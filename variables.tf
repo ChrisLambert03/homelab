@@ -23,3 +23,13 @@ variable "jellyfin_cache_path" {
   type        = string
   description = "Path on the Thinkmate where jellyfin cache is stored"
 }
+
+variable "nginx_data_path" {
+  type        = string
+  description = "Path on the Thinkmate where nginx proxy manager data (SQLite DB and config) is stored"
+}
+
+variable "nginx_letsencrypt_path" {
+  type        = string
+  description = "Path on the Thinkmate where nginx proxy manager SSL certificates (Let's Encrypt) are stored"
+}
