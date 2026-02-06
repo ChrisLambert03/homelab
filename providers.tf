@@ -10,6 +10,6 @@ terraform {
 }
 
 provider "docker" {
-  host     = "ssh://chris@workstation:22"
+  host     = "ssh://${var.ssh_user}@${var.workstation_ip}:22"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
