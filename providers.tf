@@ -1,3 +1,5 @@
+# Configure the Docker provider to connect to a remote Docker host via SSH
+
 terraform {
   required_providers {
     docker = {
@@ -5,4 +7,9 @@ terraform {
       version = "3.6.2"
     }
   }
+}
+
+provider "docker" {
+  host     = "ssh://chris@workstation:22"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
