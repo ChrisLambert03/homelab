@@ -33,3 +33,13 @@ variable "nginx_letsencrypt_path" {
   type        = string
   description = "Path on the Thinkmate where nginx proxy manager SSL certificates (Let's Encrypt) are stored"
 }
+
+variable "npm_user" {
+  type        = string
+  description = "Username for Nginx Proxy Manager"
+}
+
+variable "npm_password" {
+  type        = string
+  description = "Password for Nginx Proxy Manager"
+}
