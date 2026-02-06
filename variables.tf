@@ -19,3 +19,7 @@ variable "black_drive_path" {
   description = "Path on the Thinkmate where black drive media is stored"
 }
 
+variable "jellyfin_cache_path" {
+  type        = string
+  description = "Path on the Thinkmate where jellyfin cache is stored"
+}

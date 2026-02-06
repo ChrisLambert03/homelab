@@ -35,6 +35,12 @@ resource "docker_container" "jellyfin" {
     source = var.jellyfin_config_path
     type   = "bind"
   }
+
+  mounts {
+    target = "/cache"
+    source = var.jellyfin_cache_path
+    type   = "bind"
+  }
   # All media mapped to /data
   mounts {
     target = "/data/blue_drive"
