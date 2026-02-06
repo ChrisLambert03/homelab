@@ -1,5 +1,4 @@
 # Configure the Docker provider to connect to a remote Docker host via SSH
-
 terraform {
   required_providers {
     docker = {
