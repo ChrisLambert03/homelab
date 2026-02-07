@@ -1,55 +1,20 @@
-# Pull Jellyfin Image
-resource "docker_image" "jellyfin" {
-  name         = "jellyfin/jellyfin:latest"
-  keep_locally = true # Don't delete the image after creating the container (on destroy)
-}
-# Create a Docker network for the homelab containers
-resource "docker_network" "homelab_network" {
-  name   = "homelab"
-  driver = "bridge"
-}
-# Jellyfin docker container definition
-resource "docker_container" "jellyfin" {
-  name  = "jellyfin"
-  image = docker_image.jellyfin.image_id
-  restart = "unless-stopped"
+# Call the docker applications module
+module "docker_apps" {
+  source = "./docker"
 
-  ports {
-    internal = 8096
-    external = 8096
-  }
-  # Connect the container to the homelab network
-  networks_advanced {
-    name = docker_network.homelab_network.name
-  }
-  env = [
-    "PUID=1000",
-    "PGID=1000",
-    "TZ=America/New_York",
-    "JELLYFIN_PublishedServerUrl=http://${var.workstation_ip}:8096"
-  ]
-
-  # Config folder for metadata/database
-  mounts {
-    target = "/config"
-    source = var.jellyfin_config_path
-    type   = "bind"
-  }
-
-  mounts {
-    target = "/cache"
-    source = var.jellyfin_cache_path
-    type   = "bind"
-  }
-  # All media mapped to /data
-  mounts {
-    target = "/data/blue_drive"
-    source = var.blue_drive_path
-    type   = "bind"
-  }
-  mounts{
-   target = "/data/black_drive"
-   source = var.black_drive_path
-   type   = "bind"
-  }
+  workstation_ip          = var.workstation_ip
+  ssh_user                = var.ssh_user
+  jellyfin_config_path    = var.jellyfin_config_path
+  jellyfin_cache_path     = var.jellyfin_cache_path
+  blue_drive_path         = var.blue_drive_path
+  black_drive_path        = var.black_drive_path
+  nginx_data_path         = var.nginx_data_path
+  nginx_letsencrypt_path  = var.nginx_letsencrypt_path
+  npm_user                = var.npm_user
+  npm_password            = var.npm_password
+  homlab_domain           = var.homlab_domain
+  wildcard_cert_id        = var.wildcard_cert_id
+  optiplex7040_ip         = var.optiplex7040_ip
+  optiplex9020_ip         = var.optiplex9020_ip
+  lenovo_thinkcentre_ip   = var.lenovo_thinkcentre_ip
 }
