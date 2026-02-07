@@ -43,3 +43,29 @@ variable "npm_password" {
   type        = string
   description = "Password for Nginx Proxy Manager"
 }
+
+
+variable "homlab_domain" {
+  type        = string
+  description = "Domain used for the homelab services"
+}
+
+variable "wildcard_cert_id" {
+  type        = number
+  description = "ID of the wildcard certificate in Nginx Proxy Manager to use for the homelab domain"
+}
+
+variable "optiplex7040_ip" {
+  type        = string
+  description = "The IP address of the Optiplex 7040 (if used for additional services)"
+}
+
+variable "optiplex9020_ip" {
+  type        = string
+  description = "The IP address of the Optiplex 9020 (if used for additional services)"
+}
+
+variable "lenovo_thinkcentre_ip" {
+  type        = string
+  description = "The IP address of the Lenovo ThinkCentre (if used for additional services)"
+}
