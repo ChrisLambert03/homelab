@@ -144,3 +144,22 @@ resource "nginxproxymanager_proxy_host" "prowlarr_proxy" {
   http2_support   = true
   
 }
+
+resource "nginxproxymanager_proxy_host" "tdarr_proxy" {
+  domain_names = ["tdarr.${var.homlab_domain}"]
+
+  forward_scheme = "http"
+  forward_host   = var.workstation_ip
+  forward_port   = 8265
+
+  caching_enabled         = true
+  allow_websocket_upgrade = true
+  block_exploits          = true
+
+  certificate_id  = var.wildcard_cert_id
+  ssl_forced      = true
+  hsts_enabled    = true
+  hsts_subdomains = true
+  http2_support   = true
+  
+}
