@@ -1,6 +1,7 @@
 # --- Images ---
 resource "docker_image" "radarr" {
-  name = "lscr.io/linuxserver/radarr:latest"
+  name         = "lscr.io/linuxserver/radarr:latest"
+  keep_locally = false
 }
 
 # --- Radarr Container ---

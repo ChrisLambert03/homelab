@@ -1,7 +1,7 @@
 # Pull Jellyfin Image
 resource "docker_image" "jellyfin" {
   name         = "jellyfin/jellyfin:latest"
-  keep_locally = true # Don't delete the image after creating the container (on destroy)
+  keep_locally = false # allow Terraform to remove the image when the container is destroyed
 }
 # Create a Docker network for the homelab containers
 resource "docker_network" "homelab_network" {

@@ -1,6 +1,7 @@
 # This Terraform configuration defines a Docker image and container for the Tdarr media transcoding application.
 resource "docker_image" "tdarr" {
-  name = "ghcr.io/haveagitgat/tdarr:latest"
+  name         = "ghcr.io/haveagitgat/tdarr:latest"
+  keep_locally = false
 }
 
 resource "docker_container" "tdarr_server" {
@@ -58,7 +59,8 @@ resource "docker_container" "tdarr_server" {
 
 
 resource "docker_image" "tdarr_node" {
-  name = "ghcr.io/haveagitgat/tdarr_node:latest"
+  name         = "ghcr.io/haveagitgat/tdarr_node:latest"
+  keep_locally = false
 }
 
 resource "docker_container" "tdarr_node" {
