@@ -23,9 +23,3 @@ variable "wildcard_cert_id" {
   type = number
 }
 
-variable "nginx_manager_container_id" {
-  type = string
-  description = "(optional) id of the nginx-proxy-manager container to ensure ordering"
-  default = null
-}
-
