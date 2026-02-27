@@ -18,3 +18,10 @@ module "docker_apps" {
   optiplex9020_ip         = var.optiplex9020_ip
   lenovo_thinkcentre_ip   = var.lenovo_thinkcentre_ip
 }
+
+# call the libvirt module
+module "libvirt" {
+  source = "./vms"
+ # workstation_ip          = var.workstation_ip
+#  ssh_user                = var.ssh_user
+}

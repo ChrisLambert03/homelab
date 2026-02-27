@@ -9,6 +9,9 @@ terraform {
       source  = "Sander0542/nginxproxymanager"
       version = "1.2.2"
     }
+    libvirt = {
+      source = "dmacvicar/libvirt"
+    }
   }
 }
 
@@ -22,4 +25,8 @@ provider "nginxproxymanager" {
   url  = "http://${var.workstation_ip}:81"
   username = var.npm_user
   password = var.npm_password
+}
+# The libvirt provider is configured to connect to a remote host via SSH.
+provider "libvirt" {
+  uri = "qemu+ssh://${var.ssh_user}@${var.workstation_ip}/system"
 }
