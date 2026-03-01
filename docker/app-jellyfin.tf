@@ -3,24 +3,48 @@ resource "docker_image" "jellyfin" {
   name         = "jellyfin/jellyfin:latest"
   keep_locally = false # allow Terraform to remove the image when the container is destroyed
 }
+# 1. The Macvlan Network (Keep this as is)
+resource "docker_network" "jellyfin_macvlan" {
+  name   = "jellyfin_macvlan"
+  driver = "macvlan"
+  options = { parent = "enp5s0" }
+  ipam_config {
+    subnet  = "10.0.0.0/24"
+    gateway = "10.0.0.1"
+  }
+}
 
-# Jellyfin docker container definition
+# 2. The Jellyfin Container
 resource "docker_container" "jellyfin" {
-  name  = "jellyfin"
-  image = docker_image.jellyfin.image_id
+  name    = "jellyfin"
+  image   = docker_image.jellyfin.image_id
   restart = "unless-stopped"
-  network_mode = "host"
-
   
+  # 1. Memory Management (Prevents the "Blackout" during high RAM usage)
+  memory = 8192 # Limit to *GB so it doesn't swap
+  memory_swap = 8192# Set swap half to memory to prevent swapping
+  
+  # 2. CPU Priority (The "Xeon" advantage)
+  cpu_shares = 1024 # High priority for the Jellyfin process
+
+
+  networks_advanced {
+    name         = docker_network.jellyfin_macvlan.name
+    ipv4_address = "10.0.0.250"  # outside of dhcp range to avoid conflicts
+  }
+
   env = [
     "PUID=1000",
     "PGID=1000",
     "TZ=America/New_York",
-    "JELLYFIN_PublishedServerUrl=http://${var.workstation_ip}:8096"
+    # FIX: Point the URL to the container's own IP
+    "JELLYFIN_PublishedServerUrl=http://10.0.0.250:8096"
   ]
 
-  # Config folder for metadata/database
+   # Config folder for metadata/database
+
   mounts {
+
     target = "/config"
     source = var.jellyfin_config_path
     type   = "bind"
@@ -31,15 +55,19 @@ resource "docker_container" "jellyfin" {
     source = var.jellyfin_cache_path
     type   = "bind"
   }
+
   # All media mapped to /data
+
   mounts {
     target = "/data/blue_drive"
     source = var.blue_drive_path
     type   = "bind"
   }
+
   mounts{
    target = "/data/black_drive"
    source = var.black_drive_path
    type   = "bind"
   }
+
 }
