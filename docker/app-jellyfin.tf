@@ -3,25 +3,15 @@ resource "docker_image" "jellyfin" {
   name         = "jellyfin/jellyfin:latest"
   keep_locally = false # allow Terraform to remove the image when the container is destroyed
 }
-# Create a Docker network for the homelab containers
-resource "docker_network" "homelab_network" {
-  name   = "homelab"
-  driver = "bridge"
-}
+
 # Jellyfin docker container definition
 resource "docker_container" "jellyfin" {
   name  = "jellyfin"
   image = docker_image.jellyfin.image_id
   restart = "unless-stopped"
+  network_mode = "host"
 
-  ports {
-    internal = 8096
-    external = 8096
-  }
-  # Connect the container to the homelab network
-  networks_advanced {
-    name = docker_network.homelab_network.name
-  }
+  
   env = [
     "PUID=1000",
     "PGID=1000",
