@@ -203,3 +203,19 @@ resource "nginxproxymanager_proxy_host" "ntfy_proxy" {
   http2_support   = true
 }
 
+resource "nginxproxymanager_proxy_host" "cockpit_proxy" {
+  domain_names = ["cockpit.${var.homlab_domain}"]
+  forward_scheme = "https"
+  forward_host   = var.workstation_ip
+  forward_port   = 9090
+
+  caching_enabled         = true
+  allow_websocket_upgrade = true
+  block_exploits          = true
+
+  certificate_id  = var.wildcard_cert_id
+  ssl_forced      = true
+  hsts_enabled    = true
+  hsts_subdomains = true
+  http2_support   = true
+}
