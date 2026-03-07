@@ -6,6 +6,7 @@ module "docker_apps" {
   ssh_user                = var.ssh_user
   jellyfin_config_path    = var.jellyfin_config_path
   jellyfin_cache_path     = var.jellyfin_cache_path
+  jellyfin_macvlan_ip     = var.jellyfin_macvlan_ip
   blue_drive_path         = var.blue_drive_path
   black_drive_path        = var.black_drive_path
   nginx_data_path         = var.nginx_data_path
@@ -36,6 +37,7 @@ module "nginx" {
   optiplex9020_ip = var.optiplex9020_ip
   lenovo_thinkcentre_ip = var.lenovo_thinkcentre_ip
   wildcard_cert_id = var.wildcard_cert_id
+  jellyfin_macvlan_ip = var.jellyfin_macvlan_ip
 
   # pass through the container id exported by the docker module (optional use)
  #  nginx_manager_container_id = module.docker_apps.nginx_proxy_manager_container_id

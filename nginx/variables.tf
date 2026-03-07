@@ -23,3 +23,7 @@ variable "wildcard_cert_id" {
   type = number
 }
 
+variable "jellyfin_macvlan_ip" {
+  type = string
+}
+

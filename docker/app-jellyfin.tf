@@ -22,7 +22,7 @@ resource "docker_container" "jellyfin" {
   
   networks_advanced {
     name         = docker_network.jellyfin_macvlan.name
-    ipv4_address = "10.0.0.250"  # outside of dhcp range to avoid conflicts
+    ipv4_address = var.jellyfin_macvlan_ip
   }
 
   env = [
@@ -30,7 +30,7 @@ resource "docker_container" "jellyfin" {
     "PGID=1000",
     "TZ=America/New_York",
     # FIX: Point the URL to the container's own IP
-    "JELLYFIN_PublishedServerUrl=http://10.0.0.250:8096"
+    "JELLYFIN_PublishedServerUrl=http://${var.jellyfin_macvlan_ip}:8096"
   ]
 
    # Config folder for metadata/database

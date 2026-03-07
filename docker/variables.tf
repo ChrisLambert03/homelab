@@ -73,3 +73,8 @@ variable "lenovo_thinkcentre_ip" {
   type        = string
   description = "The IP address of the Lenovo ThinkCentre (if used for additional services)"
 }
+
+variable "jellyfin_macvlan_ip" {
+  type        = string
+  description = "IP address for the jellyfin container on the macvlan network"
+}

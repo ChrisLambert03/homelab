@@ -9,7 +9,7 @@ resource "nginxproxymanager_proxy_host" "jellyfin_proxy" {
   domain_names = ["jellyfin.${var.homlab_domain}"]
 
   forward_scheme = "http"
-  forward_host   = var.workstation_ip
+  forward_host   = var.jellyfin_macvlan_ip
   forward_port   = 8096
 
   caching_enabled         = true
@@ -208,23 +208,6 @@ resource "nginxproxymanager_proxy_host" "cockpit_proxy" {
   forward_scheme = "https"
   forward_host   = var.workstation_ip
   forward_port   = 9090
-
-  caching_enabled         = true
-  allow_websocket_upgrade = true
-  block_exploits          = true
-
-  certificate_id  = var.wildcard_cert_id
-  ssl_forced      = true
-  hsts_enabled    = true
-  hsts_subdomains = true
-  http2_support   = true
-}
-
-resource "nginxproxymanager_proxy_host" "jellyfin_internal_proxy" {
-  domain_names = ["jellyfin-internal.${var.homlab_domain}"]
-  forward_scheme = "http"
-  forward_host   = "10.0.0.250" # Use the container's IP directly
-  forward_port   = 8096
 
   caching_enabled         = true
   allow_websocket_upgrade = true
