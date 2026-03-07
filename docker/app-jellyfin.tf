@@ -20,14 +20,6 @@ resource "docker_container" "jellyfin" {
   image   = docker_image.jellyfin.image_id
   restart = "unless-stopped"
   
-  # 1. Memory Management (Prevents the "Blackout" during high RAM usage)
-  memory = 8192 # Limit to *GB so it doesn't swap
-  memory_swap = 8192# Set swap half to memory to prevent swapping
-  
-  # 2. CPU Priority (The "Xeon" advantage)
-  cpu_shares = 1024 # High priority for the Jellyfin process
-
-
   networks_advanced {
     name         = docker_network.jellyfin_macvlan.name
     ipv4_address = "10.0.0.250"  # outside of dhcp range to avoid conflicts
