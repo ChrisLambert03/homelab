@@ -4,6 +4,7 @@ name: Homelab CI
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   scan:
