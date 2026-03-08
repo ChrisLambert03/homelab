@@ -25,6 +25,7 @@
     - name: Generate CA private key
       community.crypto.openssl_privatekey:
         path: "{{ ca_dir }}/ca.key"
+        size: 4096
         force: true
 
     - name: Generate CA certificate
@@ -36,12 +37,17 @@
         basic_constraints:
           - "CA:TRUE" # Required so the CA can sign other certs
         basic_constraints_critical: true
+        key_usage:
+          - keyCertSign # Allows CA to sign certs
+          - cRLSign # Allows CA to sign revocation lists
+        key_usage_critical: true
 
     # --- Server Certs ---
     # One key/cert pair per host, signed by the CA above
     - name: Generate server private key
       community.crypto.openssl_privatekey:
         path: "{{ ca_dir }}/{{ item }}-server.key"
+        size: 4096
         force: true
       loop: "{{ hosts_to_cert }}"
 
@@ -53,6 +59,12 @@
         subject_alt_name:
           - "DNS:{{ item }}" # Tailscale hostname
           - "IP:{{ hostvars[item]['ansible_host'] }}" # Tailscale IP
+        extended_key_usage:
+          - serverAuth # Tells Docker this cert is for server auth only
+        key_usage:
+          - digitalSignature
+          - keyEncipherment
+        key_usage_critical: true
       loop: "{{ hosts_to_cert }}"
 
     - name: Sign server cert with CA
@@ -70,6 +82,7 @@
     - name: Generate client private key
       community.crypto.openssl_privatekey:
         path: "{{ ca_dir }}/client.key"
+        size: 4096
         force: true
 
     - name: Generate client CSR
@@ -79,6 +92,9 @@
         common_name: "docker-client"
         extended_key_usage:
           - clientAuth # Tells Docker this cert is for client auth only
+        key_usage:
+          - digitalSignature
+        key_usage_critical: true
 
     - name: Sign client cert with CA
       community.crypto.x509_certificate:
