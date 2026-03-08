@@ -1,0 +1,9 @@
+---
+- name: Restart Docker after cert rotation
+  hosts: docker_hosts
+  tasks:
+    - name: Restart Docker
+      ansible.builtin.systemd:
+        name: docker
+        state: restarted
+      become: yes
