@@ -23,7 +23,7 @@
     - name: Generate CA private key
       community.crypto.openssl_privatekey:
         path: "{{ ca_dir }}/ca.key"
-        force: yes
+        force: true
 
     - name: Generate CA certificate
       community.crypto.x509_certificate:

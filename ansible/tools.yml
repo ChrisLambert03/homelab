@@ -15,4 +15,4 @@
           - pciutils # lspci
           - iotop # Per-process disk I/O
         state: present
-        update_cache: yes
+        update_cache: true

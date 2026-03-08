@@ -1,7 +1,7 @@
 ---
 - name: Deploy TLS Certs to Docker Hosts
   hosts: docker_hosts
-  become: yes
+  become: true
   vars:
     ca_dir: "/home/ansible/homelab-certs"
     docker_cert_dir: "/etc/docker/certs"
@@ -12,25 +12,25 @@
         path: "{{ docker_cert_dir }}"
         state: directory
         mode: "0700"
-      become: yes
+      become: true
 
     - name: Copy CA cert
       ansible.builtin.copy:
         src: "{{ ca_dir }}/ca.crt"
         dest: "{{ docker_cert_dir }}/ca.crt"
         mode: "0644"
-      become: yes
+      become: true
 
     - name: Copy server cert
       ansible.builtin.copy:
         src: "{{ ca_dir }}/{{ inventory_hostname }}-server.crt"
         dest: "{{ docker_cert_dir }}/server.crt"
         mode: "0644"
-      become: yes
+      become: true
 
     - name: Copy server key
       ansible.builtin.copy:
         src: "{{ ca_dir }}/{{ inventory_hostname }}-server.key"
         dest: "{{ docker_cert_dir }}/server.key"
         mode: "0600"
-      become: yes
+      become: true
