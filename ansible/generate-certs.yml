@@ -82,3 +82,11 @@
         ownca_privatekey_path: "{{ ca_dir }}/ca.key"
         provider: ownca
         ownca_not_after: "{{ cert_expiry }}"
+
+    - name: Set ownership of cert directory to ansible user
+      ansible.builtin.file:
+        path: "{{ ca_dir }}"
+        owner: ansible
+        group: ansible
+        recurse: yes
+      become: yes
