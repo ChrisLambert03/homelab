@@ -2,7 +2,7 @@
   hosts: docker_hosts
   become: yes
   vars:
-    ca_dir: "/root/homelab-certs"
+    ca_dir: "/home/ansible/homelab-certs"
     docker_cert_dir: "/etc/docker/certs"
 
   tasks:
