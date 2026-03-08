@@ -2,7 +2,7 @@
   hosts: localhost
   become: yes
   vars:
-    ca_dir: "~/homelab-certs" # Where all certs will be stored locally
+    ca_dir: "/home/ansible/homelab-certs" # Where all certs will be stored locally
     cert_expiry: "+1d" # Override at runtime: -e "cert_expiry=+1h" ;   # Change to +1h, +30d, +3650d etc.
     hosts_to_cert: # Must match inventory hostnames exactly
       - workstation
