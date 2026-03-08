@@ -6,31 +6,44 @@
     ca_dir: "/home/ansible/homelab-certs"
     docker_cert_dir: "/etc/docker/certs"
 
+  handlers:
+    - name: Restart Docker
+      ansible.builtin.systemd:
+        name: docker
+        state: restarted
+
   tasks:
     - name: Create Docker cert directory
       ansible.builtin.file:
         path: "{{ docker_cert_dir }}"
         state: directory
+        owner: root
+        group: root
         mode: "0700"
-      become: true
 
     - name: Copy CA cert
       ansible.builtin.copy:
         src: "{{ ca_dir }}/ca.crt"
         dest: "{{ docker_cert_dir }}/ca.crt"
+        owner: root
+        group: root
         mode: "0644"
-      become: true
+      notify: Restart Docker
 
     - name: Copy server cert
       ansible.builtin.copy:
         src: "{{ ca_dir }}/{{ inventory_hostname }}-server.crt"
         dest: "{{ docker_cert_dir }}/server.crt"
+        owner: root
+        group: root
         mode: "0644"
-      become: true
+      notify: Restart Docker
 
     - name: Copy server key
       ansible.builtin.copy:
         src: "{{ ca_dir }}/{{ inventory_hostname }}-server.key"
         dest: "{{ docker_cert_dir }}/server.key"
+        owner: root
+        group: root
         mode: "0600"
-      become: true
+      notify: Restart Docker
