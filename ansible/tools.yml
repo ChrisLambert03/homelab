@@ -1,3 +1,4 @@
+---
 - name: Homelab Monitoring & Diagnostics
   hosts: all
   tasks:

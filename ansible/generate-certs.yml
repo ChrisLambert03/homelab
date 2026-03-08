@@ -3,8 +3,10 @@
   hosts: localhost
 
   vars:
-    ca_dir: "/home/ansible/homelab-certs" # Where all certs will be stored locally
-    cert_expiry: "+1d" # Can be overridden at runtime: -e "cert_expiry=+1h" ; Change to +1h, +30d, +3650d etc.
+    ca_dir: "/home/ansible/homelab-certs" # Where all certs will be stored
+    cert_expiry:
+      "+1d" # Can be overridden at runtime:
+      # -e "cert_expiry=+1h" ; Change to +1h, +30d, +3650d etc.
     hosts_to_cert: # Must match inventory hostnames exactly
       - workstation
       - lenovo
@@ -47,7 +49,7 @@
         common_name: "{{ item }}"
         subject_alt_name:
           - "DNS:{{ item }}" # Tailscale hostname
-          - "IP:{{ hostvars[item]['ansible_host'] }}" # Tailscale IP from inventory
+          - "IP:{{ hostvars[item]['ansible_host'] }}" # Tailscale IP
       loop: "{{ hosts_to_cert }}"
 
     - name: Sign server cert with CA

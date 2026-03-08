@@ -1,6 +1,6 @@
 ---
 name: Homelab CI
-on:
+"on":
   push:
     branches:
       - main
@@ -30,7 +30,8 @@ jobs:
         with:
           requirements_file: ansible/requirements.yml
         env:
-          ANSIBLE_COLLECTIONS_PATH: /usr/lib/python3/dist-packages/ansible_collections
+          ANSIBLE_COLLECTIONS_PATH: >
+            /usr/lib/python3/dist-packages/ansible_collections
 
       - name: YAML Lint
         run: yamllint .

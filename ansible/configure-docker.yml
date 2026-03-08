@@ -16,7 +16,8 @@
             "tlscacert": "{{ docker_cert_dir }}/ca.crt",
             "tlscert": "{{ docker_cert_dir }}/server.crt",
             "tlskey": "{{ docker_cert_dir }}/server.key",
-            "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"]  # Unix socket for local, TCP for remote TLS
+            "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"]
+            # Unix socket for local, TCP for remote TLS
           }
       become: true
 
@@ -25,5 +26,5 @@
       ansible.builtin.systemd:
         name: docker
         state: restarted
-        daemon_reload: true # Tells systemd to re-read unit files before restarting
+        daemon_reload: true # Tells systemd to re-read unit files
       become: true
