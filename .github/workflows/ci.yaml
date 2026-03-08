@@ -29,6 +29,8 @@ jobs:
         uses: ansible/ansible-lint@v26.3.0
         with:
           requirements_file: ansible/requirements.yml
+        env:
+          ANSIBLE_COLLECTIONS_PATH: /home/ansible/.ansible/collections
 
       - name: YAML Lint
         uses: ibiqlik/action-yamllint@v3
