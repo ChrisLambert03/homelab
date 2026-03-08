@@ -31,7 +31,7 @@ jobs:
           requirements_file: ansible/requirements.yml
         env:
           ANSIBLE_COLLECTIONS_PATH: >
-            /usr/lib/python3/dist-packages/ansible_collections
+            /home/ansible/.ansible/collections
 
       - name: YAML Lint
         run: yamllint .
