@@ -26,7 +26,12 @@ jobs:
         run: ansible-galaxy collection install community.crypto
 
       - name: Ansible Lint
-        run: ansible-lint
+        uses: ansible/ansible-lint@v26.3.0
+        with:
+          requirements_file: ansible/requirements.yml
+        env:
+          ANSIBLE_COLLECTIONS_PATH: >
+            /home/ansible/.ansible/collections
 
       - name: YAML Lint
         run: yamllint .
