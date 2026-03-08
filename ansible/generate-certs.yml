@@ -83,11 +83,11 @@
         provider: ownca
         ownca_not_after: "{{ cert_expiry }}"
 
-- name: Copy certs to chris home directory
-  ansible.builtin.copy:
-    src: "/root/homelab-certs/"
-    dest: "/home/chris/homelab-certs/"
-    owner: ansible
-    group: ansible
-    mode: preserve
-    become: yes
+    - name: Copy certs to chris home directory
+      ansible.builtin.copy:
+      src: "/root/homelab-certs/"
+      dest: "/home/chris/homelab-certs/"
+      owner: ansible
+      group: ansible
+      mode: preserve
+      become: yes
