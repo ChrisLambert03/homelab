@@ -8,7 +8,7 @@
     - name: Configure Docker daemon for TLS
       ansible.builtin.copy:
         dest: /etc/docker/daemon.json
-        mode: "0644" # Root writes, everyone reads
+        mode: "0644"
         content: |
           {
             "tls": true,
@@ -20,10 +20,30 @@
           }
       become: true
 
+    - name: Create systemd override directory
+      # Systemd drop-in dir for docker, overrides the default unit file
+      ansible.builtin.file:
+        path: /etc/systemd/system/docker.service.d
+        state: directory
+        mode: "0755"
+      become: true
+
+    - name: Override systemd ExecStart to remove -H flag
+      # Default unit has -H fd:// which conflicts with hosts in daemon.json
+      # Blank ExecStart= clears the original before setting the new one
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/docker.service.d/override.conf
+        mode: "0644"
+        content: |
+          [Service]
+          ExecStart=
+          ExecStart=/usr/bin/dockerd --containerd=/run/containerd/containerd.sock
+      become: true
+
     - name: Restart Docker
-      # Pick up the new daemon.json config
+      # daemon_reload picks up the new systemd override before restarting
       ansible.builtin.systemd:
         name: docker
         state: restarted
-        daemon_reload: true # Tells systemd to re-read unit files
+        daemon_reload: true
       become: true
