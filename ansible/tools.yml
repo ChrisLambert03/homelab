@@ -1,0 +1,18 @@
+- name: Ultimate Homelab Monitoring & Diagnostics
+  hosts: all
+  tasks:
+    - name: Install all the things
+      ansible.builtin.apt:
+        name:
+          - iperf3 # Network speed
+          - powerstat # Wattage/Power
+          - htop # Standard monitor
+          - lm-sensors # Temps
+          - neofetch # System Info
+          - nload # Network bandwidth graph
+          - fzf # Fuzzy search for history/files
+          - usbutils # lsusb
+          - pciutils # lspci
+          - iotop # Per-process disk I/O
+        state: present
+        update_cache: yes
