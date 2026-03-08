@@ -1,3 +1,0 @@
-# .ansible-lint
-skip_list:
-  - syntax-check[unknown-module]
