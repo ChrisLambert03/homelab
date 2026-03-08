@@ -1,5 +1,18 @@
 # Homelab Automation Infrastructure
 
+<div align="center">
+
+[![Terraform](https://img.shields.io/badge/Terraform-v1.x-blueviolet?style=for-the-badge&logo=terraform)](https://www.terraform.io)
+[![Ansible](https://img.shields.io/badge/Ansible-Latest-red?style=for-the-badge&logo=ansible)](https://www.ansible.com)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com)
+[![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04-E95420?style=for-the-badge&logo=ubuntu)](https://ubuntu.com)
+
+[![Visitors](https://visitor-badge.glitch.me/badge?page_id=chris.homelab)](https://github.com/saturn-abhishek/awesome-github-profile-readme)
+
+</div>
+
+---
+
 Welcome to my homelab! This repository contains the complete infrastructure-as-code configuration for managing a self-hosted services environment. I've transitioned from managing Docker Compose YAML files through Portainer to a full Infrastructure-as-Code approach using Terraform, enabling greater automation, version control, and reproducibility across my homelab infrastructure.
 
 ## 🏗️ Overview
@@ -13,6 +26,7 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 ### 📝 Recent Changes
 
 Recently configured Ansible playbooks to automate infrastructure management workflows:
+
 - **generate-certs.yml** - Generates TLS certificates for Docker hosts
 - **deploy-certs.yml** - Deploys TLS certificates to Docker hosts
 - **configure-docker.yml** - Configures Docker daemon for TLS authentication
