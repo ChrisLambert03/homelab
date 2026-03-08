@@ -33,4 +33,4 @@ jobs:
           ANSIBLE_COLLECTIONS_PATH: /usr/lib/python3/dist-packages/ansible_collections
 
       - name: YAML Lint
-        uses: ibiqlik/action-yamllint@v3
+        run: yamllint .
