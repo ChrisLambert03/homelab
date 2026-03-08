@@ -10,4 +10,4 @@ override.tf.json
 .terragrunt-cache/
 *.tfvars*
 /ansible/homelab-nodes
-/ansible/ansible.cfgfit
+/ansible/ansible.cfg
