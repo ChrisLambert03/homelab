@@ -1,15 +1,15 @@
 ---
 - name: Simple Homelab Update
   hosts: all
-  become: yes
+  become: true
   tasks:
     - name: Update cache and upgrade all packages
       ansible.builtin.apt:
-        update_cache: yes
+        update_cache: true
         upgrade: dist
         cache_valid_time: 3600
 
     - name: Cleanup unused packages and config files
       ansible.builtin.apt:
-        autoremove: yes
-        purge: yes
+        autoremove: true
+        purge: true
