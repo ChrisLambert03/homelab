@@ -36,6 +36,10 @@
         basic_constraints:
           - "CA:TRUE" # Required so the CA can sign other certs
         basic_constraints_critical: true
+        key_usage:
+          - keyCertSign
+          - cRLSign
+        key_usage_critical: true
 
     # --- Server Certs ---
     # One key/cert pair per host, signed by the CA above
