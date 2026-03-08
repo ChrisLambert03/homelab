@@ -1,8 +1,8 @@
 - name: Generate TLS Certs for Docker Hosts
   hosts: localhost
-  become: yes
+
   vars:
-    ca_dir: "~/homelab-certs" # Where all certs will be stored locally
+    ca_dir: "/home/ansible/homelab-certs" # Where all certs will be stored locally
     cert_expiry: "+1d" # Override at runtime: -e "cert_expiry=+1h" ;   # Change to +1h, +30d, +3650d etc.
     hosts_to_cert: # Must match inventory hostnames exactly
       - workstation
@@ -82,12 +82,3 @@
         ownca_privatekey_path: "{{ ca_dir }}/ca.key"
         provider: ownca
         ownca_not_after: "{{ cert_expiry }}"
-
-    - name: Copy certs to chris home directory
-      ansible.builtin.copy:
-      src: "/root/homelab-certs/"
-      dest: "/home/chris/homelab-certs/"
-      owner: ansible
-      group: ansible
-      mode: preserve
-      become: yes
