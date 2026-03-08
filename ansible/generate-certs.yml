@@ -37,7 +37,7 @@
     - name: Generate server private key
       community.crypto.openssl_privatekey:
         path: "{{ ca_dir }}/{{ item }}-server.key"
-        force: yes
+        force: true
       loop: "{{ hosts_to_cert }}"
 
     - name: Generate server CSR
@@ -65,7 +65,7 @@
     - name: Generate client private key
       community.crypto.openssl_privatekey:
         path: "{{ ca_dir }}/client.key"
-        force: yes
+        force: true
 
     - name: Generate client CSR
       community.crypto.openssl_csr:
@@ -89,5 +89,5 @@
         path: "{{ ca_dir }}"
         owner: ansible
         group: ansible
-        recurse: yes
-      become: yes
+        recurse: true
+      become: true
