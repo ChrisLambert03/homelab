@@ -23,14 +23,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Ansible collections
-        run: ansible-galaxy collection install -r ansible/requirements.yml
+        run: ansible-galaxy collection install community.crypto -p ./collections
 
       - name: Ansible Lint
         uses: ansible/ansible-lint@v26.3.0
         with:
           requirements_file: ansible/requirements.yml
         env:
-          ANSIBLE_COLLECTIONS_PATH: /home/ansible/.ansible/collections
+          ANSIBLE_COLLECTIONS_PATH: ./collections
 
       - name: YAML Lint
         uses: ibiqlik/action-yamllint@v3
