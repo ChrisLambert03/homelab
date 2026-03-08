@@ -14,6 +14,6 @@
           - fzf # Fuzzy search for history/files
           - usbutils # lsusb
           - pciutils # lspci
-          - iotop # Per-process disk I/O
+          - iotop # Per-process disk I/O monitoring
         state: present
         update_cache: true
