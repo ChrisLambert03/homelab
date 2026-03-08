@@ -1,7 +1,7 @@
 - name: Deploy TLS Certs to Docker Hosts
   hosts: docker_hosts
   vars:
-    ca_dir: "~/homelab-certs"
+    ca_dir: "/home/ansible/homelab-certs"
     docker_cert_dir: "/etc/docker/certs"
 
   tasks:
