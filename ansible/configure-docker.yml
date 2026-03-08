@@ -17,7 +17,6 @@
             "tlscert": "{{ docker_cert_dir }}/server.crt",
             "tlskey": "{{ docker_cert_dir }}/server.key",
             "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"]
-            # Unix socket for local, TCP for remote TLS
           }
       become: true
 
