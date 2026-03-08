@@ -1,4 +1,4 @@
-- name: Ultimate Homelab Monitoring & Diagnostics
+- name: Homelab Monitoring & Diagnostics
   hosts: all
   tasks:
     - name: Install all the things
