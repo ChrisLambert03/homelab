@@ -7,8 +7,6 @@
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com)
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04-E95420?style=for-the-badge&logo=ubuntu)](https://ubuntu.com)
 
-[![Visitors](https://visitor-badge.glitch.me/badge?page_id=chris.homelab)](https://github.com/saturn-abhishek/awesome-github-profile-readme)
-
 </div>
 
 ---
