@@ -24,6 +24,8 @@ jobs:
 
       - name: Ansible Lint
         uses: ansible/ansible-lint@v26.3.0
+        with:
+          requirements_file: ansible/requirements.yml
 
       - name: YAML Lint
         uses: ibiqlik/action-yamllint@v3
