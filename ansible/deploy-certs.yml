@@ -1,3 +1,4 @@
+---
 - name: Deploy TLS Certs to Docker Hosts
   hosts: docker_hosts
   become: yes

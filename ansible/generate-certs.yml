@@ -1,3 +1,4 @@
+---
 - name: Generate TLS Certs for Docker Hosts
   hosts: localhost
 
