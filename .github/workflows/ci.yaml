@@ -23,7 +23,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Ansible Lint
-        uses: ansible/ansible-lint@v6
+        uses: ansible/ansible-lint@stable
 
       - name: YAML Lint
         uses: ibiqlik/action-yamllint@v3
