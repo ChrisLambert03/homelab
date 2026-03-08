@@ -1,0 +1,29 @@
+---
+name: Homelab CI
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  scan:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write config files
+        run: |
+          echo "${{ secrets.ANSIBLE_CFG }}" > ansible/ansible.cfg
+          echo "${{ secrets.INVENTORY }}" > ansible/homelab-nodes
+
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Ansible Lint
+        uses: ansible/ansible-lint@v6
+
+      - name: YAML Lint
+        uses: ibiqlik/action-yamllint@v3
