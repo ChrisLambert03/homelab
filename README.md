@@ -10,6 +10,21 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 - **Terraform** for Infrastructure-as-Code (IaC) and repeatable deployments
 - **Modular Stack Architecture** for organized, scalable service management
 
+### 📝 Recent Changes
+
+Recently configured Ansible playbooks to automate infrastructure management workflows:
+- **generate-certs.yml** - Generates TLS certificates for Docker hosts
+- **deploy-certs.yml** - Deploys TLS certificates to Docker hosts
+- **configure-docker.yml** - Configures Docker daemon for TLS authentication
+- **tools.yml** - Installs monitoring & diagnostics tools (iperf3, powerstat, htop, lm-sensors, neofetch, nload, fzf, lsusb, lspci, iotop)
+- **update.yml** - Automated system package updates and upgrades
+- **restart-docker.yml** - Restarts Docker service after configuration changes
+
+### 🚀 Currently Working On
+
+- **TLS Authentication for Docker Sockets** - Implementing secure TLS authentication across Docker hosts to enable encrypted remote communication with the Docker daemon
+- **Terraform Migration** - Continuing to migrate services running on other hosts in the homelab to Terraform-managed infrastructure for improved consistency and automation
+
 ## 📦 Terraform-Managed Services
 
 ### Docker Services
