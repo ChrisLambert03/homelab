@@ -13,6 +13,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Add local bin to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
       - name: Write config files
         run: |
           echo "${{ secrets.ANSIBLE_CFG }}" > ansible/ansible.cfg
