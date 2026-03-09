@@ -1,8 +1,19 @@
 ---
 - name: Configure Docker TLS
   hosts: docker_hosts
+  become: true
   vars:
     docker_cert_dir: "/etc/docker/certs"
+
+  handlers:
+    - name: Reload systemd
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Restart Docker
+      ansible.builtin.systemd:
+        name: docker
+        state: restarted
 
   tasks:
     - name: Configure Docker daemon for TLS
@@ -11,40 +22,28 @@
         mode: "0644"
         content: |
           {
-            "tls": true,
             "tlsverify": true,
-            "tlscacert": "{{ docker_cert_dir }}/ca.crt",
-            "tlscert": "{{ docker_cert_dir }}/server.crt",
-            "tlskey": "{{ docker_cert_dir }}/server.key",
+            "tlscacert": "{{ docker_cert_dir }}/ca.pem",
+            "tlscert": "{{ docker_cert_dir }}/server-cert.pem",
+            "tlskey": "{{ docker_cert_dir }}/server-key.pem",
             "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"]
           }
-      become: true
+      notify: Restart Docker
 
     - name: Create systemd override directory
-      # Systemd drop-in dir for docker, overrides the default unit file
       ansible.builtin.file:
         path: /etc/systemd/system/docker.service.d
         state: directory
         mode: "0755"
-      become: true
 
     - name: Override systemd ExecStart to remove -H flag
-      # Default unit has -H fd:// which conflicts with hosts in daemon.json
-      # Blank ExecStart= clears the original before setting the new one
       ansible.builtin.copy:
         dest: /etc/systemd/system/docker.service.d/override.conf
         mode: "0644"
         content: |
           [Service]
           ExecStart=
-          ExecStart=/usr/bin/dockerd
-             --containerd=/run/containerd/containerd.sock
-      become: true
-
-    - name: Restart Docker
-      # daemon_reload picks up the new systemd override before restarting
-      ansible.builtin.systemd:
-        name: docker
-        state: restarted
-        daemon_reload: true
-      become: true
+          ExecStart=/usr/bin/dockerd --containerd=/run/containerd/containerd.sock
+      notify:
+        - Reload systemd
+        - Restart Docker
