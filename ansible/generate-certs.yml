@@ -102,3 +102,12 @@
         ownca_privatekey_path: "{{ ca_dir }}/ca.key"
         provider: ownca
         ownca_not_after: "{{ cert_expiry }}"
+
+    # --- Permissions Cleanup ---
+    - name: Set ownership of cert directory to ansible user
+      ansible.builtin.file:
+        path: "{{ ca_dir }}"
+        owner: ansible
+        group: ansible
+        recurse: true
+      become: true # Ensures it can chown even if files were created as root
