@@ -6,7 +6,7 @@ gather_facts: false
 vars:
   ca_dir: "/home/ansible/homelab-certs"
   ca_expiry: "+3650d"
-  cert_expiry: "+365d" # FIX: Changed from +1d to 1 year
+  cert_expiry: "+365d"
   hosts_to_cert:
     - workstation
     - lenovo
@@ -20,7 +20,6 @@ tasks:
       state: directory
       mode: "0700"
 
-  # --- CA ---
   - name: Generate CA private key
     community.crypto.openssl_privatekey:
       path: "{{ ca_dir }}/ca-key.pem"
@@ -44,7 +43,6 @@ tasks:
       provider: selfsigned
       selfsigned_not_after: "{{ ca_expiry }}"
 
-  # --- Server Certs ---
   - name: Generate server private key
     community.crypto.openssl_privatekey:
       path: "{{ ca_dir }}/{{ item }}-server-key.pem"
@@ -75,7 +73,6 @@ tasks:
       ownca_not_after: "{{ cert_expiry }}"
     loop: "{{ hosts_to_cert }}"
 
-  # --- Client Cert ---
   - name: Generate client private key
     community.crypto.openssl_privatekey:
       path: "{{ ca_dir }}/client-key.pem"
@@ -98,7 +95,6 @@ tasks:
       provider: ownca
       ownca_not_after: "{{ cert_expiry }}"
 
-  # --- Permissions Cleanup ---
   - name: Set ownership of cert directory
     ansible.builtin.file:
       path: "{{ ca_dir }}"
@@ -106,4 +102,3 @@ tasks:
       group: ansible
       recurse: true
     become: true
-
