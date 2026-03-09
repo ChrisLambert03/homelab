@@ -66,7 +66,7 @@
           - "DNS:{{ item }}"
           - "DNS:localhost"
           - "IP:127.0.0.1"
-          - "IP:{{ hostvars[item]['ansible_host'] | default('127.0.0.1') }}" # Added default fallback just in case
+          - "IP:{{ hostvars[item]['ansible_host'] | default('127.0.0.1') }}"
       loop: "{{ hosts_to_cert }}"
 
     - name: Sign server cert with CA
