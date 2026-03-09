@@ -1,113 +1,109 @@
-- name: Generate TLS Certs for Docker Hosts
-  hosts: localhost
-  gather_facts: false
+---
+name: Generate TLS Certs for Docker Hosts
+hosts: localhost
+gather_facts: false
 
-  vars:
-    ca_dir: "/home/ansible/homelab-certs"
-    ca_expiry: "+3650d"
-    cert_expiry: "+1d"
-    hosts_to_cert:
-      - workstation
-      - lenovo
-      - opti74
-      - optiplex
+vars:
+  ca_dir: "/home/ansible/homelab-certs"
+  ca_expiry: "+3650d"
+  cert_expiry: "+365d" # FIX: Changed from +1d to 1 year
+  hosts_to_cert:
+    - workstation
+    - lenovo
+    - opti74
+    - optiplex
 
-  tasks:
-    - name: Create cert directory
-      ansible.builtin.file:
-        path: "{{ ca_dir }}"
-        state: directory
-        mode: "0700"
+tasks:
+  - name: Create cert directory
+    ansible.builtin.file:
+      path: "{{ ca_dir }}"
+      state: directory
+      mode: "0700"
 
-    # --- CA ---
-    - name: Generate CA private key
-      community.crypto.openssl_privatekey:
-        path: "{{ ca_dir }}/ca.key"
+  # --- CA ---
+  - name: Generate CA private key
+    community.crypto.openssl_privatekey:
+      path: "{{ ca_dir }}/ca-key.pem"
+      mode: "0600"
 
-    # NEW STEP: We must create a CSR for the CA to hold the constraints
-    - name: Generate CA CSR
-      community.crypto.openssl_csr:
-        path: "{{ ca_dir }}/ca.csr"
-        privatekey_path: "{{ ca_dir }}/ca.key"
-        common_name: "Docker Homelab CA"
-        basic_constraints:
-          - "CA:TRUE"
-        basic_constraints_critical: true
-        key_usage:
-          - keyCertSign
-          - cRLSign
-        key_usage_critical: true
+  - name: Generate CA CSR
+    community.crypto.openssl_csr:
+      path: "{{ ca_dir }}/ca.csr"
+      privatekey_path: "{{ ca_dir }}/ca-key.pem"
+      common_name: "Docker Homelab CA"
+      basic_constraints: ["CA:TRUE"]
+      basic_constraints_critical: true
+      key_usage: [keyCertSign, cRLSign]
+      key_usage_critical: true
 
-    - name: Generate CA certificate
-      community.crypto.x509_certificate:
-        path: "{{ ca_dir }}/ca.crt"
-        csr_path: "{{ ca_dir }}/ca.csr" # Point to the new CA CSR
-        privatekey_path: "{{ ca_dir }}/ca.key"
-        provider: selfsigned
-        selfsigned_not_after: "{{ ca_expiry }}"
+  - name: Generate CA certificate
+    community.crypto.x509_certificate:
+      path: "{{ ca_dir }}/ca.pem"
+      csr_path: "{{ ca_dir }}/ca.csr"
+      privatekey_path: "{{ ca_dir }}/ca-key.pem"
+      provider: selfsigned
+      selfsigned_not_after: "{{ ca_expiry }}"
 
-    # --- Server Certs ---
-    - name: Generate server private key
-      community.crypto.openssl_privatekey:
-        path: "{{ ca_dir }}/{{ item }}-server.key"
-      loop: "{{ hosts_to_cert }}"
+  # --- Server Certs ---
+  - name: Generate server private key
+    community.crypto.openssl_privatekey:
+      path: "{{ ca_dir }}/{{ item }}-server-key.pem"
+      mode: "0600"
+    loop: "{{ hosts_to_cert }}"
 
-    - name: Generate server CSR
-      community.crypto.openssl_csr:
-        path: "{{ ca_dir }}/{{ item }}-server.csr"
-        privatekey_path: "{{ ca_dir }}/{{ item }}-server.key"
-        common_name: "{{ item }}"
-        key_usage:
-          - digitalSignature
-          - keyEncipherment
-        extended_key_usage:
-          - serverAuth
-        subject_alt_name:
-          - "DNS:{{ item }}"
-          - "DNS:localhost"
-          - "IP:127.0.0.1"
-          - "IP:{{ hostvars[item]['ansible_host'] | default('127.0.0.1') }}"
-      loop: "{{ hosts_to_cert }}"
+  - name: Generate server CSR
+    community.crypto.openssl_csr:
+      path: "{{ ca_dir }}/{{ item }}-server.csr"
+      privatekey_path: "{{ ca_dir }}/{{ item }}-server-key.pem"
+      common_name: "{{ item }}"
+      key_usage: [digitalSignature, keyEncipherment]
+      extended_key_usage: [serverAuth]
+      subject_alt_name:
+        - "DNS:{{ item }}"
+        - "DNS:localhost"
+        - "IP:127.0.0.1"
+        - "IP:{{ hostvars[item]['ansible_host'] | default('127.0.0.1') }}"
+    loop: "{{ hosts_to_cert }}"
 
-    - name: Sign server cert with CA
-      community.crypto.x509_certificate:
-        path: "{{ ca_dir }}/{{ item }}-server.crt"
-        csr_path: "{{ ca_dir }}/{{ item }}-server.csr"
-        ownca_path: "{{ ca_dir }}/ca.crt"
-        ownca_privatekey_path: "{{ ca_dir }}/ca.key"
-        provider: ownca
-        ownca_not_after: "{{ cert_expiry }}"
-      loop: "{{ hosts_to_cert }}"
+  - name: Sign server cert with CA
+    community.crypto.x509_certificate:
+      path: "{{ ca_dir }}/{{ item }}-server-cert.pem"
+      csr_path: "{{ ca_dir }}/{{ item }}-server.csr"
+      ownca_path: "{{ ca_dir }}/ca.pem"
+      ownca_privatekey_path: "{{ ca_dir }}/ca-key.pem"
+      provider: ownca
+      ownca_not_after: "{{ cert_expiry }}"
+    loop: "{{ hosts_to_cert }}"
 
-    # --- Client Cert ---
-    - name: Generate client private key
-      community.crypto.openssl_privatekey:
-        path: "{{ ca_dir }}/client.key"
+  # --- Client Cert ---
+  - name: Generate client private key
+    community.crypto.openssl_privatekey:
+      path: "{{ ca_dir }}/client-key.pem"
+      mode: "0600"
 
-    - name: Generate client CSR
-      community.crypto.openssl_csr:
-        path: "{{ ca_dir }}/client.csr"
-        privatekey_path: "{{ ca_dir }}/client.key"
-        common_name: "docker-client"
-        key_usage:
-          - digitalSignature
-        extended_key_usage:
-          - clientAuth
+  - name: Generate client CSR
+    community.crypto.openssl_csr:
+      path: "{{ ca_dir }}/client.csr"
+      privatekey_path: "{{ ca_dir }}/client-key.pem"
+      common_name: "docker-client"
+      key_usage: [digitalSignature]
+      extended_key_usage: [clientAuth]
 
-    - name: Sign client cert with CA
-      community.crypto.x509_certificate:
-        path: "{{ ca_dir }}/client.crt"
-        csr_path: "{{ ca_dir }}/client.csr"
-        ownca_path: "{{ ca_dir }}/ca.crt"
-        ownca_privatekey_path: "{{ ca_dir }}/ca.key"
-        provider: ownca
-        ownca_not_after: "{{ cert_expiry }}"
+  - name: Sign client cert with CA
+    community.crypto.x509_certificate:
+      path: "{{ ca_dir }}/client-cert.pem"
+      csr_path: "{{ ca_dir }}/client.csr"
+      ownca_path: "{{ ca_dir }}/ca.pem"
+      ownca_privatekey_path: "{{ ca_dir }}/ca-key.pem"
+      provider: ownca
+      ownca_not_after: "{{ cert_expiry }}"
 
-    # --- Permissions Cleanup ---
-    - name: Set ownership of cert directory to ansible user
-      ansible.builtin.file:
-        path: "{{ ca_dir }}"
-        owner: ansible
-        group: ansible
-        recurse: true
-      become: true # Ensures it can chown even if files were created as root
+  # --- Permissions Cleanup ---
+  - name: Set ownership of cert directory
+    ansible.builtin.file:
+      path: "{{ ca_dir }}"
+      owner: ansible
+      group: ansible
+      recurse: true
+    become: true
+
