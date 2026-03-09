@@ -27,7 +27,7 @@ jobs:
         run: ansible-galaxy collection install community.crypto
 
       - name: Ansible Lint
-        uses: ansible/ansible-lint@v26.3.0
+        run: ansible-lint
 
       - name: YAML Lint
         run: yamllint .
