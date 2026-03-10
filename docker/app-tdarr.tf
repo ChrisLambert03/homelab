@@ -9,7 +9,7 @@ resource "docker_container" "tdarr_server" {
   image        = docker_image.tdarr.image_id
   restart      = "unless-stopped"
   network_mode = "host"
-  
+
   # Crucial: Use the provider you passed from the root
 
   env = [
@@ -64,10 +64,10 @@ resource "docker_image" "tdarr_node" {
 }
 
 resource "docker_container" "tdarr_node" {
-  name         = "tdarr-node"
-  image        = docker_image.tdarr_node.image_id
-  restart      = "unless-stopped"
-  
+  name    = "tdarr-node"
+  image   = docker_image.tdarr_node.image_id
+  restart = "unless-stopped"
+
   # Changed to host mode
   network_mode = "host"
 
@@ -114,8 +114,8 @@ resource "docker_container" "tdarr_node" {
     type   = "bind"
   }
   mounts {
-        target = "/more_media"
-        source = "/mnt/blue_drive/data"
-        type   = "bind"
+    target = "/more_media"
+    source = "/mnt/blue_drive/data"
+    type   = "bind"
   }
 }

@@ -38,7 +38,7 @@ resource "nginxproxymanager_proxy_host" "firefox_proxy" {
   ssl_forced      = true
   hsts_enabled    = true
   hsts_subdomains = true
-  http2_support   = true 
+  http2_support   = true
 }
 
 resource "nginxproxymanager_proxy_host" "portainer_proxy" {
@@ -74,7 +74,7 @@ resource "nginxproxymanager_proxy_host" "sonarr_proxy" {
   ssl_forced      = true
   hsts_enabled    = true
   hsts_subdomains = true
-  http2_support   = true 
+  http2_support   = true
 }
 
 resource "nginxproxymanager_proxy_host" "radarr_proxy" {
@@ -92,7 +92,7 @@ resource "nginxproxymanager_proxy_host" "radarr_proxy" {
   ssl_forced      = true
   hsts_enabled    = true
   hsts_subdomains = true
-  http2_support   = true 
+  http2_support   = true
 }
 
 resource "nginxproxymanager_proxy_host" "prowlarr_proxy" {
@@ -204,7 +204,7 @@ resource "nginxproxymanager_proxy_host" "ntfy_proxy" {
 }
 
 resource "nginxproxymanager_proxy_host" "cockpit_proxy" {
-  domain_names = ["cockpit.${var.homlab_domain}"]
+  domain_names   = ["cockpit.${var.homlab_domain}"]
   forward_scheme = "https"
   forward_host   = var.workstation_ip
   forward_port   = 9090

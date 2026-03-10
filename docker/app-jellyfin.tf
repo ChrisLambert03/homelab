@@ -5,8 +5,8 @@ resource "docker_image" "jellyfin" {
 }
 # 1. The Macvlan Network (Keep this as is)
 resource "docker_network" "jellyfin_macvlan" {
-  name   = "jellyfin_macvlan"
-  driver = "macvlan"
+  name    = "jellyfin_macvlan"
+  driver  = "macvlan"
   options = { parent = "enp5s0" }
   ipam_config {
     subnet  = "10.0.0.0/24"
@@ -19,7 +19,7 @@ resource "docker_container" "jellyfin" {
   name    = "jellyfin"
   image   = docker_image.jellyfin.image_id
   restart = "unless-stopped"
-  
+
   networks_advanced {
     name         = docker_network.jellyfin_macvlan.name
     ipv4_address = var.jellyfin_macvlan_ip
@@ -33,7 +33,7 @@ resource "docker_container" "jellyfin" {
     "JELLYFIN_PublishedServerUrl=http://${var.jellyfin_macvlan_ip}:8096"
   ]
 
-   # Config folder for metadata/database
+  # Config folder for metadata/database
 
   mounts {
 
@@ -56,10 +56,10 @@ resource "docker_container" "jellyfin" {
     type   = "bind"
   }
 
-  mounts{
-   target = "/data/black_drive"
-   source = var.black_drive_path
-   type   = "bind"
+  mounts {
+    target = "/data/black_drive"
+    source = var.black_drive_path
+    type   = "bind"
   }
 
 }
