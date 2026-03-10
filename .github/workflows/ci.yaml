@@ -6,6 +6,9 @@ name: Homelab CI
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   scan:
     permissions:
@@ -64,4 +67,3 @@ jobs:
         if: always()
         run: |
           rm -f ansible/ansible.cfg ansible/homelab-nodes
-          rm -f results.sarif
