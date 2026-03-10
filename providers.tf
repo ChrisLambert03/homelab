@@ -1,5 +1,7 @@
 # Configure the Docker provider to connect to a remote Docker host via SSH
 terraform {
+  required_version = ">= 1.14.6"
+
   required_providers {
     docker = {
       source  = "kreuzwerker/docker"
@@ -10,7 +12,8 @@ terraform {
       version = "1.2.2"
     }
     libvirt = {
-      source = "dmacvicar/libvirt"
+      source  = "dmacvicar/libvirt"
+      version = ">= 0.9.4"
     }
   }
 }
