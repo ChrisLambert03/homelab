@@ -8,6 +8,11 @@ name: Homelab CI
 
 jobs:
   scan:
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
     runs-on: self-hosted
     steps:
       - name: Checkout
@@ -43,3 +48,19 @@ jobs:
 
       - name: TFLint
         run: tflint --recursive
+
+      - name: Checkov
+        id: checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: .
+          framework: terraform
+          quiet: false
+          soft_fail: false
+          skip_check: CKV_GIT_1
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        if: success() || failure()
+        with:
+          sarif_file: results.sarif
