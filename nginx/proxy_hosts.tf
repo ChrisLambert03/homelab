@@ -1,9 +1,6 @@
 
 # Nginx Proxy Manager proxy host resources (moved from docker/app-nginx.tf)
 
-data "nginxproxymanager_certificate" "certificate" {
-  id = 2
-}
 
 resource "nginxproxymanager_proxy_host" "jellyfin_proxy" {
   domain_names = ["jellyfin.${var.homlab_domain}"]

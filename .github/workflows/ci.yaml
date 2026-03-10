@@ -39,3 +39,6 @@ jobs:
 
       - name: Terraform fmt
         run: terraform fmt -check -recursive
+
+      - name: TFLint
+        run: tflint --recursive
