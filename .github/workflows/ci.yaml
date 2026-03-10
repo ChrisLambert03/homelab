@@ -57,6 +57,8 @@ jobs:
           framework: terraform
           output_format: cli
           skip_check: CKV_GIT_1
+          quiet: false
+          soft_fail: false
 
       - name: Secure Cleanup
         if: always()
