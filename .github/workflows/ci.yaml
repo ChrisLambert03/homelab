@@ -34,3 +34,9 @@ jobs:
 
       - name: YAML Lint
         run: yamllint .
+
+      - name: Terraform fmt
+        run: terraform fmt -check -recursive
+
+      - name: TFLint
+        run: tflint --recursive
