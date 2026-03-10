@@ -57,7 +57,7 @@ jobs:
         uses: bridgecrewio/checkov-action@v12
         with:
           directory: .
-          framework: terraform
+          framework: all
           output_format: cli
           skip_check: CKV_GIT_1
           quiet: false
