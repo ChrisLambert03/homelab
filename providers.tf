@@ -25,7 +25,7 @@ provider "docker" {
 
 # Configuration-based authentication
 provider "nginxproxymanager" {
-  url  = "http://${var.workstation_ip}:81"
+  url      = "http://${var.workstation_ip}:81"
   username = var.npm_user
   password = var.npm_password
 }

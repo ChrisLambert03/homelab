@@ -45,26 +45,26 @@ variable "nginx_letsencrypt_path" {
 variable "npm_user" {
   type        = string
   description = "Username for Nginx Proxy Manager"
-  sensitive = true
+  sensitive   = true
 }
 
 variable "npm_password" {
   type        = string
   description = "Password for Nginx Proxy Manager"
-  sensitive = true
+  sensitive   = true
 }
 
 
 variable "homlab_domain" {
   type        = string
   description = "Domain used for the homelab services"
-  sensitive = true
+  sensitive   = true
 }
 
 variable "wildcard_cert_id" {
   type        = number
   description = "ID of the wildcard certificate in Nginx Proxy Manager to use for the homelab domain"
-  sensitive = true
+  sensitive   = true
 }
 
 variable "optiplex7040_ip" {
