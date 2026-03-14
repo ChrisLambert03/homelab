@@ -27,3 +27,6 @@ variable "jellyfin_macvlan_ip" {
   type = string
 }
 
+variable "access_list_id" {
+  type = number
+}
