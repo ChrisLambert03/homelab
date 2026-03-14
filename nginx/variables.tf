@@ -27,3 +27,11 @@ variable "jellyfin_macvlan_ip" {
   type = string
 }
 
+variable "laptop_ip" {
+  type = string
+}
+
+variable "phone_ip" {
+  type = string
+}
+
