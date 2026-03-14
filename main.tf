@@ -31,8 +31,8 @@ module "nginx" {
   lenovo_thinkcentre_ip = var.lenovo_thinkcentre_ip
   wildcard_cert_id      = var.wildcard_cert_id
   jellyfin_macvlan_ip   = var.jellyfin_macvlan_ip
-  laptop_ip            = var.laptop_ip
-  phone_ip             = var.phone_ip
+  laptop_ip             = var.laptop_ip
+  phone_ip              = var.phone_ip
 
   # pass through the container id exported by the docker module (optional use)
   #  nginx_manager_container_id = module.docker_apps.nginx_proxy_manager_container_id
