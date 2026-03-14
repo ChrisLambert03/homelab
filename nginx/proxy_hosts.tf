@@ -2,7 +2,7 @@
 
 resource "nginxproxymanager_proxy_host" "jellyfin_proxy" {
   domain_names            = ["jellyfin.${var.homlab_domain}"]
-  access_list_id = var.access_list_id
+  access_list_id          = var.access_list_id
   forward_scheme          = "http"
   forward_host            = var.jellyfin_macvlan_ip
   forward_port            = 8096
@@ -18,7 +18,7 @@ resource "nginxproxymanager_proxy_host" "jellyfin_proxy" {
 
 resource "nginxproxymanager_proxy_host" "firefox_proxy" {
   domain_names            = ["firefox.${var.homlab_domain}"]
-  access_list_id = var.access_list_id
+  access_list_id          = var.access_list_id
   forward_scheme          = "http"
   forward_host            = var.optiplex7040_ip
   forward_port            = 4000
@@ -34,7 +34,7 @@ resource "nginxproxymanager_proxy_host" "firefox_proxy" {
 
 resource "nginxproxymanager_proxy_host" "portainer_proxy" {
   domain_names            = ["portainer.${var.homlab_domain}"]
-  access_list_id = var.access_list_id
+  access_list_id          = var.access_list_id
   forward_scheme          = "http"
   forward_host            = var.optiplex9020_ip
   forward_port            = 9000
@@ -50,7 +50,7 @@ resource "nginxproxymanager_proxy_host" "portainer_proxy" {
 
 resource "nginxproxymanager_proxy_host" "sonarr_proxy" {
   domain_names            = ["sonarr.${var.homlab_domain}"]
-  access_list_id = var.access_list_id
+  access_list_id          = var.access_list_id
   forward_scheme          = "http"
   forward_host            = var.workstation_ip
   forward_port            = 8989
@@ -66,7 +66,7 @@ resource "nginxproxymanager_proxy_host" "sonarr_proxy" {
 
 resource "nginxproxymanager_proxy_host" "radarr_proxy" {
   domain_names            = ["radarr.${var.homlab_domain}"]
-  access_list_id = var.access_list_id
+  access_list_id          = var.access_list_id
   forward_scheme          = "http"
   forward_host            = var.workstation_ip
   forward_port            = 7878
@@ -82,7 +82,7 @@ resource "nginxproxymanager_proxy_host" "radarr_proxy" {
 
 resource "nginxproxymanager_proxy_host" "prowlarr_proxy" {
   domain_names            = ["prowlarr.${var.homlab_domain}"]
-  access_list_id = var.access_list_id
+  access_list_id          = var.access_list_id
   forward_scheme          = "http"
   forward_host            = var.workstation_ip
   forward_port            = 9696
@@ -97,24 +97,24 @@ resource "nginxproxymanager_proxy_host" "prowlarr_proxy" {
 }
 
 resource "nginxproxymanager_proxy_host" "tdarr_proxy" {
-  domain_names   = ["tdarr.${var.homlab_domain}"]
-  access_list_id = var.access_list_id
-  forward_scheme = "http"
-  forward_host   = var.workstation_ip
-  forward_port   = 8265
+  domain_names            = ["tdarr.${var.homlab_domain}"]
+  access_list_id          = var.access_list_id
+  forward_scheme          = "http"
+  forward_host            = var.workstation_ip
+  forward_port            = 8265
   caching_enabled         = true
   allow_websocket_upgrade = true
   block_exploits          = true
-  certificate_id  = var.wildcard_cert_id
-  ssl_forced      = true
-  hsts_enabled    = true
-  hsts_subdomains = true
-  http2_support   = true
+  certificate_id          = var.wildcard_cert_id
+  ssl_forced              = true
+  hsts_enabled            = true
+  hsts_subdomains         = true
+  http2_support           = true
 }
 
 resource "nginxproxymanager_proxy_host" "nginx_proxy" {
   domain_names            = ["nginx.${var.homlab_domain}"]
-  access_list_id = var.access_list_id
+  access_list_id          = var.access_list_id
   forward_scheme          = "http"
   forward_host            = var.workstation_ip
   forward_port            = 81
@@ -130,7 +130,7 @@ resource "nginxproxymanager_proxy_host" "nginx_proxy" {
 
 resource "nginxproxymanager_proxy_host" "grafana_proxy" {
   domain_names            = ["grafana.${var.homlab_domain}"]
-  access_list_id = var.access_list_id
+  access_list_id          = var.access_list_id
   forward_scheme          = "http"
   forward_host            = var.lenovo_thinkcentre_ip
   forward_port            = 3030
@@ -146,7 +146,7 @@ resource "nginxproxymanager_proxy_host" "grafana_proxy" {
 
 resource "nginxproxymanager_proxy_host" "homarr_proxy" {
   domain_names            = ["homarr.${var.homlab_domain}"]
-  access_list_id = var.access_list_id
+  access_list_id          = var.access_list_id
   forward_scheme          = "http"
   forward_host            = var.lenovo_thinkcentre_ip
   forward_port            = 7575
@@ -178,7 +178,7 @@ resource "nginxproxymanager_proxy_host" "ntfy_proxy" {
 
 resource "nginxproxymanager_proxy_host" "cockpit_proxy" {
   domain_names            = ["cockpit.${var.homlab_domain}"]
-  access_list_id = var.access_list_id
+  access_list_id          = var.access_list_id
   forward_scheme          = "https"
   forward_host            = var.workstation_ip
   forward_port            = 9090
