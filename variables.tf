@@ -90,3 +90,9 @@ variable "jellyfin_macvlan_ip" {
   description = "IP address for the jellyfin container on the macvlan network"
   sensitive   = true
 }
+
+variable "access_list_id" {
+  type        = number
+  description = "ID of the access list in Nginx Proxy Manager to use for the homelab services)"
+  sensitive   = true
+}
