@@ -90,15 +90,3 @@ variable "jellyfin_macvlan_ip" {
   description = "IP address for the jellyfin container on the macvlan network"
   sensitive   = true
 }
-
-variable "laptop_ip" {
-  type        = string
-  description = "The IP address of the laptop"
-  sensitive   = true
-}
-
-variable "phone_ip" {
-  type        = string
-  description = "The IP address of the phone"
-  sensitive   = true
-}
