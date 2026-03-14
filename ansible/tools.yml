@@ -15,5 +15,7 @@
           - usbutils # lsusb
           - pciutils # lspci
           - iotop # Per-process disk I/O monitoring
+          - nmap # Network scanning
+          - btop # Better htop
         state: present
         update_cache: true
