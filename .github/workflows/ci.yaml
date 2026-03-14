@@ -62,8 +62,3 @@ jobs:
           skip_check: CKV_GIT_1
           quiet: false
           soft_fail: false
-
-      - name: Secure Cleanup
-        if: always()
-        run: |
-          rm -f ansible/ansible.cfg ansible/homelab-nodes
