@@ -4,11 +4,11 @@ resource "nginxproxymanager_access_list" "personal_access_list" {
   access = [
     {
       directive = "allow"
-      address   = "${var.laptop_ip}"
+      address   = var.laptop_ip
     },
     {
       directive = "allow"
-      address   = "${var.phone_ip}"
+      address   = var.phone_ip
     }
   ]
 
