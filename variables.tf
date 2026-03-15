@@ -96,3 +96,9 @@ variable "access_list_id" {
   description = "ID of the access list in Nginx Proxy Manager to use for the homelab services)"
   sensitive   = true
 }
+
+variable "n8n_encryption_key" {
+  type        = string
+  description = "Encryption key for n8n. Must be exactly 32 characters long."
+  sensitive   = true
+}
