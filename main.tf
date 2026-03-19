@@ -11,7 +11,7 @@ module "docker_apps" {
   nginx_data_path        = var.nginx_data_path
   nginx_letsencrypt_path = var.nginx_letsencrypt_path
   homlab_domain          = var.homlab_domain
-  n8n_key     = var.n8n_key
+  n8n_key                = var.n8n_key
 
 }
 
