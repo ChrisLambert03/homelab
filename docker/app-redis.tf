@@ -11,9 +11,9 @@ resource "docker_image" "redis" {
 
 resource "docker_volume" "redis_data" {
   name = "redis_data"
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 }
 
 resource "docker_container" "redis" {
