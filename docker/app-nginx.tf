@@ -1,7 +1,7 @@
 # 1. Image for Nginx Proxy Manager
 resource "docker_image" "nginx_proxy_manager" {
   name         = "jc21/nginx-proxy-manager:latest"
-  keep_locally = false
+  keep_locally = true
 }
 
 # 2. Nginx Proxy Manager Container

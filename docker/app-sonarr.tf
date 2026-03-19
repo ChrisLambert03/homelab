@@ -1,7 +1,7 @@
 # --- Sonarr Image ---
 resource "docker_image" "sonarr" {
   name         = "lscr.io/linuxserver/sonarr:latest"
-  keep_locally = false
+  keep_locally = true
 }
 # --- Sonarr Container ---
 resource "docker_container" "sonarr" {
