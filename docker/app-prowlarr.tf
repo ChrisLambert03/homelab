@@ -1,7 +1,7 @@
 # 1. Pull the Prowlarr Image
 resource "docker_image" "prowlarr" {
   name         = "lscr.io/linuxserver/prowlarr:latest"
-  keep_locally = false
+  keep_locally = true
 }
 
 # 2. Prowlarr Container

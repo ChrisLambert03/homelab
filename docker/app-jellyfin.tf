@@ -1,7 +1,7 @@
 # Pull Jellyfin Image
 resource "docker_image" "jellyfin" {
   name         = "jellyfin/jellyfin:latest"
-  keep_locally = false # allow Terraform to remove the image when the container is destroyed
+  keep_locally = true # allow Terraform to remove the image when the container is destroyed
 }
 # 1. The Macvlan Network (Keep this as is)
 resource "docker_network" "jellyfin_macvlan" {
