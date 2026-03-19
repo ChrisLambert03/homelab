@@ -5,9 +5,9 @@ resource "docker_image" "redisinsight" {
 
 resource "docker_volume" "redisinsight_data" {
   name = "redisinsight_data"
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 }
 
 resource "docker_container" "redisinsight" {

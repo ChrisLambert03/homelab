@@ -1,8 +1,8 @@
 resource "docker_volume" "n8n_data" {
-  name = "n8n_data"
-  lifecycle {
-    prevent_destroy = true
-  }
+  # name = "n8n_data"
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 }
 
 resource "docker_image" "n8n" {
