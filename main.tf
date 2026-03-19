@@ -10,8 +10,8 @@ module "docker_apps" {
   black_drive_path       = var.black_drive_path
   nginx_data_path        = var.nginx_data_path
   nginx_letsencrypt_path = var.nginx_letsencrypt_path
-  homlab_domain = var.homlab_domain
-  n8n_encryption_key = var.n8n_encryption_key
+  homlab_domain          = var.homlab_domain
+  n8n_encryption_key     = var.n8n_encryption_key
 
 }
 
