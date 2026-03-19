@@ -33,7 +33,7 @@ variable "jellyfin_macvlan_ip" {
   description = "IP address for the jellyfin container on the macvlan network"
 }
 
-variable "n8n_encryption_key" {
+variable "n8n_key" {
   type        = string
   description = "Encryption key for n8n. Must be exactly 32 characters long."
 }

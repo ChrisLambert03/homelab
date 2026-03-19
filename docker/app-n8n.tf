@@ -20,7 +20,7 @@ resource "docker_container" "n8n" {
     "N8N_HOST=n8n.${var.homlab_domain}",
     "WEBHOOK_URL=https://n8n.${var.homlab_domain}",
     "GENERIC_TIMEZONE=America/New_York",
-    "N8N_ENCRYPTION_KEY=${var.n8n_encryption_key}",
+    "N8N_ENCRYPTION_KEY=${var.n8n_key}",
   ]
 
   volumes {
