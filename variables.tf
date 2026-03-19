@@ -97,7 +97,7 @@ variable "access_list_id" {
   sensitive   = true
 }
 
-variable "n8n_encryption_key" {
+variable "n8n_key" {
   type        = string
   description = "Encryption key for n8n. Must be exactly 32 characters long."
   sensitive   = true
