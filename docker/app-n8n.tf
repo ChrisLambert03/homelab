@@ -11,9 +11,9 @@ resource "docker_image" "n8n" {
 }
 
 resource "docker_container" "n8n" {
-  name    = "n8n"
-  image   = docker_image.n8n.image_id
-  restart = "unless-stopped"
+  name         = "n8n"
+  image        = docker_image.n8n.image_id
+  restart      = "unless-stopped"
   network_mode = "host"
 
   env = [
