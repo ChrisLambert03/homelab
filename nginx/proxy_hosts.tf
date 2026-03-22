@@ -223,3 +223,19 @@ resource "nginxproxymanager_proxy_host" "redis_insight_proxy" {
   hsts_subdomains         = true
   http2_support           = true
 }
+#prometheus proxy host
+resource "nginxproxymanager_proxy_host" "prometheus_proxy" {
+  domain_names            = ["prometheus.${var.homlab_domain}"]
+  access_list_id          = var.access_list_id
+  forward_scheme          = "http"
+  forward_host            = var.lenovo_thinkcentre_ip
+  forward_port            = 9090
+  caching_enabled         = true
+  allow_websocket_upgrade = true
+  block_exploits          = true
+  certificate_id          = var.wildcard_cert_id
+  ssl_forced              = true
+  hsts_enabled            = true
+  hsts_subdomains         = true
+  http2_support           = true
+}
