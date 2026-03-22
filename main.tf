@@ -21,7 +21,7 @@ module "lenovo" {
   providers = {
     docker.lenovo = docker.lenovo
   }
-   homarr_secret_key = var.homarr_secret_key
+  homarr_secret_key = var.homarr_secret_key
 
 }
 
