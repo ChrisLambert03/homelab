@@ -1,6 +1,6 @@
 # Call the docker applications module
 module "docker_apps" {
-  source = "./docker"
+  source = "./docker/workstation"
 
 
   jellyfin_config_path   = var.jellyfin_config_path

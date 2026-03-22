@@ -22,6 +22,12 @@ provider "docker" {
   host     = "ssh://${var.ssh_user}@${var.workstation_ip}:22"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
+#provider on lenvovo ip
+provider "docker" {
+  alias  = "lenovo"
+  host = "ssh://${var.ssh_user}@${var.lenovo_thinkcentre_ip}:22"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
 
 # Configuration-based authentication
 provider "nginxproxymanager" {
