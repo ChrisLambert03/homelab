@@ -1,9 +1,3 @@
-resource "docker_volume" "n8n_data" {
-  # name = "n8n_data"
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
-}
 
 resource "docker_image" "n8n" {
   name         = "docker.n8n.io/n8nio/n8n:latest"
@@ -22,9 +16,10 @@ resource "docker_container" "n8n" {
     "GENERIC_TIMEZONE=America/New_York",
     "N8N_ENCRYPTION_KEY=${var.n8n_key}",
   ]
-
-  volumes {
-    volume_name    = docker_volume.n8n_data.name
-    container_path = "/home/node/.n8n"
+  #replace with mounts
+    mounts {
+    target = "/home/node/.n8n"
+    source = "/home/chris/services/n8n/" 
+    type   = "bind"
   }
 }
