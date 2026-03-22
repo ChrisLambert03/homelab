@@ -24,8 +24,8 @@ provider "docker" {
 }
 #provider on lenvovo ip
 provider "docker" {
-  alias  = "lenovo"
-  host = "ssh://${var.ssh_user}@${var.lenovo_thinkcentre_ip}:22"
+  alias    = "lenovo"
+  host     = "ssh://${var.ssh_user}@${var.lenovo_thinkcentre_ip}:22"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
 
