@@ -17,9 +17,9 @@ resource "docker_container" "n8n" {
     "N8N_ENCRYPTION_KEY=${var.n8n_key}",
   ]
   #replace with mounts
-    mounts {
+  mounts {
     target = "/home/node/.n8n"
-    source = "/home/chris/services/n8n/" 
+    source = "/home/chris/services/n8n/"
     type   = "bind"
   }
 }
