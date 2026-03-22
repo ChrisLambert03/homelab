@@ -1,6 +1,7 @@
 resource "docker_image" "ntfy" {
   provider = docker.lenovo
   name     = "binwiederhier/ntfy:latest"
+  keep_locally = true
 }
 
 resource "docker_container" "ntfy" {

@@ -1,6 +1,7 @@
 resource "docker_image" "homarr" {
   provider = docker.lenovo
   name     = "ghcr.io/homarr-labs/homarr:latest"
+  keep_locally = true
 }
 
 resource "docker_container" "homarr" {
