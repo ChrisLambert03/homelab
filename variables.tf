@@ -102,3 +102,9 @@ variable "n8n_key" {
   description = "Encryption key for n8n. Must be exactly 32 characters long."
   sensitive   = true
 }
+
+variable "homarr_secret_key" {
+  description = "Homarr secret encryption key"
+  type        = string
+  sensitive   = true
+}
