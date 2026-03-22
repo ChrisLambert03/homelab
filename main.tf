@@ -15,6 +15,16 @@ module "docker_apps" {
 
 }
 
+module "lenovo" {
+  source = "./docker/lenovo"
+
+  providers = {
+    docker.lenovo = docker.lenovo
+  }
+   homarr_secret_key = var.homarr_secret_key
+
+}
+
 # call the libvirt module
 module "libvirt" {
   source = "./vms"
