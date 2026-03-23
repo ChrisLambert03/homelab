@@ -32,7 +32,7 @@ resource "docker_container" "ntfy" {
 
   healthcheck {
     test         = ["CMD-SHELL", "wget -q --tries=1 http://localhost:80/v1/health -O - | grep -Eo '\"healthy\"\\s*:\\s*true' || exit 1"]
-    interval     = "60s"
+    interval     = "1m0s"
     timeout      = "10s"
     retries      = 3
     start_period = "40s"
