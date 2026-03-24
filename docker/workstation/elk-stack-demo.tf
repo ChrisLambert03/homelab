@@ -1,0 +1,144 @@
+
+# ── Network ─────────────────────────────────────────────────
+resource "docker_network" "elk" {
+  name   = "elk"
+  driver = "bridge"
+}
+
+# ── Images ──────────────────────────────────────────────────
+resource "docker_image" "elasticsearch" {
+  name         = "docker.elastic.co/elasticsearch/elasticsearch:${var.elk_version}"
+  keep_locally = true
+}
+
+resource "docker_image" "logstash" {
+  name         = "docker.elastic.co/logstash/logstash:${var.elk_version}"
+  keep_locally = true
+}
+
+resource "docker_image" "kibana" {
+  name         = "docker.elastic.co/kibana/kibana:${var.elk_version}"
+  keep_locally = true
+}
+
+resource "docker_image" "alpine" {
+  name         = "alpine:latest"
+  keep_locally = true
+}
+
+# ── Elasticsearch ────────────────────────────────────────────
+resource "docker_container" "elasticsearch" {
+  name    = "elasticsearch"
+  image   = docker_image.elasticsearch.image_id
+  restart = "unless-stopped"
+
+  networks_advanced {
+    name = docker_network.elk.name
+  }
+
+  ports {
+    internal = 9200
+    external = 9200
+  }
+
+  ports {
+    internal = 9300
+    external = 9300
+  }
+
+  env = [
+    "discovery.type=single-node",
+    "xpack.security.enabled=false",
+    "ES_JAVA_OPTS=${var.es_java_opts}"
+  ]
+
+  healthcheck {
+    test         = ["CMD", "curl", "-f", "http://localhost:9200"]
+    interval     = "10s"
+    timeout      = "5s"
+    retries      = 5
+    start_period = "30s"
+  }
+}
+
+# ── Logstash ─────────────────────────────────────────────────
+resource "docker_container" "logstash" {
+  name    = "logstash"
+  image   = docker_image.logstash.image_id
+  restart = "unless-stopped"
+
+  networks_advanced {
+    name = docker_network.elk.name
+  }
+
+  # GELF UDP
+  ports {
+    internal = 12201
+    external = 12201
+    protocol = "udp"
+  }
+
+  # GELF TCP
+  ports {
+    internal = 12201
+    external = 12201
+    protocol = "tcp"
+  }
+
+  env = [
+    "LS_JAVA_OPTS=${var.ls_java_opts}"
+  ]
+
+  volumes {
+    host_path      = var.logstash_conf_path
+    container_path = "/usr/share/logstash/pipeline/logstash.conf"
+    read_only      = true
+  }
+
+  depends_on = [docker_container.elasticsearch]
+}
+
+# ── Kibana ───────────────────────────────────────────────────
+resource "docker_container" "kibana" {
+  name    = "kibana"
+  image   = docker_image.kibana.image_id
+  restart = "unless-stopped"
+
+  networks_advanced {
+    name = docker_network.elk.name
+  }
+
+  ports {
+    internal = 5601
+    external = 5601
+  }
+
+  env = [
+    "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
+  ]
+
+  depends_on = [docker_container.elasticsearch]
+}
+
+# ── Demo logger ──────────────────────────────────────────────
+resource "docker_container" "demo_logger" {
+  name    = "demo-logger"
+  image   = docker_image.alpine.image_id
+  restart = "unless-stopped"
+
+  # No network needed - GELF runs at Docker engine level
+  command = [
+    "sh", "-c",
+    "while true; do echo '{\"level\":\"info\",\"app\":\"elk-demo\",\"msg\":\"hello from ELK\"}'; sleep 2; done"
+  ]
+
+  log_driver = "gelf"
+
+  log_opts = {
+    gelf-address          = "udp://localhost:12201"
+    tag                   = "demo-logger"
+    gelf-compression-type = "none"
+  }
+
+  depends_on = [docker_container.logstash]
+} 
