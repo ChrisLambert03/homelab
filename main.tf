@@ -44,6 +44,7 @@ module "nginx" {
   wildcard_cert_id      = var.wildcard_cert_id
   jellyfin_macvlan_ip   = var.jellyfin_macvlan_ip
   access_list_id        = var.access_list_id
+  access_list_id_2      = var.access_list_id_2
 
   # pass through the container id exported by the docker module (optional use)
   #  nginx_manager_container_id = module.docker_apps.nginx_proxy_manager_container_id

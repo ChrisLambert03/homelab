@@ -2,7 +2,7 @@
 
 resource "nginxproxymanager_proxy_host" "jellyfin_proxy" {
   domain_names            = ["jellyfin.${var.homlab_domain}"]
-  access_list_id          = var.access_list_id
+  access_list_id          = var.access_list_id_2
   forward_scheme          = "http"
   forward_host            = var.jellyfin_macvlan_ip
   forward_port            = 8096

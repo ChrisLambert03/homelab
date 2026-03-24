@@ -96,6 +96,12 @@ variable "access_list_id" {
   description = "ID of the access list in Nginx Proxy Manager to use for the homelab services)"
   sensitive   = true
 }
+# second acces list id
+variable "access_list_id_2" {
+  type        = number
+  description = "ID of the second access list in Nginx Proxy Manager to use for the homelab services)"
+  sensitive   = true
+}
 
 variable "n8n_key" {
   type        = string
