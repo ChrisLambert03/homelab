@@ -1,0 +1,15 @@
+{
+  "tlsverify": true,
+  "tlscacert": "/etc/docker/certs/ca.pem",
+  "tlscert": "/etc/docker/certs/server-cert.pem",
+  "tlskey": "/etc/docker/certs/server-key.pem",
+  "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"],
+  "log-driver": "gelf",
+  "log-opts": {
+    "gelf-address": "udp://{{ hostvars['workstation']['ansible_host'] }}:12201",
+    "gelf-compression-type": "none",
+    "tag": "{{ inventory_hostname }}/{{ '{{' }}.Name{{ '}}' }}",
+    "mode": "non-blocking",
+    "max-buffer-size": "4m"
+  }
+}

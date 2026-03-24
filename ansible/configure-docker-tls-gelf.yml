@@ -1,5 +1,5 @@
 ---
-- name: Configure Docker TLS
+- name: Configure Docker TLS and GELF logging
   hosts: docker_hosts
   become: true
 
@@ -14,9 +14,9 @@
         state: restarted
 
   tasks:
-    - name: Copy Docker daemon.json
-      ansible.builtin.copy:
-        src: daemon.json
+    - name: Template Docker daemon.json
+      ansible.builtin.template:
+        src: daemon.json.j2
         dest: /etc/docker/daemon.json
         mode: "0644"
       notify: Restart Docker
