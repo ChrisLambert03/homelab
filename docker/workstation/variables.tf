@@ -42,3 +42,26 @@ variable "homlab_domain" {
   type        = string
   description = "Domain name for the homelab (e.g. homelab.local)"
 }
+
+############# elk test vars
+
+variable "elk_version" {
+  description = "Version pinned across all ELK images"
+  default     = "8.17.0"
+}
+
+variable "logstash_conf_path" {
+  description = "Absolute path to logstash.conf on your host"
+  default     = "/home/chris/services/elk/logstash/logstash.conf"
+}
+
+variable "es_java_opts" {
+  description = "Elasticsearch JVM heap"
+  default     = "-Xms512m -Xmx512m"
+}
+
+variable "ls_java_opts" {
+  description = "Logstash JVM heap"
+  default     = "-Xms256m -Xmx256m"
+}
+
