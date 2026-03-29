@@ -62,4 +62,10 @@ resource "docker_container" "jellyfin" {
     type   = "bind"
   }
 
+  mounts {
+    target = "/data/wd_drive"
+    source = var.wd_drive_path
+    type   = "bind"
+  }
+
 }

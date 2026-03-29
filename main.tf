@@ -9,6 +9,7 @@ module "docker_apps" {
   blue_drive_path        = var.blue_drive_path
   black_drive_path       = var.black_drive_path
   nginx_data_path        = var.nginx_data_path
+  wd_drive_path          = var.wd_drive_path
   nginx_letsencrypt_path = var.nginx_letsencrypt_path
   homlab_domain          = var.homlab_domain
   n8n_key                = var.n8n_key

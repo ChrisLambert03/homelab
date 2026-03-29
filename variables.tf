@@ -24,6 +24,12 @@ variable "black_drive_path" {
   sensitive   = true
 }
 
+variable "wd_drive_path" {
+  type        = string
+  description = "Path on the Thinkmate where wd drive media is stored"
+  sensitive   = true
+}
+
 variable "jellyfin_cache_path" {
   type        = string
   description = "Path on the Thinkmate where jellyfin cache is stored"
