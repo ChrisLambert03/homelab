@@ -64,13 +64,19 @@ variable "logstash_conf_path" {
 
 variable "es_java_opts" {
   description = "Elasticsearch JVM heap"
-  default     = "-Xms512m -Xmx512m"
+  default     = "-Xms16g -Xmx16g"
   type        = string
 }
 
 variable "ls_java_opts" {
   description = "Logstash JVM heap"
-  default     = "-Xms256m -Xmx256m"
+  default     = "-Xms1g -Xmx1g"
+  type        = string
+}
+
+variable "elasticsearch_data_path" {
+  description = "Absolute path to elasticsearch data directory on your host"
+  default     = "/home/chris/services/elk/elasticsearch"
   type        = string
 }
 

@@ -35,12 +35,12 @@ resource "docker_container" "elasticsearch" {
   networks_advanced {
     name = docker_network.elk.name
   }
-
+  # Elasticsearch REST API
   ports {
     internal = 9200
     external = 9200
   }
-
+  # Elasticsearch transport (for clustering - not needed in single-node mode, but we'll expose it anyway)
   ports {
     internal = 9300
     external = 9300
@@ -118,27 +118,4 @@ resource "docker_container" "kibana" {
   ]
 
   depends_on = [docker_container.elasticsearch]
-}
-
-# ── Demo logger ──────────────────────────────────────────────
-resource "docker_container" "demo_logger" {
-  name    = "demo-logger"
-  image   = docker_image.alpine.image_id
-  restart = "unless-stopped"
-
-  # No network needed - GELF runs at Docker engine level
-  command = [
-    "sh", "-c",
-    "while true; do echo '{\"level\":\"info\",\"app\":\"elk-demo\",\"msg\":\"hello from ELK\"}'; sleep 2; done"
-  ]
-
-  log_driver = "gelf"
-
-  log_opts = {
-    gelf-address          = "udp://localhost:12201"
-    tag                   = "demo-logger"
-    gelf-compression-type = "none"
-  }
-
-  depends_on = [docker_container.logstash]
 } 
