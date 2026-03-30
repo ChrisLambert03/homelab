@@ -118,4 +118,4 @@ resource "docker_container" "kibana" {
   ]
 
   depends_on = [docker_container.elasticsearch]
-} 
+}
