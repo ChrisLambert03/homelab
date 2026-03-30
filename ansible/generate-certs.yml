@@ -24,6 +24,7 @@
       community.crypto.openssl_privatekey:
         path: "{{ ca_dir }}/ca-key.pem"
         mode: "0600"
+        force: true
 
     - name: Generate CA CSR
       community.crypto.openssl_csr:
@@ -34,6 +35,7 @@
         basic_constraints_critical: true
         key_usage: [keyCertSign, cRLSign]
         key_usage_critical: true
+        force: true
 
     - name: Generate CA certificate
       community.crypto.x509_certificate:
@@ -42,11 +44,14 @@
         privatekey_path: "{{ ca_dir }}/ca-key.pem"
         provider: selfsigned
         selfsigned_not_after: "{{ ca_expiry }}"
+        force: true
 
     - name: Generate server private key
       community.crypto.openssl_privatekey:
         path: "{{ ca_dir }}/{{ item }}-server-key.pem"
         mode: "0600"
+        force: true
+
       loop: "{{ hosts_to_cert }}"
 
     - name: Generate server CSR
@@ -61,6 +66,7 @@
           - "DNS:localhost"
           - "IP:127.0.0.1"
           - "IP:{{ hostvars[item]['ansible_host'] | default('127.0.0.1') }}"
+        force: true
       loop: "{{ hosts_to_cert }}"
 
     - name: Sign server cert with CA
@@ -71,12 +77,14 @@
         ownca_privatekey_path: "{{ ca_dir }}/ca-key.pem"
         provider: ownca
         ownca_not_after: "{{ cert_expiry }}"
+        force: true
       loop: "{{ hosts_to_cert }}"
 
     - name: Generate client private key
       community.crypto.openssl_privatekey:
         path: "{{ ca_dir }}/client-key.pem"
         mode: "0600"
+        force: true
 
     - name: Generate client CSR
       community.crypto.openssl_csr:
@@ -85,6 +93,7 @@
         common_name: "docker-client"
         key_usage: [digitalSignature]
         extended_key_usage: [clientAuth]
+        force: true
 
     - name: Sign client cert with CA
       community.crypto.x509_certificate:
@@ -94,6 +103,7 @@
         ownca_privatekey_path: "{{ ca_dir }}/ca-key.pem"
         provider: ownca
         ownca_not_after: "{{ cert_expiry }}"
+        force: true
 
     - name: Set ownership of cert directory
       ansible.builtin.file:
