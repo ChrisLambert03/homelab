@@ -23,7 +23,21 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 
 ### 📝 Recent Changes
 
-Recently configured Ansible playbooks to automate infrastructure management workflows:
+Recently expanded infrastructure with comprehensive logging and new services:
+
+**Logging & Monitoring:**
+
+- **Docker Global Log Driver** - Implementing Docker's built-in logging drivers for centralized container log management
+- **ELK Stack Demo** - Deployed Elasticsearch, Logstash, and Kibana for log aggregation, processing, and visualization
+- **configure-docker-tls-gelf.yml** - New playbook to configure Docker daemon with TLS and GELF logging driver for sending logs to the ELK stack
+
+**New Services:**
+
+- **n8n** - Workflow automation platform, now integrated with infrastructure
+- **Redis** - In-memory data store with persistence configuration
+- **Redis Insight** - Redis GUI for monitoring and data inspection
+
+**Existing Ansible Playbooks:**
 
 - **generate-certs.yml** - Generates TLS certificates for Docker hosts
 - **deploy-certs.yml** - Deploys TLS certificates to Docker hosts
@@ -34,7 +48,8 @@ Recently configured Ansible playbooks to automate infrastructure management work
 
 ### 🚀 Currently Working On
 
-- **TLS Authentication for Docker Sockets** - Implementing secure TLS authentication across Docker hosts to enable encrypted remote communication with the Docker daemon
+- **Docker Logging Infrastructure** - Fine-tuning global log driver configuration with ELK stack for centralized log management and demo purposes
+- **n8n + Redis Integration** - Optimizing workflow automation platform with Redis backend
 - **Terraform Migration** - Continuing to migrate services running on other hosts in the homelab to Terraform-managed infrastructure for improved consistency and automation
 
 ## 📦 Terraform-Managed Services
@@ -44,27 +59,72 @@ Recently configured Ansible playbooks to automate infrastructure management work
 #### **Jellyfin**
 
 - **Purpose**: Open-source media server for streaming movies, TV shows, and music
-- **Configuration**: [docker/app-jellyfin.tf](docker/app-jellyfin.tf)
+- **Configuration**: [docker/workstation/app-jellyfin.tf](docker/workstation/app-jellyfin.tf)
 
 #### **Nginx Proxy Manager**
 
 - **Purpose**: Central reverse proxy and SSL/TLS termination
-- **Configuration**: [docker/app-nginx.tf](docker/app-nginx.tf) and [nginx/proxy_hosts.tf](nginx/proxy_hosts.tf)
+- **Configuration**: [docker/workstation/app-nginx.tf](docker/workstation/app-nginx.tf) and [nginx/proxy_hosts.tf](nginx/proxy_hosts.tf)
 
 #### **Radarr**
 
 - **Purpose**: Movie collection manager and automation tool
-- **Configuration**: [docker/app-radarr.tf](docker/app-radarr.tf)
+- **Configuration**: [docker/workstation/app-radarr.tf](docker/workstation/app-radarr.tf)
 
 #### **Sonarr**
 
 - **Purpose**: TV show collection manager and automation tool
-- **Configuration**: [docker/app-sonarr.tf](docker/app-sonarr.tf)
+- **Configuration**: [docker/workstation/app-sonarr.tf](docker/workstation/app-sonarr.tf)
 
 #### **Tdarr**
 
 - **Purpose**: Distributed transcoding and media optimization
-- **Configuration**: [docker/app-tdarr.tf](docker/app-tdarr.tf)
+- **Configuration**: [docker/workstation/app-tdarr.tf](docker/workstation/app-tdarr.tf)
+
+#### **Prowlarr**
+
+- **Purpose**: Indexer manager for Radarr and Sonarr
+- **Configuration**: [docker/workstation/app-prowlarr.tf](docker/workstation/app-prowlarr.tf)
+
+#### **n8n**
+
+- **Purpose**: Workflow automation platform for connecting applications and automating tasks
+- **Configuration**: [docker/workstation/app-n8n.tf](docker/workstation/app-n8n.tf)
+- **Integration**: Connected to Redis backend for job queuing and state management
+
+#### **Redis**
+
+- **Purpose**: In-memory data store providing caching and state management for n8n and other services
+- **Configuration**: [docker/workstation/app-redis.tf](docker/workstation/app-redis.tf)
+- **Features**: Persistence enabled with RDB snapshots and AOF logging
+
+#### **Redis Insight**
+
+- **Purpose**: GUI-based Redis database management and monitoring tool
+- **Configuration**: [docker/workstation/app-redis-insight.tf](docker/workstation/app-redis-insight.tf)
+- **Integration**: Connected to Redis network for visualization and inspection
+
+#### **Homarr**
+
+- **Purpose**: A simple, yet powerful dashboard to access all your favorite applications
+- **Configuration**: [docker/lenovo/app-homarr.tf](docker/lenovo/app-homarr.tf)
+
+#### **Ntfy**
+
+- **Purpose**: Send push notifications to your phone or desktop
+- **Configuration**: [docker/lenovo/app-ntfy.tf](docker/lenovo/app-ntfy.tf)
+
+### Logging Infrastructure
+
+#### **ELK Stack Demo**
+
+- **Purpose**: Centralized logging with Elasticsearch, Logstash, and Kibana for container log aggregation, processing, and visualization
+- **Configuration**: [docker/workstation/elk-stack-demo.tf](docker/workstation/elk-stack-demo.tf)
+- **Components**:
+  - **Elasticsearch**: Search and analytics engine for logs
+  - **Logstash**: Log processing and transformation pipeline
+  - **Kibana**: Web UI for log exploration and visualization
+- **Integration**: Docker global log driver sends container logs to Logstash via GELF protocol
 
 ### Virtual Machines
 
