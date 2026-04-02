@@ -46,6 +46,12 @@ resource "docker_container" "elasticsearch" {
     external = 9300
   }
 
+  mounts {
+    target = "/usr/share/elasticsearch/data"
+    source = var.elasticsearch_data_path
+    type   = "bind"
+  }
+
   env = [
     "discovery.type=single-node",
     "xpack.security.enabled=false",
