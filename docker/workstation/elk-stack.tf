@@ -65,6 +65,10 @@ resource "docker_container" "elasticsearch" {
     retries      = 5
     start_period = "30s"
   }
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
 }
 
 # ── Logstash ─────────────────────────────────────────────────
@@ -102,6 +106,10 @@ resource "docker_container" "logstash" {
   }
 
   depends_on = [docker_container.elasticsearch]
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
 }
 
 # ── Kibana ───────────────────────────────────────────────────
@@ -124,4 +132,8 @@ resource "docker_container" "kibana" {
   ]
 
   depends_on = [docker_container.elasticsearch]
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
 }

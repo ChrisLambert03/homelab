@@ -22,4 +22,8 @@ resource "docker_container" "prowlarr" {
     source = "/home/chris/services/prowlarr/config"
     type   = "bind"
   }
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
 }

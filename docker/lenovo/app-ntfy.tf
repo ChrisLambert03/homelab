@@ -37,4 +37,8 @@ resource "docker_container" "ntfy" {
     retries      = 3
     start_period = "40s"
   }
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
 }

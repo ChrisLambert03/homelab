@@ -28,4 +28,8 @@ resource "docker_container" "homarr" {
   env = [
     "SECRET_ENCRYPTION_KEY=${var.homarr_secret_key}"
   ]
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
 }

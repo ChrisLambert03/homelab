@@ -30,5 +30,9 @@ resource "docker_container" "nginx_proxy_manager" {
     source = var.nginx_letsencrypt_path
     type   = "bind"
   }
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
 }
 
