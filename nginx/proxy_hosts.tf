@@ -2,7 +2,7 @@
 
 resource "nginxproxymanager_proxy_host" "jellyfin_proxy" {
   domain_names            = ["jellyfin.${var.homlab_domain}"]
-  access_list_id          = var.access_list_id_2
+  access_list_id          = var.access_list_id_2 # jellyfin access list
   forward_scheme          = "http"
   forward_host            = var.jellyfin_macvlan_ip
   forward_port            = 8096
@@ -230,6 +230,23 @@ resource "nginxproxymanager_proxy_host" "prometheus_proxy" {
   forward_scheme          = "http"
   forward_host            = var.lenovo_thinkcentre_ip
   forward_port            = 9090
+  caching_enabled         = true
+  allow_websocket_upgrade = true
+  block_exploits          = true
+  certificate_id          = var.wildcard_cert_id
+  ssl_forced              = true
+  hsts_enabled            = true
+  hsts_subdomains         = true
+  http2_support           = true
+}
+
+#kibana proxy host
+resource "nginxproxymanager_proxy_host" "kibana_proxy" {
+  domain_names            = ["kibana.${var.homlab_domain}"]
+  access_list_id          = var.access_list_id
+  forward_scheme          = "http"
+  forward_host            = var.workstation_ip
+  forward_port            = 5601
   caching_enabled         = true
   allow_websocket_upgrade = true
   block_exploits          = true
