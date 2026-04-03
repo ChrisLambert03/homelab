@@ -22,4 +22,8 @@ resource "docker_container" "n8n" {
     source = "/home/chris/services/n8n/"
     type   = "bind"
   }
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
 }

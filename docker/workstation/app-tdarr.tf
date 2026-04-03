@@ -60,6 +60,10 @@ resource "docker_container" "tdarr_server" {
     source = "/mnt/wd_drive/data" # Your WD HDD library
     type   = "bind"
   }
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
 }
 
 
@@ -128,5 +132,9 @@ resource "docker_container" "tdarr_node" {
     target = "/wd_media"
     source = "/mnt/wd_drive/data"
     type   = "bind"
+  }
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
   }
 }

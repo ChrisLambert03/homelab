@@ -68,4 +68,7 @@ resource "docker_container" "jellyfin" {
     type   = "bind"
   }
 
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
 }

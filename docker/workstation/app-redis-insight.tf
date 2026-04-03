@@ -32,4 +32,8 @@ resource "docker_container" "redisinsight" {
   depends_on = [
     docker_container.redis
   ]
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
 }

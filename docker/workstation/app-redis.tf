@@ -48,4 +48,8 @@ resource "docker_container" "redis" {
     retries      = 5
     start_period = "5s"
   }
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
 }

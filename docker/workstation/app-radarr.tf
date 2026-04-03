@@ -34,5 +34,9 @@ resource "docker_container" "radarr" {
     source = "/mnt/black_drive/data"
     type   = "bind"
   }
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
 }
 
