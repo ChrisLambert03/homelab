@@ -128,7 +128,9 @@ resource "docker_container" "kibana" {
   }
 
   env = [
-    "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
+    "ELASTICSEARCH_HOSTS=http://elasticsearch:9200",
+    "LOGGING_ROOT_LEVEL=warn",
+    "SERVER_PUBLICBASEURL=https://kibana.${var.homlab_domain}"
   ]
 
   depends_on = [docker_container.elasticsearch]
