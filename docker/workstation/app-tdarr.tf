@@ -76,10 +76,10 @@ resource "docker_image" "tdarr_node" {
 }
 
 resource "docker_container" "tdarr_node" {
-  provider     = docker.workstation
-  name    = "tdarr-node"
-  image   = docker_image.tdarr_node.image_id
-  restart = "unless-stopped"
+  provider = docker.workstation
+  name     = "tdarr-node"
+  image    = docker_image.tdarr_node.image_id
+  restart  = "unless-stopped"
 
   # Changed to host mode
   network_mode = "host"

@@ -7,9 +7,9 @@ resource "docker_image" "jellyfin" {
 # 1. The Macvlan Network (Keep this as is)
 resource "docker_network" "jellyfin_macvlan" {
   provider = docker.workstation
-  name    = "jellyfin_macvlan"
-  driver  = "macvlan"
-  options = { parent = "enp5s0" }
+  name     = "jellyfin_macvlan"
+  driver   = "macvlan"
+  options  = { parent = "enp5s0" }
   ipam_config {
     subnet  = "10.0.0.0/24"
     gateway = "10.0.0.1"
@@ -19,9 +19,9 @@ resource "docker_network" "jellyfin_macvlan" {
 # 2. The Jellyfin Container
 resource "docker_container" "jellyfin" {
   provider = docker.workstation
-  name    = "jellyfin"
-  image   = docker_image.jellyfin.image_id
-  restart = "unless-stopped"
+  name     = "jellyfin"
+  image    = docker_image.jellyfin.image_id
+  restart  = "unless-stopped"
 
   networks_advanced {
     name         = docker_network.jellyfin_macvlan.name

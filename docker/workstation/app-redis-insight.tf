@@ -5,18 +5,18 @@ resource "docker_image" "redisinsight" {
 }
 
 resource "docker_volume" "redisinsight_data" {
-  provider     = docker.workstation
-  name = "redisinsight_data"
+  provider = docker.workstation
+  name     = "redisinsight_data"
   # lifecycle {
   #   prevent_destroy = true
   # }
 }
 
 resource "docker_container" "redisinsight" {
-  provider     = docker.workstation
-  name    = "redisinsight"
-  image   = docker_image.redisinsight.image_id
-  restart = "unless-stopped"
+  provider = docker.workstation
+  name     = "redisinsight"
+  image    = docker_image.redisinsight.image_id
+  restart  = "unless-stopped"
 
   ports {
     internal = 5540

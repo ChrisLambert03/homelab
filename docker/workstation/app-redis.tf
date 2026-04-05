@@ -1,8 +1,8 @@
 
 resource "docker_network" "redis_net" {
-  provider     = docker.workstation
-  name   = "n8n-redis-net"
-  driver = "bridge"
+  provider = docker.workstation
+  name     = "n8n-redis-net"
+  driver   = "bridge"
 }
 
 resource "docker_image" "redis" {
@@ -12,18 +12,18 @@ resource "docker_image" "redis" {
 }
 
 resource "docker_volume" "redis_data" {
-  provider     = docker.workstation
-  name = "redis_data"
+  provider = docker.workstation
+  name     = "redis_data"
   # lifecycle {
   #   prevent_destroy = true
   # }
 }
 
 resource "docker_container" "redis" {
-  provider     = docker.workstation
-  name    = "redis"
-  image   = docker_image.redis.image_id
-  restart = "unless-stopped"
+  provider = docker.workstation
+  name     = "redis"
+  image    = docker_image.redis.image_id
+  restart  = "unless-stopped"
   # sets redis to save the DB to disk if at least 1 key changes within 300 seconds (5 minutes)
   command = [
     "redis-server",
