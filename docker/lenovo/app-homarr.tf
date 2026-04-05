@@ -24,7 +24,7 @@ resource "docker_container" "homarr" {
     host_path      = "/home/chris/services/homarr/homarr/appdata"
     container_path = "/appdata"
   }
-    volumes {
+  volumes {
     host_path      = "/etc/localtime"
     container_path = "/etc/localtime"
     read_only      = true
