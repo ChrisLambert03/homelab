@@ -40,7 +40,7 @@ resource "docker_container" "portainer" {
     container_path = "/etc/timezone"
     read_only      = true
   }
-    lifecycle {
+  lifecycle {
     ignore_changes = [log_driver, log_opts]
   }
 }
