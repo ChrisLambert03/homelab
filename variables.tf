@@ -120,3 +120,9 @@ variable "homarr_secret_key" {
   type        = string
   sensitive   = true
 }
+
+variable "postgres_password" {
+  description = "Guacamole database password"
+  type        = string
+  sensitive   = true
+}
