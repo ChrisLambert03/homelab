@@ -10,11 +10,6 @@ variable "homarr_log_level" {
   default     = "warn"
 }
 
-variable "timezone" {
-  description = "Timezone for the containers"
-  type        = string
-}
-
 # ─── Image versions ────────────────────────────────────────────────────────────
 
 variable "guacamole_version" {
