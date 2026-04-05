@@ -1,9 +1,11 @@
 resource "docker_image" "redisinsight" {
+  provider     = docker.workstation
   name         = "redis/redisinsight:latest"
   keep_locally = true
 }
 
 resource "docker_volume" "redisinsight_data" {
+  provider     = docker.workstation
   name = "redisinsight_data"
   # lifecycle {
   #   prevent_destroy = true
@@ -11,6 +13,7 @@ resource "docker_volume" "redisinsight_data" {
 }
 
 resource "docker_container" "redisinsight" {
+  provider     = docker.workstation
   name    = "redisinsight"
   image   = docker_image.redisinsight.image_id
   restart = "unless-stopped"

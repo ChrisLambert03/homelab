@@ -1,11 +1,13 @@
 # --- Images ---
 resource "docker_image" "radarr" {
+  provider     = docker.workstation
   name         = "lscr.io/linuxserver/radarr:latest"
   keep_locally = true
 }
 
 # --- Radarr Container ---
 resource "docker_container" "radarr" {
+  provider     = docker.workstation
   name         = "radarr"
   image        = docker_image.radarr.image_id
   restart      = "unless-stopped"

@@ -1,10 +1,12 @@
 
 resource "docker_image" "n8n" {
+  provider     = docker.workstation
   name         = "docker.n8n.io/n8nio/n8n:latest"
   keep_locally = true
 }
 
 resource "docker_container" "n8n" {
+  provider     = docker.workstation
   name         = "n8n"
   image        = docker_image.n8n.image_id
   restart      = "unless-stopped"

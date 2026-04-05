@@ -1,5 +1,6 @@
 # Configure the Docker provider to connect to a remote Docker host via SSH
 provider "docker" {
+  alias    = "workstation"
   host     = "ssh://${var.ssh_user}@${var.workstation_ip}:22"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
@@ -9,6 +10,13 @@ provider "docker" {
   host     = "ssh://${var.ssh_user}@${var.lenovo_thinkcentre_ip}:22"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
+# provider on optiplex ip
+provider "docker" {
+  alias    = "optiplex"
+  host     = "ssh://${var.ssh_user}@${var.optiplex9020_ip}:22"
+  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+}
+
 
 # Configuration-based authentication
 provider "nginxproxymanager" {

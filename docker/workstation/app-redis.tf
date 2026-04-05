@@ -1,15 +1,18 @@
 
 resource "docker_network" "redis_net" {
+  provider     = docker.workstation
   name   = "n8n-redis-net"
   driver = "bridge"
 }
 
 resource "docker_image" "redis" {
+  provider     = docker.workstation
   name         = "redis:latest"
   keep_locally = true
 }
 
 resource "docker_volume" "redis_data" {
+  provider     = docker.workstation
   name = "redis_data"
   # lifecycle {
   #   prevent_destroy = true
@@ -17,6 +20,7 @@ resource "docker_volume" "redis_data" {
 }
 
 resource "docker_container" "redis" {
+  provider     = docker.workstation
   name    = "redis"
   image   = docker_image.redis.image_id
   restart = "unless-stopped"
