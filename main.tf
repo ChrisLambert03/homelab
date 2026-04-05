@@ -23,6 +23,7 @@ module "lenovo" {
     docker.lenovo = docker.lenovo
   }
   homarr_secret_key = var.homarr_secret_key
+  postgres_password = var.postgres_password
 
 }
 
