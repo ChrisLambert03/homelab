@@ -7,10 +7,10 @@ resource "docker_image" "nginx_proxy_manager" {
 
 # 2. Nginx Proxy Manager Container
 resource "docker_container" "nginx_proxy_manager" {
-  provider     = docker.workstation
-  name    = "nginx-proxy-manager"
-  image   = docker_image.nginx_proxy_manager.image_id
-  restart = "unless-stopped"
+  provider = docker.workstation
+  name     = "nginx-proxy-manager"
+  image    = docker_image.nginx_proxy_manager.image_id
+  restart  = "unless-stopped"
 
   # Host mode means it uses the Thinkmate's IP directly.
   # maps 80, 443, and 81 automatically to the host
