@@ -24,6 +24,17 @@ resource "docker_container" "homarr" {
     host_path      = "/home/chris/services/homarr/homarr/appdata"
     container_path = "/appdata"
   }
+    volumes {
+    host_path      = "/etc/localtime"
+    container_path = "/etc/localtime"
+    read_only      = true
+  }
+
+  volumes {
+    host_path      = "/etc/timezone"
+    container_path = "/etc/timezone"
+    read_only      = true
+  }
 
   env = [
     "SECRET_ENCRYPTION_KEY=${var.homarr_secret_key}",
