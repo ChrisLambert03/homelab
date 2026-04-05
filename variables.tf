@@ -126,3 +126,14 @@ variable "postgres_password" {
   type        = string
   sensitive   = true
 }
+
+variable "portainer_volume_name" {
+  description = "Name of the Portainer data volume"
+  type        = string
+  default     = "portainer_data"
+}
+
+variable "timezone" {
+  description = "Timezone for the containers"
+  type        = string
+}
