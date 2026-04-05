@@ -19,6 +19,17 @@ module "docker_apps" {
 
 }
 
+# Call the optiplex module
+module "optiplex" {
+  source = "./docker/optiplex"
+
+  providers = {
+    docker.optiplex = docker.optiplex
+  }
+
+  portainer_volume_name = var.portainer_volume_name
+}
+
 module "lenovo" {
   source = "./docker/lenovo"
 
@@ -27,6 +38,7 @@ module "lenovo" {
   }
   homarr_secret_key = var.homarr_secret_key
   postgres_password = var.postgres_password
+  timezone          = var.timezone
 
 }
 
