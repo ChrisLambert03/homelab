@@ -26,7 +26,8 @@ resource "docker_container" "homarr" {
   }
 
   env = [
-    "SECRET_ENCRYPTION_KEY=${var.homarr_secret_key}"
+    "SECRET_ENCRYPTION_KEY=${var.homarr_secret_key}",
+    "LOG_LEVEL=${var.homarr_log_level}"
   ]
 
   lifecycle {
