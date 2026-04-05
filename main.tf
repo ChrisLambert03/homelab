@@ -2,7 +2,10 @@
 module "docker_apps" {
   source = "./docker/workstation"
 
-
+  providers = {
+    docker.workstation = docker.workstation
+  }
+  
   jellyfin_config_path   = var.jellyfin_config_path
   jellyfin_cache_path    = var.jellyfin_cache_path
   jellyfin_macvlan_ip    = var.jellyfin_macvlan_ip

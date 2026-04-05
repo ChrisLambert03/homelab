@@ -1,33 +1,39 @@
 
 # ── Network ─────────────────────────────────────────────────
 resource "docker_network" "elk" {
+  provider     = docker.workstation
   name   = "elk"
   driver = "bridge"
 }
 
 # ── Images ──────────────────────────────────────────────────
 resource "docker_image" "elasticsearch" {
+  provider     = docker.workstation
   name         = "docker.elastic.co/elasticsearch/elasticsearch:${var.elk_version}"
   keep_locally = true
 }
 
 resource "docker_image" "logstash" {
+  provider     = docker.workstation
   name         = "docker.elastic.co/logstash/logstash:${var.elk_version}"
   keep_locally = true
 }
 
 resource "docker_image" "kibana" {
+  provider     = docker.workstation
   name         = "docker.elastic.co/kibana/kibana:${var.elk_version}"
   keep_locally = true
 }
 
 resource "docker_image" "alpine" {
+  provider     = docker.workstation
   name         = "alpine:latest"
   keep_locally = true
 }
 
 # ── Elasticsearch ────────────────────────────────────────────
 resource "docker_container" "elasticsearch" {
+  provider     = docker.workstation
   name    = "elasticsearch"
   image   = docker_image.elasticsearch.image_id
   restart = "unless-stopped"
@@ -73,6 +79,7 @@ resource "docker_container" "elasticsearch" {
 
 # ── Logstash ─────────────────────────────────────────────────
 resource "docker_container" "logstash" {
+  provider     = docker.workstation
   name    = "logstash"
   image   = docker_image.logstash.image_id
   restart = "unless-stopped"
@@ -114,6 +121,7 @@ resource "docker_container" "logstash" {
 
 # ── Kibana ───────────────────────────────────────────────────
 resource "docker_container" "kibana" {
+  provider     = docker.workstation
   name    = "kibana"
   image   = docker_image.kibana.image_id
   restart = "unless-stopped"

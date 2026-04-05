@@ -1,11 +1,13 @@
 # 1. Image for Nginx Proxy Manager
 resource "docker_image" "nginx_proxy_manager" {
+  provider     = docker.workstation
   name         = "jc21/nginx-proxy-manager:latest"
   keep_locally = true
 }
 
 # 2. Nginx Proxy Manager Container
 resource "docker_container" "nginx_proxy_manager" {
+  provider     = docker.workstation
   name    = "nginx-proxy-manager"
   image   = docker_image.nginx_proxy_manager.image_id
   restart = "unless-stopped"

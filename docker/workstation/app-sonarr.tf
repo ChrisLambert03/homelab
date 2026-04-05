@@ -1,10 +1,12 @@
 # --- Sonarr Image ---
 resource "docker_image" "sonarr" {
+  provider     = docker.workstation
   name         = "lscr.io/linuxserver/sonarr:latest"
   keep_locally = true
 }
 # --- Sonarr Container ---
 resource "docker_container" "sonarr" {
+  provider     = docker.workstation
   name         = "sonarr"
   image        = docker_image.sonarr.image_id
   restart      = "unless-stopped"

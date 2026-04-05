@@ -1,11 +1,13 @@
 # 1. Pull the Prowlarr Image
 resource "docker_image" "prowlarr" {
+  provider     = docker.workstation
   name         = "lscr.io/linuxserver/prowlarr:latest"
   keep_locally = true
 }
 
 # 2. Prowlarr Container
 resource "docker_container" "prowlarr" {
+  provider     = docker.workstation
   name         = "prowlarr"
   image        = docker_image.prowlarr.image_id
   restart      = "unless-stopped"
