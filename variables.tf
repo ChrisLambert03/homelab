@@ -137,3 +137,15 @@ variable "timezone" {
   description = "Timezone for the containers"
   type        = string
 }
+
+variable "elastic_password" {
+  description = "Password for the elastic user in Elasticsearch"
+  type        = string
+  sensitive   = true
+}
+
+variable "kibana_secret_key" {
+  description = "Kibana secret encryption key"
+  type        = string
+  sensitive   = true
+}
