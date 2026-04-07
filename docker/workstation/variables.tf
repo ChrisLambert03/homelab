@@ -52,7 +52,7 @@ variable "homlab_domain" {
 
 variable "elk_version" {
   description = "Version pinned across all ELK images"
-  default     = "8.17.0"
+  default     = "9.3.2"
   type        = string
 }
 
@@ -78,5 +78,23 @@ variable "elasticsearch_data_path" {
   description = "Absolute path to elasticsearch data directory on your host"
   default     = "/home/chris/services/elk/elasticsearch"
   type        = string
+}
+
+variable "elastic_password" {
+  description = "Password for the elastic user in Elasticsearch"
+  type        = string
+  sensitive   = true
+}
+
+variable "kibana_secret_key" {
+  description = "Kibana secret encryption key"
+  type        = string
+  sensitive   = true
+}
+
+variable "kibana_system_password" {
+  description = "Password for the kibana_system user in Elasticsearch"
+  type        = string
+  default = "homelabpassword"
 }
 
