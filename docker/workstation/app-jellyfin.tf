@@ -22,10 +22,18 @@ resource "docker_container" "jellyfin" {
   name     = "jellyfin"
   image    = docker_image.jellyfin.image_id
   restart  = "unless-stopped"
+  runtime = "nvidia"
 
   networks_advanced {
     name         = docker_network.jellyfin_macvlan.name
     ipv4_address = var.jellyfin_macvlan_ip
+  }
+
+  # NVIDIA GPU support
+  device_requests {
+    driver       = "nvidia"
+    count        = -1  # -1 means all GPUs
+    capabilities = ["gpu", "compute", "utility", "video"]
   }
 
   env = [
@@ -33,7 +41,9 @@ resource "docker_container" "jellyfin" {
     "PGID=1000",
     "TZ=America/New_York",
     # FIX: Point the URL to the container's own IP
-    "JELLYFIN_PublishedServerUrl=http://${var.jellyfin_macvlan_ip}:8096"
+    "JELLYFIN_PublishedServerUrl=http://${var.jellyfin_macvlan_ip}:8096",
+    "NVIDIA_VISIBLE_DEVICES=all",
+    "NVIDIA_DRIVER_CAPABILITIES=all",
   ]
 
   # Config folder for metadata/database
