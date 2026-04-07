@@ -133,11 +133,6 @@ variable "portainer_volume_name" {
   default     = "portainer_data"
 }
 
-variable "timezone" {
-  description = "Timezone for the containers"
-  type        = string
-}
-
 variable "elastic_password" {
   description = "Password for the elastic user in Elasticsearch"
   type        = string

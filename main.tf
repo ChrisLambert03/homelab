@@ -16,8 +16,8 @@ module "docker_apps" {
   nginx_letsencrypt_path = var.nginx_letsencrypt_path
   homlab_domain          = var.homlab_domain
   n8n_key                = var.n8n_key
-  elastic_password = var.elastic_password
-  kibana_secret_key = var.kibana_secret_key
+  elastic_password       = var.elastic_password
+  kibana_secret_key      = var.kibana_secret_key
 
 }
 
