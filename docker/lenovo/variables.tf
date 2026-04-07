@@ -7,7 +7,7 @@ variable "homarr_secret_key" {
 variable "homarr_log_level" {
   description = "Homarr log level "
   type        = string
-  default     = "warn"
+  default     = "error"
 }
 
 # ─── Image versions ────────────────────────────────────────────────────────────
