@@ -65,7 +65,7 @@ resource "docker_container" "elasticsearch" {
     "xpack.security.authc.api_key.enabled=true",
     "ELASTIC_PASSWORD=${var.elastic_password}",
     # Bypasses the requirement for HTTPS/TLS on local single-node HTTP
-    "xpack.security.http.ssl.enabled=false", 
+    "xpack.security.http.ssl.enabled=false",
   ]
 
   healthcheck {
@@ -145,7 +145,7 @@ resource "docker_container" "kibana" {
     "ELASTICSEARCH_PASSWORD=${var.kibana_system_password}",
     "LOGGING_ROOT_LEVEL=warn",
     "SERVER_PUBLICBASEURL=https://kibana.${var.homlab_domain}",
-    
+
     # REQUIRED: Exactly 32+ characters for Fleet/Integrations to load
     "XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${var.kibana_secret_key}",
     "XPACK_REPORTING_ENCRYPTIONKEY=${var.kibana_secret_key}",

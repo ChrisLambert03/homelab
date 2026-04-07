@@ -22,7 +22,7 @@ resource "docker_container" "jellyfin" {
   name     = "jellyfin"
   image    = docker_image.jellyfin.image_id
   restart  = "unless-stopped"
-  runtime = "nvidia"
+  runtime  = "nvidia"
 
   networks_advanced {
     name         = docker_network.jellyfin_macvlan.name
@@ -32,7 +32,7 @@ resource "docker_container" "jellyfin" {
   # NVIDIA GPU support
   device_requests {
     driver       = "nvidia"
-    count        = -1  # -1 means all GPUs
+    count        = -1 # -1 means all GPUs
     capabilities = ["gpu", "compute", "utility", "video"]
   }
 
