@@ -17,5 +17,6 @@
           - iotop # Per-process disk I/O monitoring
           - nmap # Network scanning
           - btop # Better htop
+          - ncdu # Disk Usage analyzer
         state: present
         update_cache: true
