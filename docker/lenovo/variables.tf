@@ -24,6 +24,12 @@ variable "postgres_version" {
   default     = "17-alpine"
 }
 
+variable "beszel_version" {
+  description = "Beszel image tag"
+  type        = string
+  default     = "latest"
+}
+
 # ─── PostgreSQL credentials ────────────────────────────────────────────────────
 
 variable "postgres_db" {
@@ -56,4 +62,15 @@ variable "totp_enabled" {
   description = "Enable TOTP two-factor authentication"
   type        = string
   default     = "false"
+}
+
+variable "beszel_port" {
+  description = "Host port to expose Beszel on"
+  type        = number
+  default     = 8090
+}
+
+variable "homelab_domain" {
+  description = "Domain used for the homelab services (e.g. example.com)"
+  type        = string
 }
