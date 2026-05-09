@@ -273,3 +273,20 @@ resource "nginxproxymanager_proxy_host" "guacamole_proxy" {
   hsts_subdomains         = true
   http2_support           = true
 }
+
+#retroarch proxy host
+resource "nginxproxymanager_proxy_host" "retroarch_proxy" {
+  domain_names            = ["retroarch.${var.homlab_domain}"]
+  access_list_id          = var.access_list_id
+  forward_scheme          = "http"
+  forward_host            = var.workstation_ip
+  forward_port            = 3005
+  caching_enabled         = true
+  allow_websocket_upgrade = true
+  block_exploits          = true
+  certificate_id          = var.wildcard_cert_id
+  ssl_forced              = true
+  hsts_enabled            = true
+  hsts_subdomains         = true
+  http2_support           = true
+}
