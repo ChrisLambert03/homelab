@@ -40,6 +40,7 @@ module "lenovo" {
   }
   homarr_secret_key = var.homarr_secret_key
   postgres_password = var.postgres_password
+  homelab_domain = var.homlab_domain
 
 }
 
