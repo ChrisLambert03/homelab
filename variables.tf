@@ -75,19 +75,25 @@ variable "wildcard_cert_id" {
 
 variable "optiplex7040_ip" {
   type        = string
-  description = "The IP address of the Optiplex 7040 (if used for additional services)"
+  description = "The IP address of the Optiplex 7040"
   sensitive   = true
 }
 
 variable "optiplex9020_ip" {
   type        = string
-  description = "The IP address of the Optiplex 9020 (if used for additional services)"
+  description = "The IP address of the Optiplex 9020 "
   sensitive   = true
 }
 
 variable "lenovo_thinkcentre_ip" {
   type        = string
-  description = "The IP address of the Lenovo ThinkCentre (if used for additional services)"
+  description = "The IP address of the Lenovo ThinkCentre M700 Tiny"
+  sensitive   = true
+}
+
+variable "pihole_ip" {
+  type        = string
+  description = "The IP address of the Pi-hole server"
   sensitive   = true
 }
 
@@ -99,13 +105,13 @@ variable "jellyfin_macvlan_ip" {
 
 variable "access_list_id" {
   type        = number
-  description = "ID of the access list in Nginx Proxy Manager to use for the homelab services)"
+  description = "ID of the access list in Nginx Proxy Manager to use for the homelab services"
   sensitive   = true
 }
 # second acces list id
 variable "access_list_id_2" {
   type        = number
-  description = "ID of the second access list in Nginx Proxy Manager to use for the homelab services)"
+  description = "ID of the second access list in Nginx Proxy Manager to use for the homelab services"
   sensitive   = true
 }
 

@@ -19,6 +19,10 @@ variable "lenovo_thinkcentre_ip" {
   type = string
 }
 
+variable "pihole_ip" {
+  type = string
+}
+
 variable "wildcard_cert_id" {
   type = number
 }
