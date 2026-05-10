@@ -32,4 +32,14 @@ locals {
 
   # Configuration
   homlab_domain = tostring(data.vault_kv_secret_v2.homelab_secrets.data["homlab_domain"])
+  wildcard_cert_id = tonumber(data.vault_kv_secret_v2.homelab_secrets.data["wildcard_cert_id"])
+
+  # Paths
+  jellyfin_config_path   = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_config_path"])
+  jellyfin_cache_path    = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_cache_path"])
+  blue_drive_path        = tostring(data.vault_kv_secret_v2.homelab_secrets.data["blue_drive_path"])
+  black_drive_path       = tostring(data.vault_kv_secret_v2.homelab_secrets.data["black_drive_path"])
+  wd_drive_path          = tostring(data.vault_kv_secret_v2.homelab_secrets.data["wd_drive_path"])
+  nginx_data_path        = tostring(data.vault_kv_secret_v2.homelab_secrets.data["nginx_data_path"])
+  nginx_letsencrypt_path = tostring(data.vault_kv_secret_v2.homelab_secrets.data["nginx_letsencrypt_path"])
 }
