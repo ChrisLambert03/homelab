@@ -14,5 +14,9 @@ terraform {
       source  = "dmacvicar/libvirt"
       version = ">= 0.9.4"
     }
+    vault = {
+      source  = "hashicorp/vault"
+      version = " 5.9.0"
+    }
   }
 }
