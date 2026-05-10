@@ -1,5 +1,3 @@
-
-
 resource "nginxproxymanager_proxy_host" "beszel_proxy" {
   domain_names            = ["beszel.${var.homlab_domain}"]
   access_list_id          = var.access_list_id

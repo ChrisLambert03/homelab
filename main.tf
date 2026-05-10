@@ -15,9 +15,9 @@ module "docker_apps" {
   wd_drive_path          = var.wd_drive_path
   nginx_letsencrypt_path = var.nginx_letsencrypt_path
   homlab_domain          = var.homlab_domain
-  n8n_key                = var.n8n_key
-  elastic_password       = var.elastic_password
-  kibana_secret_key      = var.kibana_secret_key
+  n8n_key                = local.n8n_key
+  elastic_password       = local.elastic_password
+  kibana_secret_key      = local.kibana_secret_key
 
 }
 
@@ -38,8 +38,8 @@ module "lenovo" {
   providers = {
     docker.lenovo = docker.lenovo
   }
-  homarr_secret_key = var.homarr_secret_key
-  postgres_password = var.postgres_password
+  homarr_secret_key = local.homarr_secret_key
+  postgres_password = local.postgres_password
   homelab_domain    = var.homlab_domain
 
 }
@@ -55,16 +55,16 @@ module "libvirt" {
 module "nginx" {
   source = "./nginx"
 
-  workstation_ip        = var.workstation_ip
-  homlab_domain         = var.homlab_domain
-  optiplex7040_ip       = var.optiplex7040_ip
-  optiplex9020_ip       = var.optiplex9020_ip
-  lenovo_thinkcentre_ip = var.lenovo_thinkcentre_ip
+  workstation_ip        = local.workstation_ip
+  homlab_domain         = local.homlab_domain
+  optiplex7040_ip       = local.optiplex7040_ip
+  optiplex9020_ip       = local.optiplex9020_ip
+  lenovo_thinkcentre_ip = local.lenovo_thinkcentre_ip
   wildcard_cert_id      = var.wildcard_cert_id
-  jellyfin_macvlan_ip   = var.jellyfin_macvlan_ip
-  access_list_id        = var.access_list_id
-  access_list_id_2      = var.access_list_id_2
-  pihole_ip             = var.pihole_ip
+  jellyfin_macvlan_ip   = local.jellyfin_macvlan_ip
+  access_list_id        = local.access_list_id
+  access_list_id_2      = local.access_list_id_2
+  pihole_ip             = local.pihole_ip
 
   # pass through the container id exported by the docker module (optional use)
   #  nginx_manager_container_id = module.docker_apps.nginx_proxy_manager_container_id
