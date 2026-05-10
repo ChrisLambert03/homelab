@@ -11,5 +11,5 @@ variable "vault_ip" {
 variable "vault_password" {
   description = "Hashicorp Vault root token"
   type        = string
-  sensitive = true
+  sensitive   = true
 }
