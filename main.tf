@@ -6,15 +6,15 @@ module "docker_apps" {
     docker.workstation = docker.workstation
   }
 
-  jellyfin_config_path   = var.jellyfin_config_path
-  jellyfin_cache_path    = var.jellyfin_cache_path
-  jellyfin_macvlan_ip    = var.jellyfin_macvlan_ip
-  blue_drive_path        = var.blue_drive_path
-  black_drive_path       = var.black_drive_path
-  nginx_data_path        = var.nginx_data_path
-  wd_drive_path          = var.wd_drive_path
-  nginx_letsencrypt_path = var.nginx_letsencrypt_path
-  homlab_domain          = var.homlab_domain
+  jellyfin_config_path   = local.jellyfin_config_path
+  jellyfin_cache_path    = local.jellyfin_cache_path
+  jellyfin_macvlan_ip    = local.jellyfin_macvlan_ip
+  blue_drive_path        = local.blue_drive_path
+  black_drive_path       = local.black_drive_path
+  nginx_data_path        = local.nginx_data_path
+  wd_drive_path          = local.wd_drive_path
+  nginx_letsencrypt_path = local.nginx_letsencrypt_path
+  homlab_domain          = local.homlab_domain
   n8n_key                = local.n8n_key
   elastic_password       = local.elastic_password
   kibana_secret_key      = local.kibana_secret_key
@@ -40,7 +40,7 @@ module "lenovo" {
   }
   homarr_secret_key = local.homarr_secret_key
   postgres_password = local.postgres_password
-  homelab_domain    = var.homlab_domain
+  homelab_domain    = local.homlab_domain
 
 }
 
@@ -60,7 +60,7 @@ module "nginx" {
   optiplex7040_ip       = local.optiplex7040_ip
   optiplex9020_ip       = local.optiplex9020_ip
   lenovo_thinkcentre_ip = local.lenovo_thinkcentre_ip
-  wildcard_cert_id      = var.wildcard_cert_id
+  wildcard_cert_id      = local.wildcard_cert_id
   jellyfin_macvlan_ip   = local.jellyfin_macvlan_ip
   access_list_id        = local.access_list_id
   access_list_id_2      = local.access_list_id_2
