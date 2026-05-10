@@ -16,8 +16,6 @@ provider "docker" {
   host     = "ssh://${var.ssh_user}@${var.optiplex9020_ip}:22"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
-
-
 # Configuration-based authentication
 provider "nginxproxymanager" {
   url      = "http://${var.workstation_ip}:81"
@@ -27,4 +25,10 @@ provider "nginxproxymanager" {
 # The libvirt provider is configured to connect to a remote host via SSH.
 provider "libvirt" {
   uri = "qemu+ssh://${var.ssh_user}@${var.workstation_ip}/system"
+}
+# Hashicorp Vault provider configuration
+provider "vault" {
+  # It is recommended to set these via VAULT_ADDR and VAULT_TOKEN env vars instead
+  address = "http://${var.optiplex9020_ip}:8200"
+  token   = "wapkonjorge"
 }
