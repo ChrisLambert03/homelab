@@ -48,6 +48,24 @@ variable "homlab_domain" {
   description = "Domain name for the homelab (e.g. homelab.local)"
 }
 
+variable "beszel_key" {
+  description = "Beszel agent public key"
+  type        = string
+  sensitive   = true
+}
+
+variable "beszel_token" {
+  description = "Beszel agent token"
+  type        = string
+  sensitive   = true
+}
+
+variable "beszel_agent_version" {
+  description = "Beszel agent image tag"
+  type        = string
+  default     = "latest"
+}
+
 ############# elk test vars
 
 variable "elk_version" {

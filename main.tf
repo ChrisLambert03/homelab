@@ -18,6 +18,8 @@ module "docker_apps" {
   n8n_key                = local.n8n_key
   elastic_password       = local.elastic_password
   kibana_secret_key      = local.kibana_secret_key
+  beszel_key             = local.beszel_key
+  beszel_token           = local.beszel_token_workstation
 
 }
 
@@ -41,6 +43,8 @@ module "lenovo" {
   homarr_secret_key = local.homarr_secret_key
   postgres_password = local.postgres_password
   homelab_domain    = local.homlab_domain
+  beszel_key        = local.beszel_key
+  beszel_token      = local.beszel_token_lenovo
 
 }
 

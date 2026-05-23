@@ -34,6 +34,11 @@ locals {
   homlab_domain    = tostring(data.vault_kv_secret_v2.homelab_secrets.data["homlab_domain"])
   wildcard_cert_id = tonumber(data.vault_kv_secret_v2.homelab_secrets.data["wildcard_cert_id"])
 
+  # Beszel
+  beszel_key               = tostring(data.vault_kv_secret_v2.homelab_secrets.data["beszel_key"])
+  beszel_token_lenovo      = tostring(data.vault_kv_secret_v2.homelab_secrets.data["beszel_token_lenovo"])
+  beszel_token_workstation = tostring(data.vault_kv_secret_v2.homelab_secrets.data["beszel_token_workstation"])
+
   # Paths
   jellyfin_config_path   = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_config_path"])
   jellyfin_cache_path    = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_cache_path"])
