@@ -30,6 +30,7 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 
 **Logging & Monitoring:**
 
+- **Beszel Monitoring Migration** - Successfully migrated from a resource-intensive Grafana/Prometheus/Node Exporter/cAdvisor stack to **Beszel**. This transition significantly reduced the system footprint while maintaining comprehensive monitoring and alerting.
 - **Docker Global Log Driver** - Implementing Docker's built-in logging drivers for centralized container log management
 - **ELK Stack Demo** - Deployed Elasticsearch, Logstash, and Kibana for log aggregation, processing, and visualization
 - **configure-docker-tls-gelf.yml** - New playbook to configure Docker daemon with TLS and GELF logging driver for sending logs to the ELK stack
@@ -117,6 +118,17 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 
 - **Purpose**: Send push notifications to your phone or desktop
 - **Configuration**: [docker/lenovo/app-ntfy.tf](docker/lenovo/app-ntfy.tf)
+
+#### **Beszel**
+
+- **Purpose**: Lightweight monitoring hub and agent for resource visualization
+- **Configuration**:
+    - **Hub**: [docker/lenovo/app-beszel.tf](docker/lenovo/app-beszel.tf)
+    - **Agents**:
+        - [docker/workstation/app-beszel-agent.tf](docker/workstation/app-beszel-agent.tf)
+        - [docker/lenovo/app-beszel-agent.tf](docker/lenovo/app-beszel-agent.tf)
+        - [docker/optiplex/app-beszel-agent.tf](docker/optiplex/app-beszel-agent.tf)
+- **Rationale**: Replaced Grafana/Prometheus/Node Exporter/cAdvisor stack with this lightweight alternative to significantly reduce system resource usage.
 
 ### Logging Infrastructure
 
