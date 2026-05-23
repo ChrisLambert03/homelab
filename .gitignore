@@ -11,3 +11,7 @@ override.tf.json
 *.tfvars*
 /ansible/homelab-nodes
 /ansible/ansible.cfg
+GEMINI.md
+.gemini/
+*.skill
+homelab-ansible-runner/
