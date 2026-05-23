@@ -40,6 +40,9 @@ locals {
   beszel_token_workstation = tostring(data.vault_kv_secret_v2.homelab_secrets.data["beszel_token_workstation"])
   beszel_token_optiplex    = tostring(data.vault_kv_secret_v2.homelab_secrets.data["beszel_token_optiplex"])
 
+  # Tdarr
+  tdarr_auth_key = tostring(data.vault_kv_secret_v2.homelab_secrets.data["tdarr_auth_key"])
+
   # Paths
   jellyfin_config_path   = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_config_path"])
   jellyfin_cache_path    = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_cache_path"])

@@ -28,7 +28,7 @@ resource "docker_container" "tdarr_server" {
     "openBrowser=true",
     "maxLogSizeMB=10",
     "auth=true",
-    "authSecretKey=wapkonjorge"
+    "authSecretKey=${var.tdarr_auth_key}"
   ]
 
   mounts {
@@ -103,7 +103,7 @@ resource "docker_container" "tdarr_node" {
     "transcodegpuWorkers=0",
     "transcodecpuWorkers=2",
     "auth=true",
-    "authSecretKey=wapkonjorge"
+    "authSecretKey=${var.tdarr_auth_key}"
   ]
 
   # Mounts - Keeping your paths consistent
