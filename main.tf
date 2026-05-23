@@ -32,6 +32,9 @@ module "optiplex" {
   }
 
   portainer_volume_name = var.portainer_volume_name
+  beszel_key            = local.beszel_key
+  beszel_token          = local.beszel_token_optiplex
+  homelab_domain        = local.homlab_domain
 }
 
 module "lenovo" {
