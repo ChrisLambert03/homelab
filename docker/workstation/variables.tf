@@ -115,4 +115,3 @@ variable "kibana_system_password" {
   type        = string
   default     = "homelabpassword"
 }
-
