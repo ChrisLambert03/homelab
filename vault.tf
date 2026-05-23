@@ -38,6 +38,7 @@ locals {
   beszel_key               = tostring(data.vault_kv_secret_v2.homelab_secrets.data["beszel_key"])
   beszel_token_lenovo      = tostring(data.vault_kv_secret_v2.homelab_secrets.data["beszel_token_lenovo"])
   beszel_token_workstation = tostring(data.vault_kv_secret_v2.homelab_secrets.data["beszel_token_workstation"])
+  beszel_token_optiplex    = tostring(data.vault_kv_secret_v2.homelab_secrets.data["beszel_token_optiplex"])
 
   # Paths
   jellyfin_config_path   = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_config_path"])
