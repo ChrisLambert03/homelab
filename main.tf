@@ -20,6 +20,7 @@ module "docker_apps" {
   kibana_secret_key      = local.kibana_secret_key
   beszel_key             = local.beszel_key
   beszel_token           = local.beszel_token_workstation
+  tdarr_auth_key         = local.tdarr_auth_key
 
 }
 

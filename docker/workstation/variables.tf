@@ -60,6 +60,12 @@ variable "beszel_token" {
   sensitive   = true
 }
 
+variable "tdarr_auth_key" {
+  description = "Authentication secret key for Tdarr"
+  type        = string
+  sensitive   = true
+}
+
 variable "beszel_agent_version" {
   description = "Beszel agent image tag"
   type        = string
