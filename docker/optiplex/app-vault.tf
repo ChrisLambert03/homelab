@@ -23,7 +23,7 @@ resource "docker_container" "vault" {
   networks_advanced {
     name = docker_network.vault_net.name
   }
-  
+
   env = [
     "VAULT_ADDR=http://0.0.0.0:8200",
   ]
