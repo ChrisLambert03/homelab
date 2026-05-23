@@ -26,7 +26,9 @@ resource "docker_container" "tdarr_server" {
     "ffmpegVersion=7",
     "nodeName=ThinkmateServer",
     "openBrowser=true",
-    "maxLogSizeMB=10"
+    "maxLogSizeMB=10",
+    "auth=true",
+    "authSecretKey=wapkonjorge"
   ]
 
   mounts {
@@ -99,7 +101,9 @@ resource "docker_container" "tdarr_node" {
     "maxLogSizeMB=10",
     "pollInterval=2000",
     "transcodegpuWorkers=0",
-    "transcodecpuWorkers=2"
+    "transcodecpuWorkers=2",
+    "auth=true",
+    "authSecretKey=wapkonjorge"
   ]
 
   # Mounts - Keeping your paths consistent
