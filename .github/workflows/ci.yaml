@@ -18,6 +18,11 @@ jobs:
 
     runs-on: self-hosted
     steps:
+      - name: Pre-cleanup Workspace
+        run: |
+          sudo rm -f /tmp/gitleaks.tmp
+          sudo rm -rf ${{ github.workspace }}/../_temp/*
+
       - name: Checkout
         uses: actions/checkout@v6
         with:
