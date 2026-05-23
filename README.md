@@ -23,7 +23,10 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 
 ### 📝 Recent Changes
 
-Recently expanded infrastructure with comprehensive logging and new services:
+**Security & Secrets Management:**
+
+- **HashiCorp Vault Integration** - Implemented the Vault provider to securely manage and fetch homelab secrets dynamically from a Vault KV v2 secrets engine.
+- **Variable Refactoring** - Migrated away from plain text variables in `variables.tf`, transitioning all sensitive infrastructure parameters (IPs, credentials, encryption keys, and paths) to use Terraform locals populated securely via the Vault data source (`vault.tf`).
 
 **Logging & Monitoring:**
 
@@ -48,8 +51,9 @@ Recently expanded infrastructure with comprehensive logging and new services:
 
 ### 🚀 Currently Working On
 
+- **Vault Production Migration & Auto-Unseal** - Converting the HashiCorp Vault server from a dev environment to a production-like setup. This includes developing an Ansible playbook to automate the manual unseal process required by the open-source Vault server upon restart.
 - **Docker Logging Infrastructure** - Fine-tuning global log driver configuration with ELK stack for centralized log management and demo purposes
-- **n8n + Redis Integration** - Optimizing workflow automation platform with Redis backend
+- **n8n + Redis Integration** - Optimizing workflow automation platform with Redis backend to support future AI agent pipelines (e.g., automatically updating this README)
 - **Terraform Migration** - Continuing to migrate services running on other hosts in the homelab to Terraform-managed infrastructure for improved consistency and automation
 
 ## 📦 Terraform-Managed Services
@@ -116,7 +120,7 @@ Recently expanded infrastructure with comprehensive logging and new services:
 
 ### Logging Infrastructure
 
-#### **ELK Stack Demo**
+#### **ELK Stack (Elasticsearch, Logstash, Kibana)**
 
 - **Purpose**: Centralized logging with Elasticsearch, Logstash, and Kibana for container log aggregation, processing, and visualization
 - **Configuration**: [docker/workstation/elk-stack-demo.tf](docker/workstation/elk-stack-demo.tf)
