@@ -1,12 +1,22 @@
 ---
+# ------------------------------------------------------------------------------
+# Playbook: Generate TLS Certs for Docker Hosts
+# Purpose:  Creates a local Certificate Authority (CA) and issues server/client
+#           certificates for securing Docker daemon communication via TLS.
+# ------------------------------------------------------------------------------
+
 - name: Generate TLS Certs for Docker Hosts
   hosts: localhost
   gather_facts: false
 
   vars:
+    # Directory where all certificates and keys will be stored locally
     ca_dir: "/home/ansible/homelab-certs"
+    # Duration for CA validity (10 years)
     ca_expiry: "+3650d"
+    # Duration for individual certificates (1 year)
     cert_expiry: "+365d"
+    # List of hostnames that require server certificates
     hosts_to_cert:
       - workstation
       - lenovo
@@ -14,11 +24,16 @@
       - optiplex
 
   tasks:
+    # ─── Preparation ──────────────────────────────────────────────────────────
+
     - name: Create cert directory
       ansible.builtin.file:
         path: "{{ ca_dir }}"
         state: directory
         mode: "0700"
+
+    # ─── Certificate Authority (CA) Creation ──────────────────────────────────
+    # These tasks establish the root of trust for the homelab.
 
     - name: Generate CA private key
       community.crypto.openssl_privatekey:
@@ -45,6 +60,9 @@
         provider: selfsigned
         selfsigned_not_after: "{{ ca_expiry }}"
         force: true
+
+    # ─── Server Certificate Generation ────────────────────────────────────────
+    # Loops through 'hosts_to_cert' to create unique certificates for each Docker host.
 
     - name: Generate server private key
       community.crypto.openssl_privatekey:
@@ -80,6 +98,9 @@
         force: true
       loop: "{{ hosts_to_cert }}"
 
+    # ─── Client Certificate Generation ────────────────────────────────────────
+    # Generates a single client certificate used for administrative access to the Docker daemons.
+
     - name: Generate client private key
       community.crypto.openssl_privatekey:
         path: "{{ ca_dir }}/client-key.pem"
@@ -104,6 +125,8 @@
         provider: ownca
         ownca_not_after: "{{ cert_expiry }}"
         force: true
+
+    # ─── Final Permissions ────────────────────────────────────────────────────
 
     - name: Set ownership of cert directory
       ansible.builtin.file:
