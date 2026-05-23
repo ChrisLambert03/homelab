@@ -69,6 +69,6 @@ jobs:
         run: terraform plan
         env:
           TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
-          TF_VAR_vault_ip: ${{ vars.VAULT_IP }}
+          TF_VAR_vault_ip: ${{ secrets.VAULT_IP }}
           TF_VAR_vault_password: ${{ secrets.VAULT_TOKEN }}
           TF_VAR_vault_unseal_keys: ${{ secrets.VAULT_UNSEAL_KEYS }}
