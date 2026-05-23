@@ -62,3 +62,19 @@ jobs:
           skip_check: CKV_GIT_1
           quiet: false
           soft_fail: false
+
+      - name: Terraform Init
+        run: terraform init
+        env:
+          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
+        env:
+          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+          TF_VAR_vault_ip: ${{ vars.VAULT_IP }}
+          TF_VAR_vault_password: ${{ secrets.VAULT_TOKEN }}
+          TF_VAR_vault_unseal_keys: ${{ secrets.VAULT_UNSEAL_KEYS }}
