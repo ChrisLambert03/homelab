@@ -27,3 +27,36 @@ variable "beszel_agent_version" {
   type        = string
   default     = "latest"
 }
+
+# ─── Vault Variables ──────────────────────────────────────────────────────────
+
+variable "vault_secrets_path" {
+  description = "Host path to the secrets.json file"
+  type        = string
+  default     = "/home/chris/services/vault/secrets.json"
+}
+
+variable "vault_config_path" {
+  description = "Host path to the vault.hcl file"
+  type        = string
+  default     = "/home/chris/services/vault/vault.hcl"
+}
+
+variable "vault_data_path" {
+  description = "Host path to the vault persistent data directory"
+  type        = string
+  default     = "/home/chris/services/vault/data"
+}
+
+variable "vault_version" {
+  description = "Vault image tag"
+  type        = string
+  default     = "latest"
+}
+
+variable "vault_unseal_keys" {
+  description = "List of unseal keys for the production vault"
+  type        = list(string)
+  sensitive   = true
+  default     = []
+}
