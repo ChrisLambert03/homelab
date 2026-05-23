@@ -23,11 +23,7 @@ resource "docker_container" "vault" {
   networks_advanced {
     name = docker_network.vault_net.name
   }
-
-  capabilities {
-    add = ["IPC_LOCK"]
-  }
-
+  
   env = [
     "VAULT_ADDR=http://0.0.0.0:8200",
   ]
@@ -88,4 +84,8 @@ resource "docker_container" "vault_unsealer" {
   ]
 
   depends_on = [docker_container.vault]
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
 }

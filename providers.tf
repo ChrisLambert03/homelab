@@ -29,6 +29,6 @@ provider "libvirt" {
 # Hashicorp Vault provider configuration
 provider "vault" {
   # It is recommended to set these via VAULT_ADDR and VAULT_TOKEN env vars instead
-  address = "http://${var.vault_ip}:8200"
+  address = "http://${var.vault_ip}:8222"
   token   = var.vault_password
 }
