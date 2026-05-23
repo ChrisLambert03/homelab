@@ -25,21 +25,19 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 
 **Security & Secrets Management:**
 
-- **HashiCorp Vault Integration** - Implemented the Vault provider to securely manage and fetch homelab secrets dynamically from a Vault KV v2 secrets engine.
-- **Variable Refactoring** - Migrated away from plain text variables in `variables.tf`, transitioning all sensitive infrastructure parameters (IPs, credentials, encryption keys, and paths) to use Terraform locals populated securely via the Vault data source (`vault.tf`).
+- **Production Vault Deployment** - Successfully migrated HashiCorp Vault from an ephemeral Dev mode to a production-grade standalone instance on the Optiplex node.
+- **Automated Vault Unsealing** - Implemented a dedicated `vault-unsealer` sidecar container that monitors the Vault status and automatically applies unseal keys upon restart.
+- **Variable Refactoring** - Migrated away from plain text variables in `variables.tf`, transitioning all sensitive infrastructure parameters to use Terraform locals populated securely via the Vault data source (`vault.tf`).
 
 **Logging & Monitoring:**
 
 - **Beszel Monitoring Migration** - Successfully migrated from a resource-intensive Grafana/Prometheus/Node Exporter/cAdvisor stack to **Beszel**. This transition significantly reduced the system footprint while maintaining comprehensive monitoring and alerting.
 - **Docker Global Log Driver** - Implementing Docker's built-in logging drivers for centralized container log management
 - **ELK Stack Demo** - Deployed Elasticsearch, Logstash, and Kibana for log aggregation, processing, and visualization
-- **configure-docker-tls-gelf.yml** - New playbook to configure Docker daemon with TLS and GELF logging driver for sending logs to the ELK stack
 
 **New Services:**
 
-- **n8n** - Workflow automation platform, now integrated with infrastructure
-- **Redis** - In-memory data store with persistence configuration
-- **Redis Insight** - Redis GUI for monitoring and data inspection
+- **Redis & Redis Insight** - Deployed a persistent Redis data store and GUI for job queuing and inspection across the infrastructure.
 
 **Existing Ansible Playbooks:**
 
@@ -48,14 +46,13 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 - **configure-docker.yml** - Configures Docker daemon for TLS authentication
 - **tools.yml** - Installs monitoring & diagnostics tools (iperf3, powerstat, htop, lm-sensors, neofetch, nload, fzf, lsusb, lspci, iotop)
 - **update.yml** - Automated system package updates and upgrades
-- **restart-docker.yml** - Restarts Docker service after configuration changes
 
 ### 🚀 Currently Working On
 
-- **Vault Production Migration & Auto-Unseal** - Converting the HashiCorp Vault server from a dev environment to a production-like setup. This includes developing an Ansible playbook to automate the manual unseal process required by the open-source Vault server upon restart.
-- **Docker Logging Infrastructure** - Fine-tuning global log driver configuration with ELK stack for centralized log management and demo purposes
-- **n8n + Redis Integration** - Optimizing workflow automation platform with Redis backend to support future AI agent pipelines (e.g., automatically updating this README)
-- **Terraform Migration** - Continuing to migrate services running on other hosts in the homelab to Terraform-managed infrastructure for improved consistency and automation
+- **HashiCorp Vault PKI Integration** - Investigating and implementing Vault as a Certificate Authority (CA) to automate the generation and renewal of internal TLS certificates for homelab services.
+- **Docker Logging Infrastructure** - Fine-tuning global log driver configuration with ELK stack for centralized log management and demo purposes.
+- **n8n + Redis Integration** - Optimizing workflow automation platform with Redis backend to support future AI agent pipelines.
+- **Terraform Migration** - Continuing to migrate services running on other hosts in the homelab to Terraform-managed infrastructure for improved consistency and automation.
 
 ## 📦 Terraform-Managed Services
 
@@ -123,11 +120,11 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 
 - **Purpose**: Lightweight monitoring hub and agent for resource visualization
 - **Configuration**:
-    - **Hub**: [docker/lenovo/app-beszel.tf](docker/lenovo/app-beszel.tf)
-    - **Agents**:
-        - [docker/workstation/app-beszel-agent.tf](docker/workstation/app-beszel-agent.tf)
-        - [docker/lenovo/app-beszel-agent.tf](docker/lenovo/app-beszel-agent.tf)
-        - [docker/optiplex/app-beszel-agent.tf](docker/optiplex/app-beszel-agent.tf)
+  - **Hub**: [docker/lenovo/app-beszel.tf](docker/lenovo/app-beszel.tf)
+  - **Agents**:
+    - [docker/workstation/app-beszel-agent.tf](docker/workstation/app-beszel-agent.tf)
+    - [docker/lenovo/app-beszel-agent.tf](docker/lenovo/app-beszel-agent.tf)
+    - [docker/optiplex/app-beszel-agent.tf](docker/optiplex/app-beszel-agent.tf)
 - **Rationale**: Replaced Grafana/Prometheus/Node Exporter/cAdvisor stack with this lightweight alternative to significantly reduce system resource usage.
 
 ### Logging Infrastructure
