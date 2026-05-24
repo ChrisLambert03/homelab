@@ -6,6 +6,7 @@
 [![Ansible](https://img.shields.io/badge/Ansible-Latest-red?style=for-the-badge&logo=ansible)](https://www.ansible.com)
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com)
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04-E95420?style=for-the-badge&logo=ubuntu)](https://ubuntu.com)
+[![Secured with Aikido](https://app.aikido.dev/badge/secured-with-aikido.svg)](https://www.aikido.dev)
 
 </div>
 
@@ -25,6 +26,7 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 
 **Security & Secrets Management:**
 
+- **Aikido Security Integration** - Implemented automated security screening via GitHub Actions. The repository is now continuously scanned for SAST vulnerabilities, exposed secrets, and Infrastructure-as-Code (IaC) misconfigurations using Aikido.
 - **Production Vault Deployment** - Successfully migrated HashiCorp Vault from an ephemeral Dev mode to a production-grade standalone instance on the Optiplex node.
 - **Automated Vault Unsealing** - Implemented a dedicated `vault-unsealer` sidecar container that monitors the Vault status and automatically applies unseal keys upon restart.
 - **Variable Refactoring** - Migrated away from plain text variables in `variables.tf`, transitioning all sensitive infrastructure parameters to use Terraform locals populated securely via the Vault data source (`vault.tf`).
