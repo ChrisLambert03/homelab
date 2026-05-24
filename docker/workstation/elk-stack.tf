@@ -31,6 +31,12 @@ resource "docker_image" "alpine" {
   keep_locally = true
 }
 
+resource "docker_image" "filebeat" {
+  provider     = docker.workstation
+  name         = "docker.elastic.co/beats/filebeat:${var.elk_version}"
+  keep_locally = true
+}
+
 # ── Elasticsearch ────────────────────────────────────────────
 resource "docker_container" "elasticsearch" {
   provider = docker.workstation
@@ -153,6 +159,60 @@ resource "docker_container" "kibana" {
   ]
 
   depends_on = [docker_container.elasticsearch]
+
+  lifecycle {
+    ignore_changes = [log_driver, log_opts]
+  }
+}
+
+# ── Filebeat ──────────────────────────────────────────────────
+resource "docker_container" "filebeat" {
+  provider = docker.workstation
+  name     = "filebeat"
+  image    = docker_image.filebeat.image_id
+  user     = "1000:1000"
+  restart  = "unless-stopped"
+
+  networks_advanced {
+    name = docker_network.elk.name
+  }
+
+  # Filebeat Config
+  volumes {
+    host_path      = "/home/chris/services/elk/filebeat/filebeat.yml"
+    container_path = "/usr/share/filebeat/filebeat.yml"
+    read_only      = true
+  }
+
+  # NPM Logs
+  volumes {
+    host_path      = var.nginx_data_path
+    container_path = "/var/log/npm"
+    read_only      = true
+  }
+
+  # Sonarr Logs
+  volumes {
+    host_path      = "/home/chris/services/sonarr/config/logs"
+    container_path = "/var/log/sonarr"
+    read_only      = true
+  }
+
+  # Radarr Logs
+  volumes {
+    host_path      = "/home/chris/services/radarr/config/logs"
+    container_path = "/var/log/radarr"
+    read_only      = true
+  }
+
+  # Prowlarr Logs
+  volumes {
+    host_path      = "/home/chris/services/prowlarr/config/logs"
+    container_path = "/var/log/prowlarr"
+    read_only      = true
+  }
+
+  depends_on = [docker_container.logstash]
 
   lifecycle {
     ignore_changes = [log_driver, log_opts]
