@@ -39,12 +39,12 @@ jobs:
 
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             echo "Scanning: $image_name ($image_id)"
-            
+
             # Run the Aikido scanner
             if /usr/local/bin/aikido-local-scanner image-scan "$image_name" \
               --apikey "$AIKIDO_API_KEY" \
               --fail-on critical; then
-              
+
               # If scan succeeds, append the Image ID to the state file
               echo "$image_id" >> "$STATE_FILE"
             else
