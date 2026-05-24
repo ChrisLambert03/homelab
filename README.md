@@ -26,6 +26,7 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 
 **Security & Secrets Management:**
 
+- **Optimized Aikido Image Scans** - Updated the local image scanning workflow to track Image IDs in a persistent state file on the self-hosted runner. This optimization ensures that only new or repulled images are scanned, significantly reducing CI execution time.
 - **Aikido Security Integration** - Implemented automated security screening via GitHub Actions. The repository is now continuously scanned for SAST vulnerabilities, exposed secrets, and Infrastructure-as-Code (IaC) misconfigurations using Aikido.
 - **Production Vault Deployment** - Successfully migrated HashiCorp Vault from an ephemeral Dev mode to a production-grade standalone instance on the Optiplex node.
 - **Automated Vault Unsealing** - Implemented a dedicated `vault-unsealer` sidecar container that monitors the Vault status and automatically applies unseal keys upon restart.

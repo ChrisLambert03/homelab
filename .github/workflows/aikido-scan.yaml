@@ -22,16 +22,36 @@ jobs:
           AIKIDO_API_KEY: ${{ secrets.AIKIDO_API_KEY }}
         run: |
           FAILED=0
-          IMAGES=$(docker images --format "{{.Repository}}:{{.Tag}}" \
-            | grep -v "<none>" \
-            | sort -u)
+          # Define the path for the persistent state file on the runner
+          STATE_FILE="$HOME/.aikido_scanned_images"
+          touch "$STATE_FILE"
 
-          for image in $IMAGES; do
+          # Get all images (ID and Name:Tag) except those tagged <none>, and save to a temporary file
+          docker images --format '{{.ID}} {{.Repository}}:{{.Tag}}' | grep -v "<none>" | sort -u > /tmp/current_images.txt
+
+          # Iterate through each image listed in the temporary file
+          while read -r image_id image_name; do
+            # Check if the Image ID already exists in the state file
+            if grep -q "^$image_id$" "$STATE_FILE"; then
+              echo "Skipping already scanned image: $image_name ($image_id)"
+              continue
+            fi
+
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-            echo "Scanning: $image"
-            /usr/local/bin/aikido-local-scanner image-scan "$image" \
+            echo "Scanning: $image_name ($image_id)"
+            
+            # Run the Aikido scanner
+            if /usr/local/bin/aikido-local-scanner image-scan "$image_name" \
               --apikey "$AIKIDO_API_KEY" \
-              --fail-on critical || FAILED=1
-          done
+              --fail-on critical; then
+              
+              # If scan succeeds, append the Image ID to the state file
+              echo "$image_id" >> "$STATE_FILE"
+            else
+              # If scan fails, mark the job as failed but continue scanning other images
+              FAILED=1
+            fi
+          done < /tmp/current_images.txt
 
+          # Exit with the combined failure status
           exit $FAILED
