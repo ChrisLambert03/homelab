@@ -1,4 +1,4 @@
-name: Aikido Docker Scan
+name: Aikido Local Image Scan
 
 on:
   push:
@@ -11,28 +11,26 @@ on:
 
 jobs:
   scan:
-    name: Aikido Docker build and scan
+    name: Scan local Docker images
     runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Scan all local images with Aikido
+        env:
+          AIKIDO_API_KEY: ${{ secrets.AIKIDO_API_KEY }}
         run: |
           FAILED=0
           IMAGES=$(docker images --format "{{.Repository}}:{{.Tag}}" \
-            | grep -v "aikidosecurity/local-scanner" \
             | grep -v "<none>" \
             | sort -u)
 
           for image in $IMAGES; do
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             echo "Scanning: $image"
-            docker run --rm \
-              -v /var/run/docker.sock:/var/run/docker.sock \
-              aikidosecurity/local-scanner \
-              image-scan "$image" \
-              --apikey ${{ secrets.AIKIDO_API_KEY }} \
+            /usr/local/bin/aikido-scanner image-scan "$image" \
+              --apikey "$AIKIDO_API_KEY" \
               --fail-on critical || FAILED=1
           done
 
