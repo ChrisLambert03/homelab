@@ -46,18 +46,24 @@ touch "$STATE_FILE"
 # --- Main Logic ---
 
 # 1. Parse Inventory
-# Extracts hostnames from the [docker_hosts] section
 log_info "Parsing inventory: $INVENTORY_FILE"
+# Extract hostnames from [docker_hosts] section
 nodes=$(grep -A 100 "\[docker_hosts\]" "$INVENTORY_FILE" | grep -v "\[" | grep -v "^$" | awk '{print $1}')
+
+if [[ -z "$nodes" ]]; then
+    log_error "No nodes found in [docker_hosts] section of $INVENTORY_FILE"
+    exit 1
+fi
 
 for node in $nodes; do
     log_header "Processing Node: $node"
 
     # 2. Retrieve Docker Images from Node
     log_info "Fetching image list from $node..."
+    # We use -n for SSH to prevent it from reading from stdin
     get_images_cmd="docker images --format '{{.ID}} {{.Repository}}:{{.Tag}}' | grep -v '<none>' | sort -u"
     
-    images=$(ssh -o StrictHostKeyChecking=no "$node" "$get_images_cmd" 2>/dev/null)
+    images=$(ssh -n -o StrictHostKeyChecking=no "$node" "$get_images_cmd" 2>/dev/null)
     
     if [[ $? -ne 0 ]]; then
         log_error "Could not connect to $node via SSH. Skipping."
@@ -71,6 +77,7 @@ for node in $nodes; do
     fi
 
     # 3. Scan Images
+    # We use a process substitution or read into a variable to avoid SSH consuming the loop's stdin
     while read -r image_id image_name; do
         [[ -z "$image_id" ]] && continue
 
@@ -83,9 +90,10 @@ for node in $nodes; do
         log_info "Scanning $image_name ($image_id) on $node..."
         
         # Execute scan on the remote node
+        # Pass API key via env and use -n to prevent SSH from consuming stdin of the while loop
         scan_cmd="AIKIDO_API_KEY=\"$AIKIDO_API_KEY\" $SCANNER_PATH image-scan \"$image_name\" --apikey \"$AIKIDO_API_KEY\""
         
-        ssh -o StrictHostKeyChecking=no "$node" "$scan_cmd"
+        ssh -n -o StrictHostKeyChecking=no "$node" "$scan_cmd"
         
         if [[ $? -eq 0 ]]; then
             echo "$image_id" >> "$STATE_FILE"
