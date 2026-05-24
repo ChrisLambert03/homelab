@@ -184,6 +184,12 @@ resource "docker_container" "filebeat" {
     read_only      = true
   }
 
+  # Filebeat Data (Registry)
+  volumes {
+    host_path      = "/home/chris/services/elk/filebeat/data"
+    container_path = "/usr/share/filebeat/data"
+  }
+
   # NPM Logs
   volumes {
     host_path      = var.nginx_data_path
