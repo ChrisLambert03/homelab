@@ -6,7 +6,7 @@
 [![Ansible](https://img.shields.io/badge/Ansible-Latest-red?style=for-the-badge&logo=ansible)](https://www.ansible.com)
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com)
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04-E95420?style=for-the-badge&logo=ubuntu)](https://ubuntu.com)
-[![Secured with Aikido](https://app.aikido.dev/badge/secured-with-aikido.svg)](https://www.aikido.dev)
+[![Secured with Aikido](https://cdn.prod.website-files.com/642adcaf364024552e71df01/642adcaf364024281f71df43_Logo-Full.svg)](https://www.aikido.dev)
 
 </div>
 
