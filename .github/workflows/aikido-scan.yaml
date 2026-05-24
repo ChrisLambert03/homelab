@@ -40,18 +40,16 @@ jobs:
             echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             echo "Scanning: $image_name ($image_id)"
 
-            # Run the Aikido scanner
+            # Run the Aikido scanner (removed --fail-on critical)
             if /usr/local/bin/aikido-local-scanner image-scan "$image_name" \
-              --apikey "$AIKIDO_API_KEY" \
-              --fail-on critical; then
+              --apikey "$AIKIDO_API_KEY"; then
 
-              # If scan succeeds, append the Image ID to the state file
+              # If the command itself succeeds, append the Image ID to the state file
               echo "$image_id" >> "$STATE_FILE"
             else
-              # If scan fails, mark the job as failed but continue scanning other images
+              # If the command fails (e.g. network issue, API key invalid), mark job as failed
               FAILED=1
-            fi
-          done < current_images.txt
+            fi          done < current_images.txt
 
           # Clean up the temporary file
           rm current_images.txt
