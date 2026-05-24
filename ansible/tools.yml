@@ -18,5 +18,6 @@
           - nmap # Network scanning
           - btop # Better htop
           - ncdu # Disk Usage analyzer
+          - unzip # For extracting zip files
         state: present
         update_cache: true
