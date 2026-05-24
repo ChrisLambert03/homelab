@@ -17,42 +17,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Scan all local images with Aikido
+      - name: Scan all homelab images with Aikido
         env:
           AIKIDO_API_KEY: ${{ secrets.AIKIDO_API_KEY }}
+          INVENTORY_CONTENT: ${{ secrets.INVENTORY }}
         run: |
-          FAILED=0
-          # Define the path for the persistent state file on the runner
-          STATE_FILE="$HOME/.aikido_scanned_images"
-          touch "$STATE_FILE"
-
-          # Get all images (ID and Name:Tag) except those tagged <none>, and save to a temporary file
-          docker images --format '{{.ID}} {{.Repository}}:{{.Tag}}' | grep -v "<none>" | sort -u > current_images.txt
-
-          # Iterate through each image listed in the temporary file
-          while read -r image_id image_name; do
-            # Check if the Image ID already exists in the state file
-            if grep -q "^$image_id$" "$STATE_FILE"; then
-              echo "Skipping already scanned image: $image_name ($image_id)"
-              continue
-            fi
-
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-            echo "Scanning: $image_name ($image_id)"
-
-            # Run the Aikido scanner (removed --fail-on critical)
-            if /usr/local/bin/aikido-local-scanner image-scan "$image_name" \
-              --apikey "$AIKIDO_API_KEY"; then
-
-              # If the command itself succeeds, append the Image ID to the state file
-              echo "$image_id" >> "$STATE_FILE"
-            else
-              # If the command fails (e.g. network issue, API key invalid), mark job as failed
-              FAILED=1
-            fi          done < current_images.txt
-
-          # Clean up the temporary file
-          rm current_images.txt
-
-          # Exit with the combined failure status
-          exit $FAILED
+          echo "$INVENTORY_CONTENT" > inventory.ini
+          chmod +x scripts/aikido-multi-scan.sh
+          ./scripts/aikido-multi-scan.sh inventory.ini "$AIKIDO_API_KEY"
