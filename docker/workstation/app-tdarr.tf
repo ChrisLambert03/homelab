@@ -28,7 +28,8 @@ resource "docker_container" "tdarr_server" {
     "openBrowser=true",
     "maxLogSizeMB=10",
     "auth=true",
-    "authSecretKey=${var.tdarr_auth_key}"
+    "authSecretKey=${var.tdarr_auth_key}",
+    "seededApiKey=tapi_${var.tdarr_auth_key}"
   ]
 
   mounts {
@@ -92,7 +93,7 @@ resource "docker_container" "tdarr_node" {
     "PGID=1000",
     "UMASK_SET=002",
     "nodeName=ThinkmateNode",
-    "serverIP=127.0.0.1", # Use localhost for same-host connection
+    "serverURL=http://100.106.96.18:8266",
     "serverPort=8266",
     "inContainer=true",
     "ffmpegVersion=7",
@@ -103,7 +104,7 @@ resource "docker_container" "tdarr_node" {
     "transcodegpuWorkers=0",
     "transcodecpuWorkers=2",
     "auth=true",
-    "authSecretKey=${var.tdarr_auth_key}"
+    "apiKey=tapi_${var.tdarr_auth_key}"
   ]
 
   # Mounts - Keeping your paths consistent
