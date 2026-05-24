@@ -83,9 +83,16 @@ resource "docker_container" "tdarr_node" {
   name     = "tdarr-node"
   image    = docker_image.tdarr_node.image_id
   restart  = "unless-stopped"
+  runtime  = "nvidia"
 
   # Changed to host mode
   network_mode = "host"
+
+  device_requests {
+    driver       = "nvidia"
+    count        = -1
+    capabilities = ["gpu", "compute", "utility", "video"]
+  }
 
   env = [
     "TZ=America/New_York",
@@ -101,10 +108,12 @@ resource "docker_container" "tdarr_node" {
     "priority=-1",
     "maxLogSizeMB=10",
     "pollInterval=2000",
-    "transcodegpuWorkers=0",
-    "transcodecpuWorkers=2",
+    "transcodegpuWorkers=1",
+    "transcodecpuWorkers=1",
     "auth=true",
-    "apiKey=tapi_${var.tdarr_auth_key}"
+    "apiKey=tapi_${var.tdarr_auth_key}",
+    "NVIDIA_VISIBLE_DEVICES=all",
+    "NVIDIA_DRIVER_CAPABILITIES=all"
   ]
 
   # Mounts - Keeping your paths consistent
