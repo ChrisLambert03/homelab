@@ -18,7 +18,7 @@ resource "docker_container" "tdarr_server" {
     "PUID=1000",
     "PGID=1000",
     "TZ=America/New_York",
-    "serverIP=100.106.96.18", #Thinkmate Node IP
+    "serverIP=0.0.0.0", # Bind to all interfaces
     "serverPort=8266",
     "webUIPort=8265",
     "internalNode=true",
@@ -92,7 +92,7 @@ resource "docker_container" "tdarr_node" {
     "PGID=1000",
     "UMASK_SET=002",
     "nodeName=ThinkmateNode",
-    "serverIP=100.106.96.18", # Since it's on the same host, 0.0.0.0 or localhost works
+    "serverIP=127.0.0.1", # Use localhost for same-host connection
     "serverPort=8266",
     "inContainer=true",
     "ffmpegVersion=7",
