@@ -77,7 +77,6 @@ for node in $nodes; do
     fi
 
     # 3. Scan Images
-    # We use a process substitution or read into a variable to avoid SSH consuming the loop's stdin
     while read -r image_id image_name; do
         [[ -z "$image_id" ]] && continue
 
@@ -108,6 +107,9 @@ for node in $nodes; do
             log_error "Scan failed for $image_name on $node."
             FAILED_SCANS=1
         fi
+
+        # Add a short delay to give the API time to process
+        sleep 1
     done <<< "$images"
 done
 
