@@ -93,9 +93,15 @@ for node in $nodes; do
         # Pass API key via env and use -n to prevent SSH from consuming stdin of the while loop
         scan_cmd="AIKIDO_API_KEY=\"$AIKIDO_API_KEY\" $SCANNER_PATH image-scan \"$image_name\" --apikey \"$AIKIDO_API_KEY\""
         
-        ssh -n -o StrictHostKeyChecking=no "$node" "$scan_cmd"
+        # Capture stdout and stderr to check for silent errors
+        scan_output=$(ssh -n -o StrictHostKeyChecking=no "$node" "$scan_cmd" 2>&1)
+        exit_code=$?
         
-        if [[ $? -eq 0 ]]; then
+        # Print output for visibility in workflow logs
+        echo "$scan_output"
+        
+        # Check for non-zero exit code OR known error strings that the scanner might swallow
+        if [[ $exit_code -eq 0 ]] && ! echo "$scan_output" | grep -qiE "unexpected went wrong|ECONNRESET|socket hang up"; then
             echo "$image_id" >> "$STATE_FILE"
             log_info "Scan successful for $image_name."
         else
