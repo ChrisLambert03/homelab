@@ -27,7 +27,7 @@ jobs:
           touch "$STATE_FILE"
 
           # Get all images (ID and Name:Tag) except those tagged <none>, and save to a temporary file
-          docker images --format '{{.ID}} {{.Repository}}:{{.Tag}}' | grep -v "<none>" | sort -u > /tmp/current_images.txt
+          docker images --format '{{.ID}} {{.Repository}}:{{.Tag}}' | grep -v "<none>" | sort -u > current_images.txt
 
           # Iterate through each image listed in the temporary file
           while read -r image_id image_name; do
@@ -51,7 +51,10 @@ jobs:
               # If scan fails, mark the job as failed but continue scanning other images
               FAILED=1
             fi
-          done < /tmp/current_images.txt
+          done < current_images.txt
+
+          # Clean up the temporary file
+          rm current_images.txt
 
           # Exit with the combined failure status
           exit $FAILED
