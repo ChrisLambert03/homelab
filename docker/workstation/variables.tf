@@ -88,13 +88,13 @@ variable "logstash_conf_path" {
 
 variable "es_java_opts" {
   description = "Elasticsearch JVM heap"
-  default     = "-Xms8g -Xmx8g"
+  default     = "-Xms16g -Xmx16g"
   type        = string
 }
 
 variable "ls_java_opts" {
   description = "Logstash JVM heap"
-  default     = "-Xms1g -Xmx1g"
+  default     = "-Xms4g -Xmx4g"
   type        = string
 }
 

@@ -38,6 +38,8 @@ resource "docker_image" "filebeat" {
 }
 
 # ── Elasticsearch ────────────────────────────────────────────
+# The core search and analytics engine. Configured as a single-node 
+# cluster with optimized memory for homelab use.
 resource "docker_container" "elasticsearch" {
   provider = docker.workstation
   name     = "elasticsearch"
@@ -88,6 +90,8 @@ resource "docker_container" "elasticsearch" {
 }
 
 # ── Logstash ─────────────────────────────────────────────────
+# The ETL (Extract, Transform, Load) engine. 
+# Processes logs from GELF and Filebeat before sending to Elasticsearch.
 resource "docker_container" "logstash" {
   provider = docker.workstation
   name     = "logstash"
@@ -130,6 +134,7 @@ resource "docker_container" "logstash" {
 }
 
 # ── Kibana ───────────────────────────────────────────────────
+# The visualization dashboard for exploring and analyzing logs.
 resource "docker_container" "kibana" {
   provider = docker.workstation
   name     = "kibana"
@@ -149,6 +154,11 @@ resource "docker_container" "kibana" {
     "ELASTICSEARCH_HOSTS=http://elasticsearch:9200",
     "ELASTICSEARCH_USERNAME=kibana_system",
     "ELASTICSEARCH_PASSWORD=${var.kibana_system_password}",
+    
+    # Optimization: Increase the Node.js memory limit for Kibana to 2GB. 
+    # This prevents UI timeouts when querying large amounts of log data (like Jellyfin streams).
+    "NODE_OPTIONS=--max-old-space-size=2048",
+
     "LOGGING_ROOT_LEVEL=warn",
     "SERVER_PUBLICBASEURL=https://kibana.${var.homlab_domain}",
 
@@ -166,11 +176,13 @@ resource "docker_container" "kibana" {
 }
 
 # ── Filebeat ──────────────────────────────────────────────────
+# Filebeat serves as the log shipper for applications that write to files 
+# instead of stdout, bridging the gap between those files and Logstash.
 resource "docker_container" "filebeat" {
   provider = docker.workstation
   name     = "filebeat"
   image    = docker_image.filebeat.image_id
-  user     = "1000:1000"
+  user     = "1000:1000" # Run as non-root for improved security
   restart  = "unless-stopped"
 
   networks_advanced {
@@ -184,13 +196,13 @@ resource "docker_container" "filebeat" {
     read_only      = true
   }
 
-  # Filebeat Data (Registry)
+  # Filebeat Data (Registry) - Stores the current read offset for log files
   volumes {
     host_path      = "/home/chris/services/elk/filebeat/data"
     container_path = "/usr/share/filebeat/data"
   }
 
-  # NPM Logs
+  # NPM Logs - Access and Error logs for the Reverse Proxy
   volumes {
     host_path      = var.nginx_data_path
     container_path = "/var/log/npm"
