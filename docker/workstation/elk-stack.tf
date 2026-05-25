@@ -154,7 +154,7 @@ resource "docker_container" "kibana" {
     "ELASTICSEARCH_HOSTS=http://elasticsearch:9200",
     "ELASTICSEARCH_USERNAME=kibana_system",
     "ELASTICSEARCH_PASSWORD=${var.kibana_system_password}",
-    
+
     # Optimization: Increase the Node.js memory limit for Kibana to 2GB. 
     # This prevents UI timeouts when querying large amounts of log data (like Jellyfin streams).
     "NODE_OPTIONS=--max-old-space-size=2048",
