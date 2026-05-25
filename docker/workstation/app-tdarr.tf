@@ -29,7 +29,8 @@ resource "docker_container" "tdarr_server" {
     "maxLogSizeMB=10",
     "auth=true",
     "authSecretKey=${var.tdarr_auth_key}",
-    "seededApiKey=tapi_${var.tdarr_auth_key}"
+    "seededApiKey=tapi_${var.tdarr_auth_key}",
+    "apiKey=tapi_${var.tdarr_auth_key}"
   ]
 
   mounts {
