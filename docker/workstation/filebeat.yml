@@ -1,0 +1,50 @@
+# Filebeat Configuration for Homelab
+# Optimized for high-speed log harvesting
+
+filebeat.inputs:
+- type: filestream
+  enabled: true
+  id: npm-logs
+  # Frequency to check for new files and new data in existing files (Default 10s)
+  prospector.scanner.check_interval: 1s
+  paths:
+    - /var/log/npm/logs/*.log
+  fields:
+    service: nginx-proxy-manager
+  fields_under_root: true
+
+- type: filestream
+  enabled: true
+  id: sonarr-logs
+  prospector.scanner.check_interval: 1s
+  paths:
+    - /var/log/sonarr/*.txt
+  fields:
+    service: sonarr
+  fields_under_root: true
+
+- type: filestream
+  enabled: true
+  id: radarr-logs
+  prospector.scanner.check_interval: 1s
+  paths:
+    - /var/log/radarr/*.txt
+  fields:
+    service: radarr
+  fields_under_root: true
+
+- type: filestream
+  enabled: true
+  id: prowlarr-logs
+  prospector.scanner.check_interval: 1s
+  paths:
+    - /var/log/prowlarr/*.txt
+  fields:
+    service: prowlarr
+  fields_under_root: true
+
+output.logstash:
+  hosts: ["logstash:5044"]
+
+# Logging level for Filebeat itself
+logging.level: info
