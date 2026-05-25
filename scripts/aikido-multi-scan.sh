@@ -10,6 +10,7 @@
 # --- Configuration ---
 INVENTORY_FILE="$1"
 AIKIDO_API_KEY="$2"
+STATE_FILE="$HOME/.aikido_scanned_images"
 SCANNER_PATH="/usr/local/bin/aikido-local-scanner"
 FAILED_SCANS=0
 
@@ -39,6 +40,8 @@ if [[ ! -f "$INVENTORY_FILE" ]]; then
     log_error "Inventory file not found: $INVENTORY_FILE"
     exit 1
 fi
+
+touch "$STATE_FILE"
 
 # --- Main Logic ---
 
@@ -77,6 +80,12 @@ for node in $nodes; do
     while read -r image_id image_name; do
         [[ -z "$image_id" ]] && continue
 
+        # Check if already scanned (shared STATE_FILE on runner)
+        if grep -q "^$image_id$" "$STATE_FILE"; then
+            log_info "Skipping $image_name ($image_id) - Already scanned."
+            continue
+        fi
+
         log_info "Scanning $image_name ($image_id) on $node..."
         
         # Execute scan on the remote node
@@ -92,6 +101,7 @@ for node in $nodes; do
         
         # Check for non-zero exit code OR known error strings that the scanner might swallow
         if [[ $exit_code -eq 0 ]] && ! echo "$scan_output" | grep -qiE "unexpected went wrong|ECONNRESET|socket hang up"; then
+            echo "$image_id" >> "$STATE_FILE"
             log_info "Scan successful for $image_name."
         else
             log_error "Scan failed for $image_name on $node."
