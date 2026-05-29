@@ -1,15 +1,15 @@
-# Configure the Docker provider to connect to a remote Docker host via SSH
+# Configure the Docker provider to connect to a remote Docker host via TCP
 provider "docker" {
-  alias    = "workstation"
-  host     = "ssh://${local.ssh_user}@${local.workstation_ip}:22"
-  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+  alias     = "workstation"
+  host      = "tcp://${local.workstation_ip}:2376"
+  cert_path = pathexpand("~/.docker")
 }
 
-# provider on lenovo ip
+# provider on lenovo ip via TCP
 provider "docker" {
-  alias    = "lenovo"
-  host     = "ssh://${local.ssh_user}@${local.lenovo_thinkcentre_ip}:22"
-  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+  alias     = "lenovo"
+  host      = "tcp://${local.lenovo_thinkcentre_ip}:2376"
+  cert_path = pathexpand("~/.docker")
 }
 
 # provider on optiplex ip via native TLS

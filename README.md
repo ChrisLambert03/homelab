@@ -25,6 +25,7 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 
 **Security & Secrets Management:**
 
+- **Docker TLS Authentication** - Migrated all Docker providers (Workstation, Lenovo, Optiplex) to use TCP on port 2376 with native TLS certificate-based authentication, replacing the previous SSH-based connection method for improved performance and security consistency.
 - **Production Vault Deployment** - Successfully migrated HashiCorp Vault from an ephemeral Dev mode to a production-grade standalone instance on the Optiplex node.
 - **Automated Vault Unsealing** - Implemented a dedicated `vault-unsealer` sidecar container that monitors the Vault status and automatically applies unseal keys upon restart.
 - **Variable Refactoring** - Migrated away from plain text variables in `variables.tf`, transitioning all sensitive infrastructure parameters to use Terraform locals populated securely via the Vault data source (`vault.tf`).
