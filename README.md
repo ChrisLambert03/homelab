@@ -30,6 +30,10 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 - **Automated Vault Unsealing** - Implemented a dedicated `vault-unsealer` sidecar container that monitors the Vault status and automatically applies unseal keys upon restart.
 - **Variable Refactoring** - Migrated away from plain text variables in `variables.tf`, transitioning all sensitive infrastructure parameters to use Terraform locals populated securely via the Vault data source (`vault.tf`).
 
+**Local AI & LLM:**
+
+- **Ollama Integration** - Deployed Ollama on the Workstation node with full NVIDIA RTX A4500 (20GB) GPU passthrough and persistent volume storage. This provides a local backend for LLMs to be used by n8n for intelligent workflow automation.
+
 **Logging & Monitoring:**
 
 - **Beszel Monitoring Migration** - Successfully migrated from a resource-intensive Grafana/Prometheus/Node Exporter/cAdvisor stack to **Beszel**. This transition significantly reduced the system footprint while maintaining comprehensive monitoring and alerting.
@@ -94,6 +98,12 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 - **Purpose**: Workflow automation platform for connecting applications and automating tasks
 - **Configuration**: [docker/workstation/app-n8n.tf](docker/workstation/app-n8n.tf)
 - **Integration**: Connected to Redis backend for job queuing and state management
+
+#### **Ollama**
+
+- **Purpose**: Local LLM runner for AI-powered automation
+- **Configuration**: [docker/workstation/app-ollama.tf](docker/workstation/app-ollama.tf)
+- **Features**: NVIDIA RTX A4500 (20GB) GPU acceleration enabled
 
 #### **Redis**
 
