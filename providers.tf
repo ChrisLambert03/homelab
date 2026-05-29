@@ -4,17 +4,19 @@ provider "docker" {
   host     = "ssh://${local.ssh_user}@${local.workstation_ip}:22"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
-#provider on lenvovo ip
+
+# provider on lenovo ip
 provider "docker" {
   alias    = "lenovo"
   host     = "ssh://${local.ssh_user}@${local.lenovo_thinkcentre_ip}:22"
   ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
 }
-# provider on optiplex ip
+
+# provider on optiplex ip via native TLS
 provider "docker" {
-  alias    = "optiplex"
-  host     = "ssh://${local.ssh_user}@${local.optiplex9020_ip}:22"
-  ssh_opts = ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+  alias     = "optiplex"
+  host      = "tcp://${local.optiplex9020_ip}:2376"
+  cert_path = pathexpand("~/.docker")
 }
 # Configuration-based authentication
 provider "nginxproxymanager" {
