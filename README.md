@@ -59,103 +59,26 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 - **n8n + Redis Integration** - Optimizing workflow automation platform with Redis backend to support future AI agent pipelines.
 - **Terraform Migration** - Continuing to migrate services running on other hosts in the homelab to Terraform-managed infrastructure for improved consistency and automation.
 
-## 📦 Terraform-Managed Services
+## 📦 Managed Infrastructure
 
-### Docker Services
+### **Lenovo (Manager Node)**
+- **K3s Cluster**: `ntfy` (Notifications).
+- **Core Services**: Homarr (Dashboard), Beszel (Monitoring Hub), Apache Guacamole.
+- **Monitoring**: Beszel Agent.
 
-#### **Jellyfin**
+### **Optiplex (Management & Security)**
+- **Security**: HashiCorp Vault (Production), Portainer.
+- **Monitoring**: Beszel Agent.
 
-- **Purpose**: Open-source media server for streaming movies, TV shows, and music
-- **Configuration**: [docker/workstation/app-jellyfin.tf](docker/workstation/app-jellyfin.tf)
-
-#### **Nginx Proxy Manager**
-
-- **Purpose**: Central reverse proxy and SSL/TLS termination
-- **Configuration**: [docker/workstation/app-nginx.tf](docker/workstation/app-nginx.tf) and [nginx/proxy_hosts.tf](nginx/proxy_hosts.tf)
-
-#### **Radarr**
-
-- **Purpose**: Movie collection manager and automation tool
-- **Configuration**: [docker/workstation/app-radarr.tf](docker/workstation/app-radarr.tf)
-
-#### **Sonarr**
-
-- **Purpose**: TV show collection manager and automation tool
-- **Configuration**: [docker/workstation/app-sonarr.tf](docker/workstation/app-sonarr.tf)
-
-#### **Tdarr**
-
-- **Purpose**: Distributed transcoding and media optimization
-- **Configuration**: [docker/workstation/app-tdarr.tf](docker/workstation/app-tdarr.tf)
-
-#### **Prowlarr**
-
-- **Purpose**: Indexer manager for Radarr and Sonarr
-- **Configuration**: [docker/workstation/app-prowlarr.tf](docker/workstation/app-prowlarr.tf)
-
-#### **n8n**
-
-- **Purpose**: Workflow automation platform for connecting applications and automating tasks
-- **Configuration**: [docker/workstation/app-n8n.tf](docker/workstation/app-n8n.tf)
-- **Integration**: Connected to Redis backend for job queuing and state management
-
-#### **Ollama**
-
-- **Purpose**: Local LLM runner for AI-powered automation
-- **Configuration**: [docker/workstation/app-ollama.tf](docker/workstation/app-ollama.tf)
-- **Features**: NVIDIA RTX A4500 (20GB) GPU acceleration enabled
-
-#### **Redis**
-
-- **Purpose**: In-memory data store providing caching and state management for n8n and other services
-- **Configuration**: [docker/workstation/app-redis.tf](docker/workstation/app-redis.tf)
-- **Features**: Persistence enabled with RDB snapshots and AOF logging
-
-#### **Redis Insight**
-
-- **Purpose**: GUI-based Redis database management and monitoring tool
-- **Configuration**: [docker/workstation/app-redis-insight.tf](docker/workstation/app-redis-insight.tf)
-- **Integration**: Connected to Redis network for visualization and inspection
-
-#### **Homarr**
-
-- **Purpose**: A simple, yet powerful dashboard to access all your favorite applications
-- **Configuration**: [docker/lenovo/app-homarr.tf](docker/lenovo/app-homarr.tf)
-
-#### **Ntfy**
-
-- **Purpose**: Send push notifications to your phone or desktop
-- **Configuration**: [kubernetes/lenovo/app-ntfy.yaml](kubernetes/lenovo/app-ntfy.yaml) (Migrated to K3s)
-
-#### **Beszel**
-
-- **Purpose**: Lightweight monitoring hub and agent for resource visualization
-- **Configuration**:
-  - **Hub**: [docker/lenovo/app-beszel.tf](docker/lenovo/app-beszel.tf)
-  - **Agents**:
-    - [docker/workstation/app-beszel-agent.tf](docker/workstation/app-beszel-agent.tf)
-    - [docker/lenovo/app-beszel-agent.tf](docker/lenovo/app-beszel-agent.tf)
-    - [docker/optiplex/app-beszel-agent.tf](docker/optiplex/app-beszel-agent.tf)
-- **Rationale**: Replaced Grafana/Prometheus/Node Exporter/cAdvisor stack with this lightweight alternative to significantly reduce system resource usage.
-
-### Logging Infrastructure
-
-#### **ELK Stack (Elasticsearch, Logstash, Kibana)**
-
-- **Purpose**: Centralized logging with Elasticsearch, Logstash, and Kibana for container log aggregation, processing, and visualization
-- **Configuration**: [docker/workstation/elk-stack.tf](docker/workstation/elk-stack.tf)
-- **Components**:
-  - **Elasticsearch**: Search and analytics engine for logs
-  - **Logstash**: Log processing and transformation pipeline
-  - **Kibana**: Web UI for log exploration and visualization
-- **Integration**: Docker global log driver sends container logs to Logstash via GELF protocol
+### **Workstation (Media & Heavy Lifting)**
+- **Media & Entertainment**: Jellyfin, *arr Stack (Radarr, Sonarr, Prowlarr, Tdarr), RetroArch.
+- **Automation**: n8n, Redis, Redis Insight.
+- **AI/ML**: Ollama (NVIDIA RTX A4500 GPU Accelerated).
+- **Infrastructure**: Nginx Proxy Manager, ELK Stack (Logging).
+- **Monitoring**: Beszel Agent.
 
 ### Virtual Machines
-
-#### **LibVirt VMs**
-
-- **Purpose**: Virtual machine infrastructure management
-- **Configuration**: [vms/libvirt-vms.tf](vms/libvirt-vms.tf)
+- **LibVirt**: Managed virtual machines for isolated testing and legacy services.
 
 ## 🔧 Infrastructure as Code (Terraform)
 irt VMs**
