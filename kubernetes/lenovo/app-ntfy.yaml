@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ntfy
+  labels:
+    app: ntfy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ntfy
+  template:
+    metadata:
+      labels:
+        app: ntfy
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: lenovo
+      containers:
+        - name: ntfy
+          image: binwiederhier/ntfy:latest
+          args: ["serve"]
+          env:
+            - name: TZ
+              value: "America/New_York"
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 80
+              name: http
+          volumeMounts:
+            - name: cache
+              mountPath: "/var/cache/ntfy"
+            - name: config
+              mountPath: "/etc/ntfy"
+      volumes:
+        - name: cache
+          hostPath:
+            path: "/home/chris/services/ntfy/var/cache/ntfy"
+            type: DirectoryOrCreate
+        - name: config
+          hostPath:
+            path: "/home/chris/services/ntfy/etc/ntfy"
+            type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ntfy
+spec:
+  type: NodePort
+  selector:
+    app: ntfy
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 32080

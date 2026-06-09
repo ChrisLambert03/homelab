@@ -125,7 +125,7 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 #### **Ntfy**
 
 - **Purpose**: Send push notifications to your phone or desktop
-- **Configuration**: [docker/lenovo/app-ntfy.tf](docker/lenovo/app-ntfy.tf)
+- **Configuration**: [kubernetes/lenovo/app-ntfy.yaml](kubernetes/lenovo/app-ntfy.yaml) (Migrated to K3s)
 
 #### **Beszel**
 
@@ -149,6 +149,22 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
   - **Logstash**: Log processing and transformation pipeline
   - **Kibana**: Web UI for log exploration and visualization
 - **Integration**: Docker global log driver sends container logs to Logstash via GELF protocol
+
+### Virtual Machines
+
+#### **LibVirt VMs**
+
+- **Purpose**: Virtual machine infrastructure management
+- **Configuration**: [vms/libvirt-vms.tf](vms/libvirt-vms.tf)
+
+## 🔧 Infrastructure as Code (Terraform)
+irt VMs**
+
+- **Purpose**: Virtual machine infrastructure management
+- **Configuration**: [vms/libvirt-vms.tf](vms/libvirt-vms.tf)
+
+## 🔧 Infrastructure as Code (Terraform)
+tocol
 
 ### Virtual Machines
 

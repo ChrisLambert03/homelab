@@ -4,6 +4,8 @@ resource "docker_image" "ntfy" {
   keep_locally = true
 }
 
+## Migrated to Kubernetes:
+/*
 resource "docker_container" "ntfy" {
   provider = docker.lenovo
   name     = "ntfy"
@@ -42,3 +44,4 @@ resource "docker_container" "ntfy" {
     ignore_changes = [log_driver, log_opts]
   }
 }
+*/
