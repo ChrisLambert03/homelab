@@ -1,8 +1,13 @@
 
+data "docker_registry_image" "beszel" {
+  name = "henrygd/beszel:${var.beszel_version}"
+}
+
 resource "docker_image" "beszel" {
-  provider     = docker.lenovo
-  name         = "henrygd/beszel:${var.beszel_version}"
-  keep_locally = true
+  provider      = docker.lenovo
+  name          = data.docker_registry_image.beszel.name
+  pull_triggers = [data.docker_registry_image.beszel.sha256_digest]
+  keep_locally  = false
 }
 
 # ─── Beszel ────────────────────────────────────────────────────────────────────

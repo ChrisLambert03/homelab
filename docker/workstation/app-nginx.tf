@@ -1,8 +1,13 @@
 # 1. Image for Nginx Proxy Manager
+data "docker_registry_image" "nginx_proxy_manager" {
+  name = "jc21/nginx-proxy-manager:latest"
+}
+
 resource "docker_image" "nginx_proxy_manager" {
-  provider     = docker.workstation
-  name         = "jc21/nginx-proxy-manager:latest"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.nginx_proxy_manager.name
+  pull_triggers = [data.docker_registry_image.nginx_proxy_manager.sha256_digest]
+  keep_locally  = false
 }
 
 # 2. Nginx Proxy Manager Container

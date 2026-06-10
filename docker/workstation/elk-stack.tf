@@ -7,34 +7,59 @@ resource "docker_network" "elk" {
 }
 
 # ── Images ──────────────────────────────────────────────────
+data "docker_registry_image" "elasticsearch" {
+  name = "docker.elastic.co/elasticsearch/elasticsearch:${var.elk_version}"
+}
+
 resource "docker_image" "elasticsearch" {
-  provider     = docker.workstation
-  name         = "docker.elastic.co/elasticsearch/elasticsearch:${var.elk_version}"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.elasticsearch.name
+  pull_triggers = [data.docker_registry_image.elasticsearch.sha256_digest]
+  keep_locally  = false
+}
+
+data "docker_registry_image" "logstash" {
+  name = "docker.elastic.co/logstash/logstash:${var.elk_version}"
 }
 
 resource "docker_image" "logstash" {
-  provider     = docker.workstation
-  name         = "docker.elastic.co/logstash/logstash:${var.elk_version}"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.logstash.name
+  pull_triggers = [data.docker_registry_image.logstash.sha256_digest]
+  keep_locally  = false
+}
+
+data "docker_registry_image" "kibana" {
+  name = "docker.elastic.co/kibana/kibana:${var.elk_version}"
 }
 
 resource "docker_image" "kibana" {
-  provider     = docker.workstation
-  name         = "docker.elastic.co/kibana/kibana:${var.elk_version}"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.kibana.name
+  pull_triggers = [data.docker_registry_image.kibana.sha256_digest]
+  keep_locally  = false
+}
+
+data "docker_registry_image" "alpine" {
+  name = "alpine:latest"
 }
 
 resource "docker_image" "alpine" {
-  provider     = docker.workstation
-  name         = "alpine:latest"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.alpine.name
+  pull_triggers = [data.docker_registry_image.alpine.sha256_digest]
+  keep_locally  = false
+}
+
+data "docker_registry_image" "filebeat" {
+  name = "docker.elastic.co/beats/filebeat:${var.elk_version}"
 }
 
 resource "docker_image" "filebeat" {
-  provider     = docker.workstation
-  name         = "docker.elastic.co/beats/filebeat:${var.elk_version}"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.filebeat.name
+  pull_triggers = [data.docker_registry_image.filebeat.sha256_digest]
+  keep_locally  = false
 }
 
 # ── Elasticsearch ────────────────────────────────────────────

@@ -1,7 +1,12 @@
+data "docker_registry_image" "beszel_agent" {
+  name = "henrygd/beszel-agent-nvidia:${var.beszel_agent_version}"
+}
+
 resource "docker_image" "beszel_agent" {
-  provider     = docker.workstation
-  name         = "henrygd/beszel-agent-nvidia:${var.beszel_agent_version}"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.beszel_agent.name
+  pull_triggers = [data.docker_registry_image.beszel_agent.sha256_digest]
+  keep_locally  = false
 }
 
 # ─── Beszel Agent ─────────────────────────────────────────────────────────────

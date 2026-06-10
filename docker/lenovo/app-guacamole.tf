@@ -9,22 +9,37 @@ resource "docker_network" "guacamole" {
 
 # ─── Images ────────────────────────────────────────────────────────────────────
 
+data "docker_registry_image" "guacd" {
+  name = "guacamole/guacd:${var.guacamole_version}"
+}
+
 resource "docker_image" "guacd" {
-  provider     = docker.lenovo
-  name         = "guacamole/guacd:${var.guacamole_version}"
-  keep_locally = true
+  provider      = docker.lenovo
+  name          = data.docker_registry_image.guacd.name
+  pull_triggers = [data.docker_registry_image.guacd.sha256_digest]
+  keep_locally  = false
+}
+
+data "docker_registry_image" "guacamole" {
+  name = "guacamole/guacamole:${var.guacamole_version}"
 }
 
 resource "docker_image" "guacamole" {
-  provider     = docker.lenovo
-  name         = "guacamole/guacamole:${var.guacamole_version}"
-  keep_locally = true
+  provider      = docker.lenovo
+  name          = data.docker_registry_image.guacamole.name
+  pull_triggers = [data.docker_registry_image.guacamole.sha256_digest]
+  keep_locally  = false
+}
+
+data "docker_registry_image" "postgres" {
+  name = "postgres:${var.postgres_version}"
 }
 
 resource "docker_image" "postgres" {
-  provider     = docker.lenovo
-  name         = "postgres:${var.postgres_version}"
-  keep_locally = true
+  provider      = docker.lenovo
+  name          = data.docker_registry_image.postgres.name
+  pull_triggers = [data.docker_registry_image.postgres.sha256_digest]
+  keep_locally  = false
 }
 
 # ─── PostgreSQL ────────────────────────────────────────────────────────────────

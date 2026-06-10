@@ -1,8 +1,13 @@
 # Retroarch Image
+data "docker_registry_image" "retroarch" {
+  name = "lscr.io/linuxserver/retroarch:latest"
+}
+
 resource "docker_image" "retroarch" {
-  provider     = docker.workstation
-  name         = "lscr.io/linuxserver/retroarch:latest"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.retroarch.name
+  pull_triggers = [data.docker_registry_image.retroarch.sha256_digest]
+  keep_locally  = false
 }
 
 # 3. CONTAINER

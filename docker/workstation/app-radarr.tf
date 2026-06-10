@@ -1,8 +1,13 @@
 # --- Images ---
+data "docker_registry_image" "radarr" {
+  name = "lscr.io/linuxserver/radarr:latest"
+}
+
 resource "docker_image" "radarr" {
-  provider     = docker.workstation
-  name         = "lscr.io/linuxserver/radarr:latest"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.radarr.name
+  pull_triggers = [data.docker_registry_image.radarr.sha256_digest]
+  keep_locally  = false
 }
 
 # --- Radarr Container ---

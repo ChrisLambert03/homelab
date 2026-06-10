@@ -1,8 +1,13 @@
 # 1. Pull the Prowlarr Image
+data "docker_registry_image" "prowlarr" {
+  name = "lscr.io/linuxserver/prowlarr:latest"
+}
+
 resource "docker_image" "prowlarr" {
-  provider     = docker.workstation
-  name         = "lscr.io/linuxserver/prowlarr:latest"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.prowlarr.name
+  pull_triggers = [data.docker_registry_image.prowlarr.sha256_digest]
+  keep_locally  = false
 }
 
 # 2. Prowlarr Container

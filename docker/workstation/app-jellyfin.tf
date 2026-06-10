@@ -1,8 +1,13 @@
 # Pull Jellyfin Image
+data "docker_registry_image" "jellyfin" {
+  name = "lscr.io/linuxserver/jellyfin:latest"
+}
+
 resource "docker_image" "jellyfin" {
-  provider     = docker.workstation
-  name         = "lscr.io/linuxserver/jellyfin:latest"
-  keep_locally = true # allow Terraform to remove the image when the container is destroyed
+  provider      = docker.workstation
+  name          = data.docker_registry_image.jellyfin.name
+  pull_triggers = [data.docker_registry_image.jellyfin.sha256_digest]
+  keep_locally  = false # allow Terraform to remove the image when the container is destroyed
 }
 # 1. The Macvlan Network (Keep this as is)
 resource "docker_network" "jellyfin_macvlan" {

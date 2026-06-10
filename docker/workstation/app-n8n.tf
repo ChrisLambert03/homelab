@@ -1,8 +1,13 @@
 
+data "docker_registry_image" "n8n" {
+  name = "docker.n8n.io/n8nio/n8n:latest"
+}
+
 resource "docker_image" "n8n" {
-  provider     = docker.workstation
-  name         = "docker.n8n.io/n8nio/n8n:latest"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.n8n.name
+  pull_triggers = [data.docker_registry_image.n8n.sha256_digest]
+  keep_locally  = false
 }
 
 resource "docker_container" "n8n" {

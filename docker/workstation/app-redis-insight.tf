@@ -1,7 +1,12 @@
+data "docker_registry_image" "redisinsight" {
+  name = "redis/redisinsight:latest"
+}
+
 resource "docker_image" "redisinsight" {
-  provider     = docker.workstation
-  name         = "redis/redisinsight:latest"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.redisinsight.name
+  pull_triggers = [data.docker_registry_image.redisinsight.sha256_digest]
+  keep_locally  = false
 }
 
 resource "docker_volume" "redisinsight_data" {

@@ -1,7 +1,12 @@
+data "docker_registry_image" "ollama" {
+  name = "ollama/ollama:latest"
+}
+
 resource "docker_image" "ollama" {
-  provider     = docker.workstation
-  name         = "ollama/ollama:latest"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.ollama.name
+  pull_triggers = [data.docker_registry_image.ollama.sha256_digest]
+  keep_locally  = false
 }
 
 resource "docker_container" "ollama" {

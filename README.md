@@ -30,6 +30,10 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 - **Automated Vault Unsealing** - Implemented a dedicated `vault-unsealer` sidecar container that monitors the Vault status and automatically applies unseal keys upon restart.
 - **Variable Refactoring** - Migrated away from plain text variables in `variables.tf`, transitioning all sensitive infrastructure parameters to use Terraform locals populated securely via the Vault data source (`vault.tf`).
 
+**Infrastructure Automation:**
+
+- **Dynamic Image Updates** - Configured all Docker services to use `docker_registry_image` data sources and `pull_triggers` in their `docker_image` resources. This enables Terraform to automatically detect image updates on the registry and trigger container redeployments when a new SHA256 digest is identified.
+
 **Local AI & LLM:**
 
 - **Ollama Integration** - Deployed Ollama on the Workstation node with full NVIDIA RTX A4500 (20GB) GPU passthrough and persistent volume storage. This provides a local backend for LLMs to be used by n8n for intelligent workflow automation.

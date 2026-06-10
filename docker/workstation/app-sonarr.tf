@@ -1,8 +1,13 @@
 # --- Sonarr Image ---
+data "docker_registry_image" "sonarr" {
+  name = "lscr.io/linuxserver/sonarr:latest"
+}
+
 resource "docker_image" "sonarr" {
-  provider     = docker.workstation
-  name         = "lscr.io/linuxserver/sonarr:latest"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.sonarr.name
+  pull_triggers = [data.docker_registry_image.sonarr.sha256_digest]
+  keep_locally  = false
 }
 # --- Sonarr Container ---
 resource "docker_container" "sonarr" {

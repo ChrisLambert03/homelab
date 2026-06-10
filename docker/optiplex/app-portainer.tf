@@ -1,7 +1,12 @@
+data "docker_registry_image" "portainer" {
+  name = "portainer/portainer-ce:lts"
+}
+
 resource "docker_image" "portainer" {
-  provider     = docker.optiplex
-  name         = "portainer/portainer-ce:lts"
-  keep_locally = true
+  provider      = docker.optiplex
+  name          = data.docker_registry_image.portainer.name
+  pull_triggers = [data.docker_registry_image.portainer.sha256_digest]
+  keep_locally  = false
 }
 
 resource "docker_container" "portainer" {

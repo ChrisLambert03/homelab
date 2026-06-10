@@ -1,7 +1,12 @@
+data "docker_registry_image" "homarr" {
+  name = "ghcr.io/homarr-labs/homarr:latest"
+}
+
 resource "docker_image" "homarr" {
-  provider     = docker.lenovo
-  name         = "ghcr.io/homarr-labs/homarr:latest"
-  keep_locally = true
+  provider      = docker.lenovo
+  name          = data.docker_registry_image.homarr.name
+  pull_triggers = [data.docker_registry_image.homarr.sha256_digest]
+  keep_locally  = false
 }
 
 resource "docker_container" "homarr" {

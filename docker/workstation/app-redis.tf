@@ -5,10 +5,15 @@ resource "docker_network" "redis_net" {
   driver   = "bridge"
 }
 
+data "docker_registry_image" "redis" {
+  name = "redis:latest"
+}
+
 resource "docker_image" "redis" {
-  provider     = docker.workstation
-  name         = "redis:latest"
-  keep_locally = true
+  provider      = docker.workstation
+  name          = data.docker_registry_image.redis.name
+  pull_triggers = [data.docker_registry_image.redis.sha256_digest]
+  keep_locally  = false
 }
 
 resource "docker_volume" "redis_data" {

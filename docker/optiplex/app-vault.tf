@@ -1,7 +1,12 @@
+data "docker_registry_image" "vault" {
+  name = "hashicorp/vault:${var.vault_version}"
+}
+
 resource "docker_image" "vault" {
-  provider     = docker.optiplex
-  name         = "hashicorp/vault:${var.vault_version}"
-  keep_locally = true
+  provider      = docker.optiplex
+  name          = data.docker_registry_image.vault.name
+  pull_triggers = [data.docker_registry_image.vault.sha256_digest]
+  keep_locally  = false
 }
 
 # ─── Network ──────────────────────────────────────────────────────────────────

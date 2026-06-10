@@ -1,7 +1,12 @@
+data "docker_registry_image" "ntfy" {
+  name = "binwiederhier/ntfy:latest"
+}
+
 resource "docker_image" "ntfy" {
-  provider     = docker.lenovo
-  name         = "binwiederhier/ntfy:latest"
-  keep_locally = true
+  provider      = docker.lenovo
+  name          = data.docker_registry_image.ntfy.name
+  pull_triggers = [data.docker_registry_image.ntfy.sha256_digest]
+  keep_locally  = false
 }
 
 ## Migrated to Kubernetes:
