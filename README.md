@@ -47,6 +47,7 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 **New Services:**
 
 - **Redis & Redis Insight** - Deployed a persistent Redis data store and GUI for job queuing and inspection across the infrastructure.
+- **NAS Proxy Host** - Added a proxy host configuration pointing to the NAS web interface on port 8181 using the `nas_ip` secret retrieved from Vault. See [proxy_hosts.tf](file:///home/chris/homelab/nginx/proxy_hosts.tf).
 
 **Existing Ansible Playbooks:**
 
@@ -85,19 +86,11 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 - **LibVirt**: Managed virtual machines for isolated testing and legacy services.
 
 ## 🔧 Infrastructure as Code (Terraform)
-irt VMs**
 
-- **Purpose**: Virtual machine infrastructure management
-- **Configuration**: [vms/libvirt-vms.tf](vms/libvirt-vms.tf)
+### **Nginx Proxy Manager**
+- **Purpose**: Handles reverse proxy and SSL termination for internal and external homelab services.
+- **Configuration**: [proxy_hosts.tf](file:///home/chris/homelab/nginx/proxy_hosts.tf)
 
-## 🔧 Infrastructure as Code (Terraform)
-tocol
-
-### Virtual Machines
-
-#### **LibVirt VMs**
-
-- **Purpose**: Virtual machine infrastructure management
-- **Configuration**: [vms/libvirt-vms.tf](vms/libvirt-vms.tf)
-
-## 🔧 Infrastructure as Code (Terraform)
+### **Virtual Machines (LibVirt)**
+- **Purpose**: Virtual machine infrastructure management.
+- **Configuration**: [libvirt-vms.tf](file:///home/chris/homelab/vms/libvirt-vms.tf)

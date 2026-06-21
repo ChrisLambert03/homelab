@@ -77,6 +77,7 @@ module "nginx" {
   access_list_id        = local.access_list_id
   access_list_id_2      = local.access_list_id_2
   pihole_ip             = local.pihole_ip
+  nas_ip                = local.nas_ip
 
   # pass through the container id exported by the docker module (optional use)
   #  nginx_manager_container_id = module.docker_apps.nginx_proxy_manager_container_id

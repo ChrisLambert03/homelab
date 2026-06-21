@@ -38,3 +38,7 @@ variable "access_list_id" {
 variable "access_list_id_2" {
   type = number
 }
+
+variable "nas_ip" {
+  type = string
+}

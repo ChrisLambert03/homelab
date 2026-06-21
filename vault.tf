@@ -13,6 +13,7 @@ locals {
   lenovo_thinkcentre_ip = tostring(data.vault_kv_secret_v2.homelab_secrets.data["lenovo_thinkcentre_ip"])
   pihole_ip             = tostring(data.vault_kv_secret_v2.homelab_secrets.data["pihole_ip"])
   jellyfin_macvlan_ip   = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_macvlan_ip"])
+  nas_ip                = tostring(data.vault_kv_secret_v2.homelab_secrets.data["nas_ip"])
 
   # Authentication
   ssh_user     = tostring(data.vault_kv_secret_v2.homelab_secrets.data["ssh_user"])
