@@ -1,3 +1,4 @@
+/* Migrated to Kubernetes ###
 variable "homarr_secret_key" {
   description = "Homarr secret encryption key"
   type        = string
@@ -9,7 +10,7 @@ variable "homarr_log_level" {
   type        = string
   default     = "error"
 }
-
+*/
 # ─── Image versions ────────────────────────────────────────────────────────────
 
 variable "guacamole_version" {

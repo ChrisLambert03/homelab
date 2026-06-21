@@ -21,8 +21,8 @@ locals {
   npm_password = tostring(data.vault_kv_secret_v2.homelab_secrets.data["npm_password"])
 
   # Encryption & Secret Keys
-  n8n_key           = tostring(data.vault_kv_secret_v2.homelab_secrets.data["n8n_key"])
-  homarr_secret_key = tostring(data.vault_kv_secret_v2.homelab_secrets.data["homarr_secret_key"])
+  n8n_key = tostring(data.vault_kv_secret_v2.homelab_secrets.data["n8n_key"])
+  # homarr_secret_key = tostring(data.vault_kv_secret_v2.homelab_secrets.data["homarr_secret_key"]) Migrated to Kubernetes
   kibana_secret_key = tostring(data.vault_kv_secret_v2.homelab_secrets.data["kibana_secret_key"])
   elastic_password  = tostring(data.vault_kv_secret_v2.homelab_secrets.data["elastic_password"])
   postgres_password = tostring(data.vault_kv_secret_v2.homelab_secrets.data["postgres_password"])

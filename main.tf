@@ -48,7 +48,7 @@ module "lenovo" {
   providers = {
     docker.lenovo = docker.lenovo
   }
-  homarr_secret_key = local.homarr_secret_key
+  # homarr_secret_key = local.homarr_secret_key Migrated to Kubernetes
   postgres_password = local.postgres_password
   homelab_domain    = local.homlab_domain
   beszel_key        = local.beszel_key
