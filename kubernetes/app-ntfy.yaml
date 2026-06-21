@@ -32,6 +32,10 @@ spec:
                 secretKeyRef:
                   name: ntfy-secrets
                   key: upstream-base-url
+            - name: NTFY_BEHIND_PROXY
+              value: "true"
+            - name: NTFY_CACHE_FILE
+              value: "/var/cache/ntfy/cache.db"
           resources:
             limits:
               memory: "128Mi"
