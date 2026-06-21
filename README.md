@@ -28,7 +28,6 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 - **K3s Control Plane Deployment** - Migrated `ntfy` and `homarr` from standalone Docker containers on Lenovo to the K3s cluster.
 - **Longhorn Persistent Storage** - Integrated Longhorn dynamic volume provisioning on the cluster, deploying `ntfy` as a StatefulSet using a replicated 1Gi storage volume.
 - **Longhorn Node Requirements** - Added an Ansible playbook `longhorn-reqs.yml` to automate host-level requirements (iscsid, multipathd, etc.) for Longhorn storage across cluster nodes.
-- **Secure Secret Decoupling** - Defined opaque K8s secrets configuration for workloads while decoupling the local `secrets.yaml` using `.gitignore` to prevent credential exposure.
 
 **Security & Secrets Management:**
 
@@ -66,10 +65,10 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 
 ### 🚀 Currently Working On
 
+- **Kubernetes Migration** - Migrating more core homelab services from Docker/Terraform to the K3s cluster.
 - **HashiCorp Vault PKI Integration** - Investigating and implementing Vault as a Certificate Authority (CA) to automate the generation and renewal of internal TLS certificates for homelab services.
 - **Docker Logging Infrastructure** - Fine-tuning global log driver configuration with ELK stack for centralized log management and demo purposes.
 - **n8n + Redis Integration** - Optimizing workflow automation platform with Redis backend to support future AI agent pipelines.
-- **Terraform Migration** - Continuing to migrate services running on other hosts in the homelab to Terraform-managed infrastructure for improved consistency and automation.
 
 ## 📦 Managed Infrastructure
 
