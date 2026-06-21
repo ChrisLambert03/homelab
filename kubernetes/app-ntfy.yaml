@@ -1,10 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: ntfy
   labels:
     app: ntfy
 spec:
+  serviceName: ntfy
   replicas: 1
   selector:
     matchLabels:
@@ -14,8 +15,6 @@ spec:
       labels:
         app: ntfy
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: lenovo
       containers:
         - name: ntfy
           image: binwiederhier/ntfy:latest
@@ -23,6 +22,16 @@ spec:
           env:
             - name: TZ
               value: "America/New_York"
+            - name: NTFY_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ntfy-secrets
+                  key: base-url
+            - name: NTFY_UPSTREAM_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ntfy-secrets
+                  key: upstream-base-url
           resources:
             limits:
               memory: "128Mi"
@@ -33,17 +42,15 @@ spec:
           volumeMounts:
             - name: cache
               mountPath: "/var/cache/ntfy"
-            - name: config
-              mountPath: "/etc/ntfy"
-      volumes:
-        - name: cache
-          hostPath:
-            path: "/home/chris/services/ntfy/var/cache/ntfy"
-            type: DirectoryOrCreate
-        - name: config
-          hostPath:
-            path: "/home/chris/services/ntfy/etc/ntfy"
-            type: DirectoryOrCreate
+  volumeClaimTemplates:
+    - metadata:
+        name: cache
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: longhorn
+        resources:
+          requests:
+            storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
