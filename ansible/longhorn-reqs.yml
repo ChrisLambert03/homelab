@@ -1,0 +1,22 @@
+---
+- name: Install Longhorn Requirements
+  hosts: all
+  become: true
+  tasks:
+    - name: Install required packages
+      ansible.builtin.apt:
+        name:
+          - open-iscsi
+          - nfs-common
+          - util-linux
+          - bash
+          - curl
+          - jq
+        state: present
+        update_cache: true
+
+    - name: Ensure iscsid is started and enabled
+      ansible.builtin.systemd:
+        name: iscsid
+        state: started
+        enabled: true
