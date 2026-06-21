@@ -23,6 +23,13 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 
 ### 📝 Recent Changes
 
+**Kubernetes & Storage Migration:**
+
+- **K3s Control Plane Deployment** - Migrated `ntfy` and `homarr` from standalone Docker containers on Lenovo to the K3s cluster.
+- **Longhorn Persistent Storage** - Integrated Longhorn dynamic volume provisioning on the cluster, deploying `ntfy` as a StatefulSet using a replicated 1Gi storage volume.
+- **Longhorn Node Requirements** - Added an Ansible playbook `longhorn-reqs.yml` to automate host-level requirements (iscsid, multipathd, etc.) for Longhorn storage across cluster nodes.
+- **Secure Secret Decoupling** - Defined opaque K8s secrets configuration for workloads while decoupling the local `secrets.yaml` using `.gitignore` to prevent credential exposure.
+
 **Security & Secrets Management:**
 
 - **Docker TLS Authentication** - Migrated all Docker providers (Workstation, Lenovo, Optiplex) to use TCP on port 2376 with native TLS certificate-based authentication, replacing the previous SSH-based connection method for improved performance and security consistency.
@@ -67,8 +74,8 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 ## 📦 Managed Infrastructure
 
 ### **Lenovo (Manager Node)**
-- **K3s Cluster**: `ntfy` (Notifications).
-- **Core Services**: Homarr (Dashboard), Beszel (Monitoring Hub), Apache Guacamole.
+- **K3s Cluster**: `ntfy` (Notifications with Longhorn storage), `homarr` (Dashboard).
+- **Core Services**: Beszel (Monitoring Hub), Apache Guacamole.
 - **Monitoring**: Beszel Agent.
 
 ### **Optiplex (Management & Security)**
