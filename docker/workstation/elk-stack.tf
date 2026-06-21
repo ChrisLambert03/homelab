@@ -40,17 +40,6 @@ resource "docker_image" "kibana" {
   keep_locally  = false
 }
 
-data "docker_registry_image" "alpine" {
-  name = "alpine:latest"
-}
-
-resource "docker_image" "alpine" {
-  provider      = docker.workstation
-  name          = data.docker_registry_image.alpine.name
-  pull_triggers = [data.docker_registry_image.alpine.sha256_digest]
-  keep_locally  = false
-}
-
 data "docker_registry_image" "filebeat" {
   name = "docker.elastic.co/beats/filebeat:${var.elk_version}"
 }
