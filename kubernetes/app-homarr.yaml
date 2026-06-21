@@ -39,10 +39,10 @@ spec:
               mountPath: "/var/run/docker.sock"
             - name: localtime
               mountPath: "/etc/localtime"
-              read_only: true
+              readOnly: true
             - name: timezone
               mountPath: "/etc/timezone"
-              read_only: true
+              readOnly: true
       volumes:
         - name: appdata
           hostPath:

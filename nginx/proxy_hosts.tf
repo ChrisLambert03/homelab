@@ -180,7 +180,7 @@ resource "nginxproxymanager_proxy_host" "homarr_proxy" {
   access_list_id          = var.access_list_id
   forward_scheme          = "http"
   forward_host            = var.lenovo_thinkcentre_ip
-  forward_port            = 7575
+  forward_port            = 32082
   caching_enabled         = true
   allow_websocket_upgrade = true
   block_exploits          = true
