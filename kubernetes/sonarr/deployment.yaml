@@ -1,0 +1,64 @@
+# Sonarr Deployment Manifest
+# Deploys Sonarr inside the Kubernetes cluster.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr
+  namespace: default
+  labels:
+    app: sonarr
+spec:
+  # Single replica deployment
+  replicas: 1
+  # Strategy MUST be Recreate because the configuration volume uses iSCSI (ReadWriteOnce).
+  # A rolling update would hang because the new pod cannot mount the iSCSI target 
+  # while the old pod is still running and holding the session lock.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: sonarr
+  template:
+    metadata:
+      labels:
+        app: sonarr
+    spec:
+      containers:
+        - name: sonarr
+          # Using LinuxServer community image
+          image: lscr.io/linuxserver/sonarr:latest
+          env:
+            # Set user and group IDs to prevent permission conflicts on storage mounts
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "America/New_York"
+          ports:
+            - containerPort: 8989
+              name: http
+          volumeMounts:
+            # Persistent config directory mapped to iSCSI target on NAS
+            - name: config
+              mountPath: /config
+            # Shared media directory mapped to NFS volume on NAS
+            - name: media
+              mountPath: /media
+            # Map host timezone files read-only to ensure synchronized system logs
+            - name: localtime
+              mountPath: /etc/localtime
+              readOnly: true
+      volumes:
+        # Dedicated iSCSI Config LUN on the Terramaster NAS
+        - name: config
+          persistentVolumeClaim:
+            claimName: sonarr-iscsi-pvc
+        # Unified NFS Media Storage on the Terramaster NAS (shared with Radarr)
+        - name: media
+          persistentVolumeClaim:
+            claimName: nas-media-pvc
+        # Timezone host mount
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
