@@ -1,0 +1,41 @@
+# Unified NAS NFS Media Storage Manifest
+# Provisions a shared persistent volume and volume claim for the media storage 
+# hosted on the Terramaster NAS, allowing multiple apps (Sonarr/Radarr/Jellyfin)
+# to write to and read from it simultaneously.
+
+# Persistent Volume exposing the NAS directory over NFS
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nas-media-pv
+spec:
+  capacity:
+    # Set to 14T (Decimal Terabytes) to match the total capacity of the NAS Volume1
+    storage: 14T
+  volumeMode: Filesystem
+  # ReadWriteMany is required to let multiple pods mount and write to this volume concurrently
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    # IP address of the Terramaster NAS storage node
+    server: 10.0.0.60
+    # Directory path exported by the NAS NFS service
+    path: /Volume1/data/media
+---
+# Persistent Volume Claim for apps to bind to the NFS PV
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nas-media-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  # Explicitly bind to the PV created above
+  volumeName: nas-media-pv
+  resources:
+    requests:
+      storage: 14T
+  # Empty string storageClassName disables dynamic provisioning and enforces static binding
+  storageClassName: ""
