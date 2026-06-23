@@ -86,7 +86,28 @@ resource "docker_container" "jellyfin" {
     type   = "bind"
   }
 
+  # Unified NAS Media Storage
+  mounts {
+    target = "/media"
+    source = docker_volume.nas_media.name
+    type   = "volume"
+  }
+
   lifecycle {
     ignore_changes = [log_driver, log_opts]
   }
 }
+
+# NFS Volume pointing to the Terramaster NAS
+resource "docker_volume" "nas_media" {
+  provider = docker.workstation
+  name     = "nas_media"
+  driver   = "local"
+
+  driver_opts = {
+    type   = "nfs"
+    o      = "addr=10.0.0.60,rw,suid,dev,exec,async,nolock,soft"
+    device = ":/Volume1/data/media"
+  }
+}
+

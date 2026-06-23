@@ -42,6 +42,13 @@ resource "docker_container" "radarr" {
     type   = "bind"
   }
 
+  # Unified NAS Media Storage
+  mounts {
+    target = "/media"
+    source = docker_volume.nas_media.name
+    type   = "volume"
+  }
+
   lifecycle {
     ignore_changes = [log_driver, log_opts]
   }
