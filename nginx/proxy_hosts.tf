@@ -98,8 +98,8 @@ resource "nginxproxymanager_proxy_host" "sonarr_proxy" {
   domain_names            = ["sonarr.${var.homlab_domain}"]
   access_list_id          = var.access_list_id
   forward_scheme          = "http"
-  forward_host            = var.workstation_ip
-  forward_port            = 8989
+  forward_host            = var.lenovo_thinkcentre_ip
+  forward_port            = 32089
   caching_enabled         = true
   allow_websocket_upgrade = true
   block_exploits          = true
@@ -114,8 +114,8 @@ resource "nginxproxymanager_proxy_host" "radarr_proxy" {
   domain_names            = ["radarr.${var.homlab_domain}"]
   access_list_id          = var.access_list_id
   forward_scheme          = "http"
-  forward_host            = var.workstation_ip
-  forward_port            = 7878
+  forward_host            = var.lenovo_thinkcentre_ip
+  forward_port            = 32078
   caching_enabled         = true
   allow_websocket_upgrade = true
   block_exploits          = true
@@ -130,8 +130,8 @@ resource "nginxproxymanager_proxy_host" "prowlarr_proxy" {
   domain_names            = ["prowlarr.${var.homlab_domain}"]
   access_list_id          = var.access_list_id
   forward_scheme          = "http"
-  forward_host            = var.workstation_ip
-  forward_port            = 9696
+  forward_host            = var.lenovo_thinkcentre_ip
+  forward_port            = 32096
   caching_enabled         = true
   allow_websocket_upgrade = true
   block_exploits          = true

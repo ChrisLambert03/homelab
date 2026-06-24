@@ -1,4 +1,5 @@
 # 1. Pull the Prowlarr Image
+/*
 data "docker_registry_image" "prowlarr" {
   name = "lscr.io/linuxserver/prowlarr:latest"
 }
@@ -34,3 +35,4 @@ resource "docker_container" "prowlarr" {
     ignore_changes = [log_driver, log_opts]
   }
 }
+*/

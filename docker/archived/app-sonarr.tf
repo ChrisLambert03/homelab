@@ -1,4 +1,5 @@
 # --- Sonarr Image ---
+/*
 data "docker_registry_image" "sonarr" {
   name = "lscr.io/linuxserver/sonarr:latest"
 }
@@ -52,3 +53,4 @@ resource "docker_container" "sonarr" {
     ignore_changes = [log_driver, log_opts]
   }
 }
+*/

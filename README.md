@@ -24,14 +24,14 @@ My infrastructure is transitioning from standalone Docker hosts to a highly avai
 
 ### 📝 Recent Changes
 
-- **Kubernetes Migration**: Migrated `ntfy`, `homarr`, `sonarr`, and `radarr` from Docker to the K3s cluster.
+- **Kubernetes Migration**: Migrated `ntfy`, `homarr`, `prowlarr`, `sonarr`, and `radarr` from Docker to the K3s cluster.
 - **Storage Integration**: Connected Terramaster NAS for unified NFS media sharing (`14T` pool) and dedicated iSCSI LUNs (`20G` per target) for database/configuration persistence.
 - **Repo Restructuring**: Organized Ansible playbooks/templates and workstation log configuration files, keeping directories clean and modular.
 - **Security Hardening**: Migrated all Docker host engines to TCP/TLS socket connections and refactored Terraform variables to read directly from Vault.
 
 ### 🚀 Currently Working On
 
-- **K3s Migration**: Continuing the transition of remaining media (Jellyfin, Prowlarr, Tdarr) and automation (n8n) stacks to Kubernetes.
+- **K3s Migration**: Continuing the transition of remaining media (Jellyfin, Tdarr) and automation (n8n) stacks to Kubernetes.
 - **Storage Optimization**: Performance-tuning NFS and iSCSI mount parameters for high-throughput media transport.
 
 ---
@@ -40,7 +40,7 @@ My infrastructure is transitioning from standalone Docker hosts to a highly avai
 
 ### **Lenovo (Manager Node & K3s Control Plane)**
 
-- **K3s Cluster**: `ntfy` (StatefulSet, Longhorn), `homarr` (Dashboard), `radarr` (iSCSI Config, NFS Media), `sonarr` (iSCSI Config, NFS Media).
+- **K3s Cluster**: `ntfy` (StatefulSet, Longhorn), `homarr` (Dashboard), `prowlarr` (iSCSI Config), `radarr` (iSCSI Config, NFS Media), `sonarr` (iSCSI Config, NFS Media).
 - **Core Services**: Beszel (Monitoring Hub), Apache Guacamole.
 
 ### **Optiplex (Management & Security)**
@@ -49,7 +49,7 @@ My infrastructure is transitioning from standalone Docker hosts to a highly avai
 
 ### **Workstation (Media & Heavy Lifting)**
 
-- **Docker Container Services**: Jellyfin (prepped with NFS volumes), RetroArch, Prowlarr, Tdarr, n8n, Redis, Ollama (RTX A4500 GPU Accelerated), Nginx Proxy Manager, ELK Stack.
+- **Docker Container Services**: Jellyfin (prepped with NFS volumes), RetroArch, Tdarr, n8n, Redis, Ollama (RTX A4500 GPU Accelerated), Nginx Proxy Manager, ELK Stack.
 
 ### **Terramaster NAS (f4-425 plus - Storage Node)**
 

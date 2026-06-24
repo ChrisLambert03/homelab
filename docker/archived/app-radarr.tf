@@ -1,4 +1,5 @@
 # --- Images ---
+/*
 data "docker_registry_image" "radarr" {
   name = "lscr.io/linuxserver/radarr:latest"
 }
@@ -53,4 +54,5 @@ resource "docker_container" "radarr" {
     ignore_changes = [log_driver, log_opts]
   }
 }
+*/
 
