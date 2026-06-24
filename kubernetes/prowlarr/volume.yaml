@@ -15,8 +15,7 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   iscsi:
-    # Target portal using local DNS subdomain to hide private IP for public git repo
-    targetPortal: nas.lambertlab.us:3260
+    targetPortal: 10.0.0.60:3260
     # Dedicated iSCSI target for Prowlarr config on the NAS
     iqn: iqn.2026-06.us.lambertlab:prowlarr-config
     # 1 target per LUN layout, meaning the LUN index is always 0
