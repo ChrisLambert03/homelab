@@ -1,3 +1,4 @@
+/*
 data "docker_registry_image" "homarr" {
   name = "ghcr.io/homarr-labs/homarr:latest"
 }
@@ -8,6 +9,7 @@ resource "docker_image" "homarr" {
   pull_triggers = [data.docker_registry_image.homarr.sha256_digest]
   keep_locally  = false
 }
+*/
 
 ### Migrated to Kubernetes ###
 /*
