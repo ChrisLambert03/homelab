@@ -15,4 +15,4 @@ GEMINI.md
 .gemini/
 *.skill
 homelab-ansible-runner/
-kubernetes/secrets.yaml
+kubernetes/config/secrets.yaml
