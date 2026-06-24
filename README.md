@@ -25,9 +25,11 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 
 **Kubernetes & Storage Migration:**
 
+- **Terramaster NAS Integration (Storage Node)** - Configured a Terramaster F4-425 Plus NAS (`10.x.x.x`) to serve as the unified storage layer for the homelab. Leverages a `14T` shared NFS media volume (`nas-media-pvc`) for multi-pod file sharing and dedicated `20G` iSCSI block storage targets (`radarr-config`, `sonarr-config`) for stateful config databases.
+- **Sonarr & Radarr K3s Migrations** - Migrated Sonarr and Radarr from standalone Docker containers on Workstation to K3s. Applications are deployed as declarative workloads in K3s, mapping config storage directly to dedicated iSCSI targets on the NAS (avoiding database locks during pod updates) and media to the shared NFS mount.
 - **K3s Control Plane Deployment** - Migrated `ntfy` and `homarr` from standalone Docker containers on Lenovo to the K3s cluster.
 - **Longhorn Persistent Storage** - Integrated Longhorn dynamic volume provisioning on the cluster, deploying `ntfy` as a StatefulSet using a replicated 1Gi storage volume.
-- **Longhorn Node Requirements** - Added an Ansible playbook `longhorn-reqs.yml` to automate host-level requirements (iscsid, multipathd, etc.) for Longhorn storage across cluster nodes.
+- **Longhorn Node Requirements** - Added an Ansible playbook `longhorn-reqs.yml` to automate host-level requirements (`iscsid`, `multipathd`, etc.) for Longhorn storage across cluster nodes.
 
 **Security & Secrets Management:**
 
@@ -55,6 +57,12 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 - **Redis & Redis Insight** - Deployed a persistent Redis data store and GUI for job queuing and inspection across the infrastructure.
 - **NAS Proxy Host** - Added a proxy host configuration pointing to the NAS web interface on port 8181 using the `nas_ip` secret retrieved from Vault. See [proxy_hosts.tf](file:///home/chris/homelab/nginx/proxy_hosts.tf).
 
+**Repository Organization & Restructuring:**
+
+- **Ansible Cleanup** - Organized Ansible configurations and templates into `files/` and `templates/` folders while leaving playbooks flat in the root of `/ansible` for CWD execution.
+- **Docker Cleanup** - Archived commented-out legacy TF configuration files (Homarr & ntfy) to `docker/archived/` and moved Workstation container reference configurations (`filebeat.yml`, `logstash.conf`) into `docker/workstation/config/`.
+- **Kubernetes Cleanup** - Grouped Longhorn NodePort service under `kubernetes/longhorn/` and resolved all formatting and trailing whitespace warnings.
+
 **Existing Ansible Playbooks:**
 
 - **generate-certs.yml** - Generates TLS certificates for Docker hosts
@@ -65,15 +73,14 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 
 ### 🚀 Currently Working On
 
-- **Kubernetes Migration** - Migrating more core homelab services from Docker/Terraform to the K3s cluster.
+- **Kubernetes Migration** - Continuing the migration of other media and automation services (Jellyfin, Prowlarr, Tdarr, n8n) from Docker to the K3s cluster.
 - **HashiCorp Vault PKI Integration** - Investigating and implementing Vault as a Certificate Authority (CA) to automate the generation and renewal of internal TLS certificates for homelab services.
-- **Docker Logging Infrastructure** - Fine-tuning global log driver configuration with ELK stack for centralized log management and demo purposes.
-- **n8n + Redis Integration** - Optimizing workflow automation platform with Redis backend to support future AI agent pipelines.
+- **NFS & iSCSI Tuning** - Optimizing mount parameters and connection settings between Terramaster NAS and cluster nodes for high-speed file transport.
 
 ## 📦 Managed Infrastructure
 
 ### **Lenovo (Manager Node)**
-- **K3s Cluster**: `ntfy` (Notifications with Longhorn storage), `homarr` (Dashboard).
+- **K3s Cluster**: `ntfy` (StatefulSet, Longhorn), `homarr` (Dashboard), `radarr` (Config on iSCSI, Media on NFS), `sonarr` (Config on iSCSI, Media on NFS).
 - **Core Services**: Beszel (Monitoring Hub), Apache Guacamole.
 - **Monitoring**: Beszel Agent.
 
@@ -82,11 +89,15 @@ This homelab serves as a centralized hub for personal automation, monitoring, an
 - **Monitoring**: Beszel Agent.
 
 ### **Workstation (Media & Heavy Lifting)**
-- **Media & Entertainment**: Jellyfin, *arr Stack (Radarr, Sonarr, Prowlarr, Tdarr), RetroArch.
+- **Media & Entertainment**: Jellyfin (Prepped with NFS media volumes for NAS), RetroArch, Prowlarr, Tdarr.
 - **Automation**: n8n, Redis, Redis Insight.
 - **AI/ML**: Ollama (NVIDIA RTX A4500 GPU Accelerated).
 - **Infrastructure**: Nginx Proxy Manager, ELK Stack (Logging).
 - **Monitoring**: Beszel Agent.
+
+### **Terramaster NAS (f4-425 plus - Storage Node)**
+- **Storage Services**: Unified NFS Shares (14TB media pool), iSCSI target portal (`10.x.x.x:3260` - ext4 block LUNs for application configs).
+- **Host access**: SSH port `9222`.
 
 ### Virtual Machines
 - **LibVirt**: Managed virtual machines for isolated testing and legacy services.
