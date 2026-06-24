@@ -1,0 +1,41 @@
+# Prowlarr iSCSI Configuration Volume Manifest
+# Provisions a PersistentVolume (PV) pointing directly to a dedicated iSCSI Target
+# on the Terramaster NAS, and binds it to a PersistentVolumeClaim (PVC).
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: prowlarr-iscsi-pv
+spec:
+  capacity:
+    # 2 GB LUN created on the Terramaster NAS for indexer database and configs
+    storage: 2G
+  volumeMode: Filesystem
+  # ReadWriteOnce is required because iSCSI targets can only be mounted by one node at a time
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  iscsi:
+    # Target portal using local DNS subdomain to hide private IP for public git repo
+    targetPortal: nas.lambertlab.us:3260
+    # Dedicated iSCSI target for Prowlarr config on the NAS
+    iqn: iqn.2026-06.us.lambertlab:prowlarr-config
+    # 1 target per LUN layout, meaning the LUN index is always 0
+    lun: 0
+    fsType: ext4
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prowlarr-iscsi-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  # Explicitly bind to the PV created above
+  volumeName: prowlarr-iscsi-pv
+  resources:
+    requests:
+      storage: 2G
+  # Empty string storageClassName disables dynamic provisioning and enforces static binding
+  storageClassName: ""

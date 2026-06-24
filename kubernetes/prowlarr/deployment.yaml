@@ -1,0 +1,57 @@
+# Prowlarr Deployment Manifest
+# Deploys Prowlarr inside the Kubernetes cluster.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prowlarr
+  namespace: default
+  labels:
+    app: prowlarr
+spec:
+  # Single replica deployment
+  replicas: 1
+  # Strategy MUST be Recreate because the configuration volume uses iSCSI (ReadWriteOnce).
+  # A rolling update would hang because the new pod cannot mount the iSCSI target 
+  # while the old pod is still running and holding the session lock.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: prowlarr
+  template:
+    metadata:
+      labels:
+        app: prowlarr
+    spec:
+      containers:
+        - name: prowlarr
+          # Using LinuxServer community image
+          image: lscr.io/linuxserver/prowlarr:latest
+          env:
+            # Set user and group IDs to prevent permission conflicts on storage mounts
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "America/New_York"
+          ports:
+            - containerPort: 9696
+              name: http
+          volumeMounts:
+            # Persistent config directory mapped to iSCSI target on NAS
+            - name: config
+              mountPath: /config
+            # Map host timezone files read-only to ensure synchronized system logs
+            - name: localtime
+              mountPath: /etc/localtime
+              readOnly: true
+      volumes:
+        # Dedicated iSCSI Config LUN on the Terramaster NAS
+        - name: config
+          persistentVolumeClaim:
+            claimName: prowlarr-iscsi-pvc
+        # Local host timezone volume
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
