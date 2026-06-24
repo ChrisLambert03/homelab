@@ -1,5 +1,5 @@
 # Unified NAS NFS Media Storage Manifest
-# Provisions a shared persistent volume and volume claim for the media storage 
+# Provisions a shared persistent volume and volume claim for the media storage
 # hosted on the Terramaster NAS, allowing multiple apps (Sonarr/Radarr/Jellyfin)
 # to write to and read from it simultaneously.
 
