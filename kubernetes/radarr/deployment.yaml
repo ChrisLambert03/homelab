@@ -38,6 +38,14 @@ spec:
           ports:
             - containerPort: 7878
               name: http
+          # Health check to ensure K3s restarts the pod if the database locks up (e.g. iSCSI disconnect)
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 7878
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
           volumeMounts:
             # Persistent config directory mapped to iSCSI target on NAS
             - name: config
