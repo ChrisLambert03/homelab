@@ -43,6 +43,14 @@ spec:
           ports:
             - containerPort: 80
               name: http
+          livenessProbe:
+            httpGet:
+              path: /v1/health
+              port: 80
+            initialDelaySeconds: 40
+            periodSeconds: 60
+            timeoutSeconds: 10
+            failureThreshold: 3
           volumeMounts:
             - name: cache
               mountPath: "/var/cache/ntfy"
