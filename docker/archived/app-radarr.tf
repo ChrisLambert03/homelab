@@ -1,20 +1,21 @@
-# --- Sonarr Image ---
-/*
-data "docker_registry_image" "sonarr" {
-  name = "lscr.io/linuxserver/sonarr:latest"
+# --- Images ---
+
+data "docker_registry_image" "radarr" {
+  name = "lscr.io/linuxserver/radarr:latest"
 }
 
-resource "docker_image" "sonarr" {
+resource "docker_image" "radarr" {
   provider      = docker.workstation
-  name          = data.docker_registry_image.sonarr.name
-  pull_triggers = [data.docker_registry_image.sonarr.sha256_digest]
+  name          = data.docker_registry_image.radarr.name
+  pull_triggers = [data.docker_registry_image.radarr.sha256_digest]
   keep_locally  = false
 }
-# --- Sonarr Container ---
-resource "docker_container" "sonarr" {
+
+# --- Radarr Container ---
+resource "docker_container" "radarr" {
   provider     = docker.workstation
-  name         = "sonarr"
-  image        = docker_image.sonarr.image_id
+  name         = "radarr"
+  image        = docker_image.radarr.image_id
   restart      = "unless-stopped"
   network_mode = "host"
 
@@ -26,13 +27,13 @@ resource "docker_container" "sonarr" {
 
   mounts {
     target = "/config"
-    source = "/home/chris/services/sonarr/config"
+    source = "/home/chris/services/radarr/config"
     type   = "bind"
   }
 
   mounts {
     target = "/data"
-    source = "/mnt/blue_drive/data" # Updated to blue_drive
+    source = "/mnt/blue_drive/data"
     type   = "bind"
   }
 
@@ -53,4 +54,5 @@ resource "docker_container" "sonarr" {
     ignore_changes = [log_driver, log_opts]
   }
 }
-*/
+
+

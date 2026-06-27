@@ -1,4 +1,4 @@
-/*
+
 data "docker_registry_image" "homarr" {
   name = "ghcr.io/homarr-labs/homarr:latest"
 }
@@ -9,10 +9,10 @@ resource "docker_image" "homarr" {
   pull_triggers = [data.docker_registry_image.homarr.sha256_digest]
   keep_locally  = false
 }
-*/
+
 
 ### Migrated to Kubernetes ###
-/*
+
 resource "docker_container" "homarr" {
   provider = docker.lenovo
   name     = "homarr"
@@ -54,4 +54,3 @@ resource "docker_container" "homarr" {
     ignore_changes = [log_driver, log_opts]
   }
 }
-*/
