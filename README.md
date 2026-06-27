@@ -24,7 +24,7 @@ My infrastructure is transitioning from standalone Docker hosts to a highly avai
 
 ### 📝 Recent Changes
 
-- **Kubernetes Migration**: Migrated `ntfy`, `homarr`, `prowlarr`, `sonarr`, and `radarr` from Docker to the K3s cluster.
+- **Kubernetes Migration**: Migrated `vault`, `ntfy`, `homarr`, `prowlarr`, `sonarr`, and `radarr` from Docker to the K3s cluster.
 - **Storage Integration**: Connected Terramaster NAS for unified NFS media sharing (`14T` pool) and dedicated iSCSI LUNs (`20G` per target) for database/configuration persistence.
 - **Repo Restructuring**: Organized Ansible playbooks/templates and workstation log configuration files, keeping directories clean and modular.
 - **Security Hardening**: Migrated all Docker host engines to TCP/TLS socket connections and refactored Terraform variables to read directly from Vault.
@@ -40,12 +40,12 @@ My infrastructure is transitioning from standalone Docker hosts to a highly avai
 
 ### **Lenovo (Manager Node & K3s Control Plane)**
 
-- **K3s Cluster**: `ntfy` (StatefulSet, Longhorn), `homarr` (Dashboard), `prowlarr` (iSCSI Config), `radarr` (iSCSI Config, NFS Media), `sonarr` (iSCSI Config, NFS Media).
+- **K3s Cluster**: `vault` (StatefulSet, Longhorn), `ntfy` (StatefulSet, Longhorn), `homarr` (Dashboard), `prowlarr` (iSCSI Config), `radarr` (iSCSI Config, NFS Media), `sonarr` (iSCSI Config, NFS Media).
 - **Core Services**: Beszel (Monitoring Hub), Apache Guacamole.
 
 ### **Optiplex (Management & Security)**
 
-- **Security**: HashiCorp Vault (Production), Portainer.
+- **Security**: Portainer.
 
 ### **Workstation (Media & Heavy Lifting)**
 
