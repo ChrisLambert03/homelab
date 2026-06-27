@@ -13,9 +13,3 @@ variable "vault_password" {
   type        = string
   sensitive   = true
 }
-
-variable "vault_unseal_keys" {
-  description = "List of unseal keys for the production vault"
-  type        = list(string)
-  sensitive   = true
-}

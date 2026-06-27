@@ -36,10 +36,6 @@ module "optiplex" {
   beszel_key            = local.beszel_key
   beszel_token          = local.beszel_token_optiplex
   homelab_domain        = local.homlab_domain
-  vault_secrets_path    = "/home/chris/services/vault/secrets.json"
-  vault_config_path     = "/home/chris/services/vault/vault.hcl"
-  vault_data_path       = "/home/chris/services/vault/data"
-  vault_unseal_keys     = var.vault_unseal_keys
 }
 
 module "lenovo" {
