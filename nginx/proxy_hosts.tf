@@ -82,11 +82,11 @@ resource "nginxproxymanager_proxy_host" "vault_proxy" {
   domain_names            = ["vault.${var.homlab_domain}"]
   access_list_id          = var.access_list_id
   forward_scheme          = "http"
-  forward_host            = var.optiplex9020_ip
-  forward_port            = 8222
+  forward_host            = var.lenovo_thinkcentre_ip
+  forward_port            = 32222
   caching_enabled         = true
   allow_websocket_upgrade = true
-  block_exploits          = true
+  block_exploits          = false
   certificate_id          = var.wildcard_cert_id
   ssl_forced              = true
   hsts_enabled            = true
