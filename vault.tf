@@ -35,10 +35,10 @@ locals {
   tdarr_auth_key = tostring(data.vault_kv_secret_v2.homelab_secrets.data["tdarr_auth_key"])
 
   # Paths
-  jellyfin_config_path   = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_config_path"])
-  jellyfin_cache_path    = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_cache_path"])
-  blue_drive_path        = tostring(data.vault_kv_secret_v2.homelab_secrets.data["blue_drive_path"])
-  black_drive_path       = tostring(data.vault_kv_secret_v2.homelab_secrets.data["black_drive_path"])
-  wd_drive_path          = tostring(data.vault_kv_secret_v2.homelab_secrets.data["wd_drive_path"])
-  nginx_data_path        = tostring(data.vault_kv_secret_v2.homelab_secrets.data["nginx_data_path"])
+  jellyfin_config_path = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_config_path"])
+  jellyfin_cache_path  = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_cache_path"])
+  blue_drive_path      = tostring(data.vault_kv_secret_v2.homelab_secrets.data["blue_drive_path"])
+  black_drive_path     = tostring(data.vault_kv_secret_v2.homelab_secrets.data["black_drive_path"])
+  wd_drive_path        = tostring(data.vault_kv_secret_v2.homelab_secrets.data["wd_drive_path"])
+  nginx_data_path      = tostring(data.vault_kv_secret_v2.homelab_secrets.data["nginx_data_path"])
 }
