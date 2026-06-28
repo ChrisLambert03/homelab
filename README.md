@@ -24,6 +24,7 @@ My infrastructure is transitioning from standalone Docker hosts to a highly avai
 
 ### 📝 Recent Changes
 
+- **Traefik Migration**: Completely decommissioned Nginx Proxy Manager. Migrated all reverse proxying, SSL termination, and IP allowlisting (ACLs) into Kubernetes natively using Traefik Middlewares and EndpointSlices.
 - **Kubernetes Migration**: Migrated `vault`, `ntfy`, `homarr`, `prowlarr`, `sonarr`, and `radarr` from Docker to the K3s cluster.
 - **Storage Integration**: Connected Terramaster NAS for unified NFS media sharing (`14T` pool) and dedicated iSCSI LUNs (`20G` per target) for database/configuration persistence.
 - **Repo Restructuring**: Organized Ansible playbooks/templates and workstation log configuration files, keeping directories clean and modular.
@@ -49,7 +50,7 @@ My infrastructure is transitioning from standalone Docker hosts to a highly avai
 
 ### **Workstation (Media & Heavy Lifting)**
 
-- **Docker Container Services**: Jellyfin (prepped with NFS volumes), RetroArch, Tdarr, n8n, Redis, Ollama (RTX A4500 GPU Accelerated), Nginx Proxy Manager, ELK Stack.
+- **Docker Container Services**: Jellyfin (prepped with NFS volumes), RetroArch, Tdarr, n8n, Redis, Ollama (RTX A4500 GPU Accelerated), ELK Stack.
 
 ### **Terramaster NAS (f4-425 plus - Storage Node)**
 
@@ -64,5 +65,5 @@ My infrastructure is transitioning from standalone Docker hosts to a highly avai
 
 ## 🔧 Infrastructure as Code
 
-- **Nginx Proxy Manager**: Managed via [nginx/proxy_hosts.tf](file:///home/chris/homelab/nginx/proxy_hosts.tf) for SSL termination and internal/external reverse proxies.
+- **Traefik Ingress**: Managed natively in Kubernetes using Traefik Middlewares for IP Allowlisting (ACLs) and EndpointSlices for bridging legacy Docker applications into the K3s routing mesh.
 - **Virtual Machines**: Declaratively provisioned via LibVirt using [vms/libvirt-vms.tf](file:///home/chris/homelab/vms/libvirt-vms.tf).
