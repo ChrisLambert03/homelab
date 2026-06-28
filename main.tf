@@ -58,26 +58,3 @@ module "libvirt" {
   # workstation_ip          = var.workstation_ip
   #  ssh_user                = var.ssh_user
 }
-
-# Nginx module: handles Nginx Proxy Manager proxy_host resources
-module "nginx" {
-  source = "./nginx"
-
-  workstation_ip        = local.workstation_ip
-  homlab_domain         = local.homlab_domain
-  optiplex7040_ip       = local.optiplex7040_ip
-  optiplex9020_ip       = local.optiplex9020_ip
-  lenovo_thinkcentre_ip = local.lenovo_thinkcentre_ip
-  wildcard_cert_id      = local.wildcard_cert_id
-  jellyfin_macvlan_ip   = local.jellyfin_macvlan_ip
-  access_list_id        = local.access_list_id
-  access_list_id_2      = local.access_list_id_2
-  pihole_ip             = local.pihole_ip
-  nas_ip                = local.nas_ip
-
-  # pass through the container id exported by the docker module (optional use)
-  #  nginx_manager_container_id = module.docker_apps.nginx_proxy_manager_container_id
-
-  # Ensure the docker module finishes (and the container exists) before creating proxy hosts
-  depends_on = [module.docker_apps]
-}

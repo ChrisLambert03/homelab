@@ -28,10 +28,7 @@ variable "nginx_data_path" {
   description = "Path on the Thinkmate where nginx proxy manager data (SQLite DB and config) is stored"
 }
 
-variable "nginx_letsencrypt_path" {
-  type        = string
-  description = "Path on the Thinkmate where nginx proxy manager SSL certificates (Let's Encrypt) are stored"
-}
+
 
 variable "jellyfin_macvlan_ip" {
   type        = string
