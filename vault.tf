@@ -41,5 +41,4 @@ locals {
   black_drive_path       = tostring(data.vault_kv_secret_v2.homelab_secrets.data["black_drive_path"])
   wd_drive_path          = tostring(data.vault_kv_secret_v2.homelab_secrets.data["wd_drive_path"])
   nginx_data_path        = tostring(data.vault_kv_secret_v2.homelab_secrets.data["nginx_data_path"])
-  nginx_letsencrypt_path = tostring(data.vault_kv_secret_v2.homelab_secrets.data["nginx_letsencrypt_path"])
 }

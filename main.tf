@@ -13,7 +13,6 @@ module "docker_apps" {
   black_drive_path       = local.black_drive_path
   nginx_data_path        = local.nginx_data_path
   wd_drive_path          = local.wd_drive_path
-  nginx_letsencrypt_path = local.nginx_letsencrypt_path
   homlab_domain          = local.homlab_domain
   n8n_key                = local.n8n_key
   elastic_password       = local.elastic_password
