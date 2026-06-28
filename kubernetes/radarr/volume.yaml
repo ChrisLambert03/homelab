@@ -1,3 +1,4 @@
+---
 # Radarr iSCSI Configuration Volume Manifest
 # Provisions a PersistentVolume (PV) pointing directly to a dedicated iSCSI Target
 # on the Terramaster NAS, and binds it to a PersistentVolumeClaim (PVC).

@@ -1,3 +1,4 @@
+---
 # Sonarr Deployment Manifest
 # Deploys Sonarr inside the Kubernetes cluster.
 apiVersion: apps/v1

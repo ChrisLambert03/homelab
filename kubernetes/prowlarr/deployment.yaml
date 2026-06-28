@@ -1,3 +1,4 @@
+---
 # Prowlarr Deployment Manifest
 # Deploys Prowlarr inside the Kubernetes cluster.
 apiVersion: apps/v1

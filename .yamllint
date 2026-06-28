@@ -1,5 +1,16 @@
+---
+extends: default
+
 rules:
-  line-length:
-    max: 120
-    allow-non-breakable-words: true
-    level: warning # Make it a warning instead of an error
+  line-length: disable
+  indentation: disable
+
+  # Ansible-lint strict compatibility overrides
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: false
+  braces:
+    max-spaces-inside: 1
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true

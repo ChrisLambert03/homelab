@@ -5,19 +5,19 @@
     - name: Install all the things
       ansible.builtin.apt:
         name:
-          - iperf3 # Network speed
-          - powerstat # Wattage/Power
-          - htop # Standard monitor
-          - lm-sensors # Temps
-          - neofetch # System Info
-          - nload # Network bandwidth graph
-          - fzf # Fuzzy search for history/files
-          - usbutils # lsusb
-          - pciutils # lspci
-          - iotop # Per-process disk I/O monitoring
-          - nmap # Network scanning
-          - btop # Better htop
-          - ncdu # Disk Usage analyzer
-          - unzip # For extracting zip files
+          - iperf3  # Network speed
+          - powerstat  # Wattage/Power
+          - htop  # Standard monitor
+          - lm-sensors  # Temps
+          - neofetch  # System Info
+          - nload  # Network bandwidth graph
+          - fzf  # Fuzzy search for history/files
+          - usbutils  # lsusb
+          - pciutils  # lspci
+          - iotop  # Per-process disk I/O monitoring
+          - nmap  # Network scanning
+          - btop  # Better htop
+          - ncdu  # Disk Usage analyzer
+          - unzip  # For extracting zip files
         state: present
         update_cache: true

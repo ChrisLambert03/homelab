@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -56,14 +57,14 @@ spec:
           command: ["sh", "-c"]
           args:
             - |
-              while true; do 
-                if vault status 2>&1 | grep -q 'Sealed.*true'; then 
-                  echo 'Vault is sealed. Unsealing...'; 
-                  vault operator unseal $KEY_1; 
-                  vault operator unseal $KEY_2; 
-                  vault operator unseal $KEY_3; 
-                fi; 
-                sleep 30; 
+              while true; do
+                if vault status 2>&1 | grep -q 'Sealed.*true'; then
+                  echo 'Vault is sealed. Unsealing...';
+                  vault operator unseal $KEY_1;
+                  vault operator unseal $KEY_2;
+                  vault operator unseal $KEY_3;
+                fi;
+                sleep 30;
               done
           env:
             - name: VAULT_ADDR

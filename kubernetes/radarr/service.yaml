@@ -1,3 +1,4 @@
+---
 # Radarr Service Manifest
 # Exposes Radarr internally within the cluster and externally via NodePort.
 apiVersion: v1
