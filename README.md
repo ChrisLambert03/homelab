@@ -15,12 +15,12 @@ Welcome to my homelab! This repository has evolved from a standalone Docker Comp
 
 ## 🏗️ Architecture & Evolution
 
-My infrastructure is transitioning from standalone Docker hosts to a highly available, cluster-orchestrated model:
+My infrastructure is transitioning from standalone Docker hosts to a highly available, k8s cluster orchestrated model:
 
 1. **Docker (Managed by Terraform)**: Legacy hosting layer for standalone applications and utilities.
 2. **Kubernetes (K3s)**: Active migration target hosting core services with dynamic storage provisioning.
 3. **Storage (NFS & iSCSI)**: Configured on a Terramaster NAS storage node to serve as the unified storage layer.
-4. **Security & Secrets**: Centrally orchestrated by a production-grade HashiCorp Vault instance.
+4. **Security & Secrets**: Centrally orchestrated by a HashiCorp Vault instance.
 
 ### 📝 Recent Changes
 
