@@ -17,4 +17,5 @@ GEMINI.md
 homelab-ansible-runner/
 kubernetes/config/secrets.yaml
 check-images.sh
-check-k8s-images.sh.agents/
+check-k8s-images.sh
+.agents/
