@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pihole-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-admin-only-access@kubernetescrd,default-pihole-admin-redirect@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: pihole.lambertlab.us
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: pihole
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - pihole.lambertlab.us
+    secretName: lambertlab-wildcard-tls

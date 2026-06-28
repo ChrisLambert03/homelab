@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jellyfin-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-media-user-access@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: jellyfin.lambertlab.us
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jellyfin
+            port:
+              number: 8096
+  tls:
+  - hosts:
+    - jellyfin.lambertlab.us
+    secretName: lambertlab-wildcard-tls

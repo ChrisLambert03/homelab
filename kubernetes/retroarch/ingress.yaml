@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: retroarch-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-admin-only-access@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: retroarch.lambertlab.us
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: retroarch
+            port:
+              number: 3005
+  tls:
+  - hosts:
+    - retroarch.lambertlab.us
+    secretName: lambertlab-wildcard-tls

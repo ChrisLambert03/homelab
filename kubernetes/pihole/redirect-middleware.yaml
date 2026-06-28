@@ -1,0 +1,9 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: pihole-admin-redirect
+  namespace: default
+spec:
+  redirectRegex:
+    regex: "^https?://pihole\\.lambertlab\\.us/?$"
+    replacement: "https://pihole.lambertlab.us/admin/"

@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: redisinsight-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-admin-only-access@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: redisinsight.lambertlab.us
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: redisinsight
+            port:
+              number: 5540
+  tls:
+  - hosts:
+    - redisinsight.lambertlab.us
+    secretName: lambertlab-wildcard-tls

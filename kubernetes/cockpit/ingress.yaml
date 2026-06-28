@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cockpit-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-admin-only-access@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: cockpit.lambertlab.us
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cockpit
+            port:
+              number: 9090
+  tls:
+  - hosts:
+    - cockpit.lambertlab.us
+    secretName: lambertlab-wildcard-tls
