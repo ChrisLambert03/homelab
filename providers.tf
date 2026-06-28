@@ -19,11 +19,11 @@ provider "docker" {
   cert_path = pathexpand("~/.docker")
 }
 # Configuration-based authentication
-provider "nginxproxymanager" {
-  url      = "http://${local.workstation_ip}:81"
-  username = local.npm_user
-  password = local.npm_password
-}
+# provider "nginxproxymanager" {
+#   url      = "http://${local.workstation_ip}:81"
+#   username = local.npm_user
+#   password = local.npm_password
+# }
 # The libvirt provider is configured to connect to a remote host via SSH.
 provider "libvirt" {
   uri = "qemu+ssh://${local.ssh_user}@${local.workstation_ip}/system"

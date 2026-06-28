@@ -6,10 +6,10 @@ terraform {
       source  = "kreuzwerker/docker"
       version = "4.0.0"
     }
-    nginxproxymanager = {
-      source  = "Sander0542/nginxproxymanager"
-      version = "1.2.2"
-    }
+    # nginxproxymanager = {
+    #   source  = "Sander0542/nginxproxymanager"
+    #   version = "1.2.2"
+    # }
     libvirt = {
       source  = "dmacvicar/libvirt"
       version = ">= 0.9.4"

@@ -6,9 +6,9 @@ terraform {
       version               = "4.0.0"
       configuration_aliases = [docker.workstation]
     }
-    nginxproxymanager = {
-      source  = "Sander0542/nginxproxymanager"
-      version = "1.2.2"
-    }
+    # nginxproxymanager = {
+    #   source  = "Sander0542/nginxproxymanager"
+    #   version = "1.2.2"
+    # }
   }
 }
