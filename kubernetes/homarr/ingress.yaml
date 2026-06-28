@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: homarr-ingress
+  annotations:
+    # This annotation is used to specify the entry points for the Ingress. In this case, it specifies both "web" and "websecure" entry points, which correspond to HTTP and HTTPS traffic, respectively.
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    # This annotation is used to specify the middleware that will be applied to the Ingress. In this case, it references the "https-redirect" middleware defined in the "https-redirect-middleware.yaml" file.
+    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-admin-only-access@kubernetescrd
+spec:
+  # The IngressClassName is required in newer Kubernetes versions
+  ingressClassName: traefik
+  rules:
+    - host: homarr.lambertlab.us
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: homarr
+                port:
+                  number: 7575
+  tls:
+    - hosts:
+        - homarr.lambertlab.us
+      secretName: lambertlab-wildcard-tls
