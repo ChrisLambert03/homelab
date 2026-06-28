@@ -13,7 +13,7 @@ locals {
   jellyfin_macvlan_ip   = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_macvlan_ip"])
 
   # Authentication
-  ssh_user     = tostring(data.vault_kv_secret_v2.homelab_secrets.data["ssh_user"])
+  ssh_user = tostring(data.vault_kv_secret_v2.homelab_secrets.data["ssh_user"])
 
   # Encryption & Secret Keys
   n8n_key = tostring(data.vault_kv_secret_v2.homelab_secrets.data["n8n_key"])
@@ -23,7 +23,7 @@ locals {
   postgres_password = tostring(data.vault_kv_secret_v2.homelab_secrets.data["postgres_password"])
 
   # Configuration
-  homlab_domain    = tostring(data.vault_kv_secret_v2.homelab_secrets.data["homlab_domain"])
+  homlab_domain = tostring(data.vault_kv_secret_v2.homelab_secrets.data["homlab_domain"])
 
   # Beszel
   beszel_key               = tostring(data.vault_kv_secret_v2.homelab_secrets.data["beszel_key"])
