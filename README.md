@@ -29,6 +29,7 @@ My infrastructure is transitioning from standalone Docker hosts to a highly avai
 - **Storage Integration**: Connected Terramaster NAS for unified NFS media sharing (`14T` pool) and dedicated iSCSI LUNs (`20G` per target) for database/configuration persistence.
 - **Repo Restructuring**: Organized Ansible playbooks/templates and workstation log configuration files, keeping directories clean and modular.
 - **Security Hardening**: Migrated all Docker host engines to TCP/TLS socket connections and refactored Terraform variables to read directly from Vault.
+- **SSO & RBAC Integration**: Leveraged Microsoft Entra ID (OIDC) to implement single sign-on and role-based access control (RBAC) across the K3s cluster and HashiCorp Vault instance.
 
 ### 🚀 Currently Working On
 
