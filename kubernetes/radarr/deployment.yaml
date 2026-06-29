@@ -11,6 +11,7 @@ metadata:
 spec:
   # Single replica deployment
   replicas: 1
+  revisionHistoryLimit: 3
   # Strategy MUST be Recreate because the configuration volume uses iSCSI (ReadWriteOnce).
   # A rolling update would hang because the new pod cannot mount the iSCSI target
   # while the old pod is still running and holding the session lock.
