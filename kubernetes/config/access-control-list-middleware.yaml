@@ -7,14 +7,15 @@ metadata:
 spec:
   ipAllowList:
     sourceRange:
-      - "100.95.104.11/32"  # lenovo
-      - "100.106.96.18/32"  # workstation
-      - "100.65.236.98/32"  # opti74
-      - "100.74.145.55/32"  # optiplex
-      - "100.79.4.92/32"  # laptop
-      - "100.65.219.6/32"  # phone
-      - "100.124.184.120/32"  # pihole container
-      - "127.0.0.1/32"  # localhost (internal cluster traffic)
+      - "100.95.104.11/32" # lenovo
+      - "100.106.96.18/32" # workstation
+      - "100.65.236.98/32" # opti74
+      - "100.74.145.55/32" # optiplex
+      - "100.79.4.92/32" # laptop
+      - "100.65.219.6/32" # phone
+      - "100.124.184.120/32" # pihole container
+      - "100.72.112.61/32" # workstation windows
+      - "127.0.0.1/32" # localhost (internal cluster traffic)
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -25,11 +26,11 @@ spec:
   ipAllowList:
     sourceRange:
       # --- Your Everyday Portable Devices ---
-      - "100.79.4.92/32"  # laptop (msi)
-      - "100.65.219.6/32"  # phone (iphone-15-pro)
-      - "127.0.0.1/32"  # localhost
+      - "100.79.4.92/32" # laptop (msi)
+      - "100.65.219.6/32" # phone (iphone-15-pro)
+      - "127.0.0.1/32" # localhost
       # --- Lenovo (Homarr Dashboard) ---
-      - "100.95.104.11/32"  # lenovo
+      - "100.95.104.11/32" # lenovo
       # --- End-User IPs (Jellyfin/Media Access) ---
-      - "100.69.253.61/32"  # end user ip
-      - "100.90.167.4/32"  # end user ip
+      - "100.69.253.61/32" # end user ip
+      - "100.90.167.4/32" # end user ip
