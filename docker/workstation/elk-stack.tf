@@ -40,17 +40,6 @@ resource "docker_image" "kibana" {
   keep_locally  = false
 }
 
-data "docker_registry_image" "filebeat" {
-  name = "docker.elastic.co/beats/filebeat:${var.elk_version}"
-}
-
-resource "docker_image" "filebeat" {
-  provider      = docker.workstation
-  name          = data.docker_registry_image.filebeat.name
-  pull_triggers = [data.docker_registry_image.filebeat.sha256_digest]
-  keep_locally  = false
-}
-
 # ── Elasticsearch ────────────────────────────────────────────
 # The core search and analytics engine. Configured as a single-node 
 # cluster with optimized memory for homelab use.
@@ -189,64 +178,3 @@ resource "docker_container" "kibana" {
   }
 }
 
-# ── Filebeat ──────────────────────────────────────────────────
-# Filebeat serves as the log shipper for applications that write to files 
-# instead of stdout, bridging the gap between those files and Logstash.
-resource "docker_container" "filebeat" {
-  provider = docker.workstation
-  name     = "filebeat"
-  image    = docker_image.filebeat.image_id
-  user     = "1000:1000" # Run as non-root for improved security
-  restart  = "unless-stopped"
-
-  networks_advanced {
-    name = docker_network.elk.name
-  }
-
-  # Filebeat Config
-  volumes {
-    host_path      = "/home/chris/services/elk/filebeat/filebeat.yml"
-    container_path = "/usr/share/filebeat/filebeat.yml"
-    read_only      = true
-  }
-
-  # Filebeat Data (Registry) - Stores the current read offset for log files
-  volumes {
-    host_path      = "/home/chris/services/elk/filebeat/data"
-    container_path = "/usr/share/filebeat/data"
-  }
-
-  # NPM Logs - Access and Error logs for the Reverse Proxy
-  volumes {
-    host_path      = var.nginx_data_path
-    container_path = "/var/log/npm"
-    read_only      = true
-  }
-
-  # Sonarr Logs
-  volumes {
-    host_path      = "/home/chris/services/sonarr/config/logs"
-    container_path = "/var/log/sonarr"
-    read_only      = true
-  }
-
-  # Radarr Logs
-  volumes {
-    host_path      = "/home/chris/services/radarr/config/logs"
-    container_path = "/var/log/radarr"
-    read_only      = true
-  }
-
-  # Prowlarr Logs
-  volumes {
-    host_path      = "/home/chris/services/prowlarr/config/logs"
-    container_path = "/var/log/prowlarr"
-    read_only      = true
-  }
-
-  depends_on = [docker_container.logstash]
-
-  lifecycle {
-    ignore_changes = [log_driver, log_opts]
-  }
-}
