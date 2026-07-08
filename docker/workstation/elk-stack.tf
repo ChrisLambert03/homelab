@@ -120,7 +120,8 @@ resource "docker_container" "logstash" {
   }
 
   env = [
-    "LS_JAVA_OPTS=${var.ls_java_opts}"
+    "LS_JAVA_OPTS=${var.ls_java_opts}",
+    "ELASTIC_PASSWORD=${var.elastic_password}"
   ]
 
   volumes {
