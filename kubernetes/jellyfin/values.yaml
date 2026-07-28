@@ -1,0 +1,47 @@
+# values.yaml for jellyfin/jellyfin Helm chart
+# Overrides only — anything not listed here falls back to the chart's defaults.
+
+strategy:
+  type: Recreate
+
+image:
+  repository: lscr.io/linuxserver/jellyfin
+  tag: "latest"        # pin to a specific version once you're happy with it, e.g. "10.10.7"
+
+# Pin to the node with the GPU
+nodeSelector:
+  kubernetes.io/hostname: workstation
+
+# Required for GPU Operator's CDI-based runtime on this cluster
+# runtimeClassName: nvidia
+
+resources:
+  limits:
+    nvidia.com/gpu: 1
+
+jellyfin:
+  env:
+    - name: PUID
+      value: "1000"
+    - name: PGID
+      value: "1000"
+    - name: TZ
+      value: "America/New_York"    # set to your actual timezone
+    - name: NVIDIA_DRIVER_CAPABILITIES
+      value: "all"                 # needed for NVENC/NVDEC libraries to be injected
+    - name: JELLYFIN_PublishedServerUrl
+      value: "https://jellyfin.lambertlab.us"
+
+persistence:
+  config:
+    enabled: true
+    existingClaim: jellyfin-config-pvc   # chart has no hostPath option for config — PV/PVC bound to
+                                          # /home/chris/services/k3s-jellyfin/config via jellyfin-config-hostpath.yaml
+                                          # (functionally identical to a plain hostPath mount)
+  cache:
+    enabled: true
+    type: hostPath
+    hostPath: /home/chris/services/k3s-jellyfin/cache
+  media:
+    enabled: true
+    existingClaim: nas-media-pvc   # same NFS-backed PVC shared with Sonarr/Radarr, mounted at /media
