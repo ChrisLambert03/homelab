@@ -23,10 +23,7 @@ variable "wd_drive_path" {
   description = "Path on the Thinkmate where wd drive media is stored"
 }
 
-variable "nginx_data_path" {
-  type        = string
-  description = "Path on the Thinkmate where nginx proxy manager data (SQLite DB and config) is stored"
-}
+
 
 
 
@@ -35,10 +32,7 @@ variable "jellyfin_macvlan_ip" {
   description = "IP address for the jellyfin container on the macvlan network"
 }
 
-variable "n8n_key" {
-  type        = string
-  description = "Encryption key for n8n. Must be exactly 32 characters long."
-}
+
 
 variable "homlab_domain" {
   type        = string

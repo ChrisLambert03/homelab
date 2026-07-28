@@ -27,6 +27,7 @@ My infrastructure is transitioning from standalone Docker hosts to a highly avai
 - **Traefik Migration**: Completely decommissioned Nginx Proxy Manager. Migrated all reverse proxying, SSL termination, and IP allowlisting (ACLs) into Kubernetes natively using Traefik Middlewares and EndpointSlices.
 - **n8n Removal**: Completely removed the n8n automation stack from both Docker and Kubernetes infrastructure.
 - **Kubernetes Migration**: Migrated `vault`, `ntfy`, `homarr`, `prowlarr`, `sonarr`, `radarr`, and `jellyfin` from Docker to the K3s cluster. Native NVIDIA GPU passthrough is now handled via the CDI standard.
+- **Helm Adoption**: Transitioned to using Helm for managing complex cluster deployments. Successfully deployed the NVIDIA GPU Operator and Jellyfin using official Helm charts and custom `values.yaml` configurations.
 - **Storage Integration**: Connected Terramaster NAS for unified NFS media sharing (`14T` pool) and dedicated iSCSI LUNs (`20G` per target) for database/configuration persistence.
 - **Repo Restructuring**: Organized Ansible playbooks/templates and workstation log configuration files, keeping directories clean and modular.
 - **Security Hardening**: Migrated all Docker host engines to TCP/TLS socket connections and refactored Terraform variables to read directly from Vault.
@@ -34,6 +35,7 @@ My infrastructure is transitioning from standalone Docker hosts to a highly avai
 
 ### 🚀 Currently Working On
 
+- **High Availability Ingress**: Currently, the reverse proxy only points to a single node in the cluster, creating a single point of failure. I am evaluating the deployment of the Helm Tailscale Operator to establish a shared Virtual IP (VIP) and resolve this.
 - **K3s Migration**: Continuing the transition of remaining media (Tdarr) stacks to Kubernetes.
 - **Storage Optimization**: Performance-tuning NFS and iSCSI mount parameters for high-throughput media transport.
 

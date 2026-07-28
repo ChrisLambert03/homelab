@@ -1,3 +1,4 @@
+---
 # values.yaml for jellyfin/jellyfin Helm chart
 # Overrides only — anything not listed here falls back to the chart's defaults.
 
