@@ -16,6 +16,7 @@ spec:
       - "100.124.184.120/32" # pihole container
       - "100.72.112.61/32" # workstation windows
       - "127.0.0.1/32" # localhost (internal cluster traffic)
+      - "10.42.0.0/16" # k3s cluster internal / pod / cni hairpinned loopback traffic
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -29,6 +30,7 @@ spec:
       - "100.79.4.92/32" # laptop (msi)
       - "100.65.219.6/32" # phone (iphone-15-pro)
       - "127.0.0.1/32" # localhost
+      - "10.42.0.0/16" # k3s cluster internal / pod / cni hairpinned loopback traffic
       # --- Lenovo (Homarr Dashboard) ---
       - "100.95.104.11/32" # lenovo
       # --- End-User IPs (Jellyfin/Media Access) ---
