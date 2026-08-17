@@ -25,6 +25,7 @@ My infrastructure is transitioning from standalone Docker hosts to a highly avai
 ### 📝 Recent Changes
 
 - **Traefik Migration**: Completely decommissioned Nginx Proxy Manager. Migrated all reverse proxying, SSL termination, and IP allowlisting (ACLs) into Kubernetes natively using Traefik Middlewares and EndpointSlices.
+- **GitOps & Centralized Deployments**: Deployed ArgoCD via Helm in the cluster to establish a centralized, declarative continuous deployment pipeline and GitOps workflow.
 - **n8n Removal**: Completely removed the n8n automation stack from both Docker and Kubernetes infrastructure.
 - **Kubernetes Migration**: Migrated `vault`, `ntfy`, `homarr`, `prowlarr`, `sonarr`, `radarr`, and `jellyfin` from Docker to the K3s cluster. Native NVIDIA GPU passthrough is now handled via the CDI standard.
 - **Helm Adoption**: Transitioned to using Helm for managing complex cluster deployments. Successfully deployed the NVIDIA GPU Operator and Jellyfin using official Helm charts and custom `values.yaml` configurations.
@@ -45,7 +46,7 @@ My infrastructure is transitioning from standalone Docker hosts to a highly avai
 
 ### **Lenovo (Manager Node & K3s Control Plane)**
 
-- **K3s Cluster**: `vault` (StatefulSet, Longhorn), `ntfy` (StatefulSet, Longhorn), `homarr` (Dashboard), `prowlarr` (iSCSI Config), `radarr` (iSCSI Config, NFS Media), `sonarr` (iSCSI Config, NFS Media), `jellyfin` (iSCSI Config, NFS Media, GPU Accelerated).
+- **K3s Cluster**: `argocd` (GitOps Engine / Deployment Pipeline), `vault` (StatefulSet, Longhorn), `ntfy` (StatefulSet, Longhorn), `homarr` (Dashboard), `prowlarr` (iSCSI Config), `radarr` (iSCSI Config, NFS Media), `sonarr` (iSCSI Config, NFS Media), `jellyfin` (iSCSI Config, NFS Media, GPU Accelerated).
 - **Core Services**: Beszel (Monitoring Hub), Apache Guacamole.
 
 ### **Optiplex (Management & Security)**
@@ -69,5 +70,6 @@ My infrastructure is transitioning from standalone Docker hosts to a highly avai
 
 ## 🔧 Infrastructure as Code
 
+- **GitOps Pipeline**: Declarative continuous delivery and application deployments orchestrated via ArgoCD.
 - **Traefik Ingress**: Managed natively in Kubernetes using Traefik Middlewares for IP Allowlisting (ACLs) and EndpointSlices for bridging legacy Docker applications into the K3s routing mesh.
 - **Virtual Machines**: Declaratively provisioned via LibVirt using [vms/libvirt-vms.tf](file:///home/chris/homelab/vms/libvirt-vms.tf).
