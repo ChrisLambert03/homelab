@@ -5,10 +5,9 @@ metadata:
   name: vault
   namespace: default
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: vault
   ports:
     - port: 8200
       targetPort: 8200
-      nodePort: 32222
