@@ -80,12 +80,6 @@ resource "docker_container" "jellyfin" {
     type   = "bind"
   }
 
-  mounts {
-    target = "/data/wd_drive"
-    source = var.wd_drive_path
-    type   = "bind"
-  }
-
   lifecycle {
     ignore_changes = [log_driver, log_opts]
   }
