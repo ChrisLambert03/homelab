@@ -18,11 +18,6 @@ variable "black_drive_path" {
   description = "Path on the Thinkmate where black drive media is stored"
 }
 
-variable "wd_drive_path" {
-  type        = string
-  description = "Path on the Thinkmate where wd drive media is stored"
-}
-
 
 
 

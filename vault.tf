@@ -39,6 +39,5 @@ locals {
   jellyfin_cache_path  = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_cache_path"])
   blue_drive_path      = tostring(data.vault_kv_secret_v2.homelab_secrets.data["blue_drive_path"])
   black_drive_path     = tostring(data.vault_kv_secret_v2.homelab_secrets.data["black_drive_path"])
-  wd_drive_path        = tostring(data.vault_kv_secret_v2.homelab_secrets.data["wd_drive_path"])
 
 }

@@ -12,7 +12,6 @@ module "docker_apps" {
   blue_drive_path      = local.blue_drive_path
   black_drive_path     = local.black_drive_path
 
-  wd_drive_path = local.wd_drive_path
   homlab_domain = local.homlab_domain
 
   elastic_password  = local.elastic_password

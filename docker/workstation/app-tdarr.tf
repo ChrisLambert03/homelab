@@ -66,12 +66,7 @@ resource "docker_container" "tdarr_server" {
     source = "/mnt/blue_drive/data" # Your second HDD library
     type   = "bind"
   }
-  mounts {
-    target = "/wd_media"
-    source = "/mnt/wd_drive/data" # Your WD HDD library
-    type   = "bind"
-  }
-
+  
   lifecycle {
     ignore_changes = [log_driver, log_opts]
   }
