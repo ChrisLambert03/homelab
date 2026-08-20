@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jellyfin
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    # 1. Your Git Repo (defines $homelab alias and companion manifests)
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      ref: homelab
+      path: kubernetes/jellyfin
+      directory:
+        exclude: 'values.yaml'
+
+    # 2. Upstream Jellyfin Helm Chart using $homelab values.yaml
+    - repoURL: https://jellyfin.github.io/jellyfin-helm
+      chart: jellyfin
+      targetRevision: 3.2.0
+      helm:
+        releaseName: jellyfin
+        valueFiles:
+          - $homelab/kubernetes/jellyfin/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true
