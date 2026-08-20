@@ -1,19 +1,15 @@
 ---
 # Prowlarr Service Manifest
-# Exposes Prowlarr internally within the cluster and externally via NodePort.
+# Exposes Prowlarr internally within the cluster via ClusterIP.
 apiVersion: v1
 kind: Service
 metadata:
   name: prowlarr
   namespace: default
 spec:
-  # Using NodePort to bind the service to a static port on all Kubernetes nodes.
-  # This allows Nginx Proxy Manager (running externally) to route traffic to Prowlarr.
-  type: NodePort
+  type: ClusterIP
   selector:
     app: prowlarr
   ports:
     - port: 9696
       targetPort: 9696
-      # NPM forwards traffic from prowlarr.lambertlab.us to this port
-      nodePort: 32096

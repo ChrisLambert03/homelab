@@ -1,19 +1,15 @@
 ---
 # Radarr Service Manifest
-# Exposes Radarr internally within the cluster and externally via NodePort.
+# Exposes Radarr internally within the cluster via ClusterIP.
 apiVersion: v1
 kind: Service
 metadata:
   name: radarr
   namespace: default
 spec:
-  # Using NodePort to bind the service to a static port on all Kubernetes nodes.
-  # This allows Nginx Proxy Manager (running externally) to route traffic to Radarr.
-  type: NodePort
+  type: ClusterIP
   selector:
     app: radarr
   ports:
     - port: 7878
       targetPort: 7878
-      # NPM forwards traffic from radarr.lambertlab.us to this port
-      nodePort: 32078
