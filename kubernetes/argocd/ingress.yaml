@@ -8,7 +8,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-admin-only-access@kubernetescrd
     traefik.ingress.kubernetes.io/service.serversscheme: https
-    traefik.ingress.kubernetes.io/service.serverstransport: default-insecure-transport@kubernetescrd
+    traefik.ingress.kubernetes.io/service.serverstransport: argocd-insecure-transport@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
