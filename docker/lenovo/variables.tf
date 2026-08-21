@@ -16,7 +16,7 @@ variable "homarr_log_level" {
 variable "guacamole_version" {
   description = "Guacamole / guacd image tag"
   type        = string
-  default     = "1.6.0"
+  default     = "latest"
 }
 
 variable "postgres_version" {

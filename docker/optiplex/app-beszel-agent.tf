@@ -37,8 +37,8 @@ resource "docker_container" "beszel_agent" {
   }
 
   devices {
-    host_path      = "/dev/dri/card1"
-    container_path = "/dev/dri/card1"
+    host_path      = "/dev/dri"
+    container_path = "/dev/dri"
   }
 
   capabilities {
