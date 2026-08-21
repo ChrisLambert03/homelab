@@ -19,7 +19,3 @@ spec:
             name: vault
             port:
               number: 8200
-  tls:
-  - hosts:
-    - vault.lambertlab.us
-    secretName: lambertlab-wildcard-tls

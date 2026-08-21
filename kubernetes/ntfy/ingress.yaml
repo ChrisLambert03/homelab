@@ -19,7 +19,3 @@ spec:
             name: ntfy
             port:
               number: 80
-  tls:
-  - hosts:
-    - ntfy.lambertlab.us
-    secretName: lambertlab-wildcard-tls
