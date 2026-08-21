@@ -19,7 +19,3 @@ spec:
             name: jellyfin
             port:
               number: 8096
-  tls:
-  - hosts:
-    - jellyfin.lambertlab.us
-    secretName: lambertlab-wildcard-tls

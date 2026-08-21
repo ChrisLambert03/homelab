@@ -19,7 +19,3 @@ spec:
             name: prowlarr
             port:
               number: 9696
-  tls:
-  - hosts:
-    - prowlarr.lambertlab.us
-    secretName: lambertlab-wildcard-tls

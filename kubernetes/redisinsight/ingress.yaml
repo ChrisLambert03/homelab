@@ -19,7 +19,3 @@ spec:
             name: redisinsight
             port:
               number: 5540
-  tls:
-  - hosts:
-    - redisinsight.lambertlab.us
-    secretName: lambertlab-wildcard-tls

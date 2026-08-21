@@ -19,7 +19,3 @@ spec:
             name: retroarch
             port:
               number: 3005
-  tls:
-  - hosts:
-    - retroarch.lambertlab.us
-    secretName: lambertlab-wildcard-tls

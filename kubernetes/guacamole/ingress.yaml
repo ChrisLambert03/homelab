@@ -19,7 +19,3 @@ spec:
             name: guacamole
             port:
               number: 8223
-  tls:
-  - hosts:
-    - guacamole.lambertlab.us
-    secretName: lambertlab-wildcard-tls

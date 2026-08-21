@@ -19,7 +19,3 @@ spec:
             name: firefox
             port:
               number: 4000
-  tls:
-  - hosts:
-    - firefox.lambertlab.us
-    secretName: lambertlab-wildcard-tls

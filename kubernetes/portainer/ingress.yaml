@@ -19,7 +19,3 @@ spec:
             name: portainer
             port:
               number: 9000
-  tls:
-  - hosts:
-    - portainer.lambertlab.us
-    secretName: lambertlab-wildcard-tls

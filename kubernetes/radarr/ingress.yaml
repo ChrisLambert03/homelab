@@ -19,7 +19,3 @@ spec:
             name: radarr
             port:
               number: 7878
-  tls:
-  - hosts:
-    - radarr.lambertlab.us
-    secretName: lambertlab-wildcard-tls

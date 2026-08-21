@@ -19,7 +19,3 @@ spec:
             name: sonarr
             port:
               number: 8989
-  tls:
-  - hosts:
-    - sonarr.lambertlab.us
-    secretName: lambertlab-wildcard-tls

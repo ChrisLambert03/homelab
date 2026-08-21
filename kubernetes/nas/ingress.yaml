@@ -19,7 +19,3 @@ spec:
             name: nas
             port:
               number: 8181
-  tls:
-  - hosts:
-    - nas.lambertlab.us
-    secretName: lambertlab-wildcard-tls

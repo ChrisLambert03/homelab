@@ -19,7 +19,3 @@ spec:
             name: pihole
             port:
               number: 80
-  tls:
-  - hosts:
-    - pihole.lambertlab.us
-    secretName: lambertlab-wildcard-tls

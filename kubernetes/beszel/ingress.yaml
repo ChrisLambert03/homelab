@@ -19,7 +19,3 @@ spec:
             name: beszel
             port:
               number: 8090
-  tls:
-  - hosts:
-    - beszel.lambertlab.us
-    secretName: lambertlab-wildcard-tls

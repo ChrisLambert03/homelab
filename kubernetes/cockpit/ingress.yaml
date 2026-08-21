@@ -19,7 +19,3 @@ spec:
             name: cockpit
             port:
               number: 9090
-  tls:
-  - hosts:
-    - cockpit.lambertlab.us
-    secretName: lambertlab-wildcard-tls

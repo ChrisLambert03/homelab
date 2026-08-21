@@ -19,7 +19,3 @@ spec:
             name: kibana
             port:
               number: 5601
-  tls:
-  - hosts:
-    - kibana.lambertlab.us
-    secretName: lambertlab-wildcard-tls
