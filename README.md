@@ -37,6 +37,7 @@ My infrastructure is centered around a declarative, highly available Kubernetes 
 - **ArgoCD IngressRoute & gRPC Support**: Deployed a native Traefik `IngressRoute` in the `argocd` namespace with dual routing rules—serving the Web UI over HTTPS and the `argocd` CLI/API over gRPC (`scheme: h2c`) under `https://argocd.lambertlab.us` with `admin-only-access` IP allowlisting.
 - **Full GitOps Adoption**: Declaratively onboarded all cluster applications into ArgoCD:
   - `cert-manager` (Helm v1.21.1)
+  - `longhorn` (Distributed Block Storage Helm chart v1.12.0)
   - `gpu-operator` (NVIDIA GPU Operator v26.3.3)
   - `jellyfin` (Multi-source Helm chart + custom values and volume mounts)
   - `vault` (StatefulSet on Longhorn, ClusterIP)
