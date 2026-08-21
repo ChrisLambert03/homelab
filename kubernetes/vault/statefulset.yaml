@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: vault
-  namespace: default
   labels:
     app: vault
 spec:
@@ -96,7 +95,7 @@ spec:
         name: data
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: longhorn
+        storageClassName: longhorn-retain
         resources:
           requests:
             storage: 1Gi
