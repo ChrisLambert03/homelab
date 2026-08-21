@@ -1,5 +1,42 @@
 ---
 apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: admin-only-access
+  namespace: argocd
+spec:
+  ipAllowList:
+    sourceRange:
+      - "100.95.104.11/32" # lenovo
+      - "100.106.96.18/32" # workstation
+      - "100.65.236.98/32" # opti74
+      - "100.74.145.55/32" # optiplex
+      - "100.79.4.92/32" # laptop
+      - "100.65.219.6/32" # phone
+      - "100.124.184.120/32" # pihole container
+      - "100.72.112.61/32" # workstation windows
+      - "127.0.0.1/32" # localhost
+      - "10.42.0.0/16" # k3s cluster internal / pod / cni hairpinned loopback traffic
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: https-redirect
+  namespace: argocd
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: insecure-transport
+  namespace: argocd
+spec:
+  insecureSkipVerify: true
+---
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: argocd-server
@@ -13,20 +50,21 @@ spec:
       priority: 10
       middlewares:
         - name: admin-only-access
-          namespace: default
       services:
         - name: argocd-server
-          port: 80
+          port: 443
+          scheme: https
+          serversTransport: insecure-transport
     - kind: Rule
       match: Host(`argocd.lambertlab.us`) && Header(`Content-Type`, `application/grpc`)
       priority: 11
       middlewares:
         - name: admin-only-access
-          namespace: default
       services:
         - name: argocd-server
-          port: 80
-          scheme: h2c
+          port: 443
+          scheme: https
+          serversTransport: insecure-transport
   tls: {}
 ---
 apiVersion: traefik.io/v1alpha1
@@ -41,7 +79,8 @@ spec:
     - match: Host(`argocd.lambertlab.us`)
       middlewares:
         - name: https-redirect
-          namespace: default
       services:
         - name: argocd-server
-          port: 80
+          port: 443
+          scheme: https
+          serversTransport: insecure-transport
