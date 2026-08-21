@@ -4,10 +4,7 @@ variable "portainer_volume_name" {
   default     = "portainer_data"
 }
 
-variable "vault_ip" {
-  description = "IP address of the Hashicorp Vault server"
-  type        = string
-}
+
 variable "vault_password" {
   description = "Hashicorp Vault root token"
   type        = string
