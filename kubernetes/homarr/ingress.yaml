@@ -22,7 +22,3 @@ spec:
                 name: homarr
                 port:
                   number: 7575
-  tls:
-    - hosts:
-        - homarr.lambertlab.us
-      secretName: lambertlab-wildcard-tls
