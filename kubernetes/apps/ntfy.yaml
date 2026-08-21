@@ -14,13 +14,13 @@ spec:
     path: kubernetes/ntfy
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: observability
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=false
+      - CreateNamespace=true
       - ServerSideApply=true
   ignoreDifferences:
     - group: apps
