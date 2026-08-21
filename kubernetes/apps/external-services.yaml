@@ -1,0 +1,51 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-services
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      path: kubernetes/cockpit
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      path: kubernetes/firefox
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      path: kubernetes/guacamole
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      path: kubernetes/kibana
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      path: kubernetes/nas
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      path: kubernetes/pihole
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      path: kubernetes/portainer
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      path: kubernetes/redisinsight
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      path: kubernetes/retroarch
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      path: kubernetes/tdarr
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true
