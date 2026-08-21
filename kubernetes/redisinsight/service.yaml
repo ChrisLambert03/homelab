@@ -3,7 +3,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redisinsight
-  namespace: default
 spec:
   ports:
     - port: 5540
@@ -13,7 +12,6 @@ apiVersion: discovery.k8s.io/v1
 kind: EndpointSlice
 metadata:
   name: redisinsight
-  namespace: default
   labels:
     kubernetes.io/service-name: redisinsight
 addressType: IPv4

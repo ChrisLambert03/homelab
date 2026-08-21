@@ -41,11 +41,11 @@ spec:
       path: kubernetes/tdarr
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: external
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=false
+      - CreateNamespace=true
       - ServerSideApply=true

@@ -5,7 +5,7 @@ metadata:
   name: pihole-ingress
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-admin-only-access@kubernetescrd,default-pihole-admin-redirect@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-admin-only-access@kubernetescrd,external-pihole-admin-redirect@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
