@@ -1,24 +1,47 @@
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
 metadata:
-  name: argocd-server-ingress
+  name: argocd-server
   namespace: argocd
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-admin-only-access@kubernetescrd
-    traefik.ingress.kubernetes.io/service.serversscheme: https
-    traefik.ingress.kubernetes.io/service.serverstransport: argocd-insecure-transport@kubernetescrd
 spec:
-  ingressClassName: traefik
-  rules:
-    - host: argocd.lambertlab.us
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: argocd-server
-                port:
-                  number: 443
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`argocd.lambertlab.us`)
+      priority: 10
+      middlewares:
+        - name: admin-only-access
+          namespace: default
+      services:
+        - name: argocd-server
+          port: 80
+    - kind: Rule
+      match: Host(`argocd.lambertlab.us`) && Header(`Content-Type`, `application/grpc`)
+      priority: 11
+      middlewares:
+        - name: admin-only-access
+          namespace: default
+      services:
+        - name: argocd-server
+          port: 80
+          scheme: h2c
+  tls: {}
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd-server-web
+  namespace: argocd
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`argocd.lambertlab.us`)
+      middlewares:
+        - name: https-redirect
+          namespace: default
+      services:
+        - name: argocd-server
+          port: 80
