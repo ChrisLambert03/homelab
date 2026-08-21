@@ -8,12 +8,15 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://argoproj.github.io/argo-helm
-    chart: argo-cd
-    targetRevision: 10.3.3
-    helm:
-      releaseName: argocd
+  sources:
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      path: kubernetes/argocd
+    - repoURL: https://argoproj.github.io/argo-helm
+      chart: argo-cd
+      targetRevision: 10.3.3
+      helm:
+        releaseName: argocd
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
