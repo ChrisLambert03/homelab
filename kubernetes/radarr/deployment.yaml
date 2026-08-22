@@ -5,7 +5,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: radarr
-  namespace: default
   labels:
     app: radarr
 spec:
