@@ -10,6 +10,9 @@ kind: PersistentVolume
 metadata:
   name: nas-media-pv
 spec:
+  claimRef:
+    namespace: media
+    name: nas-media-pvc
   capacity:
     # Set to 14T (Decimal Terabytes) to match the total capacity of the NAS Volume1
     storage: 14T

@@ -7,6 +7,9 @@ kind: PersistentVolume
 metadata:
   name: prowlarr-iscsi-pv
 spec:
+  claimRef:
+    namespace: media
+    name: prowlarr-iscsi-pvc
   capacity:
     # 2 GB LUN created on the Terramaster NAS for indexer database and configs
     storage: 2G

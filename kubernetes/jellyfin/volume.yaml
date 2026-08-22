@@ -4,6 +4,9 @@ kind: PersistentVolume
 metadata:
   name: jellyfin-config-pv
 spec:
+  claimRef:
+    namespace: media
+    name: jellyfin-config-pvc
   capacity:
     storage: 15Gi
   accessModes:

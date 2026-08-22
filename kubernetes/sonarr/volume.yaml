@@ -7,6 +7,9 @@ kind: PersistentVolume
 metadata:
   name: sonarr-iscsi-pv
 spec:
+  claimRef:
+    namespace: media
+    name: sonarr-iscsi-pvc
   capacity:
     # Matches the exact 20 GB LUN created on the Terramaster NAS
     storage: 20G
