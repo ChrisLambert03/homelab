@@ -27,11 +27,11 @@ spec:
           - $homelab/kubernetes/jellyfin/values.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: media
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=false
+      - CreateNamespace=true
       - ServerSideApply=true

@@ -5,7 +5,7 @@ metadata:
   name: jellyfin-ingress
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-media-user-access@kubernetescrd,default-jellyfin-buffering@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-media-user-access@kubernetescrd,media-jellyfin-buffering@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
