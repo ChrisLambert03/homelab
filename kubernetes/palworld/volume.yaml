@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: palworld-pvc
+  namespace: gaming
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn-retain
+  volumeName: pvc-128f9d6f-b4be-424c-a692-9752a1f132ac
+  resources:
+    requests:
+      storage: 25Gi
