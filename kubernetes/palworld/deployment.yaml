@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: palworld
+  namespace: gaming
+  labels:
+    app: palworld
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: palworld
+  template:
+    metadata:
+      labels:
+        app: palworld
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: palworld-server
+          image: thijsvanloef/palworld-server-docker:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            # General public settings
+            - configMapRef:
+                name: palworld-config
+            # Sensitive passwords
+            - secretRef:
+                name: palworld-secret
+          ports:
+            - containerPort: 8211
+              protocol: UDP
+              name: game
+            - containerPort: 25575
+              protocol: TCP
+              name: rcon
+            - containerPort: 8212
+              protocol: TCP
+              name: rest-api
+          resources:
+            requests:
+              cpu: "1500m"
+              memory: "8Gi"
+            limits:
+              cpu: "4000m"
+              memory: "12Gi"
+          volumeMounts:
+            - name: palworld-data
+              mountPath: /palworld
+      volumes:
+        - name: palworld-data
+          persistentVolumeClaim:
+            claimName: palworld-pvc
