@@ -6,17 +6,13 @@ metadata:
   namespace: kube-system
   annotations:
     tailscale.com/proxy-group: k8s-ingress-proxy
-    tailscale.com/hostname: "k8s-gateway"
 spec:
   ingressClassName: tailscale
-  rules:
-    - host: k8s-gateway
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: traefik
-                port:
-                  number: 80
+  defaultBackend:
+    service:
+      name: traefik
+      port:
+        number: 80
+  tls:
+    - hosts:
+        - k8s-gateway
