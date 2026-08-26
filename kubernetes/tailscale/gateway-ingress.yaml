@@ -6,6 +6,7 @@ metadata:
   namespace: kube-system
   annotations:
     tailscale.com/proxy-group: k8s-ingress-proxy
+    tailscale.com/hostname: "k8s-gateway"
 spec:
   ingressClassName: tailscale
   rules:
