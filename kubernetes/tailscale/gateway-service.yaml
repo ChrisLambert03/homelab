@@ -5,6 +5,7 @@ metadata:
   name: traefik-tailscale-gateway
   namespace: kube-system
   annotations:
+    tailscale.com/expose: "true"
     tailscale.com/proxy-group: k8s-ingress-proxy
     tailscale.com/hostname: "k8s-gateway"
 spec:
