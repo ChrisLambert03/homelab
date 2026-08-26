@@ -7,7 +7,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: observability
   source:
     repoURL: git@github.com:ChrisLambert03/homelab.git
     targetRevision: main
