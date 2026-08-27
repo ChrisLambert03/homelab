@@ -1,0 +1,48 @@
+---
+- name: Fix Intel e1000e NIC offloads, EEE, and ring buffer
+  hosts: all
+  become: true
+  tasks:
+    - name: Find default ethernet interface
+      ansible.builtin.set_fact:
+        target_iface: "{{ ansible_default_ipv4.interface | default(ansible_interfaces[0]) }}"
+
+    - name: Check if interface uses e1000e driver
+      ansible.builtin.command:
+        cmd: "ethtool -i {{ target_iface }}"
+      register: ethtool_driver_info
+      changed_when: false
+      failed_when: false
+
+    - name: Configure and persist e1000e optimizations if applicable
+      when: "'driver: e1000e' in ethtool_driver_info.stdout"
+      block:
+        - name: Deploy e1000e-fix systemd service
+          ansible.builtin.copy:
+            dest: /etc/systemd/system/e1000e-fix.service
+            mode: '0644'
+            content: |
+              [Unit]
+              Description=Disable buggy hardware offloads, EEE and enlarge ring buffer for Intel e1000e NIC
+              After=network-pre.target
+              Wants=network-pre.target
+
+              [Service]
+              Type=oneshot
+              ExecStart=/sbin/ethtool -K {{ target_iface }} tso off gso off gro off tx off rx off
+              ExecStart=/sbin/ethtool --set-eee {{ target_iface }} eee off
+              ExecStart=/sbin/ethtool -G {{ target_iface }} rx 4096 tx 4096
+              RemainAfterExit=yes
+
+              [Install]
+              WantedBy=multi-user.target
+
+        - name: Reload systemd daemon
+          ansible.builtin.systemd:
+            daemon_reload: true
+
+        - name: Enable and start e1000e-fix service
+          ansible.builtin.systemd:
+            name: e1000e-fix.service
+            enabled: true
+            state: started

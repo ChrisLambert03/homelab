@@ -34,10 +34,12 @@ My infrastructure is centered around a declarative, highly available Kubernetes 
 
 ## 📝 Recent Accomplishments
 
-- [x] **Tailscale Kubernetes Operator & HA Ingress**: Deployed the official Tailscale Kubernetes Operator via a multi-source Argo CD application. Configured a 2-replica High-Availability `ProxyGroup` (`k8s-ingress-proxy`) distributed across worker nodes.
+- [x] **3-Node High-Availability Control Plane (Embedded etcd)**: Promoted `optiplex` and `opti74` to control-plane servers with embedded etcd (`cluster-init`), establishing a true 3-node Raft quorum across `lenovo`, `optiplex`, and `opti74` for uninterrupted multi-node master failover.
+- [x] **ArgoCD AppProjects & GitOps Sync Waves**: Organized all 16 applications into 5 dedicated `AppProject` categories (`infrastructure`, `security`, `media`, `observability`, `gaming`) with deterministic 0-3 sync waves ensuring deterministic startup order.
+- [x] **Tailscale Kubernetes Operator & 3-Node HA Ingress**: Deployed the official Tailscale Kubernetes Operator via a multi-source Argo CD application. Configured a 3-replica High-Availability `ProxyGroup` (`k8s-ingress-proxy`) distributed across all physical nodes.
 - [x] **Persistent Virtual Ingress Gateway (VIP)**: Established a permanent Tailscale Virtual Service IP utilizing `spec.loadBalancerClass: tailscale` for raw TCP Layer 4 TLS passthrough, eliminating single-node ingress bottlenecks and enabling seamless multi-node failover.
-- [x] **4th Physical Node Onboarded (`opti74`)**: Joined the 4th bare-metal node `opti74` to the K3s cluster as a dedicated worker node.
-- [x] **Dedicated Gaming Workload (`palworld`)**: Deployed containerized Palworld dedicated game server onto the `opti74` worker node within the `gaming` namespace.
+- [x] **4th Physical Node Onboarded (`opti74`)**: Joined the 4th bare-metal node `opti74` to the K3s cluster.
+- [x] **Dedicated Gaming Workload (`palworld`)**: Deployed containerized Palworld dedicated game server onto the `opti74` node within the `gaming` namespace.
 - [x] **Media Stack Namespace Migration & Storage Refactor**: Completely migrated the media automation stack (`jellyfin`, `prowlarr`, `radarr`, `sonarr`) from `default` into a dedicated `media` namespace. Declared explicit `claimRef` bindings on all 5 TerraMaster persistent volumes (`jellyfin-config-pv`, `nas-media-pv`, `prowlarr-iscsi-pv`, `radarr-iscsi-pv`, `sonarr-iscsi-pv`), achieving 100% bound PVCs with zero data loss.
 - [x] **Namespace Segregation**: Reorganized cluster workloads into dedicated logical namespaces:
   - `media`: Jellyfin, Radarr, Sonarr, Prowlarr
@@ -70,12 +72,12 @@ My infrastructure is centered around a declarative, highly available Kubernetes 
 
 | Host | Role | Workloads / Responsibilities |
 | :--- | :--- | :--- |
-| **`lenovo`** | K3s Control Plane | K3s API Server, etcd, Argo CD (GitOps Engine), Beszel Hub |
-| **`workstation`** | K3s GPU Worker | NVIDIA GPU Operator (RTX A4500), Media Stack Runtime, Hardware Transcoding |
-| **`optiplex`** | K3s Worker | Pi-hole DNS, Tailnet Exit Node, General Compute |
-| **`opti74`** | K3s Worker | Palworld Dedicated Game Server, Dedicated Worker Node, General Compute |
+| **`lenovo`** | K3s HA Control Plane (etcd) | K3s API Server, etcd Quorum Member, Argo CD (GitOps Engine), Beszel Hub |
+| **`optiplex`** | K3s HA Control Plane (etcd) | K3s API Server, etcd Quorum Member, Ingress Proxy, General Compute |
+| **`opti74`** | K3s HA Control Plane (etcd) | K3s API Server, etcd Quorum Member, Palworld Dedicated Server, General Compute |
+| **`workstation`** | K3s Dedicated GPU Worker | NVIDIA GPU Operator (RTX 4070 Ti), Media Stack Runtime, Hardware Transcoding |
 | **`terramaster`** | Storage SAN/NAS | High-Capacity NFS Media Pool (14TB), iSCSI Target Portal (ext4 Block LUNs for DB state) |
-| **`k8s-gateway`** | **Virtual VIP Gateway** | **High-Availability Tailscale Ingress Gateway (Multi-Replica Layer 4 Proxy)** |
+| **`k8s-gateway`** | **Virtual VIP Gateway** | **High-Availability Tailscale Ingress Gateway (3-Replica Layer 4 Proxy)** |
 
 ---
 
