@@ -18,5 +18,13 @@ terraform {
       source  = "hashicorp/vault"
       version = " 5.9.0"
     }
+    tailscale = {
+      source  = "tailscale/tailscale"
+      version = "0.29.2"
+    }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "5.24.0"
+    }
   }
 }

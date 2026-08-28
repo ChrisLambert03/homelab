@@ -34,3 +34,14 @@ provider "vault" {
   address = "https://vault.lambertlab.us"
   token   = var.vault_password
 }
+
+# Tailscale provider configuration
+provider "tailscale" {
+  tailnet = var.tailscale_tailnet
+  api_key = local.tailscale_api_key
+}
+
+# Cloudflare provider configuration
+provider "cloudflare" {
+  api_token = local.cloudflare_api_token
+}

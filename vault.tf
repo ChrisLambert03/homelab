@@ -34,6 +34,18 @@ locals {
   # Tdarr
   tdarr_auth_key = tostring(data.vault_kv_secret_v2.homelab_secrets.data["tdarr_auth_key"])
 
+  # Cloudflare & Tailscale
+  cloudflare_api_token = try(
+    tostring(data.vault_kv_secret_v2.homelab_secrets.data["tf_cloudflare_api_key"]),
+    tostring(data.vault_kv_secret_v2.homelab_secrets.data["cloudflare_api_token"]),
+    null
+  )
+  tailscale_api_key = try(
+    tostring(data.vault_kv_secret_v2.homelab_secrets.data["tf_tailscale_api_key"]),
+    tostring(data.vault_kv_secret_v2.homelab_secrets.data["tailscale_api_key"]),
+    null
+  )
+
   # Paths
   jellyfin_config_path = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_config_path"])
   jellyfin_cache_path  = tostring(data.vault_kv_secret_v2.homelab_secrets.data["jellyfin_cache_path"])
