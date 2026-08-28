@@ -39,5 +39,5 @@ spec:
           pod: {}
       volumes:
         - name: boot-disk
-          dataVolume:
-            name: fortios-boot-dv
+          persistentVolumeClaim:
+            claimName: fortigate-boot-pvc

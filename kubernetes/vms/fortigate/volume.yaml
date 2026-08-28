@@ -1,0 +1,35 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: fortigate-iscsi-pv
+spec:
+  claimRef:
+    namespace: vms
+    name: fortigate-boot-pvc
+  capacity:
+    storage: 30G
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  iscsi:
+    targetPortal: 10.0.0.60:3260
+    iqn: iqn.2026-08.us.lambertlab:fgt-boot
+    lun: 0
+    fsType: ext4
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fortigate-boot-pvc
+  namespace: vms
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeName: fortigate-iscsi-pv
+  resources:
+    requests:
+      storage: 30G
+  storageClassName: ""
