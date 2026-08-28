@@ -25,6 +25,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: fortigate-boot-pvc
   namespace: vms
+  annotations:
+    cdi.kubevirt.io/storage.upload.target: ""
 spec:
   accessModes:
     - ReadWriteOnce
