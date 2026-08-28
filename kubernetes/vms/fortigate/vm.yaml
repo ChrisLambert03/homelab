@@ -1,0 +1,43 @@
+---
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: fg-firewall
+  namespace: vms
+  labels:
+    app: fortigate
+spec:
+  running: true
+  template:
+    metadata:
+      labels:
+        kubevirt.io/vm: fg-firewall
+        app: fortigate
+    spec:
+      terminationGracePeriodSeconds: 60
+      domain:
+        machine:
+          type: q35
+        cpu:
+          cores: 1
+        resources:
+          requests:
+            memory: 2Gi
+          limits:
+            memory: 2Gi
+        devices:
+          disks:
+            - name: boot-disk
+              disk:
+                bus: virtio
+          interfaces:
+            - name: default
+              masquerade: {}
+          rng: {}
+      networks:
+        - name: default
+          pod: {}
+      volumes:
+        - name: boot-disk
+          dataVolume:
+            name: fortios-boot-dv
