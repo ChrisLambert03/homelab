@@ -19,11 +19,15 @@ spec:
         machine:
           type: q35
         cpu:
+          sockets: 1
           cores: 1
+          threads: 1
         resources:
           requests:
+            cpu: "1"
             memory: 2Gi
           limits:
+            cpu: "1"
             memory: 2Gi
         devices:
           disks:
