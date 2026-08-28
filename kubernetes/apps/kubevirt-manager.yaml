@@ -1,0 +1,31 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubevirt-manager
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: infrastructure
+  sources:
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      path: kubernetes/kubevirt-manager
+    - repoURL: https://charts.christianhuth.de
+      chart: kubevirt-manager
+      targetRevision: 0.7.0
+      helm:
+        releaseName: kubevirt-manager
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kubevirt
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true
