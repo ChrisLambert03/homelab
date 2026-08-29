@@ -32,4 +32,3 @@ spec:
         - /spec/conversion
         - /spec/versions
         - /metadata/annotations
-

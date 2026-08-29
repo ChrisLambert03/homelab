@@ -66,3 +66,4 @@ jobs:
           TF_VAR_vault_ip: ${{ secrets.VAULT_IP }}
           TF_VAR_vault_password: ${{ secrets.VAULT_TOKEN }}
           TF_VAR_vault_unseal_keys: ${{ secrets.VAULT_UNSEAL_KEYS }}
+          TF_VAR_tailscale_tailnet: ${{ secrets.TAILSCALE_TAILNET }}
