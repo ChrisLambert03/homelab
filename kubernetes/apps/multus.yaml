@@ -24,11 +24,6 @@ spec:
             binDir: /var/lib/rancher/k3s/data/cni/
             kubeconfig: /var/lib/rancher/k3s/agent/etc/cni/net.d/multus.d/multus.kubeconfig
             multusAutoconfigDir: /var/lib/rancher/k3s/agent/etc/cni/net.d
-          daemon_conf:
-            cniConfigDir: /host/var/lib/rancher/k3s/agent/etc/cni/net.d
-            multusAutoconfigDir: /host/var/lib/rancher/k3s/agent/etc/cni/net.d
-        thickPlugin:
-          enabled: true
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system
