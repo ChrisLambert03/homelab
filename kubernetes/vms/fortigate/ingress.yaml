@@ -7,6 +7,10 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/service.serversscheme: https
     traefik.ingress.kubernetes.io/service.serverstransport: vms-fg-insecure-transport@kubernetescrd
+    traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
+    traefik.ingress.kubernetes.io/service.sticky.cookie.name: "fg_stickiness"
+    traefik.ingress.kubernetes.io/service.sticky.cookie.secure: "true"
+    traefik.ingress.kubernetes.io/service.sticky.cookie.httponly: "true"
 spec:
   type: ClusterIP
   selector:
@@ -26,6 +30,11 @@ metadata:
   namespace: vms
 spec:
   insecureSkipVerify: true
+  disableHTTP2: true
+  maxIdleConnsPerHost: 10
+  forwardingTimeouts:
+    responseHeaderTimeout: 60s
+    idleConnTimeout: 90s
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
