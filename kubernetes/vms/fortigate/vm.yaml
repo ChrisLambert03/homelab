@@ -37,10 +37,15 @@ spec:
           interfaces:
             - name: default
               masquerade: {}
+            - name: lab-lan
+              bridge: {}
           rng: {}
       networks:
         - name: default
           pod: {}
+        - name: lab-lan
+          multus:
+            networkName: lab-lan-bridge
       volumes:
         - name: boot-disk
           persistentVolumeClaim:
