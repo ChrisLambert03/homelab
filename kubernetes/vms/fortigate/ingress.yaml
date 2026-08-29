@@ -4,6 +4,9 @@ kind: Service
 metadata:
   name: fg-firewall-mgmt
   namespace: vms
+  annotations:
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+    traefik.ingress.kubernetes.io/service.serverstransport: vms-fg-insecure-transport@kubernetescrd
 spec:
   type: ClusterIP
   selector:
@@ -32,8 +35,6 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-admin-only-access@kubernetescrd
-    traefik.ingress.kubernetes.io/service.serversscheme: https
-    traefik.ingress.kubernetes.io/service.serverstransport: vms-fg-insecure-transport@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
