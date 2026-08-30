@@ -1,0 +1,50 @@
+---
+- name: Configure persistent node networking, PCIe ASPM, and disable systemd-networkd
+  hosts: opti74
+  become: true
+  tasks:
+    - name: Disable PCIe ASPM and e1000e SmartPowerDown in GRUB
+      ansible.builtin.lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+        line: 'GRUB_CMDLINE_LINUX_DEFAULT="pcie_aspm=off e1000e.SmartPowerDownEnable=0"'
+      notify: Update grub
+
+    - name: Disable and stop conflicting systemd-networkd daemon
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        enabled: false
+        state: stopped
+      loop:
+        - systemd-networkd.socket
+        - systemd-networkd
+      failed_when: false
+
+    - name: Deploy declarative Netplan configuration for NetworkManager
+      ansible.builtin.copy:
+        dest: /etc/netplan/01-netcfg.yaml
+        mode: '0600'
+        content: |
+          network:
+            version: 2
+            renderer: NetworkManager
+            ethernets:
+              enp0s31f6:
+                dhcp4: true
+                nameservers:
+                  addresses:
+                    - 1.1.1.1
+                    - 8.8.8.8
+                    - 10.0.0.1
+      notify: Apply netplan
+
+  handlers:
+    - name: Update grub
+      ansible.builtin.command:
+        cmd: update-grub
+      changed_when: true
+
+    - name: Apply netplan
+      ansible.builtin.command:
+        cmd: netplan apply
+      changed_when: true
