@@ -1,0 +1,39 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nmstate
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: infrastructure
+  sources:
+    # 1. Your Git Repo (defines $homelab alias and companion manifests)
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      ref: homelab
+      path: kubernetes/network/nmstate
+      directory:
+        exclude: 'values.yaml'
+
+    # 2. Upstream NMState Helm Chart using $homelab values.yaml
+    - repoURL: oci://quay.io/nmstate
+      chart: kubernetes-nmstate
+      targetRevision: 0.87.0
+      helm:
+        releaseName: nmstate
+        valueFiles:
+          - $homelab/kubernetes/network/nmstate/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nmstate
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

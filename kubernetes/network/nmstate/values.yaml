@@ -1,0 +1,10 @@
+---
+operator:
+  pullPolicy: IfNotPresent
+
+handler:
+  namespace: nmstate
+
+nmstate:
+  enabled: true
+  spec: {}

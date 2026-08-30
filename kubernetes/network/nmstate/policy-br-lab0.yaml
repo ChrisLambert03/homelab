@@ -1,0 +1,23 @@
+---
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: lab-lan-bridge
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  nodeSelector:
+    kubernetes.io/os: linux
+  desiredState:
+    interfaces:
+      - name: br-lab0
+        type: linux-bridge
+        state: up
+        bridge:
+          options:
+            stp:
+              enabled: false
+        ipv4:
+          enabled: false
+        ipv6:
+          enabled: false
