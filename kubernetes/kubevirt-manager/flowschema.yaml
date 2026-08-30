@@ -19,6 +19,8 @@ spec:
         - verbs: ["*"]
           apiGroups: ["*"]
           resources: ["*"]
+          namespaces: ["*"]
+          clusterScope: true
       nonResourceRules:
         - verbs: ["*"]
           nonResourceURLs: ["*"]
