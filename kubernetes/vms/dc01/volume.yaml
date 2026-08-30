@@ -65,3 +65,35 @@ spec:
     requests:
       storage: 100G
   storageClassName: ""
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nas-isos-virtio-pv
+spec:
+  claimRef:
+    namespace: vms
+    name: nas-isos-virtio-pvc
+  capacity:
+    storage: 50G
+  volumeMode: Filesystem
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: 10.0.0.60
+    path: /Volume1/data/isos/virtio-win
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nas-isos-virtio-pvc
+  namespace: vms
+spec:
+  accessModes:
+    - ReadOnlyMany
+  volumeName: nas-isos-virtio-pv
+  resources:
+    requests:
+      storage: 50G
+  storageClassName: ""
