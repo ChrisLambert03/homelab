@@ -22,15 +22,38 @@ spec:
           type: q35
         cpu:
           sockets: 1
-          cores: 2
+          cores: 4
           threads: 1
+          model: host-passthrough
         resources:
           requests:
             cpu: "2"
-            memory: 4Gi
+            memory: 8Gi
           limits:
-            cpu: "2"
-            memory: 4Gi
+            cpu: "4"
+            memory: 8Gi
+        features:
+          acpi: {}
+          apic: {}
+          hyperv:
+            relaxed: {}
+            vapic: {}
+            spinlocks:
+              spinlocks: 8191
+            synic: {}
+            synictimer: {}
+            reset: {}
+            runtime: {}
+        clock:
+          utc: {}
+          timer:
+            hpet:
+              present: false
+            pit:
+              tickPolicy: delay
+            rtc:
+              tickPolicy: catchup
+            hyperv: {}
         devices:
           blockMultiQueue: true
           inputs:
