@@ -1,0 +1,67 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: dc01-iscsi-pv
+spec:
+  claimRef:
+    namespace: vms
+    name: dc01-boot-pvc
+  capacity:
+    storage: 45G
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  iscsi:
+    targetPortal: 10.0.0.60:3260
+    iqn: iqn.2026-08.us.lambertlab:dc01-boot
+    lun: 0
+    fsType: ext4
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dc01-boot-pvc
+  namespace: vms
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeName: dc01-iscsi-pv
+  resources:
+    requests:
+      storage: 45G
+  storageClassName: ""
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nas-isos-win2025-pv
+spec:
+  claimRef:
+    namespace: vms
+    name: nas-isos-win2025-pvc
+  capacity:
+    storage: 100G
+  volumeMode: Filesystem
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: 10.0.0.60
+    path: /Volume1/data/isos/win2025
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nas-isos-win2025-pvc
+  namespace: vms
+spec:
+  accessModes:
+    - ReadOnlyMany
+  volumeName: nas-isos-win2025-pv
+  resources:
+    requests:
+      storage: 100G
+  storageClassName: ""

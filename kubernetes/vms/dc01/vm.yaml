@@ -1,0 +1,63 @@
+---
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: dc01
+  namespace: vms
+  labels:
+    app: active-directory
+spec:
+  runStrategy: Manual
+  template:
+    metadata:
+      labels:
+        kubevirt.io/vm: dc01
+        app: active-directory
+    spec:
+      terminationGracePeriodSeconds: 60
+      domain:
+        machine:
+          type: q35
+        cpu:
+          sockets: 1
+          cores: 2
+          threads: 1
+        resources:
+          requests:
+            cpu: "2"
+            memory: 4Gi
+          limits:
+            cpu: "2"
+            memory: 4Gi
+        devices:
+          blockMultiQueue: true
+          disks:
+            - name: boot-disk
+              disk:
+                bus: virtio
+              bootOrder: 2
+            - name: win-iso
+              cdrom:
+                bus: sata
+              bootOrder: 1
+            - name: virtio-drivers
+              cdrom:
+                bus: sata
+          interfaces:
+            - name: lab-lan
+              bridge: {}
+          rng: {}
+      networks:
+        - name: lab-lan
+          multus:
+            networkName: lab-lan-bridge
+      volumes:
+        - name: boot-disk
+          persistentVolumeClaim:
+            claimName: dc01-boot-pvc
+        - name: win-iso
+          persistentVolumeClaim:
+            claimName: nas-isos-win2025-pvc
+        - name: virtio-drivers
+          containerDisk:
+            image: quay.io/kubevirt/virtio-container-disk:latest
