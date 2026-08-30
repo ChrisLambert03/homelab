@@ -33,6 +33,10 @@ spec:
             memory: 4Gi
         devices:
           blockMultiQueue: true
+          inputs:
+            - type: tablet
+              bus: usb
+              name: tablet
           disks:
             - name: boot-disk
               disk:
