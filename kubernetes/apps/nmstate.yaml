@@ -20,7 +20,7 @@ spec:
         exclude: 'values.yaml'
 
     # 2. Upstream NMState Helm Chart using $homelab values.yaml
-    - repoURL: oci://quay.io/nmstate
+    - repoURL: quay.io/nmstate
       chart: kubernetes-nmstate
       targetRevision: 0.87.0
       helm:
