@@ -1,0 +1,24 @@
+---
+apiVersion: flowcontrol.apiserver.k8s.io/v1
+kind: FlowSchema
+metadata:
+  name: kubevirt-manager-flow
+spec:
+  matchingPrecedence: 800
+  priorityLevelConfiguration:
+    name: workload-high
+  distinguisherMethod:
+    type: ByUser
+  rules:
+    - subjects:
+        - kind: ServiceAccount
+          serviceAccount:
+            name: kubevirt-manager
+            namespace: kubevirt
+      resourceRules:
+        - verbs: ["*"]
+          apiGroups: ["*"]
+          resources: ["*"]
+      nonResourceRules:
+        - verbs: ["*"]
+          nonResourceURLs: ["*"]
