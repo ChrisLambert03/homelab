@@ -50,7 +50,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   nfs:
     server: 10.0.0.60
-    path: /Volume1/data/isos/win2025
+    path: /Volume3/isos/win2025
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -82,7 +82,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   nfs:
     server: 10.0.0.60
-    path: /Volume1/data/isos/virtio-win
+    path: /Volume3/isos/virtio-win
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
