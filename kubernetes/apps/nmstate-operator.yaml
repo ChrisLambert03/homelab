@@ -1,0 +1,36 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nmstate-operator
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: infrastructure
+  source:
+    repoURL: quay.io/nmstate
+    chart: kubernetes-nmstate
+    targetRevision: 0.87.0
+    helm:
+      releaseName: nmstate
+      values: |
+        operator:
+          pullPolicy: IfNotPresent
+        handler:
+          namespace: nmstate
+        nmstate:
+          enabled: true
+          spec: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nmstate
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

@@ -3,8 +3,6 @@ apiVersion: nmstate.io/v1
 kind: NodeNetworkConfigurationPolicy
 metadata:
   name: lab-lan-bridge
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
 spec:
   nodeSelector:
     kubernetes.io/os: linux
