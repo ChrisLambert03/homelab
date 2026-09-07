@@ -1,34 +1,35 @@
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: tailscale-operator
-  namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: infrastructure
-  sources:
-    # 1. Local Tailscale companion manifests (ProxyGroup, Gateway Services, CRDs)
-    - repoURL: git@github.com:ChrisLambert03/homelab.git
-      targetRevision: main
-      path: kubernetes/tailscale
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: tailscale-operator
+#   namespace: argocd
+#   annotations:
+#     argocd.argoproj.io/sync-wave: "1"
+#   finalizers:
+#     - resources-finalizer.argocd.argoproj.io
+# spec:
+#   project: infrastructure
+#   sources:
+#     # 1. Local Tailscale companion manifests (ProxyGroup, Gateway Services, CRDs)
+#     - repoURL: git@github.com:ChrisLambert03/homelab.git
+#       targetRevision: main
+#       path: kubernetes/tailscale
+#
+#     # 2. Upstream Tailscale Operator Helm chart
+#     - repoURL: https://pkgs.tailscale.com/helmcharts
+#       chart: tailscale-operator
+#       targetRevision: 1.102.3
+#       helm:
+#         releaseName: tailscale-operator
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: tailscale
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#       - CreateNamespace=true
+#       - ServerSideApply=true
 
-    # 2. Upstream Tailscale Operator Helm chart
-    - repoURL: https://pkgs.tailscale.com/helmcharts
-      chart: tailscale-operator
-      targetRevision: 1.102.3
-      helm:
-        releaseName: tailscale-operator
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: tailscale
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-      - ServerSideApply=true

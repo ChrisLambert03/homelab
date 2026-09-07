@@ -5,13 +5,44 @@ data "cloudflare_zone" "main" {
   }
 }
 
-# Wildcard A Record dynamically pointing to the Tailscale k8s-gateway Service IPv4
-resource "cloudflare_dns_record" "wildcard" {
+# Wildcard A Records for each k3s node Tailscale IP (HA Direct Ingress)
+resource "cloudflare_dns_record" "wildcard_workstation" {
   zone_id = data.cloudflare_zone.main.id
   name    = "*"
-  content = data.tailscale_service.k8s_gateway.addrs[0]
+  content = data.tailscale_device.workstation.addresses[0]
   type    = "A"
   ttl     = 300
   proxied = false
-  comment = "Kubernetes VIP - Managed by Terraform"
+  comment = "k3s workstation - Managed by Terraform"
 }
+
+resource "cloudflare_dns_record" "wildcard_opti74" {
+  zone_id = data.cloudflare_zone.main.id
+  name    = "*"
+  content = data.tailscale_device.opti74.addresses[0]
+  type    = "A"
+  ttl     = 300
+  proxied = false
+  comment = "k3s opti74 - Managed by Terraform"
+}
+
+resource "cloudflare_dns_record" "wildcard_optiplex" {
+  zone_id = data.cloudflare_zone.main.id
+  name    = "*"
+  content = data.tailscale_device.optiplex.addresses[0]
+  type    = "A"
+  ttl     = 300
+  proxied = false
+  comment = "k3s optiplex - Managed by Terraform"
+}
+
+resource "cloudflare_dns_record" "wildcard_lenovo" {
+  zone_id = data.cloudflare_zone.main.id
+  name    = "*"
+  content = data.tailscale_device.lenovo.addresses[0]
+  type    = "A"
+  ttl     = 300
+  proxied = false
+  comment = "k3s lenovo - Managed by Terraform"
+}
+

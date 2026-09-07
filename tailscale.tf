@@ -1,10 +1,21 @@
-# Fetch Tailscale Service details for the Kubernetes Ingress Gateway
-data "tailscale_service" "k8s_gateway" {
-  name = "svc:k8s-gateway"
+data "tailscale_device" "workstation" {
+  name = "workstation.${var.tailscale_tailnet}"
 }
 
-# Dynamically retrieved Service IPv4 address
-output "k8s_gateway_ipv4" {
-  description = "Tailscale Service IPv4 address for k8s-gateway"
-  value       = data.tailscale_service.k8s_gateway.addrs[0]
+data "tailscale_device" "opti74" {
+  name = "opti74.${var.tailscale_tailnet}"
 }
+
+data "tailscale_device" "optiplex" {
+  name = "optiplex.${var.tailscale_tailnet}"
+}
+
+data "tailscale_device" "lenovo" {
+  name = "lenovo.${var.tailscale_tailnet}"
+}
+
+# Commented out - decommissioned VIP service
+# data "tailscale_service" "k8s_gateway" {
+#   name = "svc:k8s-gateway"
+# }
+
