@@ -1,0 +1,70 @@
+---
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: sophos-firewall
+  namespace: vms
+  labels:
+    app: sophos
+spec:
+  runStrategy: Manual
+  template:
+    metadata:
+      labels:
+        kubevirt.io/vm: sophos-firewall
+        app: sophos
+    spec:
+      terminationGracePeriodSeconds: 60
+      domain:
+        machine:
+          type: q35
+        cpu:
+          sockets: 1
+          cores: 2
+          threads: 1
+        resources:
+          requests:
+            cpu: "2"
+            memory: 4Gi
+          limits:
+            cpu: "2"
+            memory: 4Gi
+        devices:
+          inputs:
+            - type: tablet
+              bus: usb
+              name: tablet
+          disks:
+            - name: cdrom-iso
+              cdrom:
+                bus: sata
+              bootOrder: 1
+            - name: boot-disk
+              disk:
+                bus: virtio
+              bootOrder: 2
+            - name: logs-disk
+              disk:
+                bus: virtio
+          interfaces:
+            - name: default
+              masquerade: {}
+            - name: lab-lan
+              bridge: {}
+          rng: {}
+      networks:
+        - name: default
+          pod: {}
+        - name: lab-lan
+          multus:
+            networkName: lab-lan-bridge
+      volumes:
+        - name: cdrom-iso
+          persistentVolumeClaim:
+            claimName: nas-isos-sophos-pvc
+        - name: boot-disk
+          persistentVolumeClaim:
+            claimName: sophos-boot-pvc
+        - name: logs-disk
+          persistentVolumeClaim:
+            claimName: sophos-logs-pvc
