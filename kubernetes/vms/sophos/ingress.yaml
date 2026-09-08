@@ -36,6 +36,7 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-admin-only-access@kubernetescrd
+    traefik.ingress.kubernetes.io/service.passhostheader: "false"
 spec:
   ingressClassName: traefik
   rules:
