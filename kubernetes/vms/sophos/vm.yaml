@@ -14,6 +14,8 @@ spec:
         kubevirt.io/vm: sophos-firewall
         app: sophos
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: workstation
       terminationGracePeriodSeconds: 60
       domain:
         machine:
