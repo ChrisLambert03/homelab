@@ -46,8 +46,10 @@ spec:
                 bus: virtio
           interfaces:
             - name: default
+              model: e1000e
               masquerade: {}
             - name: lab-lan
+              model: e1000e
               bridge: {}
           rng: {}
       networks:
