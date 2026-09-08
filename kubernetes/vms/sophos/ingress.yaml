@@ -7,6 +7,7 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/service.serversscheme: https
     traefik.ingress.kubernetes.io/service.serverstransport: vms-sophos-insecure-transport@kubernetescrd
+    traefik.ingress.kubernetes.io/service.passhostheader: "false"
 spec:
   type: ClusterIP
   selector:
