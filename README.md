@@ -14,6 +14,7 @@
 [![Terraform](https://img.shields.io/badge/Terraform-v1.x-blueviolet?style=for-the-badge&logo=terraform&logoColor=white)](https://www.terraform.io)
 [![Ansible](https://img.shields.io/badge/Ansible-Latest-red?style=for-the-badge&logo=ansible&logoColor=white)](https://www.ansible.com)
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com)
+[![Microsoft Entra ID](https://img.shields.io/badge/Entra_ID-OIDC_RBAC-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)](https://learn.microsoft.com/en-us/entra/identity/)
 
 </div>
 
@@ -27,16 +28,19 @@ My infrastructure is centered around a declarative, highly available Kubernetes 
 
 1. **GitOps Engine (ArgoCD)**: Central declarative deployment pipeline using the App-of-Apps pattern to self-manage applications, Helm releases, and companion manifests.
 2. **Kubernetes (K3s)**: 4-node physical bare-metal cluster hosting core services, GPU-accelerated workloads, and dynamic persistent storage.
-3. **High-Availability Ingress (Tailscale Operator + ProxyGroup)**: Distributed HA Tailscale Ingress ProxyGroup exposing a permanent virtual gateway with raw TCP TLS passthrough into Traefik.
-4. **Automated Wildcard DNS (Terraform + Cloudflare)**: Terraform-managed Cloudflare DNS records dynamically bound to the Tailscale Gateway VIP (`svc:k8s-gateway`).
+3. **High-Availability Ingress & Client IP Preservation**: Distributed edge ingress via Tailscale and Cloudflare DNS round-robin across physical node Tailscale interfaces, preserving true client source IPs into Traefik.
+4. **Automated Wildcard DNS (Terraform + Cloudflare)**: Terraform-managed Cloudflare DNS records dynamically bound to physical cluster nodes' Tailscale addresses.
 5. **Edge Routing & Wildcard TLS (Traefik + Cert-Manager)**: Centralized edge ingress using Traefik with automated Let's Encrypt DNS-01 wildcard certificates and granular IP allowlisting (ACLs).
 6. **Storage Layer (TerraMaster NAS NFS & iSCSI + Longhorn)**: TerraMaster NAS storage pool providing unified NFS media shares and dedicated iSCSI block LUNs for database/application state, complemented by distributed Longhorn storage.
-7. **Security & Secrets**: Centrally orchestrated by HashiCorp Vault with OIDC SSO integration and External Secrets Operator (ESO).
+7. **Security, Secrets & Identity**: Centrally orchestrated by HashiCorp Vault, External Secrets Operator (ESO), and native Microsoft Entra ID OIDC RBAC with Azure/kubelogin.
 
 ---
 
 ## 📝 Recent Accomplishments
 
+- [x] **Microsoft Entra ID (Azure AD) OIDC & RBAC Authentication**: Configured enterprise-grade OpenID Connect (OIDC) authentication on the K3s API server (`kube-apiserver`) backed by Microsoft Entra ID. Upgraded app token issuance to modern v2 access tokens (`requestedAccessTokenVersion: 2`), mapped security groups (`groups` claim) directly to `cluster-admin` via `ClusterRoleBinding` (`entra-cluster-admins`), and standardized workstation client authentication on `Azure/kubelogin` using PKCE interactive authentication (`--login interactive`) without requiring persistent client secrets.
+- [x] **Ingress Client IP Preservation & Tailscale DNS Round-Robin**: Diagnosed and resolved source IP masking (SNAT to flannel overlay `10.42.x.x`) previously introduced by the Tailscale Operator L3 VIP. Re-architected edge ingress to multi-A Cloudflare DNS round-robin (`*.lambertlab.us`) directly across the physical nodes' Tailscale interfaces via Terraform (`tailscale.tf` and `cloudflare.tf`), preserving real remote client IPs for Traefik security middleware allowlists and Jellyfin streaming logs while cleanly retiring the Operator ProxyGroup.
+- [x] **Intel iGPU Hardware Acceleration on `opti74`**: Enabled Intel HD Graphics 530 GPU passthrough (`/dev/dri/renderD128`) on `opti74` with the `i965` Mesa driver, providing hardware-accelerated rendering for containerized desktop workloads (Firefox).
 - [x] **Automated Cloudflare DNS via Terraform**: Integrated the Cloudflare and Tailscale Terraform providers with HashiCorp Vault. Declaratively provisioned a wildcard DNS record (`*.lambertlab.us`) pointing dynamically to the Tailscale `svc:k8s-gateway` Service VIP (`100.75.164.26`), enabling automatic DNS resolution across for all cluster services.
 - [x] **3-Node High-Availability Control Plane (Embedded etcd)**: Promoted `optiplex` and `opti74` to control-plane servers with embedded etcd (`cluster-init`), establishing a true 3-node Raft quorum across `lenovo`, `optiplex`, and `opti74` for uninterrupted multi-node master failover.
 - [x] **ArgoCD AppProjects & GitOps Sync Waves**: Organized all 16 applications into 5 dedicated `AppProject` categories (`infrastructure`, `security`, `media`, `observability`, `gaming`) with deterministic 0-3 sync waves ensuring deterministic startup order.
@@ -81,14 +85,15 @@ My infrastructure is centered around a declarative, highly available Kubernetes 
 | **`opti74`** | K3s HA Control Plane (etcd) | K3s API Server, etcd Quorum Member, Palworld Dedicated Server, General Compute |
 | **`workstation`** | K3s Dedicated GPU Worker | NVIDIA GPU Operator (RTX 4070 Ti), Media Stack Runtime, Hardware Transcoding |
 | **`terramaster`** | Storage SAN/NAS | High-Capacity NFS Media Pool (14TB), iSCSI Target Portal (ext4 Block LUNs for DB state) |
-| **`k8s-gateway`** | **Virtual VIP Gateway** | **High-Availability Tailscale Ingress Gateway (3-Replica Layer 4 Proxy)** |
+| **Tailscale Ingress** | Distributed Edge Ingress | Multi-A DNS Round-Robin across physical Tailscale IPs (`*.lambertlab.us`), preserving real client IPs |
 
 ---
 
 ## 🔧 Infrastructure as Code & GitOps Principles
 
 - **GitOps Pipeline**: Centralized, declarative continuous delivery via ArgoCD using the App-of-Apps pattern (`kubernetes/apps/`).
-- **Terraform IaC & DNS Automation**: Declaratively manages Cloudflare DNS records dynamically bound to the Tailscale Ingress Gateway VIP (`svc:k8s-gateway`), with credentials securely fetched from HashiCorp Vault.
+- **Terraform IaC & DNS Automation**: Declaratively manages Cloudflare DNS records dynamically querying physical node Tailscale IPs, with credentials securely fetched from HashiCorp Vault.
+- **Identity & Access Management (IAM)**: Native Kubernetes OIDC authentication integrated with Microsoft Entra ID, enforcing RBAC group mappings and public client PKCE workflows with `Azure/kubelogin`.
 - **Edge Routing & Ingress**: Managed natively in Kubernetes using Traefik `IngressRoute`, `Middleware` (IP allowlists, HTTPS redirects), and `EndpointSlice` bridging for legacy Docker hosts.
 - **Automated TLS**: Cert-Manager with Cloudflare DNS-01 ACME issuing a single wildcard certificate to Traefik's `default` `TLSStore`.
 - **Virtual Machines**: Declaratively provisioned via LibVirt using [vms/libvirt-vms.tf](file:///home/chris/homelab/vms/libvirt-vms.tf).
