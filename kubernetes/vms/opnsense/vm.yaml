@@ -37,14 +37,10 @@ spec:
               bus: usb
               name: tablet
           disks:
-            - name: cdrom-iso
-              cdrom:
-                bus: sata
-              bootOrder: 1
             - name: boot-disk
               disk:
                 bus: virtio
-              bootOrder: 2
+              bootOrder: 1
           interfaces:
             - name: default
               model: virtio
@@ -60,9 +56,6 @@ spec:
           multus:
             networkName: lab-lan-bridge
       volumes:
-        - name: cdrom-iso
-          persistentVolumeClaim:
-            claimName: nas-isos-opnsense-pvc
         - name: boot-disk
           persistentVolumeClaim:
             claimName: opnsense-boot-pvc
