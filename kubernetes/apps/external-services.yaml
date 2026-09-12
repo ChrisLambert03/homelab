@@ -16,6 +16,9 @@ spec:
       path: kubernetes/cockpit
     - repoURL: git@github.com:ChrisLambert03/homelab.git
       targetRevision: main
+      path: kubernetes/code
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
       path: kubernetes/firefox
     - repoURL: git@github.com:ChrisLambert03/homelab.git
       targetRevision: main
