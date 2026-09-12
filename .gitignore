@@ -12,6 +12,7 @@ override.tf.json
 /ansible/homelab-nodes
 /ansible/ansible.cfg
 GEMINI.md
+MEMORY.md
 .gemini/
 *.skill
 homelab-ansible-runner/
