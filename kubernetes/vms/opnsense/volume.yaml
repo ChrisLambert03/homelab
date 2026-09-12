@@ -1,0 +1,73 @@
+---
+# ==============================================================================
+# ISO INSTALLER (NFS - TerraMaster Volume3)
+# ==============================================================================
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nas-isos-opnsense-pv
+spec:
+  claimRef:
+    namespace: vms
+    name: nas-isos-opnsense-pvc
+  capacity:
+    storage: 10G
+  volumeMode: Filesystem
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: 10.0.0.60
+    path: /Volume3/isos/opnsense
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nas-isos-opnsense-pvc
+  namespace: vms
+spec:
+  accessModes:
+    - ReadOnlyMany
+  volumeName: nas-isos-opnsense-pv
+  resources:
+    requests:
+      storage: 10G
+  storageClassName: ""
+---
+# ==============================================================================
+# DISK 1: OS / BOOT (iSCSI - TerraMaster SATA SSD Pool)
+# ==============================================================================
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: opnsense-boot-pv
+spec:
+  claimRef:
+    namespace: vms
+    name: opnsense-boot-pvc
+  capacity:
+    storage: 40G
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  iscsi:
+    targetPortal: 10.0.0.60:3260
+    iqn: iqn.2026-09.us.lambertlab:opnsense-boot
+    lun: 0
+    fsType: ext4
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: opnsense-boot-pvc
+  namespace: vms
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeName: opnsense-boot-pv
+  resources:
+    requests:
+      storage: 40G
+  storageClassName: ""
