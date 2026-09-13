@@ -8,7 +8,7 @@ spec:
     namespace: vms
     name: dc01-boot-pvc
   capacity:
-    storage: 45G
+    storage: 80G
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -31,7 +31,7 @@ spec:
   volumeName: dc01-iscsi-pv
   resources:
     requests:
-      storage: 45G
+      storage: 80G
   storageClassName: ""
 ---
 apiVersion: v1
