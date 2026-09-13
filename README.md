@@ -101,12 +101,16 @@ The entire environment is managed declaratively through **GitOps (ArgoCD)** and 
 - [x] **Microsoft Entra ID (Azure AD) OIDC & RBAC Authentication**: Configured enterprise-grade OpenID Connect (OIDC) authentication on the K3s API server (`kube-apiserver`) backed by Microsoft Entra ID. Upgraded app token issuance to modern v2 access tokens (`requestedAccessTokenVersion: 2`), mapped security groups directly to `cluster-admin` via `ClusterRoleBinding`, and standardized workstation authentication using `Azure/kubelogin` interactive PKCE without requiring persistent client secrets.
 - [x] **Ingress Client IP Preservation & Tailscale DNS Round-Robin**: Diagnosed and resolved source IP masking (SNAT to flannel overlay network) previously introduced by the Tailscale Operator L3 VIP. Re-architected edge ingress to multi-A Cloudflare DNS round-robin (`*.lambertlab.us`) directly across physical nodes' Tailscale interfaces via Terraform (`tailscale.tf` and `cloudflare.tf`), preserving real remote client IPs for Traefik security middleware allowlists and Jellyfin streaming logs.
 - [x] **3-Node High-Availability Control Plane (Embedded etcd)**: Promoted `optiplex` and `opti74` to control-plane servers with embedded etcd (`cluster-init`), establishing a true 3-node Raft quorum across `lenovo`, `optiplex`, and `opti74` for uninterrupted multi-node master failover.
+- [x] **Active Directory LDAPS Integration & OPNsense RBAC**: Integrated virtualized OPNsense with Active Directory over secure LDAPS (`636/TCP`) using internal Root CA trust and Unbound DNS host overrides. Declaratively provisioned the `OPNsense-Admins` security group and membership via Terraform (`hashicorp/ad`), establishing role-based access control and automated user group synchronization for firewall administration.
 
 ---
 
 ## 🚀 Active Roadmap
 
+- [ ] **ArgoCD Microsoft Entra ID (Azure AD) OIDC SSO**: Integrate ArgoCD authentication with Microsoft Entra ID using OpenID Connect (OIDC) and map enterprise security groups to declarative ArgoCD RBAC roles.
+- [ ] **Clientless Remote Desktop Gateway (Apache Guacamole)**: Deploy a secure web-based remote desktop gateway (Apache Guacamole) to facilitate browser-based RDP and SSH access into KubeVirt VMs without exposing management ports directly.
 - [ ] **Active Directory Domain Joins & DNS Integration**: Automate domain joining for homelab Windows/Linux clients and integrate AD DNS forwarding with Pi-hole and OPNsense.
 - [ ] **Modernize `external-services` with `TraefikService` CRDs**: Refactor static `EndpointSlice` definitions in the `external` namespace to native Traefik Custom Resource Definitions.
 - [ ] **Transcoding Offload (Tdarr)**: Transition Tdarr distributed compute nodes directly into Kubernetes worker nodes.
-- [ ] **Storage Tuning**: Benchmark and optimize NFS and iSCSI mount parameters for high-concurrency 4K media streaming.
+- [ ] **Storage Tuning**: Benchmark and optimize NFS and iSCSI mount parameters for high-concurrency media streaming and VM hosting.
+
