@@ -8,6 +8,13 @@ spec:
     kubernetes.io/os: linux
   desiredState:
     interfaces:
+      - name: vxlan-lab
+        type: vxlan
+        state: up
+        vxlan:
+          id: 100
+          remote: 239.1.1.1
+          destination-port: 4789
       - name: br-lab0
         type: linux-bridge
         state: up
@@ -15,6 +22,8 @@ spec:
           options:
             stp:
               enabled: false
+          port:
+            - name: vxlan-lab
         ipv4:
           enabled: false
         ipv6:

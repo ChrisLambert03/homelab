@@ -6,7 +6,7 @@ metadata:
   namespace: vms
 spec:
   selector:
-    kubevirt.io/vm: fg-firewall
+    kubevirt.io/vm: opnsense-firewall
   ports:
     - name: winrm
       port: 5985

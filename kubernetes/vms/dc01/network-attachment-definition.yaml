@@ -8,9 +8,9 @@ spec:
   config: '{
     "cniVersion": "0.3.1",
     "name": "lab-lan-bridge",
-    "type": "flannel",
-    "delegate": {
-      "isDefaultGateway": false,
-      "hairpinMode": true
-    }
+    "type": "bridge",
+    "bridge": "br-lab0",
+    "isDefaultGateway": false,
+    "hairpinMode": true,
+    "ipam": {}
   }'
