@@ -30,16 +30,16 @@ The entire environment is managed declaratively through **GitOps (ArgoCD)** and 
 ### 1. Orchestration & Virtualization (K3s + KubeVirt)
 * **High-Availability Control Plane**: 3-node embedded `etcd` quorum (`lenovo`, `optiplex`, `opti74`) running K3s for seamless master failover.
 * **Dedicated GPU Worker**: Bare-metal `workstation` hosting an NVIDIA RTX GPU with the NVIDIA GPU Operator for hardware-accelerated transcoding and compute.
-* **Cloud-Native Virtualization**: KubeVirt runs core virtual appliances directly inside Kubernetes, unifying VM and container lifecycles under standard Kubernetes APIs.
+* **Cloud-Native Virtualization**: KubeVirt runs core virtual appliances directly inside Kubernetes, unifying virtual machine and container lifecycles under standard Kubernetes APIs.
 
 ### 2. Software-Defined Networking & Edge Ingress
-* **Multi-Node L2 Overlay**: Cluster-wide multicast VXLAN (`br-lab0` via NMState on VNI 100 / UDP 4789) providing direct Layer 2 connectivity between VMs across physical nodes without switch VLAN trunking.
-* **Preserved Client IP Ingress**: Distributed edge routing via Tailscale mesh and Cloudflare DNS round-robin (`*.lambertlab.us`) across physical node Tailscale interfaces, preserving true client source IPs into Traefik.
+* **Multi-Node L2 Overlay**: Cluster-wide multicast VXLAN (`br-lab0` via NMState) providing direct Layer 2 connectivity between virtual machines across physical nodes without switch VLAN trunking.
+* **Preserved Client IP Ingress**: Distributed edge routing via Tailscale mesh and Cloudflare DNS round-robin (`*.lambertlab.us`) across physical node interfaces, preserving true client source IPs into Traefik.
 * **Firewall & Routing Gateway**: Virtualized OPNsense router enforcing network policies, DNS resolution, and bidirectional port forwarding with symmetric return-path SNAT.
 
 ### 3. Dual-Directory Identity & Security
 * **Cloud / K8s IAM**: Native OpenID Connect (OIDC) authentication on `kube-apiserver` integrated with Microsoft Entra ID (Azure AD), public-client PKCE login via `Azure/kubelogin`, and RBAC group rolebindings.
-* **On-Premise IAM**: Windows Server 2025 Active Directory domain controller (`dc01`, `lambertlab.us`), managed declaratively via Terraform over HTTPS WinRM.
+* **On-Premise IAM**: Windows Server 2025 Active Directory domain controller (`lambertlab.us`), managed declaratively via Terraform over HTTPS WinRM.
 * **Secrets Orchestration**: HashiCorp Vault paired with External Secrets Operator (ESO) for declarative in-cluster secret synchronization.
 
 ### 4. GitOps & Declarative IaC
@@ -61,9 +61,9 @@ The entire environment is managed declaratively through **GitOps (ArgoCD)** and 
 | **`opti74`** | Physical | K3s HA Control Plane (etcd) | K3s API Server, etcd Member, Palworld Dedicated Server |
 | **`workstation`** | Physical | Dedicated GPU Worker | NVIDIA GPU Operator (RTX 4070 Ti), Media Stack Runtime |
 | **`terramaster`** | SAN / NAS | Storage Target Portal | 14TB NFS Media Pool, iSCSI Block LUNs for DB/Application State |
-| **`opnsense-firewall`** | Virtual (KubeVirt) | Network Gateway (`10.10.0.1`) | Default Gateway, NAT Routing, DNS Resolver, Firewall ACLs |
-| **`dc01`** | Virtual (KubeVirt) | Windows Server 2025 (`10.10.0.10`) | Active Directory Domain Controller (`lambertlab.us`), DNS, WinRM |
-| **Tailscale Ingress** | Edge Mesh | Edge Routing | Multi-A DNS Round-Robin across physical Tailscale IPs |
+| **OPNsense Gateway** | Virtual (KubeVirt) | Virtual Firewall & Router | Default Gateway, NAT Routing, Local DNS Resolver, Firewall ACLs |
+| **Active Directory DC** | Virtual (KubeVirt) | Windows Server 2025 | Domain Controller (`lambertlab.us`), DNS, Automated WinRM Management |
+| **Tailscale Ingress** | Edge Mesh | Edge Routing | Multi-A DNS Round-Robin across physical cluster nodes |
 
 ---
 
@@ -74,7 +74,7 @@ The entire environment is managed declaratively through **GitOps (ArgoCD)** and 
 ├── kubernetes/                  # Declarative Kubernetes Manifests & GitOps
 │   ├── apps/                    # ArgoCD Root Application & Application CRDs
 │   ├── network/nmstate/         # Cluster-wide NMState VXLAN & Bridge Policies
-│   ├── vms/                     # KubeVirt Virtual Machine Definitions (OPNsense, DC01)
+│   ├── vms/                     # KubeVirt VM Definitions (OPNsense, Domain Controller)
 │   ├── media/                   # Jellyfin, Radarr, Sonarr, Prowlarr
 │   ├── observability/           # Homarr, Ntfy
 │   └── security/                # HashiCorp Vault, External Secrets
@@ -94,12 +94,12 @@ The entire environment is managed declaratively through **GitOps (ArgoCD)** and 
 
 ## 📝 Recent Accomplishments
 
-- [x] **Cluster-Wide Multicast VXLAN Overlay (KubeVirt L2 Networking)**: Engineered a multi-node Layer 2 network fabric using Kubernetes NMState (`policy-br-lab0.yaml`) with multicast VXLAN (VNI 100 on UDP 4789, group `239.1.1.1`) bonded to `br-lab0` across all bare-metal nodes (`lenovo`, `optiplex`, `opti74`, `workstation`), enabling seamless cross-node Layer 2 VM connectivity for KubeVirt workloads without physical switch trunking.
-- [x] **OPNsense Virtual Gateway & Sophos Decommissioning**: Deployed virtualized OPNsense on KubeVirt, successfully replacing the legacy Sophos Firewall. Configured WAN/LAN SNAT and DNAT routing policies, restoring full outbound internet connectivity and DNS resolution to Windows Server DC01 (`10.10.0.10`).
-- [x] **Secure WinRM Ingress & Active Directory (DC01) IaC**: Engineered an end-to-end HTTPS WinRM ingress pathway (`winrm.lambertlab.us`) through Traefik and OPNsense port forwarding with symmetric return-path SNAT, establishing declarative Active Directory management via Terraform (`hashicorp/ad`) for OUs, security groups, users, and service accounts.
+- [x] **Cluster-Wide Multicast VXLAN Overlay (KubeVirt L2 Networking)**: Engineered a multi-node Layer 2 network fabric using Kubernetes NMState (`policy-br-lab0.yaml`) with multicast VXLAN bonded to `br-lab0` across all bare-metal nodes (`lenovo`, `optiplex`, `opti74`, `workstation`), enabling seamless cross-node Layer 2 VM connectivity for KubeVirt workloads without physical switch trunking.
+- [x] **OPNsense Virtual Gateway & Sophos Decommissioning**: Deployed virtualized OPNsense on KubeVirt, successfully replacing the legacy Sophos Firewall. Configured WAN/LAN SNAT and DNAT routing policies, restoring full outbound internet connectivity and DNS resolution to the virtualized Windows Server Domain Controller.
+- [x] **Secure WinRM Ingress & Active Directory IaC Automation**: Engineered an end-to-end HTTPS WinRM ingress pathway (`winrm.lambertlab.us`) through Traefik and OPNsense port forwarding with symmetric return-path SNAT, establishing declarative Active Directory management via Terraform (`hashicorp/ad`) for OUs, security groups, users, and service accounts.
 - [x] **Workstation Workload Cleanup & Ollama Decommissioning**: Safely decommissioned the standalone Ollama container, reclaimed ~8.5 GB of container images and ~9.8 GB of model storage from `workstation`, and fully reconciled the deletion across Terraform state.
 - [x] **Microsoft Entra ID (Azure AD) OIDC & RBAC Authentication**: Configured enterprise-grade OpenID Connect (OIDC) authentication on the K3s API server (`kube-apiserver`) backed by Microsoft Entra ID. Upgraded app token issuance to modern v2 access tokens (`requestedAccessTokenVersion: 2`), mapped security groups directly to `cluster-admin` via `ClusterRoleBinding`, and standardized workstation authentication using `Azure/kubelogin` interactive PKCE without requiring persistent client secrets.
-- [x] **Ingress Client IP Preservation & Tailscale DNS Round-Robin**: Diagnosed and resolved source IP masking (SNAT to flannel overlay `10.42.x.x`) previously introduced by the Tailscale Operator L3 VIP. Re-architected edge ingress to multi-A Cloudflare DNS round-robin (`*.lambertlab.us`) directly across physical nodes' Tailscale interfaces via Terraform (`tailscale.tf` and `cloudflare.tf`), preserving real remote client IPs for Traefik security middleware allowlists and Jellyfin streaming logs.
+- [x] **Ingress Client IP Preservation & Tailscale DNS Round-Robin**: Diagnosed and resolved source IP masking (SNAT to flannel overlay network) previously introduced by the Tailscale Operator L3 VIP. Re-architected edge ingress to multi-A Cloudflare DNS round-robin (`*.lambertlab.us`) directly across physical nodes' Tailscale interfaces via Terraform (`tailscale.tf` and `cloudflare.tf`), preserving real remote client IPs for Traefik security middleware allowlists and Jellyfin streaming logs.
 - [x] **3-Node High-Availability Control Plane (Embedded etcd)**: Promoted `optiplex` and `opti74` to control-plane servers with embedded etcd (`cluster-init`), establishing a true 3-node Raft quorum across `lenovo`, `optiplex`, and `opti74` for uninterrupted multi-node master failover.
 
 ---
