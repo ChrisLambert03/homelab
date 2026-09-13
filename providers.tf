@@ -45,3 +45,13 @@ provider "tailscale" {
 provider "cloudflare" {
   api_token = local.cloudflare_api_token
 }
+
+# Active Directory provider configuration for Windows Server DC01
+provider "ad" {
+  winrm_hostname = "winrm.lambertlab.us"
+  winrm_username = "svc_terraform@lambertlab.us"
+  winrm_password = local.ad_svc_terraform_password
+  winrm_port     = 443
+  winrm_proto    = "https"
+  winrm_insecure = false
+}

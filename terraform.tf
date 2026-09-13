@@ -26,5 +26,9 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "5.24.0"
     }
+    ad = {
+      source  = "hashicorp/ad"
+      version = "0.5.0"
+    }
   }
 }

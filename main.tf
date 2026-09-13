@@ -56,3 +56,10 @@ module "libvirt" {
   # workstation_ip          = var.workstation_ip
   #  ssh_user                = var.ssh_user
 }
+
+# Active Directory Module
+module "active_directory" {
+  source = "./active_directory"
+
+  ad_svc_terraform_password = local.ad_svc_terraform_password
+}

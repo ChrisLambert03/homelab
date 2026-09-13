@@ -82,7 +82,7 @@ The entire environment is managed declaratively through **GitOps (ArgoCD)** and 
 │   ├── workstation/             # Workstation Docker services (Jellyfin, Tdarr, ELK)
 │   ├── optiplex/                # Optiplex Docker services
 │   └── lenovo/                  # Lenovo ThinkCentre Docker services
-├── ad_*.tf                      # Declarative Active Directory IaC (OUs, Groups, Users, SvcAccts)
+├── active_directory/           # Declarative Active Directory Module (OUs, Groups, Users, SvcAccts)
 ├── cloudflare.tf                # Cloudflare Wildcard DNS Automation
 ├── tailscale.tf                 # Tailscale Device & Ingress Data Sources
 ├── providers.tf                 # Terraform Providers (AD, Docker, Vault, Tailscale, Cloudflare)
