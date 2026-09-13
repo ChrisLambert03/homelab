@@ -17,3 +17,6 @@ spec:
     - name: ldap
       port: 389
       targetPort: 389
+    - name: rdp
+      port: 3389
+      targetPort: 3389
