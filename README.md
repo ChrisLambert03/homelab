@@ -110,7 +110,7 @@ The entire environment is managed declaratively through **GitOps (ArgoCD)** and 
 - [ ] **ArgoCD Microsoft Entra ID (Azure AD) OIDC SSO**: Integrate ArgoCD authentication with Microsoft Entra ID using OpenID Connect (OIDC) and map enterprise security groups to declarative ArgoCD RBAC roles.
 - [ ] **Clientless Remote Desktop Gateway (Apache Guacamole)**: Deploy a secure web-based remote desktop gateway (Apache Guacamole) to facilitate browser-based RDP and SSH access into KubeVirt VMs without exposing management ports directly.
 - [ ] **Active Directory Domain Joins & DNS Integration**: Automate domain joining for homelab Windows/Linux clients and integrate AD DNS forwarding with Pi-hole and OPNsense.
-- [ ] **Modernize `external-services` with `TraefikService` CRDs**: Refactor static `EndpointSlice` definitions in the `external` namespace to native Traefik Custom Resource Definitions.
 - [ ] **Transcoding Offload (Tdarr)**: Transition Tdarr distributed compute nodes directly into Kubernetes worker nodes.
 - [ ] **Storage Tuning**: Benchmark and optimize NFS and iSCSI mount parameters for high-concurrency media streaming and VM hosting.
+
 
