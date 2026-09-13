@@ -11,6 +11,6 @@ spec:
     "type": "bridge",
     "bridge": "br-lab0",
     "isDefaultGateway": false,
-    "hairpinMode": true,
+    "hairpinMode": false,
     "ipam": {}
   }'
