@@ -1,0 +1,42 @@
+---
+# values.yaml for helmforge/guacamole Helm chart
+# Phase 1: Local guacadmin + PostgreSQL on Longhorn
+
+guacamole:
+  contextPath: ROOT
+
+# Reverse proxy / Tomcat RemoteIpValve for client IP preservation
+proxy:
+  enabled: true
+  ipHeader: X-Forwarded-For
+  protocolHeader: X-Forwarded-Proto
+
+# Database schema bootstrap job
+initDb:
+  enabled: true
+
+# PostgreSQL subchart with Longhorn persistence
+postgresql:
+  enabled: true
+  auth:
+    database: guacamole_db
+    username: guacamole_user
+    existingSecret: "guacamole-postgresql-auth"
+  standalone:
+    persistence:
+      enabled: true
+      storageClass: longhorn-retain
+      size: 6Gi
+
+# Ingress via Traefik
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-admin-only-access@kubernetescrd
+  hosts:
+    - host: guacamole.lambertlab.us
+      paths:
+        - path: /
+          pathType: Prefix

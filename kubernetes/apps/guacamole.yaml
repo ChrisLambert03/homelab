@@ -1,0 +1,37 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: guacamole
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: infrastructure
+  sources:
+    # 1. Local Homelab Git Repo (defines $homelab alias for values.yaml)
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      ref: homelab
+
+    # 2. Upstream HelmForge Guacamole Chart
+    - repoURL: https://repo.helmforge.dev
+      chart: guacamole
+      targetRevision: 1.5.2
+      helm:
+        releaseName: guacamole
+        valueFiles:
+          - $homelab/kubernetes/guacamole/values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: guacamole
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

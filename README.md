@@ -117,9 +117,11 @@ The entire environment is managed declaratively through **GitOps (ArgoCD)** and 
 ### Platform Engineering & SRE
 - [ ] **Automated Disaster Recovery & Cold-Start Rebuild ("Nuke & Pave")**: Implement scheduled automated cluster state and persistent volume backups using Velero to S3/MinIO/NFS storage, paired with an idempotent cold-start bootstrap script to validate rapid bare-metal cluster restoration.
 - [ ] **SRE Observability & SLO Dashboards**: Deploy `kube-prometheus-stack` (Prometheus Operator, Alertmanager, Grafana) to define availability Service Level Objectives (SLOs), track error budgets and p99 latency across Traefik ingress and iSCSI storage, with automated alerting via Ntfy.
+- [ ] **Centralized Log Shipping & ELK Lifecycle Automation**: Deploy Filebeat/Vector to ship host OS, K3s control-plane, and pod logs into Elasticsearch on `workstation`, remediate ILM rollover policies for automated log retention, and federate Kibana through Traefik ForwardAuth with role-based access control.
 - [ ] **Storage Performance Tuning**: Benchmark and optimize NFS and iSCSI mount parameters for high-concurrency media streaming and VM hosting.
 
 ### DevSecOps & Governance
+- [ ] **Declarative Secrets Orchestration (External Secrets Operator & HashiCorp Vault)**: Implement cluster-wide `ClusterSecretStore` and `ExternalSecret` manifests to automatically synchronize and inject secrets from HashiCorp Vault KV v2 into native Kubernetes secrets across all namespaces.
 - [ ] **GitOps CI/CD Policy Gatekeeping (GitHub Actions)**: Implement an automated shift-left PR validation pipeline using `kubeconform` (Kubernetes schema validation), `tflint` (Terraform linting), and Policy-as-Code (Kyverno or OPA/Conftest) to enforce security rules and resource constraints prior to ArgoCD reconciliation.
 - [ ] **Zero-Trust NetworkPolicies (Namespace Firewalls)**: Enforce declarative Kubernetes NetworkPolicies using the built-in K3s policy engine to isolate critical namespaces (`security` for HashiCorp Vault, `vms` for Active Directory DC) and prevent lateral movement across workloads.
 
