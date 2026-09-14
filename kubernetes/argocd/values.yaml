@@ -1,0 +1,33 @@
+---
+# values.yaml for argo-cd Helm chart
+# Overrides only — anything not listed falls back to chart defaults.
+
+dex:
+  enabled: false
+
+configs:
+  cm:
+    url: "https://argocd.lambertlab.us"
+    oidc.config: |
+      name: Microsoft
+      issuer: https://login.microsoftonline.com/c8e5d5f1-237a-45a1-a913-5908b6042e39/v2.0
+      clientID: af5766ad-cdf1-4173-80ab-f402147662bd
+      clientSecret: $oidc.azure.clientSecret
+      requestedIDTokenClaims:
+        groups:
+          essential: true
+      requestedScopes:
+        - openid
+        - profile
+        - email
+    resource.inclusions: |
+      - apiGroups:
+        - discovery.k8s.io
+        kinds:
+        - EndpointSlice
+
+  rbac:
+    policy.default: role:readonly
+    scopes: '[groups, email]'
+    policy.csv: |
+      g, "4b93aed7-18bd-4f3d-bdac-2cf2e869d34f", role:admin
