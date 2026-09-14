@@ -20,11 +20,6 @@ configs:
         - openid
         - profile
         - email
-    resource.inclusions: |
-      - apiGroups:
-        - discovery.k8s.io
-        kinds:
-        - EndpointSlice
 
   rbac:
     policy.default: role:readonly
