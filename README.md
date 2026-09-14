@@ -102,15 +102,28 @@ The entire environment is managed declaratively through **GitOps (ArgoCD)** and 
 - [x] **Ingress Client IP Preservation & Tailscale DNS Round-Robin**: Diagnosed and resolved source IP masking (SNAT to flannel overlay network) previously introduced by the Tailscale Operator L3 VIP. Re-architected edge ingress to multi-A Cloudflare DNS round-robin (`*.lambertlab.us`) directly across physical nodes' Tailscale interfaces via Terraform (`tailscale.tf` and `cloudflare.tf`), preserving real remote client IPs for Traefik security middleware allowlists and Jellyfin streaming logs.
 - [x] **3-Node High-Availability Control Plane (Embedded etcd)**: Promoted `optiplex` and `opti74` to control-plane servers with embedded etcd (`cluster-init`), establishing a true 3-node Raft quorum across `lenovo`, `optiplex`, and `opti74` for uninterrupted multi-node master failover.
 - [x] **Active Directory LDAPS Integration & OPNsense RBAC**: Integrated virtualized OPNsense with Active Directory over secure LDAPS (`636/TCP`) using internal Root CA trust and Unbound DNS host overrides. Declaratively provisioned the `OPNsense-Admins` security group and membership via Terraform (`hashicorp/ad`), establishing role-based access control and automated user group synchronization for firewall administration.
+- [x] **ArgoCD Microsoft Entra ID (Azure AD) OIDC SSO**: Integrated ArgoCD authentication with Microsoft Entra ID using OpenID Connect (OIDC) and mapped enterprise security groups to declarative ArgoCD RBAC roles.
 
 ---
 
 ## 🚀 Active Roadmap
 
-- [ ] **ArgoCD Microsoft Entra ID (Azure AD) OIDC SSO**: Integrate ArgoCD authentication with Microsoft Entra ID using OpenID Connect (OIDC) and map enterprise security groups to declarative ArgoCD RBAC roles.
-- [ ] **Clientless Remote Desktop Gateway (Apache Guacamole)**: Deploy a secure web-based remote desktop gateway (Apache Guacamole) to facilitate browser-based RDP and SSH access into KubeVirt VMs without exposing management ports directly.
+### Enterprise Identity & Edge Access
+- [ ] **Zero-Trust Edge SSO (OAuth2-Proxy & Traefik ForwardAuth)**: Deploy `oauth2-proxy` with Microsoft Entra ID integration and Traefik ForwardAuth middlewares to protect internal web dashboards with multi-tier role-based access control.
+- [ ] **Hybrid Identity Federation (Microsoft Entra Cloud Sync on dc01)**: Deploy the Microsoft Entra Cloud Sync Agent on the virtualized Windows Server 2025 domain controller (`dc01`) to synchronize on-premises Active Directory objects and password hashes with Microsoft Entra ID.
+- [ ] **Clientless Remote Desktop Gateway (Apache Guacamole)**: Deploy an HTML5 browser-based remote desktop gateway connected directly to `dc01-ad.vms:3389` and Active Directory LDAPS for clientless RDP/SSH access without exposing management ports directly.
 - [ ] **Active Directory Domain Joins & DNS Integration**: Automate domain joining for homelab Windows/Linux clients and integrate AD DNS forwarding with Pi-hole and OPNsense.
-- [ ] **Transcoding Offload (Tdarr)**: Transition Tdarr distributed compute nodes directly into Kubernetes worker nodes.
-- [ ] **Storage Tuning**: Benchmark and optimize NFS and iSCSI mount parameters for high-concurrency media streaming and VM hosting.
+
+### Platform Engineering & SRE
+- [ ] **Automated Disaster Recovery & Cold-Start Rebuild ("Nuke & Pave")**: Implement scheduled automated cluster state and persistent volume backups using Velero to S3/MinIO/NFS storage, paired with an idempotent cold-start bootstrap script to validate rapid bare-metal cluster restoration.
+- [ ] **SRE Observability & SLO Dashboards**: Deploy `kube-prometheus-stack` (Prometheus Operator, Alertmanager, Grafana) to define availability Service Level Objectives (SLOs), track error budgets and p99 latency across Traefik ingress and iSCSI storage, with automated alerting via Ntfy.
+- [ ] **Storage Performance Tuning**: Benchmark and optimize NFS and iSCSI mount parameters for high-concurrency media streaming and VM hosting.
+
+### DevSecOps & Governance
+- [ ] **GitOps CI/CD Policy Gatekeeping (GitHub Actions)**: Implement an automated shift-left PR validation pipeline using `kubeconform` (Kubernetes schema validation), `tflint` (Terraform linting), and Policy-as-Code (Kyverno or OPA/Conftest) to enforce security rules and resource constraints prior to ArgoCD reconciliation.
+- [ ] **Zero-Trust NetworkPolicies (Namespace Firewalls)**: Enforce declarative Kubernetes NetworkPolicies using the built-in K3s policy engine to isolate critical namespaces (`security` for HashiCorp Vault, `vms` for Active Directory DC) and prevent lateral movement across workloads.
+
+### Virtualization & Workloads
+- [ ] **Persistent Windows 11 KubeVirt VM**: Provision a dedicated Windows 11 desktop VM on the bare-metal `workstation` worker backed by TerraMaster NAS iSCSI block storage.
 
 
