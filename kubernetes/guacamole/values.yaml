@@ -11,9 +11,9 @@ proxy:
   ipHeader: X-Forwarded-For
   protocolHeader: X-Forwarded-Proto
 
-# Database schema bootstrap job
+# Database schema bootstrap job (completed)
 initDb:
-  enabled: true
+  enabled: false
 
 # PostgreSQL subchart with Longhorn persistence
 postgresql:
