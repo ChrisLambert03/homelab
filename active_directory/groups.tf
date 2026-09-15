@@ -21,3 +21,20 @@ resource "ad_group_membership" "opnsense_admins" {
   ]
 }
 
+resource "ad_group" "guacamole_admins" {
+  name             = "Guacamole-Admins"
+  sam_account_name = "Guacamole-Admins"
+  scope            = "global"
+  category         = "security"
+  container        = ad_ou.groups.dn
+  description      = "Apache Guacamole Gateway Administrators"
+}
+
+resource "ad_group_membership" "guacamole_admins" {
+  group_id = ad_group.guacamole_admins.id
+  group_members = [
+    ad_user.chris.id
+  ]
+}
+
+
