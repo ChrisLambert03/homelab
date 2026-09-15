@@ -46,3 +46,14 @@ resource "cloudflare_dns_record" "wildcard_lenovo" {
   comment = "k3s lenovo - Managed by Terraform"
 }
 
+# Microsoft Entra ID Domain Verification for lambertlab.us
+resource "cloudflare_dns_record" "ms_entra_verification" {
+  zone_id = data.cloudflare_zone.main.id
+  name    = "@"
+  content = "MS=ms33191728"
+  type    = "TXT"
+  ttl     = 3600
+  comment = "Microsoft Entra ID custom domain verification - Managed by Terraform"
+}
+
+
