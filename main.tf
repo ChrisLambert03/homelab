@@ -61,4 +61,5 @@ module "active_directory" {
   source = "./active_directory"
 
   ad_svc_terraform_password = local.ad_svc_terraform_password
+  ad_svc_guacamole_password = local.ad_svc_guacamole_password
 }

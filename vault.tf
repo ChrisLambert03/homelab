@@ -21,6 +21,7 @@ locals {
   kibana_secret_key         = tostring(data.vault_kv_secret_v2.homelab_secrets.data["kibana_secret_key"])
   elastic_password          = tostring(data.vault_kv_secret_v2.homelab_secrets.data["elastic_password"])
   ad_svc_terraform_password = tostring(data.vault_kv_secret_v2.homelab_secrets.data["ad_svc_terraform_password"])
+  ad_svc_guacamole_password = tostring(data.vault_kv_secret_v2.homelab_secrets.data["ad_svc_guacamole_password"])
 
   # Configuration
   homlab_domain = tostring(data.vault_kv_secret_v2.homelab_secrets.data["homlab_domain"])

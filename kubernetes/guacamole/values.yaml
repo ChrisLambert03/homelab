@@ -1,9 +1,87 @@
 ---
 # values.yaml for helmforge/guacamole Helm chart
-# Phase 1: Local guacadmin + PostgreSQL on Longhorn
+# Phase 2: Active Directory LDAPS Integration with Root CA Injection
 
 guacamole:
   contextPath: ROOT
+  extraEnv:
+    # ----------------------------------------------------
+    # Java JVM Truststore & Hostname Verification Options
+    # ----------------------------------------------------
+    - name: JAVA_TOOL_OPTIONS
+      value: >-
+        -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/custom-cacerts
+        -Djavax.net.ssl.trustStorePassword=changeit
+        -Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true
+
+    # ----------------------------------------------------
+    # Active Directory LDAPS Configuration
+    # ----------------------------------------------------
+    - name: LDAP_HOSTNAME
+      value: "dc01-ad.vms"
+    - name: LDAP_PORT
+      value: "636"
+    - name: LDAP_ENCRYPTION_METHOD
+      value: "ssl"
+    - name: LDAP_SEARCH_BIND_DN
+      value: "CN=svc_guacamole,OU=Service Accounts,OU=LambertLab,DC=ad,DC=lambertlab,DC=us"
+    - name: LDAP_SEARCH_BIND_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: guacamole-ldap-auth
+          key: bind-password
+    - name: LDAP_USER_BASE_DN
+      value: "OU=Users,OU=LambertLab,DC=ad,DC=lambertlab,DC=us"
+    - name: LDAP_USERNAME_ATTRIBUTE
+      value: "sAMAccountName"
+    - name: LDAP_USER_SEARCH_FILTER
+      value: "(objectClass=user)"
+    - name: LDAP_GROUP_BASE_DN
+      value: "OU=LambertLab,DC=ad,DC=lambertlab,DC=us"
+    - name: LDAP_GROUP_NAME_ATTRIBUTE
+      value: "cn"
+    - name: LDAP_GROUP_MEMBER_ATTRIBUTE
+      value: "member"
+    - name: LDAP_DEREFERENCE_ALIASES
+      value: "never"
+    - name: LDAP_MAX_SEARCH_RESULTS
+      value: "100"
+
+# Init container that merges your Root CA into Java's default cacerts
+extraInitContainers:
+  - name: inject-ca-cert
+    image: eclipse-temurin:21-jre-alpine
+    command:
+      - sh
+      - -c
+      - |
+        cp $JAVA_HOME/lib/security/cacerts /custom-truststore/custom-cacerts
+        keytool -importcert -noprompt \
+          -alias ad-root-ca \
+          -file /certs/ad-root-ca.crt \
+          -keystore /custom-truststore/custom-cacerts \
+          -storepass changeit
+    volumeMounts:
+      - name: ad-ca-volume
+        mountPath: /certs/ad-root-ca.crt
+        subPath: ad-root-ca.crt
+      - name: truststore-volume
+        mountPath: /custom-truststore
+
+# Mount the merged truststore into Guacamole Tomcat container
+extraVolumeMounts:
+  - name: truststore-volume
+    mountPath: /etc/ssl/certs/java
+    readOnly: true
+
+# Volumes backed by ConfigMap and emptyDir
+extraVolumes:
+  - name: ad-ca-volume
+    configMap:
+      name: ad-root-ca
+  - name: truststore-volume
+    emptyDir: {}
+
 
 # Reverse proxy / Tomcat RemoteIpValve for client IP preservation
 proxy:
