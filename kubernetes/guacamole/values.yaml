@@ -15,6 +15,18 @@ guacamole:
         -Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true
 
     # ----------------------------------------------------
+    # Extension Priority (Local/LDAP first, then OpenID)
+    # ----------------------------------------------------
+    - name: EXTENSION_PRIORITY
+      value: "*,openid"
+
+    # ----------------------------------------------------
+    # Brute-Force Ban Extension (Disabled to avoid proxy lockouts)
+    # ----------------------------------------------------
+    - name: BAN_ENABLED
+      value: "false"
+
+    # ----------------------------------------------------
     # Active Directory LDAPS Configuration
     # ----------------------------------------------------
     - name: LDAP_HOSTNAME
@@ -86,6 +98,7 @@ extraVolumes:
 # Reverse proxy / Tomcat RemoteIpValve for client IP preservation
 proxy:
   enabled: true
+  allowedIpsRegex: ".*"
   ipHeader: X-Forwarded-For
   protocolHeader: X-Forwarded-Proto
 
@@ -105,6 +118,20 @@ postgresql:
       enabled: true
       storageClass: longhorn-retain
       size: 6Gi
+
+# OpenID Connect (Microsoft Entra ID SSO)
+oidc:
+  enabled: true
+  authorizationEndpoint: "https://login.microsoftonline.com/c8e5d5f1-237a-45a1-a913-5908b6042e39/oauth2/v2.0/authorize"
+  jwksEndpoint: "https://login.microsoftonline.com/c8e5d5f1-237a-45a1-a913-5908b6042e39/discovery/v2.0/keys"
+  issuer: "https://login.microsoftonline.com/c8e5d5f1-237a-45a1-a913-5908b6042e39/v2.0"
+  clientId: "5c6ae6d9-02f1-4eab-88cf-017f6f9fbc7a"
+  redirectUri: "https://guacamole.lambertlab.us/"
+  scope: "openid email profile"
+  usernameClaim: "preferred_username"
+  groupsClaim: "groups"
+  allowedClockSkew: 30
+  maxTokenValidity: 300
 
 # Ingress via Traefik
 ingress:
