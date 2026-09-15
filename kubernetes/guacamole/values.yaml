@@ -102,6 +102,24 @@ proxy:
   ipHeader: X-Forwarded-For
   protocolHeader: X-Forwarded-Proto
 
+# Resource requests and limits
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1024Mi
+
+guacd:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 2000m
+      memory: 1024Mi
+
 # Database schema bootstrap job (completed)
 initDb:
   enabled: false
@@ -118,6 +136,13 @@ postgresql:
       enabled: true
       storageClass: longhorn-retain
       size: 6Gi
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
 
 # OpenID Connect (Microsoft Entra ID SSO)
 oidc:
