@@ -11,10 +11,13 @@ metadata:
 spec:
   project: infrastructure
   sources:
-    # 1. Local Homelab Git Repo (defines $homelab alias for values.yaml)
+    # 1. Local Homelab Git Repo (defines $homelab alias and companion manifests)
     - repoURL: git@github.com:ChrisLambert03/homelab.git
       targetRevision: main
       ref: homelab
+      path: kubernetes/guacamole
+      directory:
+        exclude: 'values.yaml'
 
     # 2. Upstream HelmForge Guacamole Chart
     - repoURL: https://repo.helmforge.dev

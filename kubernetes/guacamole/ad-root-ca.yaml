@@ -1,0 +1,31 @@
+---
+# Active Directory Root CA Certificate (Private Internal CA)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ad-root-ca
+  namespace: guacamole
+data:
+  ad-root-ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIDnTCCAoWgAwIBAgIQXbWF/WozFYhNrepWRoe3UzANBgkqhkiG9w0BAQsFADBh
+    MRIwEAYKCZImiZPyLGQBGRYCdXMxGjAYBgoJkiaJk/IsZAEZFgpsYW1iZXJ0bGFi
+    MRIwEAYKCZImiZPyLGQBGRYCYWQxGzAZBgNVBAMTEmxhbWJlcnRsYWItREMwMS1D
+    QTAeFw0yNjA4MzEyMzU3MjZaFw0zNjA5MDEwMDA3MjVaMGExEjAQBgoJkiaJk/Is
+    ZAEZFgJ1czEaMBgGCgmSJomT8ixkARkWCmxhbWJlcnRsYWIxEjAQBgoJkiaJk/Is
+    ZAEZFgJhZDEbMBkGA1UEAxMSbGFtYmVydGxhYi1EQzAxLUNBMIIBIjANBgkqhkiG
+    9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwDneYXqItZJvvc3Tf2j8aRbZKg1gFDrlHdMm
+    uxjh1R7H+i/oTlzxrjNgRhTY+W9RhvJH7EigQvnr7osyaup/9wlSFyjF4x2oKF3t
+    cePs4b1pusfqWQaj8KmDXUBb2Txa5WZn05aoW31OlqfNb1Tg46ahe7/Zb0bpCwb4
+    UPbj9DFGuqvu1TG36Hna9FoRv7cFvl3PAEnQyReAJL286ZSf6Kx/GTuB8MM1XpdD
+    lxLRm7N6nqT+kLCDpavsp2t72Q0iKznNGLgjj8i6tKcGpbFhPWwCrycTi7DSCWt5
+    eaNSGellsD6rCOyHet1fIGZaZtPditF+1fuY65XQBvPITsN5uQIDAQABo1EwTzAL
+    BgNVHQ8EBAMCAYYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUSM2fU1eBn2cb
+    s1ayiQChupi6+twwEAYJKwYBBAGCNxUBBAMCAQAwDQYJKoZIhvcNAQELBQADggEB
+    AD/nuXZPKDD4VoqAm4bhf7hsqUz+ctED1s8Y53Ll83Si+caUarsN4NVaCudzuW5Q
+    Qyb5OyI1vYzjnvFc++zAZlc5qULgKb6G72VxilQJXWM5bDFycQBNpjd7Bh7ZzUBo
+    wsWvdKNLwvABwTLe0voHrapsnoutufVO1fYJGBGPMrkNeQpKY1hnFTftTtn5nPCb
+    7p2bCGKq39ln4ByEa/ZLj1cq+LbDRAzX3Q++WeWKCf3rr8OTOuHxB1joPOKLTEzs
+    ac6rlRsUOwSEQhg1BFLFmWVo6mvyrUt9AWR4TuNtQh/wNmwWn/L/qYe2XihtoXri
+    AYh2qPchL5HIM4rkua1QnpU=
+    -----END CERTIFICATE-----
