@@ -52,8 +52,6 @@ spec:
               direct: {}
             reset: {}
             runtime: {}
-            frequencies: {}
-            reenlightenment: {}
             tlbflush: {}
             ipi: {}
             vpindex: {}
