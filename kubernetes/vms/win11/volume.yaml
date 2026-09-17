@@ -1,0 +1,67 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: win11-iscsi-pv
+spec:
+  claimRef:
+    namespace: vms
+    name: win11-boot-pvc
+  capacity:
+    storage: 64G
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  iscsi:
+    targetPortal: 10.0.0.60:3260
+    iqn: iqn.2026-09.us.lambertlab:win11-boot
+    lun: 0
+    fsType: ext4
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: win11-boot-pvc
+  namespace: vms
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeName: win11-iscsi-pv
+  resources:
+    requests:
+      storage: 64G
+  storageClassName: ""
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nas-isos-win11-pv
+spec:
+  claimRef:
+    namespace: vms
+    name: nas-isos-win11-pvc
+  capacity:
+    storage: 50G
+  volumeMode: Filesystem
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: 10.0.0.60
+    path: /Volume3/isos/win11
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nas-isos-win11-pvc
+  namespace: vms
+spec:
+  accessModes:
+    - ReadOnlyMany
+  volumeName: nas-isos-win11-pv
+  resources:
+    requests:
+      storage: 50G
+  storageClassName: ""

@@ -1,0 +1,107 @@
+---
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: win11
+  namespace: vms
+  labels:
+    app: win11-desktop
+spec:
+  runStrategy: Manual
+  template:
+    metadata:
+      labels:
+        kubevirt.io/vm: win11
+        app: win11-desktop
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: workstation
+      terminationGracePeriodSeconds: 300
+      domain:
+        machine:
+          type: q35
+        firmware:
+          bootloader:
+            efi:
+              secureBoot: true
+              persistent: true
+        cpu:
+          sockets: 1
+          cores: 4
+          threads: 1
+          model: host-passthrough
+        resources:
+          requests:
+            cpu: "2"
+            memory: 8Gi
+          limits:
+            cpu: "4"
+            memory: 8Gi
+        features:
+          acpi: {}
+          apic: {}
+          smm:
+            enabled: true
+          hyperv:
+            relaxed: {}
+            vapic: {}
+            spinlocks:
+              spinlocks: 8191
+            synic: {}
+            synictimer:
+              direct: {}
+            reset: {}
+            runtime: {}
+            frequencies: {}
+            reenlightenment: {}
+            tlbflush: {}
+            ipi: {}
+            vpindex: {}
+        clock:
+          timezone: "America/New_York"
+          timer:
+            hpet:
+              present: false
+            pit:
+              tickPolicy: delay
+            rtc:
+              tickPolicy: catchup
+            hyperv: {}
+        devices:
+          tpm:
+            persistent: true
+          blockMultiQueue: true
+          inputs:
+            - type: tablet
+              bus: usb
+              name: tablet
+          disks:
+            - name: boot-disk
+              disk:
+                bus: virtio
+              bootOrder: 2
+            - name: win-iso
+              cdrom:
+                bus: sata
+              bootOrder: 1
+            - name: virtio-drivers
+              cdrom:
+                bus: sata
+          interfaces:
+            - name: lab-lan
+              bridge: {}
+          rng: {}
+      networks:
+        - name: lab-lan
+          multus:
+            networkName: lab-lan-bridge
+      volumes:
+        - name: boot-disk
+          persistentVolumeClaim:
+            claimName: win11-boot-pvc
+        - name: win-iso
+          persistentVolumeClaim:
+            claimName: nas-isos-win11-pvc
+        - name: virtio-drivers
+          persistentVolumeClaim:
+            claimName: nas-isos-virtio-pvc
