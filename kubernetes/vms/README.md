@@ -340,7 +340,7 @@ volumes:
 
 1. **`specialize` Configuration Pass**:
    * **Dynamic DNS Bootstrap**: Executes synchronous PowerShell commands to point the active network adapter directly to the Domain Controller, ensuring immediate Active Directory SRV record discoverability.
-   * **Unique Hostname Attribution**: Assigns the desired host identity (`ComputerName`).
+   * **Unique Hostname Attribution**: Generates a dynamic unique machine identity (`ComputerName: *`), emitting native `WIN-XXXXXXXX` hostnames on every specialization to prevent Active Directory account collisions and stale DNS records.
    * **Automated Domain Enrollment**: Leverages `Microsoft-Windows-UnattendedJoin` backed by a least-privilege service account (`svc_domainjoin`) to authenticate against Kerberos and enroll the machine into the target Organizational Unit (`OU=Desktops,OU=LambertLab,DC=ad,DC=lambertlab,DC=us`).
 
 2. **`oobeSystem` Configuration Pass**:
