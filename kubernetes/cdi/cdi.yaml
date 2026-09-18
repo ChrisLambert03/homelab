@@ -6,3 +6,5 @@ metadata:
   namespace: cdi
 spec:
   imagePullPolicy: IfNotPresent
+  config:
+    uploadProxyURLOverride: "https://cdi.lambertlab.us"

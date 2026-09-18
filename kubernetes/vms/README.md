@@ -183,7 +183,7 @@ devices:
 ```yaml
 # Storage: Dedicated iSCSI Block LUN
 iscsi:
-  targetPortal: <SAN_TARGET_PORTAL>:3260
+  targetPortal: san.lambertlab.us:3260
   iqn: iqn.2026-09.us.lambertlab:win11-boot
   lun: 0
   fsType: ext4
@@ -197,3 +197,126 @@ networks:
 
 * **Dedicated iSCSI Target**: Bound to `iqn.2026-09.us.lambertlab:win11-boot` hosted on the TerraMaster SAN SATA SSD pool. iSCSI delivers dedicated SCSI command queuing with sub-2ms random I/O latency, completely bypassing NFS file-locking mechanics.
 * **Multus CNI (`lab-lan-bridge`)**: Connects the virtual machine directly to the physical cluster's `br-lab0` multicast VXLAN overlay. This places the VM directly on the flat virtual LAN subnet alongside `dc01` and OPNsense, enabling native Active Directory Kerberos ticket exchanges, LDAP queries, and dynamic DNS registration without traversing Kubernetes NAT gateways.
+
+---
+
+## 💿 Master Image Lifecycle & Automated Virtual Desktop Provisioning
+
+To eliminate manual OS installations and guarantee identical, deterministic desktop environments, this infrastructure implements an automated **Golden Master Template Lifecycle**. A reference virtual machine is installed, tuned with paravirtualized drivers, and generalized using Microsoft Sysprep. The underlying raw iSCSI block storage is then extracted and compressed into an immutable QCOW2 master template, enabling rapid zero-touch provisioning of new workstations via KubeVirt's **Containerized Data Importer (CDI)** and native **Sysprep Secret specialization**.
+
+---
+
+### Phase 1: OS Sealing & Machine SID Generalization
+
+Before any virtual machine image can serve as a multi-instance template, system-specific identifiers must be removed. Duplicating an ungeneralized Windows installation produces duplicate Security Identifiers (Machine SIDs), resulting in WSUS conflicts, Active Directory Trust broken relationships, and Kerberos ticket collisions.
+
+The reference VM is generalized and sealed from an elevated command prompt:
+
+```cmd
+C:\Windows\System32\Sysprep\sysprep.exe /generalize /oobe /shutdown
+```
+
+* **`/generalize`**: Strips the unique Machine SID, clears hardware-specific GUIDs, purges device-specific driver databases, and resets the event log engine.
+* **`/oobe`**: Sets the boot configuration database to trigger the Out-of-Box Experience on subsequent boot, allowing the setup engine to process unattended configuration passes.
+* **`/shutdown`**: Powers off the hypervisor instance cleanly, guaranteeing zero disk writes occur after SID generalization.
+
+---
+
+### Phase 2: Block-to-Image Extraction & Compression (`qemu-img`)
+
+With the reference VM powered off, the underlying storage LUN is frozen in an immutable, generalized state. Using QEMU's native user-space storage drivers, the raw block volume is streamed directly across the storage network, parsed, and converted into a compressed QCOW2 template.
+
+```bash
+qemu-img convert -p -f raw -O qcow2 -c \
+  iscsi://san.lambertlab.us/iqn.2026-09.us.lambertlab:win11-boot/0 \
+  win11-template.qcow2 2> >(grep -v "GET_LBA_STATUS" >&2)
+```
+
+#### Technical Flag Specifications
+
+| Parameter | Technical Function & Architectural Role |
+| :--- | :--- |
+| **`convert`** | Core QEMU conversion engine; reads the source sector allocation table and writes only non-zero clusters to the destination format. |
+| **`-p`** | **Real-Time Progress Tracking**: Renders dynamic byte transfer and percentage completion indicators. |
+| **`-f raw`** | **Input Driver Specification**: Enforces raw block parsing on the source volume, bypassing heuristic filesystem probing. |
+| **`-O qcow2`** | **Output Target Architecture**: Compiles the disk into **QEMU Copy-On-Write v2** format, featuring sparse allocation, internal snapshots, and cluster metadata. |
+| **`-c`** | **Lossless Cluster Compression**: Applies transparent zlib/deflate compression across allocated data clusters, shrinking an enterprise OS footprint by 50–60%. |
+| **`iscsi://...`** | **Direct User-Space iSCSI Protocol**: Utilizes `libiscsi` to establish TCP socket connections directly with the SAN target portal, eliminating the need for host kernel iSCSI initiator logins or device node management. |
+
+> [!NOTE]
+> **SCSI Protocol Analysis: `GET_LBA_STATUS` (SBC-3)**:
+> During extraction from standard iSCSI targets, `qemu-img` may emit:
+> `qemu-img: iSCSI GET_LBA_STATUS failed at lba 0: SENSE KEY:ILLEGAL_REQUEST(5) ASCQ:INVALID_FIELD_IN_CDB(0x2400)`
+> `GET_LBA_STATUS` is an optional SCSI Block Command (SBC-3) query used to probe thin-provisioning metadata. If the storage target daemon does not implement this optional query, it returns a standard SCSI sense rejection (`0x2400`). QEMU automatically handles this by falling back to sequential block reads paired with software zero-detection, resulting in zero data loss or corruption.
+
+---
+
+### Phase 3: Automated Ingestion via Containerized Data Importer (CDI)
+
+Deploying a new VM from the golden master involves provisioning a target volume and streaming the template into the disk via KubeVirt's **Containerized Data Importer (CDI)** upload proxy.
+
+```bash
+./upload-image.sh win11-template.qcow2 vms win11-boot-pvc
+```
+
+Or executed directly via the `virtctl` CLI:
+
+```bash
+virtctl image-upload pvc win11-boot-pvc \
+  --namespace vms \
+  --image-path=win11-template.qcow2 \
+  --uploadproxy-url=https://cdi.lambertlab.us \
+  --no-create
+```
+
+#### CDI Upload Parameter Reference
+
+| Flag | Function |
+| :--- | :--- |
+| **`pvc`** | Identifies the target Kubernetes `PersistentVolumeClaim` bound to the destination storage volume. |
+| **`--namespace`** | Kubernetes namespace scoping the target workload (`vms`). |
+| **`--image-path`** | Filesystem path referencing the master `.qcow2` template file. |
+| **`--uploadproxy-url`** | External ingress endpoint exposing `cdi-uploadproxy` via Traefik with trusted wildcard TLS termination. |
+| **`--no-create`** | Directs CDI to ingest the disk image directly into a pre-existing, declaratively bound PVC rather than generating dynamic storage. |
+| **`--size`** | Defines volume capacity when dynamic PVC provisioning is utilized (e.g., `--size=64Gi`). |
+| **`--force-bind`** | Overrides volume binding mode constraints, forcing immediate volume provisioning regardless of consumer pod state. |
+
+---
+
+### Phase 4: Declarative Specialization & Identity Management
+
+When a newly cloned instance powers on, KubeVirt mounts a synthetic CD-ROM containing an unattended answer file (`unattend.xml`) stored in a Kubernetes Secret (`win11-unattend-secret`). This orchestrates full end-to-end OS specialization without human intervention.
+
+```yaml
+devices:
+  disks:
+    - name: boot-disk
+      disk:
+        bus: virtio
+      bootOrder: 1
+    - name: sysprep-disk
+      cdrom:
+        bus: sata
+volumes:
+  - name: boot-disk
+    persistentVolumeClaim:
+      claimName: win11-boot-pvc
+  - name: sysprep-disk
+    sysprep:
+      secret:
+        name: win11-unattend-secret
+```
+
+#### The Two-Pass Unattended Pipeline:
+
+1. **`specialize` Configuration Pass**:
+   * **Dynamic DNS Bootstrap**: Executes synchronous PowerShell commands to point the active network adapter directly to the Domain Controller, ensuring immediate Active Directory SRV record discoverability.
+   * **Unique Hostname Attribution**: Assigns the desired host identity (`ComputerName`).
+   * **Automated Domain Enrollment**: Leverages `Microsoft-Windows-UnattendedJoin` backed by a least-privilege service account (`svc_domainjoin`) to authenticate against Kerberos and enroll the machine into the target Organizational Unit (`OU=Desktops,OU=LambertLab,DC=ad,DC=lambertlab,DC=us`).
+
+2. **`oobeSystem` Configuration Pass**:
+   * **Automated Regional Settings**: Pre-configures `InputLocale`, `SystemLocale`, `UILanguage`, and `UserLocale` to `en-US` (`0409:00000409`), bypassing all interactive regional setup screens.
+   * **Local Administrator & LAPS Setup**: Provisions a dedicated local administrator account (`lapsadmin`) pre-configured for automated management via Windows Local Administrator Password Solution (LAPS).
+   * **Remote Management Bootstrap**: Injects `FirstLogonCommands` executing `Enable-PSRemoting -Force` to establish WinRM access for centralized configuration management.
+   * **OOBE Wizard Suppression**: Disables EULA confirmation, privacy question prompts, Microsoft account requirements, and network selection dialogues, dropping directly to the domain logon console.
+
