@@ -1,11 +1,20 @@
 ---
-apiVersion: traefik.io/v1alpha1
-kind: ServersTransport
+apiVersion: v1
+kind: Service
 metadata:
-  name: cdi-insecure-transport
+  name: cdi-uploadproxy-external
   namespace: cdi
+  annotations:
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+    traefik.ingress.kubernetes.io/service.serverstransport: default-insecure-transport@kubernetescrd
 spec:
-  insecureSkipVerify: true
+  type: ClusterIP
+  selector:
+    cdi.kubevirt.io: cdi-uploadproxy
+  ports:
+    - name: https
+      port: 443
+      targetPort: 8443
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -15,8 +24,6 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-admin-only-access@kubernetescrd
-    traefik.ingress.kubernetes.io/service.serversscheme: https
-    traefik.ingress.kubernetes.io/service.serverstransport: cdi-cdi-insecure-transport@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
@@ -27,6 +34,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: cdi-uploadproxy
+                name: cdi-uploadproxy-external
                 port:
                   number: 443
