@@ -77,10 +77,11 @@ spec:
             - name: boot-disk
               disk:
                 bus: virtio
-              bootOrder: 1
-            - name: sysprep-disk
+              bootOrder: 2
+            - name: win-iso
               cdrom:
                 bus: sata
+              bootOrder: 1
             - name: virtio-drivers
               cdrom:
                 bus: sata
@@ -96,10 +97,9 @@ spec:
         - name: boot-disk
           persistentVolumeClaim:
             claimName: win11-boot-pvc
-        - name: sysprep-disk
-          sysprep:
-            secret:
-              name: win11-unattend-secret
+        - name: win-iso
+          persistentVolumeClaim:
+            claimName: nas-isos-win11-pvc
         - name: virtio-drivers
           persistentVolumeClaim:
             claimName: nas-isos-virtio-pvc
