@@ -38,7 +38,7 @@ configs:
         - email
 
   rbac:
-    policy.default: role:readonly
+    policy.default: ""
     scopes: '[groups, email]'
     policy.csv: |
       g, "4b93aed7-18bd-4f3d-bdac-2cf2e869d34f", role:admin
