@@ -283,6 +283,35 @@ virtctl image-upload pvc win11-boot-pvc \
 
 ---
 
+### Alternative: Direct High-Speed iSCSI Ingestion via `qemu-img`
+
+For large multi-gigabyte virtual disks (such as Windows 11), streaming through CDI and an HTTP ingress proxy can trigger intermediate Longhorn scratch volume allocations (64+ GiB) or HTTP proxy timeout drops. A direct, line-rate alternative is streaming the compressed `.qcow2` template directly into the iSCSI target LUN using QEMU's native user-space `libiscsi` driver:
+
+```bash
+qemu-img convert -p -f qcow2 -O raw \
+  /mnt/nas-mount/templates/win11-template.qcow2 \
+  iscsi://san.lambertlab.us/iqn.2026-09.us.lambertlab:win11-boot/0
+```
+
+#### Technical Flag Specifications & Architectural Advantages
+
+| Parameter | Technical Function & Architectural Role |
+| :--- | :--- |
+| **`convert`** | Core QEMU conversion engine; decompresses zlib clusters and writes sequential raw sectors to the destination LUN. |
+| **`-p`** | **Real-Time Progress Tracking**: Renders dynamic byte transfer and percentage completion indicators `(XX.XX/100%)`. |
+| **`-f qcow2`** | **Input Driver Specification**: Enforces QCOW2 format parsing, decoding internal cluster maps and decompression tables. |
+| **`-O raw`** | **Output Target Architecture**: Emits flat, uncompressed sector arrays directly to the target storage medium. |
+| **`iscsi://...`** | **Direct User-Space iSCSI Protocol**: Connects directly to the TerraMaster SAN via `libiscsi` over TCP port 3260, streaming raw blocks starting at Sector 0 without host kernel initiator logins. |
+
+> [!TIP]
+> **Why Direct iSCSI Ingestion is Preferred for Large Workstations:**
+> 1. **Bypasses Ingress Timeouts**: Completely avoids Traefik HTTP connection timeouts on massive multi-gigabyte transfers.
+> 2. **Eliminates Longhorn Scratch Overhead**: CDI requires a matching ephemeral scratch volume (64+ GiB) to stage QCOW2 conversions; `qemu-img` streams and converts on the fly with zero intermediate disk allocation.
+> 3. **Guaranteed Sector-0 Overwrite**: Writes raw sectors directly over any prior partition tables, EFI bootloaders, and NTFS structures, ensuring a completely clean OS state without needing manual zero-wipes.
+> 4. **Storage Lock Pre-requisite**: Always ensure the target VM is stopped (`virtctl stop <vm>`) and any lingering upload pods are cleared before flashing to avoid SCSI reservation conflicts.
+
+---
+
 ### Phase 4: Declarative Specialization & Identity Management
 
 When a newly cloned instance powers on, KubeVirt mounts a synthetic CD-ROM containing an unattended answer file (`unattend.xml`) stored in a Kubernetes Secret (`win11-unattend-secret`). This orchestrates full end-to-end OS specialization without human intervention.

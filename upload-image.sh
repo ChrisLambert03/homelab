@@ -27,7 +27,8 @@ fi
 virtctl image-upload pvc "${PVC_NAME}" \
   --namespace "${NAMESPACE}" \
   --image-path="${IMAGE_PATH}" \
-  --uploadproxy-url="${UPLOAD_PROXY_URL}"
+  --uploadproxy-url="${UPLOAD_PROXY_URL}" \
+  --no-create "${@:4}"
 
 echo "----------------------------------------------------------"
 echo "✅ Upload completed successfully!"
