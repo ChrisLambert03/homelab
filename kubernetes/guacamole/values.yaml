@@ -2,6 +2,15 @@
 # values.yaml for helmforge/guacamole Helm chart
 # Phase 2: Active Directory LDAPS Integration with Root CA Injection
 
+# ----------------------------------------------------
+# Multus L2 VXLAN Network Attachment (Lab LAN)
+# ----------------------------------------------------
+podAnnotations:
+  k8s.v1.cni.cncf.io/networks: '[{
+    "name": "lab-lan-bridge",
+    "ips": ["10.10.0.50/24"]
+  }]'
+
 guacamole:
   contextPath: ROOT
   extraEnv:
@@ -30,7 +39,7 @@ guacamole:
     # Active Directory LDAPS Configuration
     # ----------------------------------------------------
     - name: LDAP_HOSTNAME
-      value: "dc01-ad.vms"
+      value: "10.10.0.10"
     - name: LDAP_PORT
       value: "636"
     - name: LDAP_ENCRYPTION_METHOD
