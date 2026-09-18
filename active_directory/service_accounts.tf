@@ -33,3 +33,19 @@ resource "ad_user" "svc_guacamole" {
     ignore_changes = [initial_password, cannot_change_password]
   }
 }
+
+# Domain Join Service Account for Workstations/Desktops
+resource "ad_user" "svc_domainjoin" {
+  display_name           = "Domain Join Service Account"
+  principal_name         = "svc_domainjoin@lambertlab.us"
+  sam_account_name       = "svc_domainjoin"
+  container              = ad_ou.service_accounts.dn
+  initial_password       = var.ad_svc_domainjoin_password
+  enabled                = true
+  password_never_expires = true
+  description            = "Restricted service account for joining workstations and clients to Active Directory"
+
+  lifecycle {
+    ignore_changes = [initial_password, cannot_change_password]
+  }
+}
