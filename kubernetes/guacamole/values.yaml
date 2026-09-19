@@ -39,7 +39,7 @@ guacamole:
     # Active Directory LDAPS Configuration
     # ----------------------------------------------------
     - name: LDAP_HOSTNAME
-      value: "10.10.0.10"
+      value: "dc01.ad.lambertlab.us"
     - name: LDAP_PORT
       value: "636"
     - name: LDAP_ENCRYPTION_METHOD
