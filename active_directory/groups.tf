@@ -37,4 +37,20 @@ resource "ad_group_membership" "guacamole_admins" {
   ]
 }
 
+resource "ad_group" "gpo_remote_desktop_users" {
+  name             = "GPO-Remote-Desktop-Users"
+  sam_account_name = "GPO-Remote-Desktop-Users"
+  scope            = "global"
+  category         = "security"
+  container        = ad_ou.groups.dn
+  description      = "Security group for Workstation Remote Desktop access via Group Policy"
+}
+
+resource "ad_group_membership" "gpo_remote_desktop_users" {
+  group_id = ad_group.gpo_remote_desktop_users.id
+  group_members = [
+    ad_user.chris.id
+  ]
+}
+
 
