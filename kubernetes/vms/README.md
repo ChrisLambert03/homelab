@@ -200,9 +200,9 @@ networks:
 
 ---
 
-## 💿 Master Image Lifecycle & Automated Virtual Desktop Provisioning
+## 💿 Base Image Template Lifecycle & Automated Virtual Desktop Provisioning
 
-To eliminate manual OS installations and guarantee identical, deterministic desktop environments, this infrastructure implements an automated **Golden Master Template Lifecycle**. A reference virtual machine is installed, tuned with paravirtualized drivers, and generalized using Microsoft Sysprep. The underlying raw iSCSI block storage is then extracted and compressed into an immutable QCOW2 master template, enabling rapid zero-touch provisioning of new workstations via KubeVirt's **Containerized Data Importer (CDI)** and native **Sysprep Secret specialization**.
+To eliminate manual OS installations and guarantee identical, deterministic desktop environments, this infrastructure implements an automated **Base Image Template Lifecycle**. A reference virtual machine is installed, tuned with paravirtualized drivers, and generalized using Microsoft Sysprep. The underlying raw iSCSI block storage is then extracted and compressed into an immutable QCOW2 master template, enabling rapid zero-touch provisioning of new workstations via KubeVirt's **Containerized Data Importer (CDI)** and native **Sysprep Secret specialization**.
 
 ---
 
@@ -253,7 +253,7 @@ qemu-img convert -p -f raw -O qcow2 -c \
 
 ### Phase 3: Automated Ingestion via Containerized Data Importer (CDI)
 
-Deploying a new VM from the golden master involves provisioning a target volume and streaming the template into the disk via KubeVirt's **Containerized Data Importer (CDI)** upload proxy.
+Deploying a new VM from the base template involves provisioning a target volume and streaming the template into the disk via KubeVirt's **Containerized Data Importer (CDI)** upload proxy.
 
 ```bash
 ./upload-image.sh win11-template.qcow2 vms win11-boot-pvc
@@ -314,7 +314,7 @@ qemu-img convert -p -f qcow2 -O raw \
 
 ### Phase 4: Declarative Specialization & Identity Management
 
-When a newly cloned instance powers on, KubeVirt mounts a synthetic CD-ROM containing an unattended answer file (`unattend.xml`) stored in a Kubernetes Secret (`win11-unattend-secret`). This orchestrates full end-to-end OS specialization without human intervention.
+When a newly cloned instance powers on, KubeVirt mounts a synthetic CD-ROM containing an unattended answer file (`unattend.xml`) stored in a Kubernetes Secret (`win11-unattend-secret`). This orchestrates full end-to-end OS specialization without human intervention. *(See [win11/unattend.xml.example](win11/unattend.xml.example) for the full sanitized answer file).*
 
 ```yaml
 devices:
