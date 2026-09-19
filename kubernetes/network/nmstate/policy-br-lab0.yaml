@@ -1,3 +1,4 @@
+---
 # ==============================================================================
 # Cross-Node Multicast VXLAN Overlay (br-lab0)
 # ==============================================================================
@@ -8,7 +9,6 @@
 # OS, and only then delete the policy CRDs.
 # ==============================================================================
 
----
 # 1. Lenovo ThinkCentre (eno1)
 apiVersion: nmstate.io/v1
 kind: NodeNetworkConfigurationPolicy
@@ -37,7 +37,10 @@ spec:
           port:
             - name: vxlan-lab
         ipv4:
-          enabled: false
+          enabled: true
+          address:
+            - ip: 10.10.0.2
+              prefix-length: 24
         ipv6:
           enabled: false
 ---
@@ -69,7 +72,10 @@ spec:
           port:
             - name: vxlan-lab
         ipv4:
-          enabled: false
+          enabled: true
+          address:
+            - ip: 10.10.0.3
+              prefix-length: 24
         ipv6:
           enabled: false
 ---
@@ -101,7 +107,10 @@ spec:
           port:
             - name: vxlan-lab
         ipv4:
-          enabled: false
+          enabled: true
+          address:
+            - ip: 10.10.0.4
+              prefix-length: 24
         ipv6:
           enabled: false
 ---
@@ -133,6 +142,9 @@ spec:
           port:
             - name: vxlan-lab
         ipv4:
-          enabled: false
+          enabled: true
+          address:
+            - ip: 10.10.0.5
+              prefix-length: 24
         ipv6:
           enabled: false
