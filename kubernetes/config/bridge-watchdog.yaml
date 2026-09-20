@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: bridge-watchdog
+  namespace: kube-system
+  labels:
+    app: bridge-watchdog
+spec:
+  selector:
+    matchLabels:
+      app: bridge-watchdog
+  template:
+    metadata:
+      labels:
+        app: bridge-watchdog
+    spec:
+      hostNetwork: true
+      nodeSelector:
+        kubernetes.io/os: linux
+      tolerations:
+        - operator: Exists
+      containers:
+        - name: watchdog
+          image: busybox:1.37
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: tz-config
+              mountPath: /etc/localtime
+              readOnly: true
+          command:
+            - sh
+            - -c
+            - |
+              while true; do
+                if ! ip link show vxlan-lab 2>/dev/null | grep -q "master br-lab0"; then
+                  echo "$(date): Re-attaching vxlan-lab to br-lab0"
+                  ip link set vxlan-lab master br-lab0
+                  ip link set br-lab0 up
+                fi
+                sleep 15
+              done
+      volumes:
+        - name: tz-config
+          hostPath:
+            path: /etc/localtime
