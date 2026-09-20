@@ -9,5 +9,8 @@ data:
     ad.lambertlab.us:53 {
         errors
         cache 30
-        forward . 10.10.0.10
+        forward . 10.10.0.10 {
+            max_fails 2
+            health_check 5s
+        }
     }
