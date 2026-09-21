@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Enterprise-Grade Hybrid Cloud, KubeVirt, and GitOps Documentation">
+        <meta name="description" content="Production-Level Hybrid Cloud, KubeVirt, and GitOps Documentation">
       
       
         <meta name="author" content="Chris Lambert">
@@ -630,15 +630,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#enterprise-ldaps-root-ca-injection-port-636" class="md-nav__link">
+  <a href="#internal-ldaps-root-ca-injection-port-636" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🔒 Enterprise LDAPS Root CA Injection (Port 636)
+        🔒 Internal LDAPS Root CA Injection (Port 636)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🔒 Enterprise LDAPS Root CA Injection (Port 636)">
+    <nav class="md-nav" aria-label="🔒 Internal LDAPS Root CA Injection (Port 636)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1269,15 +1269,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#enterprise-ldaps-root-ca-injection-port-636" class="md-nav__link">
+  <a href="#internal-ldaps-root-ca-injection-port-636" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🔒 Enterprise LDAPS Root CA Injection (Port 636)
+        🔒 Internal LDAPS Root CA Injection (Port 636)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🔒 Enterprise LDAPS Root CA Injection (Port 636)">
+    <nav class="md-nav" aria-label="🔒 Internal LDAPS Root CA Injection (Port 636)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1450,12 +1450,12 @@
     guacd--&gt;&gt;Tomcat: Encoded Guacamole Instruction Stream
     Tomcat--&gt;&gt;User: Encrypted HTML5 Canvas WebSocket Stream</code></pre>
 <hr />
-<h2 id="enterprise-ldaps-root-ca-injection-port-636">🔒 Enterprise LDAPS Root CA Injection (Port 636)</h2>
-<p>By default, Java virtual machines (JVM) reject enterprise internal Certificate Authorities when establishing TLS/SSL handshakes over LDAPS (TCP port 636).</p>
+<h2 id="internal-ldaps-root-ca-injection-port-636">🔒 Internal LDAPS Root CA Injection (Port 636)</h2>
+<p>By default, Java virtual machines (JVM) reject private internal Certificate Authorities when establishing TLS/SSL handshakes over LDAPS (TCP port 636).</p>
 <h3 id="the-challenge">The Challenge</h3>
-<p>Active Directory Domain Services on <code>dc01.ad.lambertlab.us</code> signs its LDAPS certificate using the internal root CA (<code>lambertlab-DC01-CA</code>). Standard Guacamole container images do not trust private Enterprise PKIs, throwing <code>javax.net.ssl.SSLHandshakeException: PKIX path building failed</code>.</p>
+<p>Active Directory Domain Services on <code>dc01.ad.lambertlab.us</code> signs its LDAPS certificate using the internal root CA (<code>lambertlab-DC01-CA</code>). Standard Guacamole container images do not trust private internal PKIs, throwing <code>javax.net.ssl.SSLHandshakeException: PKIX path building failed</code>.</p>
 <h3 id="the-automated-solution-initcontainer-keystore-merging">The Automated Solution: InitContainer Keystore Merging</h3>
-<p>Rather than rebuilding custom Docker images, the Guacamole deployment manifest uses an Alpine Linux <code>initContainer</code> (<code>eclipse-temurin:21-jre-alpine</code>) that merges the enterprise root certificate into Java's standard <code>cacerts</code> keystore at startup on an <code>emptyDir</code> volume:</p>
+<p>Rather than rebuilding custom Docker images, the Guacamole deployment manifest uses an Alpine Linux <code>initContainer</code> (<code>eclipse-temurin:21-jre-alpine</code>) that merges the internal root certificate into Java's standard <code>cacerts</code> keystore at startup on an <code>emptyDir</code> volume:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># kubernetes/guacamole/values.yaml</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">extraInitContainers</span><span class="p">:</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inject-ca-cert</span>

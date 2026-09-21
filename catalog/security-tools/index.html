@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Enterprise-Grade Hybrid Cloud, KubeVirt, and GitOps Documentation">
+        <meta name="description" content="Production-Level Hybrid Cloud, KubeVirt, and GitOps Documentation">
       
       
         <meta name="author" content="Chris Lambert">
@@ -1363,7 +1363,7 @@
 <ul>
 <li><strong>Host Environment:</strong> <code>workstation</code> (Docker Engine managed via Terraform <code>docker/workstation/elk-stack.tf</code>)</li>
 <li><strong>Ingress Endpoint:</strong> <code>https://kibana.lambertlab.us</code> (Internal ES on <code>:9200</code>, Logstash on <code>:12201</code> GELF)</li>
-<li><strong>Architectural Role:</strong> Enterprise Security Information and Event Management (SIEM) and log analytics pipeline.</li>
+<li><strong>Architectural Role:</strong> Production-level Security Information and Event Management (SIEM) and log analytics pipeline.</li>
 <li><strong>Storage Backend:</strong> Dedicated local NVMe storage (<code>/usr/share/elasticsearch/data</code>) on <code>workstation</code>.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Single-node cluster enforcing <code>number_of_replicas: 0</code> across templates to maintain solid green health and prevent Index Lifecycle Management (ILM) stalls.</li>

@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Enterprise-Grade Hybrid Cloud, KubeVirt, and GitOps Documentation">
+        <meta name="description" content="Production-Level Hybrid Cloud, KubeVirt, and GitOps Documentation">
       
       
         <meta name="author" content="Chris Lambert">
@@ -1560,7 +1560,7 @@ Both the <code>Users</code> OU and <code>Security Groups</code> OU must be inclu
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    ├── OU=Servers              # Infrastructure servers, K8s nodes, and storage
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    ├── OU=Desktops             # Domain-joined virtual machines (win11) and client workstations
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    ├── OU=Users                # Standard human user accounts (chris)
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    ├── OU=Security Groups      # Enterprise RBAC groups (OPNsense-Admins, Guacamole-Admins, GPO-Remote-Desktop-Users)
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    ├── OU=Security Groups      # Centralized RBAC groups (OPNsense-Admins, Guacamole-Admins, GPO-Remote-Desktop-Users)
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    └── OU=Service Accounts     # Scoped integration identities (svc_terraform, svc_guacamole, svc_domainjoin)
 </span></code></pre></div>
 <h3 id="dedicated-service-accounts">Dedicated Service Accounts</h3>
