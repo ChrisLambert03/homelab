@@ -35,15 +35,15 @@ sequenceDiagram
 
 ---
 
-## 🔒 Enterprise LDAPS Root CA Injection (Port 636)
+## 🔒 Internal LDAPS Root CA Injection (Port 636)
 
-By default, Java virtual machines (JVM) reject enterprise internal Certificate Authorities when establishing TLS/SSL handshakes over LDAPS (TCP port 636).
+By default, Java virtual machines (JVM) reject private internal Certificate Authorities when establishing TLS/SSL handshakes over LDAPS (TCP port 636).
 
 ### The Challenge
-Active Directory Domain Services on `dc01.ad.lambertlab.us` signs its LDAPS certificate using the internal root CA (`lambertlab-DC01-CA`). Standard Guacamole container images do not trust private Enterprise PKIs, throwing `javax.net.ssl.SSLHandshakeException: PKIX path building failed`.
+Active Directory Domain Services on `dc01.ad.lambertlab.us` signs its LDAPS certificate using the internal root CA (`lambertlab-DC01-CA`). Standard Guacamole container images do not trust private internal PKIs, throwing `javax.net.ssl.SSLHandshakeException: PKIX path building failed`.
 
 ### The Automated Solution: InitContainer Keystore Merging
-Rather than rebuilding custom Docker images, the Guacamole deployment manifest uses an Alpine Linux `initContainer` (`eclipse-temurin:21-jre-alpine`) that merges the enterprise root certificate into Java's standard `cacerts` keystore at startup on an `emptyDir` volume:
+Rather than rebuilding custom Docker images, the Guacamole deployment manifest uses an Alpine Linux `initContainer` (`eclipse-temurin:21-jre-alpine`) that merges the internal root certificate into Java's standard `cacerts` keystore at startup on an `emptyDir` volume:
 
 ```yaml
 # kubernetes/guacamole/values.yaml

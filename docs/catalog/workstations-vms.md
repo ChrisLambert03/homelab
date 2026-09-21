@@ -31,7 +31,7 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 * **FQDN:** `win11.ad.lambertlab.us`
 * **Hardware Profile:** 4 vCPU, 8 GiB RAM, host-passthrough CPU topology.
 * **Storage Backend:** Dedicated 64 GB raw iSCSI block LUN (`iqn.2026-09.us.lambertlab:win11-boot`) on TerraMaster SAN.
-* **Architectural Role:** Domain-joined administrative workstation for enterprise management, Active Directory administration, and remote engineering.
+* **Architectural Role:** Domain-joined administrative workstation for centralized infrastructure management, Active Directory administration, and remote engineering.
 * **Key Configuration:**
   * Hardware-enforced OVMF UEFI Secure Boot and persistent virtual TPM 2.0 (`swtpm`) backed by Longhorn storage.
   * Full KVM Hyper-V enlightened hypercall suite (`tlbflush`, `ipi`, `synictimer`, `frequencies`, `relaxed`, `vapic`, `spinlocks`).

@@ -19,7 +19,7 @@
 
 ## ⚡ Overview
 
-An enterprise-grade hybrid infrastructure bridging bare-metal physical compute, cloud-native virtualization via **KubeVirt**, and dual-directory identity across **Active Directory** and **Microsoft Entra ID**. The environment is fully automated using **GitOps (ArgoCD HA)** and **Infrastructure as Code (Terraform)**, featuring zero-touch Windows 11 VM provisioning, line-rate iSCSI SAN storage, and clientless remote desktop access via **Apache Guacamole** directly bridged to a software-defined L2 VXLAN network fabric.
+A production-level hybrid infrastructure bridging bare-metal physical compute, cloud-native virtualization via **KubeVirt**, and dual-directory identity across **Active Directory** and **Microsoft Entra ID**. The environment is fully automated using **GitOps (ArgoCD HA)** and **Infrastructure as Code (Terraform)**, featuring zero-touch Windows 11 VM provisioning, line-rate iSCSI SAN storage, and clientless remote desktop access via **Apache Guacamole** directly bridged to a software-defined L2 VXLAN network fabric.
 
 ---
 
@@ -30,7 +30,7 @@ An enterprise-grade hybrid infrastructure bridging bare-metal physical compute, 
 * **High-Availability GitOps & IaC Engine**: Multi-replica ArgoCD (HA) with Redis Sentinel and controller sharding reconciles cluster state with strict default-deny RBAC across deterministic sync waves. Terraform drives Cloudflare DNS, Tailscale mesh devices, Docker host workloads, and Active Directory objects.
 * **Hybrid Identity & Clientless Remote Access**: Bidirectional identity federation between on-premises Active Directory (`ad.lambertlab.us`) and Microsoft Entra ID using Entra Cloud Sync under a gMSA. Clientless HTML5 remote desktop gateway (Apache Guacamole) integrates Entra ID OIDC SSO with Active Directory LDAPS (`dc01.ad.lambertlab.us`) and native Multus L2 VXLAN pod networking for wire-speed VM access.
 * **Software-Defined Networking & Storage**: Cluster-wide multicast VXLAN overlay (`br-lab0` via NMState) provides seamless Layer 2 VM connectivity across physical nodes without switch VLAN trunking, backed by a TerraMaster SAN (F4-425 Plus) delivering dedicated iSCSI block LUNs and NFS pools alongside distributed Longhorn storage.
-* **Security Information and Event Management (SIEM) & Telemetry (ELK Stack)**: An enterprise observability and security operations pipeline hosted on `workstation` high-speed NVMe storage (Elasticsearch 8.x, Logstash, Kibana). Aggregates cluster-wide Kubernetes pod logs, cross-node Docker container logs via GELF over Tailscale, Windows Security Event logs (Active Directory Kerberos/NTLM authentication, privilege escalation, logon tracking), and OPNsense firewall packet drops for unified threat detection with single-node Index Lifecycle Management (ILM) retention policies.
+* **Security Information and Event Management (SIEM) & Telemetry (ELK Stack)**: A production-level observability and security operations pipeline hosted on `workstation` high-speed NVMe storage (Elasticsearch 8.x, Logstash, Kibana). Aggregates cluster-wide Kubernetes pod logs, cross-node Docker container logs via GELF over Tailscale, Windows Security Event logs (Active Directory Kerberos/NTLM authentication, privilege escalation, logon tracking), and OPNsense firewall packet drops for unified threat detection with single-node Index Lifecycle Management (ILM) retention policies.
 
 ---
 

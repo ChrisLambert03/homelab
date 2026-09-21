@@ -16,7 +16,7 @@
 
 ## 🏛️ Architecture & System Design
 
-This subsystem manages bare-metal, enterprise-grade virtual machines running on top of a multi-node **K3s Kubernetes cluster** via **KubeVirt v1.9.0**.
+This subsystem manages bare-metal, production-level virtual machines running on top of a multi-node **K3s Kubernetes cluster** via **KubeVirt v1.9.0**.
 
 By replacing traditional standalone hypervisors with KubeVirt, this architecture converges legacy monolithic operating systems and cloud-native container workloads into a **single declarative control plane**. All virtual machine lifecycles, virtual hardware topologies, storage claims, and network attachments are tracked in Git and continuously reconciled via **ArgoCD**.
 
@@ -37,7 +37,7 @@ By replacing traditional standalone hypervisors with KubeVirt, this architecture
 
 | Virtual Machine | Operating System | Profile | Storage Architecture | Network Interface | Primary Role |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`win11`** | Windows 11 Enterprise LTSC | 4 vCPU / 8 GiB RAM | 64 GB iSCSI Block LUN | `lab-lan-bridge` (VXLAN) | Domain-Joined Enterprise Admin Workstation |
+| **`win11`** | Windows 11 Enterprise LTSC | 4 vCPU / 8 GiB RAM | 64 GB iSCSI Block LUN | `lab-lan-bridge` (VXLAN) | Domain-Joined Dedicated Admin Workstation |
 | **`dc01`** | Windows Server 2025 | 4 vCPU / 8 GiB RAM | 80 GB iSCSI Block LUN | `lab-lan-bridge` (VXLAN) | Primary Domain Controller (`ad.lambertlab.us`) |
 | **`opnsense`** | FreeBSD 14 / OPNsense | 4 vCPU / 4 GiB RAM | Distributed Longhorn Block | Host NIC Physical Bridge | Edge Routing Gateway, NAT, & Firewall |
 
@@ -102,7 +102,7 @@ features:
 * **`relaxed`**: Relaxes guest timer constraints during periods when the host CPU is heavily loaded, preventing Windows from triggering false-positive Blue Screen of Death (BSOD) watchdog timeouts (`CLOCK_WATCHDOG_TIMEOUT`).
 * **`vapic`**: Enables virtual APIC support, reducing overhead when the Windows kernel accesses APIC registers during task scheduling.
 * **`spinlocks (8191)`**: Tells Windows to yield the vCPU if a kernel lock cannot be acquired after 8,191 attempts, preventing wasteful CPU core spinning on contended threads.
-* **`synic` & `runtime`**: Implements Hyper-V Synthetic Interrupt Controllers and virtual processor runtime tracking for enterprise telemetry.
+* **`synic` & `runtime`**: Implements Hyper-V Synthetic Interrupt Controllers and virtual processor runtime tracking for hypervisor telemetry.
 
 ---
 
@@ -240,7 +240,7 @@ qemu-img convert -p -f raw -O qcow2 -c \
 | **`-p`** | **Real-Time Progress Tracking**: Renders dynamic byte transfer and percentage completion indicators. |
 | **`-f raw`** | **Input Driver Specification**: Enforces raw block parsing on the source volume, bypassing heuristic filesystem probing. |
 | **`-O qcow2`** | **Output Target Architecture**: Compiles the disk into **QEMU Copy-On-Write v2** format, featuring sparse allocation, internal snapshots, and cluster metadata. |
-| **`-c`** | **Lossless Cluster Compression**: Applies transparent zlib/deflate compression across allocated data clusters, shrinking an enterprise OS footprint by 50–60%. |
+| **`-c`** | **Lossless Cluster Compression**: Applies transparent zlib/deflate compression across allocated data clusters, shrinking an OS disk footprint by 50–60%. |
 | **`iscsi://...`** | **Direct User-Space iSCSI Protocol**: Utilizes `libiscsi` to establish TCP socket connections directly with the SAN target portal, eliminating the need for host kernel iSCSI initiator logins or device node management. |
 
 > [!NOTE]

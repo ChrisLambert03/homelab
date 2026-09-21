@@ -33,7 +33,7 @@ This section documents secrets orchestration, centralized Security Information a
 ### 3. Centralized ELK Stack (Elasticsearch, Logstash, Kibana)
 * **Host Environment:** `workstation` (Docker Engine managed via Terraform `docker/workstation/elk-stack.tf`)
 * **Ingress Endpoint:** `https://kibana.lambertlab.us` (Internal ES on `:9200`, Logstash on `:12201` GELF)
-* **Architectural Role:** Enterprise Security Information and Event Management (SIEM) and log analytics pipeline.
+* **Architectural Role:** Production-level Security Information and Event Management (SIEM) and log analytics pipeline.
 * **Storage Backend:** Dedicated local NVMe storage (`/usr/share/elasticsearch/data`) on `workstation`.
 * **Key Configuration:**
   * Single-node cluster enforcing `number_of_replicas: 0` across templates to maintain solid green health and prevent Index Lifecycle Management (ILM) stalls.

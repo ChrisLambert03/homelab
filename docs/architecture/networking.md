@@ -111,7 +111,7 @@ graph TD
 
 ## 🌉 Software-Defined L2 Fabric (`br-lab0`)
 
-Instead of requiring dedicated enterprise switches with 802.1Q VLAN trunking, the cluster implements a **multicast VXLAN overlay** managed declaratively by **NMState**:
+Instead of requiring expensive managed switches with 802.1Q VLAN trunking, the cluster implements a **multicast VXLAN overlay** managed declaratively by **NMState**:
 
 * **Bridge Name:** `br-lab0`
 * **Underlay Interface:** `vxlan-lab` (VNI `100`, multicast group `239.1.1.1`, port `4789`)

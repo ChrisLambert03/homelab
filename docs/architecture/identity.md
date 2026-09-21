@@ -103,7 +103,7 @@ DC=ad,DC=lambertlab,DC=us
     ├── OU=Servers              # Infrastructure servers, K8s nodes, and storage
     ├── OU=Desktops             # Domain-joined virtual machines (win11) and client workstations
     ├── OU=Users                # Standard human user accounts (chris)
-    ├── OU=Security Groups      # Enterprise RBAC groups (OPNsense-Admins, Guacamole-Admins, GPO-Remote-Desktop-Users)
+    ├── OU=Security Groups      # Centralized RBAC groups (OPNsense-Admins, Guacamole-Admins, GPO-Remote-Desktop-Users)
     └── OU=Service Accounts     # Scoped integration identities (svc_terraform, svc_guacamole, svc_domainjoin)
 ```
 
