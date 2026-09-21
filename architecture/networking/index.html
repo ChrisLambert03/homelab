@@ -1,0 +1,1650 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Enterprise-Grade Hybrid Cloud, KubeVirt, and GitOps Documentation">
+      
+      
+        <meta name="author" content="Chris Lambert">
+      
+      
+        <link rel="canonical" href="https://chrislambert03.github.io/homelab/architecture/networking/">
+      
+      
+        <link rel="prev" href="../hardware/">
+      
+      
+        <link rel="next" href="../storage/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>L2 VXLAN & CoreDNS Fabric - LambertLab Infrastructure Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#l2-vxlan-overlay-coredns-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="LambertLab Infrastructure Docs" class="md-header__button md-logo" aria-label="LambertLab Infrastructure Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LambertLab Infrastructure Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              L2 VXLAN & CoreDNS Fabric
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="deep-purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ChrisLambert03/homelab" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ChrisLambert03/homelab
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../hardware/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../catalog/" class="md-tabs__link">
+          
+  
+  
+  Service Catalog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../runbooks/bridge-watchdog/" class="md-tabs__link">
+          
+  
+  
+  Operational Runbooks
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="LambertLab Infrastructure Docs" class="md-nav__button md-logo" aria-label="LambertLab Infrastructure Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LambertLab Infrastructure Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ChrisLambert03/homelab" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ChrisLambert03/homelab
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware & Node Fleet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    L2 VXLAN & CoreDNS Fabric
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    L2 VXLAN & CoreDNS Fabric
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#network-topology-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌐 Network Topology Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#edge-ingress-tailscale-round-robin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚪 Edge Ingress &amp; Tailscale Round-Robin
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#two-tier-zero-trust-ingress-filtering-traefik-middlewares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛡️ Two-Tier Zero-Trust Ingress Filtering (Traefik Middlewares)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛡️ Two-Tier Zero-Trust Ingress Filtering (Traefik Middlewares)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-admin-only-access-tier-1-administrative-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. admin-only-access (Tier 1: Administrative Protection)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-media-user-access-tier-2-scoped-consumer-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. media-user-access (Tier 2: Scoped Consumer Access)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#software-defined-l2-fabric-br-lab0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌉 Software-Defined L2 Fabric (br-lab0)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌉 Software-Defined L2 Fabric (br-lab0)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multus-cni-secondary-interface-attachment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multus CNI Secondary Interface Attachment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coredns-conditional-forwarding-to-active-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 CoreDNS Conditional Forwarding to Active Directory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔍 CoreDNS Conditional Forwarding to Active Directory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-health-checking-is-essential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Health-Checking is Essential
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#intel-i219-lm-nic-hardware-offload-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ Intel I219-LM NIC Hardware Offload Optimization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internal-vm-hairpin-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔄 Internal VM Hairpin Routing
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage Hierarchy & SAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../identity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Identity & Entra ID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guacamole/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Guacamole Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../virtualization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KubeVirt & Virtualization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gitops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps Engine & Sync Waves
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Information & Event Management (SIEM)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service Catalog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Service Catalog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../catalog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview & Master Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../catalog/infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Infrastructure & Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../catalog/workstations-vms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Virtual Machines & Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../catalog/media-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media & Home Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../catalog/security-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Productivity Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operational Runbooks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operational Runbooks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runbooks/bridge-watchdog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bridge Self-Healing Watchdog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runbooks/iscsi-flashing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Direct iSCSI Line-Rate Flashing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runbooks/elk-ilm-maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ELK Stack & Index Lifecycle Management (ILM)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runbooks/disaster-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Disaster Recovery & Quorum
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#network-topology-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌐 Network Topology Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#edge-ingress-tailscale-round-robin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚪 Edge Ingress &amp; Tailscale Round-Robin
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#two-tier-zero-trust-ingress-filtering-traefik-middlewares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛡️ Two-Tier Zero-Trust Ingress Filtering (Traefik Middlewares)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛡️ Two-Tier Zero-Trust Ingress Filtering (Traefik Middlewares)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-admin-only-access-tier-1-administrative-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. admin-only-access (Tier 1: Administrative Protection)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-media-user-access-tier-2-scoped-consumer-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. media-user-access (Tier 2: Scoped Consumer Access)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#software-defined-l2-fabric-br-lab0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌉 Software-Defined L2 Fabric (br-lab0)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌉 Software-Defined L2 Fabric (br-lab0)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multus-cni-secondary-interface-attachment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multus CNI Secondary Interface Attachment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coredns-conditional-forwarding-to-active-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 CoreDNS Conditional Forwarding to Active Directory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔍 CoreDNS Conditional Forwarding to Active Directory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-health-checking-is-essential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Health-Checking is Essential
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#intel-i219-lm-nic-hardware-offload-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ Intel I219-LM NIC Hardware Offload Optimization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internal-vm-hairpin-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔄 Internal VM Hairpin Routing
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/ChrisLambert03/homelab/blob/main/docs/architecture/networking.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="l2-vxlan-overlay-coredns-architecture">L2 VXLAN Overlay &amp; CoreDNS Architecture</h1>
+<p>The <strong>LambertLab</strong> network combines software-defined Layer 2 multicast tunneling, conditional Active Directory DNS forwarding, hardware NIC offload tuning, and multi-cloud edge ingress.</p>
+<hr />
+<h2 id="network-topology-overview">🌐 Network Topology Overview</h2>
+<pre class="mermaid"><code>graph TD
+    Client["External Remote Client"] --&gt; CF["Cloudflare DNS *.lambertlab.us&lt;br/&gt;Multi-A Round-Robin"]
+    CF --&gt; TS["Tailscale Mesh Ingress&lt;br/&gt;Direct WireGuard Point-to-Point"]
+    TS --&gt; Traefik["Traefik Edge Ingress :443&lt;br/&gt;Wildcard TLSStore *.lambertlab.us"]
+
+    subgraph Flannel["Flannel Pod Overlay (10.42.0.0/16)"]
+        Traefik --&gt; GuacPod["Guacamole Web Pod :8080"]
+        Traefik --&gt; KibanaPod["Kibana Ingress Service :5601"]
+        CoreDNS["K3s CoreDNS Forwarder&lt;br/&gt;10.43.0.10:53"]
+    end
+
+    subgraph VXLAN["L2 Multicast VXLAN Fabric (br-lab0 / 10.10.0.0/24)"]
+        BridgeNet["br-lab0 Bridge"]
+        GuacPod -.-&gt;|"Multus CNI: net1 10.10.0.50"| BridgeNet
+        BridgeNet --&gt; DC01["DC01 Active Directory&lt;br/&gt;10.10.0.10:636 LDAPS / :3389 RDP"]
+        BridgeNet --&gt; Win11["Windows 11 Workstation&lt;br/&gt;10.10.0.155:3389 RDP"]
+        BridgeNet --&gt; OPNsense["OPNsense Firewall VM&lt;br/&gt;Virtual Edge Routing"]
+        CoreDNS --&gt;|"Conditional Forward ad.lambertlab.us"| DC01
+    end
+
+    subgraph External["External Services over Tailscale"]
+        KibanaPod --&gt; WorkstationNode["Workstation Host Engine&lt;br/&gt;workstation:5601"]
+    end</code></pre>
+<hr />
+<h2 id="edge-ingress-tailscale-round-robin">🚪 Edge Ingress &amp; Tailscale Round-Robin</h2>
+<p>External access to cluster services is secured without exposing public listening ports or relying on dynamic DNS port-forwarding:</p>
+<ol>
+<li><strong>Cloudflare Multi-A Round-Robin:</strong> <code>cloudflare.tf</code> maintains wildcard DNS records (<code>*.lambertlab.us</code>) resolving to the Tailscale IPv4 addresses of physical nodes (<code>lenovo</code>, <code>optiplex</code>, <code>opti74</code>, <code>workstation</code>).</li>
+<li><strong>Client IP Preservation:</strong> Because traffic terminates directly on nodes via Tailscale WireGuard sockets rather than traversing an intermediate SNAT gateway proxy, original client IP addresses are preserved for Traefik security middlewares.</li>
+<li><strong>Traefik Default TLSStore:</strong> Cert-Manager issues a single wildcard certificate (<code>*.lambertlab.us</code>) via Cloudflare DNS-01 challenges stored in <code>kube-system</code>. Traefik automatically references this certificate across all Ingress and IngressRoute resources:</li>
+</ol>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># kubernetes/config/tls-store.yaml</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">traefik.io/v1alpha1</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TLSStore</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kube-system</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nt">defaultCertificate</span><span class="p">:</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wildcard-lambertlab-us-tls</span>
+</span></code></pre></div>
+<hr />
+<h2 id="two-tier-zero-trust-ingress-filtering-traefik-middlewares">🛡️ Two-Tier Zero-Trust Ingress Filtering (Traefik Middlewares)</h2>
+<p>Cluster Ingress resources do not rely solely on application passwords or SSO; Traefik enforces network-level isolation using declarative <code>Middleware</code> resources (<code>kubernetes/config/access-control-list-middleware.yaml</code>) that inspect client source IP addresses before requests ever touch upstream application pods:</p>
+<pre class="mermaid"><code>graph TD
+    subgraph ClientTiers["Client Connection Origins (Tailscale Mesh)"]
+        AdminClients["Admin Endpoints&lt;br/&gt;(Cluster Manager, Workstation, Admin Laptops/Phones)"]
+        MediaClients["Media Consumers&lt;br/&gt;(Family Devices, Mobile Streaming, Jellyfin Users)"]
+        Untrusted["Unknown / External Source IPs"]
+    end
+
+    subgraph TraefikMiddlewares["Traefik Edge Routing Middlewares"]
+        AdminACL["admin-only-access&lt;br/&gt;(ipAllowList: Admin Tailscale IPs + Cluster Pod CIDR 10.42.0.0/16)"]
+        MediaACL["media-user-access&lt;br/&gt;(ipAllowList: Admin IPs + Media User IPs + Cluster CIDR)"]
+    end
+
+    subgraph ProtectedWorkloads["Backend Cluster Workloads"]
+        AdminPortal["Sensitive Control &amp; Infra&lt;br/&gt;(ArgoCD, Vault, Guacamole, Portainer, Cockpit, ARR Suite)"]
+        MediaPortal["Media &amp; Streaming Frontend&lt;br/&gt;(Jellyfin)"]
+    end
+
+    AdminClients --&gt;|"Allow"| AdminACL
+    MediaClients --&gt;|"Reject 403"| AdminACL
+    Untrusted --&gt;|"Drop / 403"| AdminACL
+
+    AdminClients --&gt;|"Allow"| MediaACL
+    MediaClients --&gt;|"Allow"| MediaACL
+    Untrusted --&gt;|"Drop / 403"| MediaACL
+
+    AdminACL --&gt; AdminPortal
+    MediaACL --&gt; MediaPortal</code></pre>
+<h3 id="1-admin-only-access-tier-1-administrative-protection">1. <code>admin-only-access</code> (Tier 1: Administrative Protection)</h3>
+<ul>
+<li><strong>Scope:</strong> Applied across all sensitive infrastructure, GitOps, virtualization, secrets, and management ingresses (<code>argocd</code>, <code>vault</code>, <code>guacamole</code>, <code>portainer</code>, <code>cockpit</code>, <code>code-server</code>, <code>nas</code>, <code>firefox</code>, <code>sonarr</code>, <code>radarr</code>, <code>prowlarr</code>).</li>
+<li><strong>Source Allowlist:</strong></li>
+<li>Dedicated physical node endpoints (<code>lenovo</code>, <code>optiplex</code>, <code>opti74</code>, <code>workstation</code>).</li>
+<li>Primary administrative portable devices (laptops and administrative mobile clients).</li>
+<li>In-cluster CNI pod network (<code>10.42.0.0/16</code>) to preserve internal service-to-service hairpinned routing.</li>
+<li>Localhost loopback (<code>127.0.0.1/32</code>).</li>
+<li><strong>Result:</strong> Even if an ingress endpoint URL is known or discovered, unauthorized requests receive an immediate HTTP 403 Forbidden at the Traefik proxy edge.</li>
+</ul>
+<h3 id="2-media-user-access-tier-2-scoped-consumer-access">2. <code>media-user-access</code> (Tier 2: Scoped Consumer Access)</h3>
+<ul>
+<li><strong>Scope:</strong> Applied exclusively to end-user facing media portals (such as Jellyfin streaming).</li>
+<li><strong>Source Allowlist:</strong></li>
+<li>All administrative endpoints from Tier 1.</li>
+<li>Designated family and media client devices connected to the Tailscale mesh.</li>
+<li>Internal cluster CNI and dashboard endpoints.</li>
+<li><strong>Result:</strong> Grants media streaming access to trusted family clients while completely blocking them from querying administrative tools, databases, or cluster control planes.</li>
+</ul>
+<hr />
+<h2 id="software-defined-l2-fabric-br-lab0">🌉 Software-Defined L2 Fabric (<code>br-lab0</code>)</h2>
+<p>Instead of requiring dedicated enterprise switches with 802.1Q VLAN trunking, the cluster implements a <strong>multicast VXLAN overlay</strong> managed declaratively by <strong>NMState</strong>:</p>
+<ul>
+<li><strong>Bridge Name:</strong> <code>br-lab0</code></li>
+<li><strong>Underlay Interface:</strong> <code>vxlan-lab</code> (VNI <code>100</code>, multicast group <code>239.1.1.1</code>, port <code>4789</code>)</li>
+<li><strong>Static Host Gateways:</strong></li>
+<li><code>lenovo</code>: <code>10.10.0.2/24</code></li>
+<li><code>optiplex</code>: <code>10.10.0.3/24</code></li>
+<li><code>opti74</code>: <code>10.10.0.4/24</code></li>
+<li><code>workstation</code>: <code>10.10.0.5/24</code></li>
+</ul>
+<h3 id="multus-cni-secondary-interface-attachment">Multus CNI Secondary Interface Attachment</h3>
+<p>Standard Kubernetes pods only receive a Flannel overlay IP (<code>10.42.x.x</code>). Using <strong>Multus CNI</strong>, select pods (like Apache Guacamole) are provisioned with a secondary interface (<code>net1</code>) plugged directly into <code>br-lab0</code>:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># NetworkAttachmentDefinition in default / target namespace</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s.cni.cncf.io/v1</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NetworkAttachmentDefinition</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">metadata</span><span class="p">:</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lab-lan-bridge</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="s">'{</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="s">"cniVersion":</span><span class="nv"> </span><span class="s">"0.3.1",</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="s">"name":</span><span class="nv"> </span><span class="s">"lab-lan-bridge",</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="s">"type":</span><span class="nv"> </span><span class="s">"bridge",</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="s">"bridge":</span><span class="nv"> </span><span class="s">"br-lab0",</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="s">"hairpinMode":</span><span class="nv"> </span><span class="s">false</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="s">}'</span>
+</span></code></pre></div>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Pod Annotation on Guacamole Deployment</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">k8s.v1.cni.cncf.io/networks</span><span class="p">:</span><span class="w"> </span><span class="s">'[{</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s">"name":</span><span class="nv"> </span><span class="s">"lab-lan-bridge",</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="s">"ips":</span><span class="nv"> </span><span class="s">["10.10.0.50/24"]</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s">}]'</span>
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Hairpin Mode &amp; IPv6 DAD Resolution</p>
+<p>Early testing revealed that enabling <code>hairpinMode: true</code> on Linux bridges caused duplicate address detection (DAD) packet reflections back to KubeVirt VM interfaces. Setting <code>"hairpinMode": false</code> completely eliminates DAD loopbacks while allowing full cross-VM and Pod-to-VM communication.</p>
+</div>
+<hr />
+<h2 id="coredns-conditional-forwarding-to-active-directory">🔍 CoreDNS Conditional Forwarding to Active Directory</h2>
+<p>Kubernetes pods routinely need to resolve domain-joined machines like <code>dc01.ad.lambertlab.us</code> or <code>win11-01.ad.lambertlab.us</code>.</p>
+<p>Because Windows clients update their DNS dynamically via Active Directory Dynamic DNS (DDNS), cluster CoreDNS forwarders are configured with <strong>active health checking</strong>:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># kubernetes/config/coredns-custom.yaml</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="l l-Scalar l-Scalar-Plain">ad.lambertlab.us:53 {</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">forward . 10.10.0.10 {</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">health_check 5s</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">max_fails 2</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">}</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">cache 30</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">reload</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="l l-Scalar l-Scalar-Plain">}</span>
+</span></code></pre></div>
+<h3 id="why-health-checking-is-essential">Why Health-Checking is Essential</h3>
+<p>Without <code>health_check 5s</code> and <code>max_fails 2</code>, if DC01 reboots or a worker node faces transient network latency, CoreDNS pods hang waiting on UDP timeouts (30+ seconds), stalling applications across the cluster. With active health-checks, degraded upstream forwarders fail fast (&lt; 5s) and seamlessly route to healthy replicas.</p>
+<hr />
+<h2 id="intel-i219-lm-nic-hardware-offload-optimization">⚡ Intel I219-LM NIC Hardware Offload Optimization</h2>
+<p>Worker nodes utilizing Intel I219-LM Ethernet controllers (<code>optiplex</code> and <code>opti74</code>) running the Linux <code>e1000e</code> kernel driver can experience sporadic hardware micro-hangs and watchdog resets (<code>e1000e: Detected Hardware Unit Hang</code>) during sustained Gigabit packet bursts.</p>
+<p>To eliminate driver lockups, an Ansible automation playbook applies deterministic <code>ethtool</code> offload adjustments during boot:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Disable problematic hardware offloads on I219-LM</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">ansible.builtin.command</span><span class="p">:</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ethtool -K {{ ansible_default_ipv4.interface }} rx off tx off tso off gso off</span>
+</span></code></pre></div>
+<p>Disabling TCP segmentation offload (TSO) and generic segmentation offload (GSO) offloads packet framing to the Linux kernel network stack, completely eliminating hardware controller state corruption.</p>
+<hr />
+<h2 id="internal-vm-hairpin-routing">🔄 Internal VM Hairpin Routing</h2>
+<p>KubeVirt virtual machines (such as <code>dc01</code> and <code>win11</code>) reside on the <code>10.10.0.0/24</code> L2 VXLAN subnet and do not run Tailscale clients. When VMs need to query cluster services published over external Traefik URLs (e.g. <code>https://vault.lambertlab.us</code> or <code>https://guacamole.lambertlab.us</code>):</p>
+<ul>
+<li><strong>Traffic Path:</strong> OPNsense routes <code>100.64.0.0/10</code> LAN traffic to the Traefik Service ClusterIP (<code>10.43.204.125:443</code>).</li>
+<li><strong>Rule:</strong> Always route internal VM traffic targeting cluster ingress to the Traefik Service ClusterIP, never to a physical node's local LAN IP.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.instant", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
