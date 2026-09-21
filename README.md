@@ -2,6 +2,7 @@
 
 <div align="center">
 
+[![Documentation](https://img.shields.io/badge/Documentation-Live-526CFE?style=for-the-badge&logo=materialformkdocs&logoColor=white)](https://chrislambert03.github.io/homelab/)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-K3s_v1.36-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io)
 [![KubeVirt](https://img.shields.io/badge/KubeVirt-Virtualization-purple?style=for-the-badge&logo=redhatopenshift&logoColor=white)](https://kubevirt.io)
 [![ArgoCD](https://img.shields.io/badge/ArgoCD-GitOps_HA-EF6036?style=for-the-badge&logo=argo&logoColor=white)](https://argoproj.github.io)
@@ -20,6 +21,8 @@
 ## ⚡ Overview
 
 A production-level hybrid infrastructure bridging bare-metal physical compute, cloud-native virtualization via **KubeVirt**, and dual-directory identity across **Active Directory** and **Microsoft Entra ID**. The environment is fully automated using **GitOps (ArgoCD HA)** and **Infrastructure as Code (Terraform)**, featuring zero-touch Windows 11 VM provisioning, line-rate iSCSI SAN storage, and clientless remote desktop access via **Apache Guacamole** directly bridged to a software-defined L2 VXLAN network fabric.
+
+Full architectural specifications, network topologies, storage design, service catalogs, and operational runbooks are published on the **[Homelab Documentation Site](https://chrislambert03.github.io/homelab/)**.
 
 ---
 

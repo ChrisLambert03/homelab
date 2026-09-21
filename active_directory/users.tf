@@ -12,7 +12,7 @@ resource "ad_user" "chris" {
   container              = ad_ou.users.dn
   enabled                = true
   password_never_expires = true
-  description            = "Enterprise Lead & Systems Architect"
+  description            = "Homelab Architect & Systems Administrator"
 
   lifecycle {
     ignore_changes = [initial_password]

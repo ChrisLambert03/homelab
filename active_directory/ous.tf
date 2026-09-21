@@ -1,12 +1,12 @@
 # ==============================================================================
-# ENTERPRISE ORGANIZATIONAL UNITS (OU HIERARCHY)
+# ORGANIZATIONAL UNITS (OU HIERARCHY)
 # ==============================================================================
 
 # 1. Primary Organization Root OU
 resource "ad_ou" "lambertlab" {
   name        = "LambertLab"
   path        = "DC=ad,DC=lambertlab,DC=us"
-  description = "Primary Enterprise Root OU for LambertLab"
+  description = "Primary Domain Root OU for LambertLab"
   protected   = true
 }
 
@@ -42,7 +42,7 @@ resource "ad_ou" "users" {
   protected   = true
 }
 
-# 6. Enterprise Security Groups
+# 6. Security Groups
 resource "ad_ou" "groups" {
   name        = "Security Groups"
   path        = ad_ou.lambertlab.dn

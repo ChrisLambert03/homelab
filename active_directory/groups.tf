@@ -1,5 +1,5 @@
 # ==============================================================================
-# ENTERPRISE SECURITY GROUPS
+# SECURITY GROUPS
 # ==============================================================================
 
 # Core directory administrative groups (Domain Admins) are managed natively
