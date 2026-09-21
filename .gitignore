@@ -21,3 +21,4 @@ check-images.sh
 check-k8s-images.sh
 .agents/
 unlinked_files_list.txt
+site/

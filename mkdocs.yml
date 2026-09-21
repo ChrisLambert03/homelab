@@ -1,0 +1,82 @@
+---
+site_name: LambertLab Infrastructure Docs
+site_description: Enterprise-Grade Hybrid Cloud, KubeVirt, and GitOps Documentation
+site_author: Chris Lambert
+site_url: https://chrislambert03.github.io/homelab/
+repo_url: https://github.com/ChrisLambert03/homelab
+repo_name: ChrisLambert03/homelab
+edit_uri: blob/main/docs/
+
+theme:
+  name: material
+  language: en
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.instant
+    - search.highlight
+    - search.share
+    - search.suggest
+    - content.code.copy
+    - content.action.edit
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.snippets
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Overview: index.md
+  - Architecture:
+      - Hardware & Node Fleet: architecture/hardware.md
+      - L2 VXLAN & CoreDNS Fabric: architecture/networking.md
+      - Storage Hierarchy & SAN: architecture/storage.md
+      - Hybrid Identity & Entra ID: architecture/identity.md
+      - Apache Guacamole Gateway: architecture/guacamole.md
+      - KubeVirt & Virtualization: architecture/virtualization.md
+      - GitOps Engine & Sync Waves: architecture/gitops.md
+      - Security Information & Event Management (SIEM): architecture/logging.md
+  - Service Catalog:
+      - Overview & Master Matrix: catalog/index.md
+      - Core Infrastructure & Networking: catalog/infrastructure.md
+      - Virtual Machines & Identity: catalog/workstations-vms.md
+      - Media & Home Automation: catalog/media-automation.md
+      - Security & Productivity Tools: catalog/security-tools.md
+  - Operational Runbooks:
+      - Bridge Self-Healing Watchdog: runbooks/bridge-watchdog.md
+      - Direct iSCSI Line-Rate Flashing: runbooks/iscsi-flashing.md
+      - ELK Stack & Index Lifecycle Management (ILM): runbooks/elk-ilm-maintenance.md
+      - Disaster Recovery & Quorum: runbooks/disaster-recovery.md

@@ -69,3 +69,8 @@ The cluster is anchored by a high-availability 3-node K3s control plane (**`leno
   - Stream Windows Security Event logs (Event IDs: 4624 logon, 4625 failed auth, 4672 admin privileges) from DC01 and Win11 via Winlogbeat.
   - Forward OPNsense firewall state tables and packet drop telemetry via syslog to Logstash for real-time threat analysis and geo-tagging.
   - Implement automated hot-warm-cold Index Lifecycle Management (ILM) retention policies and build unified Kibana security monitoring dashboards.
+- [ ] **Documentation as Code & Architectural Transparency**:
+  - Deploy a centralized, searchable documentation portal using **Material for MkDocs** covering disaster recovery runbooks, physical hardware topology, and storage tiers.
+  - Automate parameter documentation for Helm chart releases (`values.yaml`) using **`helm-docs`** in CI to eliminate configuration drift.
+  - Implement programmatic architecture and network diagrams using **`diagrams` (Python as Code)** to keep topology graphics continuously synchronized with cluster state.
+  - Generate an automated inventory and service catalog covering all 30+ ArgoCD workloads and KubeVirt virtual machines.
