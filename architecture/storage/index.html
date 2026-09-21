@@ -1335,6 +1335,7 @@
 <ul>
 <li><strong>StorageClass Retention:</strong> A custom StorageClass <code>longhorn-retain</code> enforces <code>reclaimPolicy: Retain</code> so that if ArgoCD applications are pruned or re-synced, underlying persistent volumes are never destroyed automatically.</li>
 <li><strong>Volume Snapshotting:</strong> Longhorn schedules automated periodic volume snapshots distributed across healthy control plane nodes.</li>
+<li><strong>Multipath Daemon Blacklist (<code>multipathd</code>):</strong> To prevent host multipath daemons from mistakenly locking Longhorn virtual iSCSI devices (causing <code>MountVolume.SetUp failed: already mounted or mount point busy</code>), worker nodes deploy a <code>devnode "^sd[a-z0-9]+"</code> blacklist to <code>/etc/multipath.conf</code> via <code>ansible/longhorn-reqs.yml</code> per the official <a href="https://longhorn.io/kb/troubleshooting-volume-with-multipath/">Longhorn Knowledge Base: Troubleshooting Volume Mount Failure with multipathd</a>.</li>
 </ul>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># kubernetes/longhorn/storageclass-retain.yaml</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage.k8s.io/v1</span>
