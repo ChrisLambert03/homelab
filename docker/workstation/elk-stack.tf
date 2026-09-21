@@ -94,7 +94,7 @@ resource "docker_container" "elasticsearch" {
 
 # ── Logstash ─────────────────────────────────────────────────
 # The ETL (Extract, Transform, Load) engine. 
-# Processes logs from GELF and Filebeat before sending to Elasticsearch.
+# Processes container logs from Docker GELF before sending to Elasticsearch.
 resource "docker_container" "logstash" {
   provider = docker.workstation
   name     = "logstash"
