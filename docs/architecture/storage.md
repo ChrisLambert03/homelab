@@ -59,6 +59,7 @@ Critical cluster state (HashiCorp Vault storage, Apache Guacamole's PostgreSQL d
 
 * **StorageClass Retention:** A custom StorageClass `longhorn-retain` enforces `reclaimPolicy: Retain` so that if ArgoCD applications are pruned or re-synced, underlying persistent volumes are never destroyed automatically.
 * **Volume Snapshotting:** Longhorn schedules automated periodic volume snapshots distributed across healthy control plane nodes.
+* **Multipath Daemon Blacklist (`multipathd`):** To prevent host multipath daemons from mistakenly locking Longhorn virtual iSCSI devices (causing `MountVolume.SetUp failed: already mounted or mount point busy`), worker nodes deploy a `devnode "^sd[a-z0-9]+"` blacklist to `/etc/multipath.conf` via `ansible/longhorn-reqs.yml` per the official [Longhorn Knowledge Base: Troubleshooting Volume Mount Failure with multipathd](https://longhorn.io/kb/troubleshooting-volume-with-multipath/).
 
 ```yaml
 # kubernetes/longhorn/storageclass-retain.yaml

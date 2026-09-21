@@ -20,3 +20,23 @@
         name: iscsid
         state: started
         enabled: true
+
+    # Ref: https://longhorn.io/kb/troubleshooting-volume-with-multipath/
+    - name: Deploy multipath blacklist configuration for Longhorn
+      ansible.builtin.copy:
+        dest: /etc/multipath.conf
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          blacklist {
+              devnode "^sd[a-z0-9]+"
+          }
+      notify: Restart multipathd
+
+  handlers:
+    - name: Restart multipathd
+      ansible.builtin.systemd:
+        name: multipathd
+        state: restarted
+      failed_when: false
