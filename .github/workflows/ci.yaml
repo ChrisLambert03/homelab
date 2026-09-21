@@ -28,6 +28,11 @@ jobs:
           clean: true
           fetch-depth: 0
 
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@v3.97.5
+        with:
+          extra_args: --results=verified,unknown
+
       - name: Add local bin to PATH
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
