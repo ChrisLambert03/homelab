@@ -112,5 +112,38 @@ To capture container logs (`/var/log/pods`), cluster-level health, and bare-meta
   * **Pinned Image Tag:** Pinned to `9.3.2` to strictly adhere to Elastic's architectural requirement: $V_{\text{Agent}} \le V_{\text{Fleet Server}}$.
   * **System & Kubernetes Integrations:** With `system.enabled: true` and `preset: perNode`, exactly one agent pod runs on every cluster node, mounting `/var/log`, `/proc`, and `/sys` to monitor host OS telemetry and container logs simultaneously with zero duplication.
   * **Secret Decoupling:** Uses `tokenFromSecret` referencing Kubernetes secret `elastic-agent-token` in `kube-system`. Plaintext enrollment tokens are never committed to Git.
+  * **Memory Sizing:** Resource limits configured with `memory: 2000Mi` in `kubernetes/elastic-agent/values.yaml` to ensure agents do not encounter OOMKilled restarts during high-volume log bursts.
+  * **Fleet Server Policy Hygiene:** The standalone Fleet Server container on `workstation` runs unprivileged in Docker with its own PID namespace; its policy omits host `system.process` checks to prevent permission denied errors (the workstation K3s DaemonSet agent handles all workstation host metrics).
+
+---
+
+### 6. Planned Dashboards & Discover Views (Target Roadmap)
+
+Homelab telemetry streams into the `logs-*` and `metrics-*` data views in Kibana (`https://kibana.lambertlab.us`). The following curated searches and operational dashboards represent the target implementation roadmap:
+
+#### A. Target Discover Saved Searches
+
+| View Name | Target Dataset / Filter | Recommended Columns | Purpose |
+|:---|:---|:---|:---|
+| **Host Sudo Audit** | `data_stream.dataset: "system.auth" and process.name: "sudo"` | `host.hostname`, `process.name`, `system.auth.sudo.command`, `message` | Complete audit trail of elevated privileged commands across all nodes. |
+| **Failed SSH Logins** | `data_stream.dataset: "system.auth" and process.name: "sshd" and (message: ("Failed" or "Invalid") or system.auth.ssh.event: "Failed")` | `host.hostname`, `user.name`, `source.ip`, `message` | Detect brute-force attempts and unauthorized user logins. |
+| **Kernel OOM Killer** | `message: (*oom* or "Out of memory" or "invoked oom-killer" or "Killed process") or process.name: "kernel"` | `host.hostname`, `process.name`, `message` | Track memory starvation events and kernel kills across nodes. |
+| **Systemd Unit Failures** | `message: ("Failed to start" or "Unit entered failed state" or "Failed with result")` | `host.hostname`, `process.name`, `message` | Identify host daemon crashes (`containerd`, `k3s`, `docker`, `tailscale`). |
+| **Pod CrashLoopBackOff** | `data_stream.dataset: "kubernetes.container_logs" and (log.level: ("error" or "fatal") or message: ("CrashLoopBackOff" or "panic:"))` | `kubernetes.namespace`, `kubernetes.pod.name`, `kubernetes.container.name`, `message` | Instant detection of crashing or restarting cluster workloads. |
+| **Longhorn Storage Alerts** | `kubernetes.namespace: "longhorn-system" and (log.level: ("error" or "warning") or message: ("failed" or "degraded" or "timeout"))` | `kubernetes.pod.name`, `log.level`, `message` | Storage engine alerts, degraded replicas, and detachments. |
+| **ArgoCD GitOps Errors** | `kubernetes.namespace: "argocd" and (log.level: ("error" or "warning") or message: ("ComparisonError" or "failed to sync"))` | `kubernetes.pod.name`, `log.level`, `message` | Sync failures, repo connection timeouts, and manifest errors. |
+| **Traefik Ingress 5xx** | `kubernetes.namespace: "traefik" and (message: (" 500 " or " 502 " or " 503 " or " 504 ") or log.level: "error")` | `kubernetes.pod.name`, `message` | Reverse proxy backend connection and gateway errors. |
+| **Cert-Manager TLS Renewal**| `kubernetes.namespace: "cert-manager" and (message: ("Renewing" or "Order" or "error" or "failed") or log.level: "error")` | `kubernetes.pod.name`, `log.level`, `message` | ACME challenge validation and Let's Encrypt certificate renewal tracking. |
+| **KubeVirt & VM Lifecycle** | `kubernetes.namespace: ("kubevirt" or "cdi" or "vms" or "gaming") and (log.level: ("error" or "warning") or message: ("VMI" or "error" or "failed"))` | `kubernetes.namespace`, `kubernetes.pod.name`, `message` | VM provisioning, virt-launcher pod errors, and disk import tracking. |
+
+#### B. Target Operational Dashboards
+
+* **Homelab Security & Access Operations:**
+  * **Panels:** Failed SSH attempts table / geographic breakdown, Sudo execution timeline, active SSH session counter, elevated command audit table.
+* **Cluster Reliability & Pod Crash Center:**
+  * **Panels:** Restarts by namespace (bar chart), CrashLoopBackOff log stream, OOM killer event stream, unhandled pod exceptions.
+* **Storage & Edge Ingress Health:**
+  * **Panels:** Longhorn replica degradation events, Traefik HTTP status code distribution (2xx vs 4xx vs 5xx), Cert-Manager renewal certificate status timeline.
+
 
 
