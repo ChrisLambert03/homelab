@@ -10,6 +10,14 @@ agent:
     tokenFromSecret:
       name: elastic-agent-token
       key: token
+  presets:
+    perNode:
+      resources:
+        limits:
+          memory: 2000Mi
+        requests:
+          cpu: 100m
+          memory: 400Mi
 
 system:
   enabled: true
