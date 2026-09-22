@@ -2,74 +2,74 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://chrislambert03.github.io/homelab/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/architecture/gitops/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/architecture/guacamole/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/architecture/hardware/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/architecture/identity/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/architecture/logging/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/architecture/networking/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/architecture/storage/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/architecture/virtualization/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/catalog/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/catalog/infrastructure/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/catalog/media-automation/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/catalog/security-tools/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/catalog/workstations-vms/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/runbooks/bridge-watchdog/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/runbooks/disaster-recovery/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/runbooks/elk-ilm-maintenance/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
     <url>
          <loc>https://chrislambert03.github.io/homelab/runbooks/iscsi-flashing/</loc>
-         <lastmod>2026-09-21</lastmod>
+         <lastmod>2026-09-22</lastmod>
     </url>
 </urlset>
