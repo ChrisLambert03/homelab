@@ -780,6 +780,45 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#6-planned-dashboards-discover-views-target-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Planned Dashboards &amp; Discover Views (Target Roadmap)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Planned Dashboards &amp; Discover Views (Target Roadmap)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-target-discover-saved-searches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. Target Discover Saved Searches
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-target-operational-dashboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Target Operational Dashboards
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1279,6 +1318,45 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#6-planned-dashboards-discover-views-target-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Planned Dashboards &amp; Discover Views (Target Roadmap)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Planned Dashboards &amp; Discover Views (Target Roadmap)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-target-discover-saved-searches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. Target Discover Saved Searches
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-target-operational-dashboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Target Operational Dashboards
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1397,6 +1475,93 @@ Increasing the heap ceiling to 2048 MB ensures smooth visual aggregation and uni
 <li><strong>Pinned Image Tag:</strong> Pinned to <code>9.3.2</code> to strictly adhere to Elastic's architectural requirement: $V_{\text{Agent}} \le V_{\text{Fleet Server}}$.</li>
 <li><strong>System &amp; Kubernetes Integrations:</strong> With <code>system.enabled: true</code> and <code>preset: perNode</code>, exactly one agent pod runs on every cluster node, mounting <code>/var/log</code>, <code>/proc</code>, and <code>/sys</code> to monitor host OS telemetry and container logs simultaneously with zero duplication.</li>
 <li><strong>Secret Decoupling:</strong> Uses <code>tokenFromSecret</code> referencing Kubernetes secret <code>elastic-agent-token</code> in <code>kube-system</code>. Plaintext enrollment tokens are never committed to Git.</li>
+<li><strong>Memory Sizing:</strong> Resource limits configured with <code>memory: 2000Mi</code> in <code>kubernetes/elastic-agent/values.yaml</code> to ensure agents do not encounter OOMKilled restarts during high-volume log bursts.</li>
+<li><strong>Fleet Server Policy Hygiene:</strong> The standalone Fleet Server container on <code>workstation</code> runs unprivileged in Docker with its own PID namespace; its policy omits host <code>system.process</code> checks to prevent permission denied errors (the workstation K3s DaemonSet agent handles all workstation host metrics).</li>
+</ul>
+<hr />
+<h3 id="6-planned-dashboards-discover-views-target-roadmap">6. Planned Dashboards &amp; Discover Views (Target Roadmap)</h3>
+<p>Homelab telemetry streams into the <code>logs-*</code> and <code>metrics-*</code> data views in Kibana (<code>https://kibana.lambertlab.us</code>). The following curated searches and operational dashboards represent the target implementation roadmap:</p>
+<h4 id="a-target-discover-saved-searches">A. Target Discover Saved Searches</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">View Name</th>
+<th style="text-align: left;">Target Dataset / Filter</th>
+<th style="text-align: left;">Recommended Columns</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Host Sudo Audit</strong></td>
+<td style="text-align: left;"><code>data_stream.dataset: "system.auth" and process.name: "sudo"</code></td>
+<td style="text-align: left;"><code>host.hostname</code>, <code>process.name</code>, <code>system.auth.sudo.command</code>, <code>message</code></td>
+<td style="text-align: left;">Complete audit trail of elevated privileged commands across all nodes.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Failed SSH Logins</strong></td>
+<td style="text-align: left;"><code>data_stream.dataset: "system.auth" and process.name: "sshd" and (message: ("Failed" or "Invalid") or system.auth.ssh.event: "Failed")</code></td>
+<td style="text-align: left;"><code>host.hostname</code>, <code>user.name</code>, <code>source.ip</code>, <code>message</code></td>
+<td style="text-align: left;">Detect brute-force attempts and unauthorized user logins.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Kernel OOM Killer</strong></td>
+<td style="text-align: left;"><code>message: (*oom* or "Out of memory" or "invoked oom-killer" or "Killed process") or process.name: "kernel"</code></td>
+<td style="text-align: left;"><code>host.hostname</code>, <code>process.name</code>, <code>message</code></td>
+<td style="text-align: left;">Track memory starvation events and kernel kills across nodes.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Systemd Unit Failures</strong></td>
+<td style="text-align: left;"><code>message: ("Failed to start" or "Unit entered failed state" or "Failed with result")</code></td>
+<td style="text-align: left;"><code>host.hostname</code>, <code>process.name</code>, <code>message</code></td>
+<td style="text-align: left;">Identify host daemon crashes (<code>containerd</code>, <code>k3s</code>, <code>docker</code>, <code>tailscale</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pod CrashLoopBackOff</strong></td>
+<td style="text-align: left;"><code>data_stream.dataset: "kubernetes.container_logs" and (log.level: ("error" or "fatal") or message: ("CrashLoopBackOff" or "panic:"))</code></td>
+<td style="text-align: left;"><code>kubernetes.namespace</code>, <code>kubernetes.pod.name</code>, <code>kubernetes.container.name</code>, <code>message</code></td>
+<td style="text-align: left;">Instant detection of crashing or restarting cluster workloads.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Longhorn Storage Alerts</strong></td>
+<td style="text-align: left;"><code>kubernetes.namespace: "longhorn-system" and (log.level: ("error" or "warning") or message: ("failed" or "degraded" or "timeout"))</code></td>
+<td style="text-align: left;"><code>kubernetes.pod.name</code>, <code>log.level</code>, <code>message</code></td>
+<td style="text-align: left;">Storage engine alerts, degraded replicas, and detachments.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>ArgoCD GitOps Errors</strong></td>
+<td style="text-align: left;"><code>kubernetes.namespace: "argocd" and (log.level: ("error" or "warning") or message: ("ComparisonError" or "failed to sync"))</code></td>
+<td style="text-align: left;"><code>kubernetes.pod.name</code>, <code>log.level</code>, <code>message</code></td>
+<td style="text-align: left;">Sync failures, repo connection timeouts, and manifest errors.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Traefik Ingress 5xx</strong></td>
+<td style="text-align: left;"><code>kubernetes.namespace: "traefik" and (message: (" 500 " or " 502 " or " 503 " or " 504 ") or log.level: "error")</code></td>
+<td style="text-align: left;"><code>kubernetes.pod.name</code>, <code>message</code></td>
+<td style="text-align: left;">Reverse proxy backend connection and gateway errors.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Cert-Manager TLS Renewal</strong></td>
+<td style="text-align: left;"><code>kubernetes.namespace: "cert-manager" and (message: ("Renewing" or "Order" or "error" or "failed") or log.level: "error")</code></td>
+<td style="text-align: left;"><code>kubernetes.pod.name</code>, <code>log.level</code>, <code>message</code></td>
+<td style="text-align: left;">ACME challenge validation and Let's Encrypt certificate renewal tracking.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>KubeVirt &amp; VM Lifecycle</strong></td>
+<td style="text-align: left;"><code>kubernetes.namespace: ("kubevirt" or "cdi" or "vms" or "gaming") and (log.level: ("error" or "warning") or message: ("VMI" or "error" or "failed"))</code></td>
+<td style="text-align: left;"><code>kubernetes.namespace</code>, <code>kubernetes.pod.name</code>, <code>message</code></td>
+<td style="text-align: left;">VM provisioning, virt-launcher pod errors, and disk import tracking.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="b-target-operational-dashboards">B. Target Operational Dashboards</h4>
+<ul>
+<li><strong>Homelab Security &amp; Access Operations:</strong></li>
+<li><strong>Panels:</strong> Failed SSH attempts table / geographic breakdown, Sudo execution timeline, active SSH session counter, elevated command audit table.</li>
+<li><strong>Cluster Reliability &amp; Pod Crash Center:</strong></li>
+<li><strong>Panels:</strong> Restarts by namespace (bar chart), CrashLoopBackOff log stream, OOM killer event stream, unhandled pod exceptions.</li>
+<li><strong>Storage &amp; Edge Ingress Health:</strong></li>
+<li><strong>Panels:</strong> Longhorn replica degradation events, Traefik HTTP status code distribution (2xx vs 4xx vs 5xx), Cert-Manager renewal certificate status timeline.</li>
 </ul>
 
 
