@@ -1,0 +1,15 @@
+---
+agent:
+  image:
+    tag: "9.3.2"
+  fleet:
+    enabled: true
+    url: "https://100.106.96.18:8220"
+    insecure: true
+    preset: perNode
+    tokenFromSecret:
+      name: elastic-agent-token
+      key: token
+
+system:
+  enabled: true

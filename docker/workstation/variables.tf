@@ -107,3 +107,9 @@ variable "kibana_system_password" {
   type        = string
   default     = "homelabpassword"
 }
+
+variable "fleet_server_service_token" {
+  description = "Service token for Fleet Server generated from Kibana"
+  type        = string
+  sensitive   = true
+}

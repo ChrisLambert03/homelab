@@ -14,11 +14,12 @@ module "docker_apps" {
 
   homlab_domain = local.homlab_domain
 
-  elastic_password  = local.elastic_password
-  kibana_secret_key = local.kibana_secret_key
-  beszel_key        = local.beszel_key
-  beszel_token      = local.beszel_token_workstation
-  tdarr_auth_key    = local.tdarr_auth_key
+  elastic_password           = local.elastic_password
+  kibana_secret_key          = local.kibana_secret_key
+  fleet_server_service_token = local.fleet_server_service_token
+  beszel_key                 = local.beszel_key
+  beszel_token               = local.beszel_token_workstation
+  tdarr_auth_key             = local.tdarr_auth_key
 
 }
 
