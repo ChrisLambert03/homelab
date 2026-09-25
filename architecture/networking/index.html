@@ -618,6 +618,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#docker-host-netfilter-bridge-forwarding-ip-forward-no-drop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker Host Netfilter &amp; Bridge Forwarding (ip-forward-no-drop)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1341,6 +1352,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#docker-host-netfilter-bridge-forwarding-ip-forward-no-drop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker Host Netfilter &amp; Bridge Forwarding (ip-forward-no-drop)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1553,6 +1575,13 @@
 <p class="admonition-title">Hairpin Mode &amp; IPv6 DAD Resolution</p>
 <p>Early testing revealed that enabling <code>hairpinMode: true</code> on Linux bridges caused duplicate address detection (DAD) packet reflections back to KubeVirt VM interfaces. Setting <code>"hairpinMode": false</code> completely eliminates DAD loopbacks while allowing full cross-VM and Pod-to-VM communication.</p>
 </div>
+<h3 id="docker-host-netfilter-bridge-forwarding-ip-forward-no-drop">Docker Host Netfilter &amp; Bridge Forwarding (<code>ip-forward-no-drop</code>)</h3>
+<p>In Kubernetes clusters, <code>net.bridge.bridge-nf-call-iptables = 1</code> is enabled by default to allow iptables to filter bridged packets for CNI overlays and kube-proxy.</p>
+<ul>
+<li><strong>The Collision:</strong> By default, when the Docker daemon starts, it enables <code>net.ipv4.ip_forward = 1</code> and actively sets the iptables <code>FORWARD</code> chain policy to <code>DROP</code> (<code>-P FORWARD DROP</code>).</li>
+<li><strong>The Symptom:</strong> On pure worker nodes running Docker (such as <code>opti74</code>) without libvirt or Tailscale subnet routing to override the policy to <code>ACCEPT</code>, bridged Multus packets traversing <code>br-lab0</code> across hosts (e.g. Apache Guacamole at <code>10.10.0.50</code> on <code>opti74</code> communicating with Active Directory <code>dc01</code> at <code>10.10.0.10</code> on <code>workstation</code>) resolve Layer 2 ARP cleanly, but all subsequent Layer 3 IP traffic (LDAPS TCP 636, ICMP) is intercepted and silently dropped by the host's iptables <code>FORWARD</code> chain.</li>
+<li><strong>The Cluster Invariant:</strong> All nodes running Docker deploy <code>"ip-forward-no-drop": true</code> in <code>/etc/docker/daemon.json</code> via Ansible (<code>ansible/configure-docker-tls-gelf.yml</code>). This instructs Docker not to touch or restrict the host's <code>FORWARD</code> policy, ensuring unhindered Layer 2/Layer 3 bridging across the VXLAN fabric. The playbook also asserts <code>iptables -P FORWARD ACCEPT</code> directly.</li>
+</ul>
 <hr />
 <h2 id="coredns-conditional-forwarding-to-active-directory">🔍 CoreDNS Conditional Forwarding to Active Directory</h2>
 <p>Kubernetes pods routinely need to resolve domain-joined machines like <code>dc01.ad.lambertlab.us</code> or <code>win11-01.ad.lambertlab.us</code>.</p>

@@ -1516,6 +1516,11 @@ Java's JNDI LDAP provider performs strict hostname endpoint identification. In v
 <li><strong>Interface <code>net1</code>:</strong> Receives static IP <code>10.10.0.50</code> directly on the <code>10.10.0.0/24</code> subnet.</li>
 <li><strong>Direct RDP/SSH Access:</strong> RDP connections to <code>win11</code> (<code>10.10.0.155:3389</code>) and LDAPS queries to <code>dc01</code> (<code>10.10.0.10:636</code>) flow across the VXLAN tunnel with <strong>sub-millisecond latency</strong> and zero NAT traversal.</li>
 </ul>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>Host Netfilter &amp; Cross-Node Bridging:</strong>
+Because Multus attaches directly to <code>br-lab0</code>, bridged cross-node IP packets pass through host iptables via <code>br_netfilter</code> (<code>net.bridge.bridge-nf-call-iptables = 1</code>). To prevent worker nodes running Docker (like <code>opti74</code>) from silently dropping LDAPS (port 636) or RDP traffic, all cluster nodes mandate <code>"ip-forward-no-drop": true</code> in <code>/etc/docker/daemon.json</code> and maintain an iptables <code>FORWARD</code> chain policy of <code>ACCEPT</code>.</p>
+</blockquote>
 <hr />
 <h2 id="compute-guardrails-proxy-hygiene">🛡️ Compute Guardrails &amp; Proxy Hygiene</h2>
 <h3 id="1-guacd-cpu-core-capping">1. <code>guacd</code> CPU Core Capping</h3>
