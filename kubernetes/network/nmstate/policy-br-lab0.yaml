@@ -17,6 +17,7 @@ metadata:
 spec:
   nodeSelector:
     kubernetes.io/hostname: lenovo
+  maxUnavailable: 1
   desiredState:
     interfaces:
       - name: vxlan-lab
@@ -52,6 +53,7 @@ metadata:
 spec:
   nodeSelector:
     kubernetes.io/hostname: optiplex
+  maxUnavailable: 1
   desiredState:
     interfaces:
       - name: vxlan-lab
@@ -87,6 +89,7 @@ metadata:
 spec:
   nodeSelector:
     kubernetes.io/hostname: opti74
+  maxUnavailable: 1
   desiredState:
     interfaces:
       - name: vxlan-lab
@@ -122,6 +125,7 @@ metadata:
 spec:
   nodeSelector:
     kubernetes.io/hostname: workstation
+  maxUnavailable: 1
   desiredState:
     interfaces:
       - name: vxlan-lab
