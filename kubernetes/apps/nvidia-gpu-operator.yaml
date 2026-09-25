@@ -13,7 +13,7 @@ spec:
   source:
     repoURL: https://helm.ngc.nvidia.com/nvidia
     chart: gpu-operator
-    targetRevision: v26.3.3
+    targetRevision: v26.7.1
     helm:
       releaseName: gpu-operator
       values: |
