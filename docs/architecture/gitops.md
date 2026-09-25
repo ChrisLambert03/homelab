@@ -25,7 +25,7 @@ graph TD
         Wave1 --> Longhorn["Longhorn Storage Helm"]
         Wave1 --> Multus["Multus Thick CNI DaemonSet"]
         Wave1 --> KubeVirtOp["KubeVirt & CDI Operators"]
-        Wave1 --> CertMgr["Cert-Manager Helm v1.21.1"]
+        Wave1 --> CertMgr["Cert-Manager Helm v1.21.2"]
         Wave1 --> NMStateOp["kubernetes-nmstate Operator"]
         Wave1 --> GPUOp["NVIDIA GPU Operator"]
     end

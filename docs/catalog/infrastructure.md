@@ -33,7 +33,7 @@ This section details the foundational control plane components, software-defined
 
 ### 3. Cert-Manager
 * **Namespace:** `cert-manager`
-* **Version:** Helm `v1.21.1`
+* **Version:** Helm `v1.21.2`
 * **Sync Wave:** `Wave 1`
 * **Architectural Role:** Automated TLS x509 certificate management.
 * **Key Configuration:**
