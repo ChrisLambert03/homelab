@@ -35,3 +35,7 @@
       notify:
         - Reload systemd
         - Restart Docker
+
+    - name: Ensure iptables FORWARD policy is ACCEPT
+      ansible.builtin.command: iptables -P FORWARD ACCEPT
+      changed_when: false

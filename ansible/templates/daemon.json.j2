@@ -1,4 +1,5 @@
 {
+  "ip-forward-no-drop": true,
   "tlsverify": true,
   "tlscacert": "/etc/docker/certs/ca.pem",
   "tlscert": "/etc/docker/certs/server-cert.pem",
@@ -11,5 +12,12 @@
     "tag": "{{ inventory_hostname }}/{{ '{{' }}.Name{{ '}}' }}",
     "mode": "non-blocking",
     "max-buffer-size": "10m"
+  }{% if inventory_hostname == 'workstation' %},
+  "runtimes": {
+    "nvidia": {
+      "args": [],
+      "path": "nvidia-container-runtime"
+    }
   }
+{% endif %}
 }

@@ -121,6 +121,10 @@ podAnnotations:
 * **Interface `net1`:** Receives static IP `10.10.0.50` directly on the `10.10.0.0/24` subnet.
 * **Direct RDP/SSH Access:** RDP connections to `win11` (`10.10.0.155:3389`) and LDAPS queries to `dc01` (`10.10.0.10:636`) flow across the VXLAN tunnel with **sub-millisecond latency** and zero NAT traversal.
 
+> [!IMPORTANT]
+> **Host Netfilter & Cross-Node Bridging:**
+> Because Multus attaches directly to `br-lab0`, bridged cross-node IP packets pass through host iptables via `br_netfilter` (`net.bridge.bridge-nf-call-iptables = 1`). To prevent worker nodes running Docker (like `opti74`) from silently dropping LDAPS (port 636) or RDP traffic, all cluster nodes mandate `"ip-forward-no-drop": true` in `/etc/docker/daemon.json` and maintain an iptables `FORWARD` chain policy of `ACCEPT`.
+
 ---
 
 ## 🛡️ Compute Guardrails & Proxy Hygiene
