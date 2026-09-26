@@ -8,45 +8,56 @@ In **LambertLab**, Git is the absolute single source of truth for all Kubernetes
 
 ```mermaid
 graph TD
-    Root["root-apps Application<br/>App-of-Apps Pattern"] --> Wave0["Sync Wave 0: AppProjects"]
-    Root --> Wave1["Sync Wave 1: Foundation & Operators"]
-    Root --> Wave2["Sync Wave 2: Config, Security & Gateways"]
-    Root --> Wave3["Sync Wave 3: Workloads & Virtual Machines"]
+    Root["root-apps Application<br/>(App-of-Apps Pattern)"]
 
-    subgraph W0["Wave 0: Scaffolding"]
-        Wave0 --> P1["infrastructure Project"]
-        Wave0 --> P2["security Project"]
-        Wave0 --> P3["media Project"]
-        Wave0 --> P4["observability Project"]
-        Wave0 --> P5["gaming Project"]
+    Root --> Wave0
+    Root --> Wave1
+    Wave0 -.-> Wave1
+    Wave1 -.-> Wave2
+    Wave2 -.-> Wave3
+
+    subgraph Row1[" "]
+        subgraph W0["Sync Wave 0: AppProjects Scaffolding"]
+            Wave0["AppProjects"]
+            P1["infrastructure"]
+            P2["security"]
+            P3["media"]
+            P4["observability"]
+            P5["gaming"]
+        end
+
+        subgraph W1["Sync Wave 1: Foundation & Operators"]
+            Wave1["Foundations"]
+            Longhorn["Longhorn Storage"]
+            Multus["Multus Thick CNI"]
+            KubeVirtOp["KubeVirt & CDI"]
+            CertMgr["Cert-Manager v1.21.2"]
+            NMStateOp["kubernetes-nmstate"]
+            GPUOp["NVIDIA GPU Operator"]
+        end
     end
 
-    subgraph W1["Wave 1: Foundation & Operators"]
-        Wave1 --> Longhorn["Longhorn Storage Helm"]
-        Wave1 --> Multus["Multus Thick CNI DaemonSet"]
-        Wave1 --> KubeVirtOp["KubeVirt & CDI Operators"]
-        Wave1 --> CertMgr["Cert-Manager Helm v1.21.2"]
-        Wave1 --> NMStateOp["kubernetes-nmstate Operator"]
-        Wave1 --> GPUOp["NVIDIA GPU Operator"]
-    end
+    subgraph Row2[" "]
+        subgraph W2["Sync Wave 2: Security & Gateways"]
+            Wave2["Gateways & Config"]
+            Vault["HashiCorp Vault"]
+            ExtSecrets["External Secrets"]
+            ClusterCfg["CoreDNS & TLSStore"]
+            NMStatePol["br-lab0 VXLAN"]
+            Guac["Apache Guacamole"]
+            KVMgr["KubeVirt Manager"]
+            ExtSvc["External Services"]
+        end
 
-    subgraph W2["Wave 2: Security, Config & Gateways"]
-        Wave2 --> Vault["HashiCorp Vault"]
-        Wave2 --> ExtSecrets["External Secrets Operator"]
-        Wave2 --> ClusterCfg["CoreDNS AD Forwarder & Traefik TLSStore"]
-        Wave2 --> NMStatePol["br-lab0 VXLAN Overlay Policy"]
-        Wave2 --> Guac["Apache Guacamole Gateway"]
-        Wave2 --> KVMgr["KubeVirt Manager Web UI"]
-        Wave2 --> ExtSvc["External Services EndpointSlices"]
-    end
-
-    subgraph W3["Wave 3: Consumer Workloads & VMs"]
-        Wave3 --> DC01VM["DC01 Active Directory VM"]
-        Wave3 --> Win11VM["Win11 Admin Workstation VM"]
-        Wave3 --> OPNsenseVM["OPNsense Firewall VM"]
-        Wave3 --> MediaStack["Jellyfin / Sonarr / Radarr / Prowlarr"]
-        Wave3 --> ObsStack["Homarr / Ntfy"]
-        Wave3 --> GamingStack["Palworld Dedicated Server"]
+        subgraph W3["Sync Wave 3: Workloads & VMs"]
+            Wave3["Workloads & VMs"]
+            DC01VM["DC01 Active Directory"]
+            Win11VM["Win11 Workstation"]
+            OPNsenseVM["OPNsense Firewall"]
+            MediaStack["ARR Media Stack / Jellyfin"]
+            ObsStack["Homarr / Ntfy"]
+            GamingStack["Palworld Dedicated"]
+        end
     end
 ```
 

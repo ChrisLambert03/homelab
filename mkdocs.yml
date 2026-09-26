@@ -57,6 +57,15 @@ markdown_extensions:
   - tables
   - attr_list
 
+plugins:
+  - search
+  - panzoom:
+      full_screen: true
+      always_show_hint: true
+      hint_location: "top"
+      include_selectors:
+        - ".mermaid"
+
 extra_css:
   - stylesheets/extra.css
 

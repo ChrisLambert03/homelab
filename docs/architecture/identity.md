@@ -11,7 +11,7 @@ graph TD
     subgraph Cloud["Microsoft Entra ID (Cloud Identity Provider)"]
         EntraUsers["Synced & Cloud Users"]
         EntraGroups["Synced Security Groups"]
-        OIDCApps["OIDC SSO Applications<br/>Guacamole / ArgoCD"]
+        OIDCApps["OIDC SSO Applications<br/>Guacamole / ArgoCD / Vault"]
         BreakGlass["Break-Glass Global Admin<br/>Emergency Cloud Account"]
     end
 
