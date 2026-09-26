@@ -57,13 +57,16 @@
     
       <link rel="stylesheet" href="../stylesheets/extra.css">
     
+      <link rel="stylesheet" href="../assets/stylesheets/panzoom.css">
+    
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
     
     
-  </head>
+  <meta name="panzoom-theme" content="material">
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1218,7 +1221,7 @@
 <td style="text-align: left;"><code>argocd</code></td>
 <td style="text-align: left;">ArgoCD Helm (Wave 2)</td>
 <td style="text-align: left;"><code>argocd.lambertlab.us</code></td>
-<td style="text-align: left;">Longhorn Distributed Block</td>
+<td style="text-align: left;">Stateless / In-Memory</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Traefik Ingress</strong></td>
@@ -1330,7 +1333,7 @@
 <td style="text-align: left;"><code>vms</code> (KubeVirt)</td>
 <td style="text-align: left;">ArgoCD Manifest (Wave 3)</td>
 <td style="text-align: left;"><code>opnsense.lambertlab.us</code></td>
-<td style="text-align: left;">Longhorn Block</td>
+<td style="text-align: left;">40 GB SAN iSCSI LUN</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>KubeVirt Manager</strong></td>
@@ -1354,7 +1357,7 @@
 <td style="text-align: left;"><code>media</code></td>
 <td style="text-align: left;">ArgoCD Multi-Source (Wave 3)</td>
 <td style="text-align: left;"><code>jellyfin.lambertlab.us</code></td>
-<td style="text-align: left;">14TB TerraMaster NFS Pool</td>
+<td style="text-align: left;">Host NVMe (15Gi) + 14TB Bulk NFS</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Sonarr</strong></td>
@@ -1362,7 +1365,7 @@
 <td style="text-align: left;"><code>media</code></td>
 <td style="text-align: left;">ArgoCD Manifest (Wave 3)</td>
 <td style="text-align: left;"><code>sonarr.lambertlab.us</code></td>
-<td style="text-align: left;">14TB TerraMaster NFS Pool</td>
+<td style="text-align: left;">20 GB SAN iSCSI LUN + Bulk NFS</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Radarr</strong></td>
@@ -1370,7 +1373,7 @@
 <td style="text-align: left;"><code>media</code></td>
 <td style="text-align: left;">ArgoCD Manifest (Wave 3)</td>
 <td style="text-align: left;"><code>radarr.lambertlab.us</code></td>
-<td style="text-align: left;">14TB TerraMaster NFS Pool</td>
+<td style="text-align: left;">20 GB SAN iSCSI LUN + Bulk NFS</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Prowlarr</strong></td>
@@ -1378,7 +1381,7 @@
 <td style="text-align: left;"><code>media</code></td>
 <td style="text-align: left;">ArgoCD Manifest (Wave 3)</td>
 <td style="text-align: left;"><code>prowlarr.lambertlab.us</code></td>
-<td style="text-align: left;">14TB TerraMaster NFS Pool</td>
+<td style="text-align: left;">2 GB SAN iSCSI LUN</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Tdarr (Transcoder)</strong></td>
@@ -1394,15 +1397,15 @@
 <td style="text-align: left;"><code>gaming</code></td>
 <td style="text-align: left;">ArgoCD Manifest (Wave 3)</td>
 <td style="text-align: left;">Port 8211 UDP (<code>opti74</code>)</td>
-<td style="text-align: left;">Longhorn Retained Volume</td>
+<td style="text-align: left;">Longhorn Retained Volume (25Gi)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>HashiCorp Vault</strong></td>
 <td style="text-align: left;">Security</td>
 <td style="text-align: left;"><code>security</code></td>
-<td style="text-align: left;">ArgoCD Helm (Wave 2)</td>
+<td style="text-align: left;">ArgoCD Manifest (Wave 2)</td>
 <td style="text-align: left;"><code>vault.lambertlab.us</code></td>
-<td style="text-align: left;">10 GB Longhorn Retained</td>
+<td style="text-align: left;">1 GiB Longhorn Retained</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>External Secrets Operator</strong></td>
@@ -1437,12 +1440,20 @@
 <td style="text-align: left;">Ephemeral</td>
 </tr>
 <tr>
+<td style="text-align: left;"><strong>Elastic Agent</strong></td>
+<td style="text-align: left;">SIEM / Logging</td>
+<td style="text-align: left;"><code>kube-system</code></td>
+<td style="text-align: left;">ArgoCD Helm (Wave 5)</td>
+<td style="text-align: left;">In-Cluster Host DaemonSet</td>
+<td style="text-align: left;">Ephemeral DaemonSet</td>
+</tr>
+<tr>
 <td style="text-align: left;"><strong>Homarr Dashboard</strong></td>
 <td style="text-align: left;">Observability</td>
 <td style="text-align: left;"><code>observability</code></td>
 <td style="text-align: left;">ArgoCD Manifest (Wave 3)</td>
 <td style="text-align: left;"><code>homarr.lambertlab.us</code></td>
-<td style="text-align: left;">Longhorn Distributed Block</td>
+<td style="text-align: left;">Local Host Storage (<code>lenovo</code>)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Ntfy Notifications</strong></td>
@@ -1450,7 +1461,7 @@
 <td style="text-align: left;"><code>observability</code></td>
 <td style="text-align: left;">ArgoCD Manifest (Wave 3)</td>
 <td style="text-align: left;"><code>ntfy.lambertlab.us</code></td>
-<td style="text-align: left;">Longhorn Retained Volume</td>
+<td style="text-align: left;">Longhorn Retained Volume (1Gi)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Beszel Hub &amp; Agents</strong></td>
@@ -1466,7 +1477,7 @@
 <td style="text-align: left;"><code>external</code> / Docker</td>
 <td style="text-align: left;">EndpointSlice &amp; Ingress</td>
 <td style="text-align: left;"><code>pihole.lambertlab.us</code></td>
-<td style="text-align: left;">Local Volume</td>
+<td style="text-align: left;">Local Docker Volume</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Portainer</strong></td>
@@ -1479,7 +1490,7 @@
 <tr>
 <td style="text-align: left;"><strong>Cockpit</strong></td>
 <td style="text-align: left;">Management</td>
-<td style="text-align: left;"><code>lenovo</code> / Node</td>
+<td style="text-align: left;"><code>workstation</code> / Node</td>
 <td style="text-align: left;">EndpointSlice &amp; Ingress</td>
 <td style="text-align: left;"><code>cockpit.lambertlab.us</code></td>
 <td style="text-align: left;">Host System</td>
@@ -1499,22 +1510,6 @@
 <td style="text-align: left;">EndpointSlice &amp; Ingress</td>
 <td style="text-align: left;"><code>firefox.lambertlab.us</code></td>
 <td style="text-align: left;">Ephemeral Container</td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Redis &amp; RedisInsight</strong></td>
-<td style="text-align: left;">Caching</td>
-<td style="text-align: left;"><code>workstation</code> (Docker)</td>
-<td style="text-align: left;">Terraform Docker</td>
-<td style="text-align: left;"><code>redisinsight.lambertlab.us</code></td>
-<td style="text-align: left;">Local Docker Volume</td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>RetroArch Web</strong></td>
-<td style="text-align: left;">Gaming</td>
-<td style="text-align: left;"><code>workstation</code> (Docker)</td>
-<td style="text-align: left;">Terraform Docker</td>
-<td style="text-align: left;"><code>retroarch.lambertlab.us</code></td>
-<td style="text-align: left;">Local Docker Volume</td>
 </tr>
 </tbody>
 </table>
@@ -1577,6 +1572,10 @@
     
     
       <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../assets/javascripts/panzoom.min.js"></script>
+      
+        <script src="../assets/javascripts/zoompan.js"></script>
       
     
   </body>

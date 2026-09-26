@@ -57,13 +57,16 @@
     
       <link rel="stylesheet" href="../../stylesheets/extra.css">
     
+      <link rel="stylesheet" href="../../assets/stylesheets/panzoom.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
     
     
-  </head>
+  <meta name="panzoom-theme" content="material">
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1332,7 +1335,7 @@
 <li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://opnsense.lambertlab.us</code></li>
 <li><strong>Hardware Profile:</strong> 4 vCPU, 4 GiB RAM.</li>
-<li><strong>Storage Backend:</strong> Distributed Longhorn block volume.</li>
+<li><strong>Storage Backend:</strong> Dedicated 40 GB raw iSCSI block LUN (<code>iqn.2026-09.us.lambertlab:opnsense-boot</code>) on TerraMaster SAN; NFS installer mount (<code>/Volume3/isos/opnsense</code>).</li>
 <li><strong>Architectural Role:</strong> Virtualized edge perimeter router, NAT gateway, and security firewall.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Multi-NIC topology bridging physical host interfaces to the software-defined <code>br-lab0</code> VXLAN fabric.</li>
@@ -1423,6 +1426,10 @@
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/javascripts/panzoom.min.js"></script>
+      
+        <script src="../../assets/javascripts/zoompan.js"></script>
       
     
   </body>

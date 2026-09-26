@@ -57,13 +57,16 @@
     
       <link rel="stylesheet" href="../../stylesheets/extra.css">
     
+      <link rel="stylesheet" href="../../assets/stylesheets/panzoom.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
     
     
-  </head>
+  <meta name="panzoom-theme" content="material">
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1257,12 +1260,31 @@
 <p>The <strong>LambertLab</strong> storage infrastructure follows a clear tiered strategy designed to match workload I/O characteristics with optimal backend protocols.</p>
 <hr />
 <h2 id="storage-topology-workload-mapping">💾 Storage Topology &amp; Workload Mapping</h2>
-<pre class="mermaid"><code>graph TD
+<div class="panzoom-box" data-key="alt" id="panzoom0" oncontextmenu="return false;">
+    <div class="panzoom-info-box panzoom-info-box-top">
+Hold "Alt" / "Option" to enable pan &amp; zoom
+</div>
+    <nav class="panzoom-nav panzoom-top-nav panzoom-nav-infobox-top">
+    <button class="panzoom-reset panzoom-button">
+    <svg class="panzoom-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M125.7 160l50.3 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L48 224c-17.7 0-32-14.3-32-32L16 64c0-17.7 14.3-32 32-32s32 14.3 32 32l0 51.2L97.6 97.6c87.5-87.5 229.3-87.5 316.8 0s87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3s-163.8-62.5-226.3 0L125.7 160z"></path>
+    </svg>
+</button><button class="panzoom-max panzoom-button">
+    <svg class="panzoom-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 32C14.3 32 0 46.3 0 64l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96z"></path>
+    </svg>
+</button><button class="panzoom-min panzoom-button panzoom-hidden">
+    <svg class="panzoom-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M160 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96zM32 320c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM352 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 320c-17.7 0-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0z"></path>
+    </svg>
+</button>
+    </nav>
+    <pre class="mermaid"><code>graph TD
     subgraph ComputeWorkloads["Kubernetes &amp; Docker Workloads"]
-        VMs["KubeVirt VMs&lt;br/&gt;(DC01, Win11)"]
-        StatefulPods["Stateful Pods&lt;br/&gt;(Vault, Guac DB, Ntfy)"]
-        MediaPods["Media Automation&lt;br/&gt;(Jellyfin, Sonarr, Radarr)"]
-        SIEM["Docker ELK Stack&lt;br/&gt;(Elasticsearch, Logstash, Kibana)"]
+        VMs["KubeVirt VMs&lt;br/&gt;(DC01, Win11, OPNsense)"]
+        StatefulPods["Stateful Pods&lt;br/&gt;(Vault, Guac DB, Ntfy, Palworld)"]
+        MediaPods["Media Automation&lt;br/&gt;(Sonarr, Radarr, Prowlarr, Jellyfin)"]
+        SIEM["Docker ELK Stack &amp; Jellyfin Cache&lt;br/&gt;(Elasticsearch, Host Configs)"]
     end
 
     subgraph StorageTiers["Multi-Tier Storage Backends"]
@@ -1273,9 +1295,12 @@
     end
 
     VMs --&gt;|"Direct libiscsi Block Access"| Tier1
+    MediaPods --&gt;|"Dedicated Database LUNs"| Tier1
     StatefulPods --&gt;|"CSI Volume Claims / longhorn-retain"| Tier2
     MediaPods --&gt;|"NFS PVC Mounts / RWX"| Tier3
-    SIEM --&gt;|"Direct Host Bind Mount"| Tier4</code></pre>
+    SIEM --&gt;|"Direct Host Bind Mount"| Tier4</code></pre> 
+    
+</div>
 <hr />
 <h2 id="storage-tiers-matrix">💾 Storage Tiers Matrix</h2>
 <table>
@@ -1293,40 +1318,44 @@
 <td style="text-align: left;"><strong>Tier 1: SAN iSCSI</strong></td>
 <td style="text-align: left;">iSCSI Block Targets</td>
 <td style="text-align: left;">TerraMaster F4-425 Plus (<code>san.lambertlab.us</code>)</td>
-<td style="text-align: left;">KubeVirt VM boot disks (<code>win11-boot</code>, <code>dc01-disk</code>)</td>
+<td style="text-align: left;">KubeVirt VM boot disks (<code>win11</code>, <code>dc01</code>, <code>opnsense</code>) &amp; Media SQLite DBs (<code>sonarr</code>, <code>radarr</code>, <code>prowlarr</code>)</td>
 <td style="text-align: left;">Lowest latency (&lt; 2ms random I/O), direct block access, bypasses overlay filesystem overhead</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Tier 2: Distributed Block</strong></td>
 <td style="text-align: left;">Longhorn CSI</td>
 <td style="text-align: left;">Multi-Node K3s NVMe/SSDs</td>
-<td style="text-align: left;">State-backed cluster pods (PostgreSQL, Redis, Vault, Ntfy)</td>
+<td style="text-align: left;">State-backed cluster pods (PostgreSQL, Vault, Ntfy, Palworld)</td>
 <td style="text-align: left;">Synchronous 2-3x cross-node replication, automated CSI volume snapshots, <code>longhorn-retain</code> policy</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Tier 3: Bulk Network File</strong></td>
 <td style="text-align: left;">NFSv4 Pools</td>
 <td style="text-align: left;">TerraMaster F4-425 Plus (<code>nas.lambertlab.us</code>)</td>
-<td style="text-align: left;">Media libraries, ISO repositories (<code>/Volume3/isos</code>), VirtIO drivers</td>
+<td style="text-align: left;">Media libraries (<code>/Volume1/data</code>), ISO repositories (<code>/Volume3/isos</code>), VirtIO drivers</td>
 <td style="text-align: left;">High-capacity bulk throughput, multi-client read/write sharing (ReadWriteMany)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Tier 4: Local NVMe</strong></td>
 <td style="text-align: left;">Direct Host Filesystem</td>
-<td style="text-align: left;"><code>workstation</code> NVMe</td>
-<td style="text-align: left;">Docker ELK Stack (Elasticsearch, Logstash, Kibana) indices</td>
-<td style="text-align: left;">Extreme write IOPs for real-time security log indexing, zero network latency</td>
+<td style="text-align: left;"><code>workstation</code> &amp; <code>lenovo</code> Host Disks</td>
+<td style="text-align: left;">Docker ELK Stack indices, Jellyfin config/transcode cache, Homarr appdata</td>
+<td style="text-align: left;">Extreme write IOPs, zero network latency</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h2 id="tier-1-low-latency-san-iscsi-targets">🧱 Tier 1: Low-Latency SAN iSCSI Targets</h2>
-<p>KubeVirt virtual machines require dedicated, high-performance block devices for guest operating system stability:</p>
+<p>Virtual machines and latency-sensitive media databases require dedicated, high-performance block devices:</p>
 <ul>
 <li><strong>Target Portal:</strong> <code>san.lambertlab.us:3260</code></li>
 <li><strong>LUN Architecture:</strong></li>
 <li><code>iqn.2026-09.us.lambertlab:win11-boot</code> (LUN 0, 64 GiB) - Windows 11 Enterprise LTSC</li>
 <li><code>iqn.2026-09.us.lambertlab:dc01-disk</code> (LUN 0, 80 GiB) - Windows Server 2025 Domain Controller</li>
+<li><code>iqn.2026-09.us.lambertlab:opnsense-boot</code> (LUN 0, 40 GiB) - OPNsense Firewall &amp; Routing Gateway</li>
+<li><code>iqn.2026-06.us.lambertlab:sonarr-config</code> (LUN 0, 20 GiB) - Sonarr series database &amp; configs</li>
+<li><code>iqn.2026-06.us.lambertlab:radarr-config</code> (LUN 0, 20 GiB) - Radarr movie database &amp; configs</li>
+<li><code>iqn.2026-06.us.lambertlab:prowlarr-config</code> (LUN 0, 2 GiB) - Prowlarr indexer database &amp; configs</li>
 <li><strong>Direct Line-Rate Flashing:</strong> By using <code>qemu-img convert</code> with native <code>libiscsi</code> user-space drivers, master OS templates are written directly into LUNs at full line rate without needing intermediate 64GB Longhorn scratch volumes or triggering HTTP ingress proxy timeouts.</li>
 </ul>
 <hr />
@@ -1419,6 +1448,10 @@
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/javascripts/panzoom.min.js"></script>
+      
+        <script src="../../assets/javascripts/zoompan.js"></script>
       
     
   </body>

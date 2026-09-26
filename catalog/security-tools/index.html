@@ -57,13 +57,16 @@
     
       <link rel="stylesheet" href="../../stylesheets/extra.css">
     
+      <link rel="stylesheet" href="../../assets/stylesheets/panzoom.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
     
     
-  </head>
+  <meta name="panzoom-theme" content="material">
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -938,10 +941,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-centralized-elk-stack-elasticsearch-logstash-kibana" class="md-nav__link">
+  <a href="#3-centralized-elk-stack-elastic-agent" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Centralized ELK Stack (Elasticsearch, Logstash, Kibana)
+        3. Centralized ELK Stack &amp; Elastic Agent
       
     </span>
   </a>
@@ -1247,10 +1250,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-centralized-elk-stack-elasticsearch-logstash-kibana" class="md-nav__link">
+  <a href="#3-centralized-elk-stack-elastic-agent" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Centralized ELK Stack (Elasticsearch, Logstash, Kibana)
+        3. Centralized ELK Stack &amp; Elastic Agent
       
     </span>
   </a>
@@ -1342,10 +1345,11 @@
 <li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://vault.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> Centralized cryptographic secrets engine and identity broker.</li>
-<li><strong>Storage Backend:</strong> 10 GB distributed Longhorn block storage with <code>longhorn-retain</code> StorageClass.</li>
+<li><strong>Storage Backend:</strong> 1 GiB distributed Longhorn block storage with <code>longhorn-retain</code> StorageClass.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Stores Cloudflare API tokens, Tailscale authentication keys, database passwords, and Active Directory service account credentials.</li>
 <li>Native Kubernetes authentication engine granting cluster pods time-limited, scoped tokens based on ServiceAccounts.</li>
+<li>Integrated with Microsoft Entra ID via OIDC SSO for administrative console access.</li>
 </ul>
 <hr />
 <h3 id="2-external-secrets-operator-eso">2. External Secrets Operator (ESO)</h3>
@@ -1359,15 +1363,16 @@
 <li>Eliminates plaintext secrets from Git repositories while allowing applications to consume standard Kubernetes secrets declaratively.</li>
 </ul>
 <hr />
-<h3 id="3-centralized-elk-stack-elasticsearch-logstash-kibana">3. Centralized ELK Stack (Elasticsearch, Logstash, Kibana)</h3>
+<h3 id="3-centralized-elk-stack-elastic-agent">3. Centralized ELK Stack &amp; Elastic Agent</h3>
 <ul>
-<li><strong>Host Environment:</strong> <code>workstation</code> (Docker Engine managed via Terraform <code>docker/workstation/elk-stack.tf</code>)</li>
+<li><strong>Host Environment:</strong> <code>workstation</code> (Docker Engine managed via Terraform <code>docker/workstation/elk-stack.tf</code>) &amp; Kubernetes <code>kube-system</code> (Elastic Agent DaemonSet via ArgoCD Wave 5)</li>
 <li><strong>Ingress Endpoint:</strong> <code>https://kibana.lambertlab.us</code> (Internal ES on <code>:9200</code>, Logstash on <code>:12201</code> GELF)</li>
 <li><strong>Architectural Role:</strong> Production-level Security Information and Event Management (SIEM) and log analytics pipeline.</li>
 <li><strong>Storage Backend:</strong> Dedicated local NVMe storage (<code>/usr/share/elasticsearch/data</code>) on <code>workstation</code>.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Single-node cluster enforcing <code>number_of_replicas: 0</code> across templates to maintain solid green health and prevent Index Lifecycle Management (ILM) stalls.</li>
 <li>Docker GELF input on port 12201 (UDP/TCP) streaming container logs over Tailscale from all physical nodes.</li>
+<li>Elastic Agent DaemonSet deployed in <code>kube-system</code> streaming Kubernetes node, container, and pod telemetry.</li>
 <li>Logstash mutate filter recording exact receipt timestamps (<code>received_at =&gt; "%{@timestamp}"</code>).</li>
 <li>Kibana tuned with <code>NODE_OPTIONS=--max-old-space-size=2048</code> to prevent V8 JavaScript heap exhaustion during complex visual log queries.</li>
 <li>Traefik Ingress with <code>default-admin-only-access</code> security middleware.</li>
@@ -1380,6 +1385,7 @@
 <li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://homarr.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> Customizable homelab landing portal and application launcher.</li>
+<li><strong>Storage Backend:</strong> Local host storage on <code>lenovo</code> (<code>/home/chris/services/homarr/homarr/appdata</code> via <code>hostPath</code>).</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Displays real-time operational status and ping health across all cluster services.</li>
 <li>Secured via Traefik HTTPS termination using the cluster-wide default TLSStore.</li>
@@ -1435,7 +1441,7 @@
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Cockpit</strong></td>
-<td style="text-align: left;"><code>lenovo</code></td>
+<td style="text-align: left;"><code>workstation</code></td>
 <td style="text-align: left;"><code>https://cockpit.lambertlab.us</code></td>
 <td style="text-align: left;">Web-based Linux system administration, storage controller monitoring, and terminal access.</td>
 </tr>
@@ -1450,18 +1456,6 @@
 <td style="text-align: left;"><code>opti74</code></td>
 <td style="text-align: left;"><code>https://firefox.lambertlab.us</code></td>
 <td style="text-align: left;">Isolated browser sandbox running on port 4000 for secure, disposable web browsing and testing.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Redis &amp; RedisInsight</strong></td>
-<td style="text-align: left;"><code>workstation</code></td>
-<td style="text-align: left;"><code>https://redisinsight.lambertlab.us</code></td>
-<td style="text-align: left;">In-memory key-value caching layer paired with a real-time memory visualizer GUI.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>RetroArch Web</strong></td>
-<td style="text-align: left;"><code>workstation</code></td>
-<td style="text-align: left;"><code>https://retroarch.lambertlab.us</code></td>
-<td style="text-align: left;">Cloud-hosted browser-based emulator gaming frontend.</td>
 </tr>
 </tbody>
 </table>
@@ -1524,6 +1518,10 @@
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/javascripts/panzoom.min.js"></script>
+      
+        <script src="../../assets/javascripts/zoompan.js"></script>
       
     
   </body>

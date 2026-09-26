@@ -57,13 +57,16 @@
     
       <link rel="stylesheet" href="../../stylesheets/extra.css">
     
+      <link rel="stylesheet" href="../../assets/stylesheets/panzoom.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
     
     
-  </head>
+  <meta name="panzoom-theme" content="material">
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1319,7 +1322,7 @@
 <li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://jellyfin.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> Privacy-focused, high-performance open-source media streaming server.</li>
-<li><strong>Storage Backend:</strong> Persistent data on Longhorn; media libraries mounted via ReadWriteMany (RWX) NFS shares directly from the TerraMaster NAS 14TB pool (<code>/Volume1/data</code>).</li>
+<li><strong>Storage Backend:</strong> Persistent application configuration and transcode cache on host NVMe (<code>/home/chris/services/k3s-jellyfin/config</code> on <code>workstation</code>, 15Gi <code>hostPath</code>); media libraries mounted via ReadWriteMany (RWX) NFS shares directly from the TerraMaster NAS 14TB pool (<code>/Volume1/data</code>).</li>
 <li><strong>Hardware Acceleration:</strong></li>
 <li>Scheduled with node affinity targeting <code>workstation</code>.</li>
 <li>Passes through the <strong>NVIDIA RTX A4500 (20 GB VRAM)</strong> via <code>nvidia.com/gpu: 1</code> resource requests.</li>
@@ -1332,10 +1335,10 @@
 <li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://sonarr.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> Automated TV series collection manager and download scheduler.</li>
+<li><strong>Storage Backend:</strong> Dedicated 20 GB raw iSCSI block LUN (<code>iqn.2026-06.us.lambertlab:sonarr-config</code> on TerraMaster SAN) for application database and settings; ReadWriteMany NFS mount (<code>/Volume1/data</code>) for media library organization.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Reconciles television series monitoring, season upgrades, and file renaming.</li>
 <li>Integrates with Prowlarr for upstream indexer coordination.</li>
-<li>Persistent volume claims bound to Longhorn storage for local application database; NFS mounts for media library organization.</li>
 </ul>
 <hr />
 <h3 id="3-radarr">3. Radarr</h3>
@@ -1344,6 +1347,7 @@
 <li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://radarr.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> Automated movie collection manager and quality profile scheduler.</li>
+<li><strong>Storage Backend:</strong> Dedicated 20 GB raw iSCSI block LUN (<code>iqn.2026-06.us.lambertlab:radarr-config</code> on TerraMaster SAN) for movie database and configurations; ReadWriteMany NFS mount (<code>/Volume1/data</code>) for media library management.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Tracks release dates, monitors wanted films, and orchestrates automatic quality upgrades.</li>
 <li>Configured with custom quality definitions and format scoring for optimal video/audio codec matching.</li>
@@ -1356,6 +1360,7 @@
 <li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://prowlarr.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> Centralized indexer proxy integrating Usenet and BitTorrent feeds.</li>
+<li><strong>Storage Backend:</strong> Dedicated 2 GB raw iSCSI block LUN (<code>iqn.2026-06.us.lambertlab:prowlarr-config</code> on TerraMaster SAN) for indexer SQLite database and configurations.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Manages and tests upstream tracker connections and rate limits.</li>
 <li>Synchronizes indexers seamlessly across both Sonarr and Radarr via in-cluster API endpoints, eliminating redundant manual configuration.</li>
@@ -1444,6 +1449,10 @@
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/javascripts/panzoom.min.js"></script>
+      
+        <script src="../../assets/javascripts/zoompan.js"></script>
       
     
   </body>
