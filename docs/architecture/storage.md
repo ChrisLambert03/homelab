@@ -9,10 +9,10 @@ The **LambertLab** storage infrastructure follows a clear tiered strategy design
 ```mermaid
 graph TD
     subgraph ComputeWorkloads["Kubernetes & Docker Workloads"]
-        VMs["KubeVirt VMs<br/>(DC01, Win11)"]
-        StatefulPods["Stateful Pods<br/>(Vault, Guac DB, Ntfy)"]
-        MediaPods["Media Automation<br/>(Jellyfin, Sonarr, Radarr)"]
-        SIEM["Docker ELK Stack<br/>(Elasticsearch, Logstash, Kibana)"]
+        VMs["KubeVirt VMs<br/>(DC01, Win11, OPNsense)"]
+        StatefulPods["Stateful Pods<br/>(Vault, Guac DB, Ntfy, Palworld)"]
+        MediaPods["Media Automation<br/>(Sonarr, Radarr, Prowlarr, Jellyfin)"]
+        SIEM["Docker ELK Stack & Jellyfin Cache<br/>(Elasticsearch, Host Configs)"]
     end
 
     subgraph StorageTiers["Multi-Tier Storage Backends"]
@@ -23,6 +23,7 @@ graph TD
     end
 
     VMs -->|"Direct libiscsi Block Access"| Tier1
+    MediaPods -->|"Dedicated Database LUNs"| Tier1
     StatefulPods -->|"CSI Volume Claims / longhorn-retain"| Tier2
     MediaPods -->|"NFS PVC Mounts / RWX"| Tier3
     SIEM -->|"Direct Host Bind Mount"| Tier4
@@ -34,21 +35,25 @@ graph TD
 
 | Storage Tier | Backend Protocol | Host Provider | Primary Use Cases | Performance Characteristics |
 | :--- | :--- | :--- | :--- | :--- |
-| **Tier 1: SAN iSCSI** | iSCSI Block Targets | TerraMaster F4-425 Plus (`san.lambertlab.us`) | KubeVirt VM boot disks (`win11-boot`, `dc01-disk`) | Lowest latency (< 2ms random I/O), direct block access, bypasses overlay filesystem overhead |
-| **Tier 2: Distributed Block** | Longhorn CSI | Multi-Node K3s NVMe/SSDs | State-backed cluster pods (PostgreSQL, Redis, Vault, Ntfy) | Synchronous 2-3x cross-node replication, automated CSI volume snapshots, `longhorn-retain` policy |
-| **Tier 3: Bulk Network File** | NFSv4 Pools | TerraMaster F4-425 Plus (`nas.lambertlab.us`) | Media libraries, ISO repositories (`/Volume3/isos`), VirtIO drivers | High-capacity bulk throughput, multi-client read/write sharing (ReadWriteMany) |
-| **Tier 4: Local NVMe** | Direct Host Filesystem | `workstation` NVMe | Docker ELK Stack (Elasticsearch, Logstash, Kibana) indices | Extreme write IOPs for real-time security log indexing, zero network latency |
+| **Tier 1: SAN iSCSI** | iSCSI Block Targets | TerraMaster F4-425 Plus (`san.lambertlab.us`) | KubeVirt VM boot disks (`win11`, `dc01`, `opnsense`) & Media SQLite DBs (`sonarr`, `radarr`, `prowlarr`) | Lowest latency (< 2ms random I/O), direct block access, bypasses overlay filesystem overhead |
+| **Tier 2: Distributed Block** | Longhorn CSI | Multi-Node K3s NVMe/SSDs | State-backed cluster pods (PostgreSQL, Vault, Ntfy, Palworld) | Synchronous 2-3x cross-node replication, automated CSI volume snapshots, `longhorn-retain` policy |
+| **Tier 3: Bulk Network File** | NFSv4 Pools | TerraMaster F4-425 Plus (`nas.lambertlab.us`) | Media libraries (`/Volume1/data`), ISO repositories (`/Volume3/isos`), VirtIO drivers | High-capacity bulk throughput, multi-client read/write sharing (ReadWriteMany) |
+| **Tier 4: Local NVMe** | Direct Host Filesystem | `workstation` & `lenovo` Host Disks | Docker ELK Stack indices, Jellyfin config/transcode cache, Homarr appdata | Extreme write IOPs, zero network latency |
 
 ---
 
 ## 🧱 Tier 1: Low-Latency SAN iSCSI Targets
 
-KubeVirt virtual machines require dedicated, high-performance block devices for guest operating system stability:
+Virtual machines and latency-sensitive media databases require dedicated, high-performance block devices:
 
 * **Target Portal:** `san.lambertlab.us:3260`
 * **LUN Architecture:**
   * `iqn.2026-09.us.lambertlab:win11-boot` (LUN 0, 64 GiB) - Windows 11 Enterprise LTSC
   * `iqn.2026-09.us.lambertlab:dc01-disk` (LUN 0, 80 GiB) - Windows Server 2025 Domain Controller
+  * `iqn.2026-09.us.lambertlab:opnsense-boot` (LUN 0, 40 GiB) - OPNsense Firewall & Routing Gateway
+  * `iqn.2026-06.us.lambertlab:sonarr-config` (LUN 0, 20 GiB) - Sonarr series database & configs
+  * `iqn.2026-06.us.lambertlab:radarr-config` (LUN 0, 20 GiB) - Radarr movie database & configs
+  * `iqn.2026-06.us.lambertlab:prowlarr-config` (LUN 0, 2 GiB) - Prowlarr indexer database & configs
 * **Direct Line-Rate Flashing:** By using `qemu-img convert` with native `libiscsi` user-space drivers, master OS templates are written directly into LUNs at full line rate without needing intermediate 64GB Longhorn scratch volumes or triggering HTTP ingress proxy timeouts.
 
 ---

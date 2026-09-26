@@ -11,7 +11,7 @@ This section documents the automated media indexing, hardware-accelerated transc
 * **Sync Wave:** `Wave 3`
 * **Ingress Endpoint:** `https://jellyfin.lambertlab.us`
 * **Architectural Role:** Privacy-focused, high-performance open-source media streaming server.
-* **Storage Backend:** Persistent data on Longhorn; media libraries mounted via ReadWriteMany (RWX) NFS shares directly from the TerraMaster NAS 14TB pool (`/Volume1/data`).
+* **Storage Backend:** Persistent application configuration and transcode cache on host NVMe (`/home/chris/services/k3s-jellyfin/config` on `workstation`, 15Gi `hostPath`); media libraries mounted via ReadWriteMany (RWX) NFS shares directly from the TerraMaster NAS 14TB pool (`/Volume1/data`).
 * **Hardware Acceleration:**
   * Scheduled with node affinity targeting `workstation`.
   * Passes through the **NVIDIA RTX A4500 (20 GB VRAM)** via `nvidia.com/gpu: 1` resource requests.
@@ -24,10 +24,10 @@ This section documents the automated media indexing, hardware-accelerated transc
 * **Sync Wave:** `Wave 3`
 * **Ingress Endpoint:** `https://sonarr.lambertlab.us`
 * **Architectural Role:** Automated TV series collection manager and download scheduler.
+* **Storage Backend:** Dedicated 20 GB raw iSCSI block LUN (`iqn.2026-06.us.lambertlab:sonarr-config` on TerraMaster SAN) for application database and settings; ReadWriteMany NFS mount (`/Volume1/data`) for media library organization.
 * **Key Configuration:**
   * Reconciles television series monitoring, season upgrades, and file renaming.
   * Integrates with Prowlarr for upstream indexer coordination.
-  * Persistent volume claims bound to Longhorn storage for local application database; NFS mounts for media library organization.
 
 ---
 
@@ -36,6 +36,7 @@ This section documents the automated media indexing, hardware-accelerated transc
 * **Sync Wave:** `Wave 3`
 * **Ingress Endpoint:** `https://radarr.lambertlab.us`
 * **Architectural Role:** Automated movie collection manager and quality profile scheduler.
+* **Storage Backend:** Dedicated 20 GB raw iSCSI block LUN (`iqn.2026-06.us.lambertlab:radarr-config` on TerraMaster SAN) for movie database and configurations; ReadWriteMany NFS mount (`/Volume1/data`) for media library management.
 * **Key Configuration:**
   * Tracks release dates, monitors wanted films, and orchestrates automatic quality upgrades.
   * Configured with custom quality definitions and format scoring for optimal video/audio codec matching.
@@ -48,6 +49,7 @@ This section documents the automated media indexing, hardware-accelerated transc
 * **Sync Wave:** `Wave 3`
 * **Ingress Endpoint:** `https://prowlarr.lambertlab.us`
 * **Architectural Role:** Centralized indexer proxy integrating Usenet and BitTorrent feeds.
+* **Storage Backend:** Dedicated 2 GB raw iSCSI block LUN (`iqn.2026-06.us.lambertlab:prowlarr-config` on TerraMaster SAN) for indexer SQLite database and configurations.
 * **Key Configuration:**
   * Manages and tests upstream tracker connections and rate limits.
   * Synchronizes indexers seamlessly across both Sonarr and Radarr via in-cluster API endpoints, eliminating redundant manual configuration.

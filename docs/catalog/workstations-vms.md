@@ -46,7 +46,7 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 * **Sync Wave:** `Wave 3`
 * **Ingress Endpoint:** `https://opnsense.lambertlab.us`
 * **Hardware Profile:** 4 vCPU, 4 GiB RAM.
-* **Storage Backend:** Distributed Longhorn block volume.
+* **Storage Backend:** Dedicated 40 GB raw iSCSI block LUN (`iqn.2026-09.us.lambertlab:opnsense-boot`) on TerraMaster SAN; NFS installer mount (`/Volume3/isos/opnsense`).
 * **Architectural Role:** Virtualized edge perimeter router, NAT gateway, and security firewall.
 * **Key Configuration:**
   * Multi-NIC topology bridging physical host interfaces to the software-defined `br-lab0` VXLAN fabric.

@@ -12,10 +12,11 @@ This section documents secrets orchestration, centralized Security Information a
 * **Sync Wave:** `Wave 2`
 * **Ingress Endpoint:** `https://vault.lambertlab.us`
 * **Architectural Role:** Centralized cryptographic secrets engine and identity broker.
-* **Storage Backend:** 10 GB distributed Longhorn block storage with `longhorn-retain` StorageClass.
+* **Storage Backend:** 1 GiB distributed Longhorn block storage with `longhorn-retain` StorageClass.
 * **Key Configuration:**
   * Stores Cloudflare API tokens, Tailscale authentication keys, database passwords, and Active Directory service account credentials.
   * Native Kubernetes authentication engine granting cluster pods time-limited, scoped tokens based on ServiceAccounts.
+  * Integrated with Microsoft Entra ID via OIDC SSO for administrative console access.
 
 ---
 
@@ -30,14 +31,15 @@ This section documents secrets orchestration, centralized Security Information a
 
 ---
 
-### 3. Centralized ELK Stack (Elasticsearch, Logstash, Kibana)
-* **Host Environment:** `workstation` (Docker Engine managed via Terraform `docker/workstation/elk-stack.tf`)
+### 3. Centralized ELK Stack & Elastic Agent
+* **Host Environment:** `workstation` (Docker Engine managed via Terraform `docker/workstation/elk-stack.tf`) & Kubernetes `kube-system` (Elastic Agent DaemonSet via ArgoCD Wave 5)
 * **Ingress Endpoint:** `https://kibana.lambertlab.us` (Internal ES on `:9200`, Logstash on `:12201` GELF)
 * **Architectural Role:** Production-level Security Information and Event Management (SIEM) and log analytics pipeline.
 * **Storage Backend:** Dedicated local NVMe storage (`/usr/share/elasticsearch/data`) on `workstation`.
 * **Key Configuration:**
   * Single-node cluster enforcing `number_of_replicas: 0` across templates to maintain solid green health and prevent Index Lifecycle Management (ILM) stalls.
   * Docker GELF input on port 12201 (UDP/TCP) streaming container logs over Tailscale from all physical nodes.
+  * Elastic Agent DaemonSet deployed in `kube-system` streaming Kubernetes node, container, and pod telemetry.
   * Logstash mutate filter recording exact receipt timestamps (`received_at => "%{@timestamp}"`).
   * Kibana tuned with `NODE_OPTIONS=--max-old-space-size=2048` to prevent V8 JavaScript heap exhaustion during complex visual log queries.
   * Traefik Ingress with `default-admin-only-access` security middleware.
@@ -50,6 +52,7 @@ This section documents secrets orchestration, centralized Security Information a
 * **Sync Wave:** `Wave 3`
 * **Ingress Endpoint:** `https://homarr.lambertlab.us`
 * **Architectural Role:** Customizable homelab landing portal and application launcher.
+* **Storage Backend:** Local host storage on `lenovo` (`/home/chris/services/homarr/homarr/appdata` via `hostPath`).
 * **Key Configuration:**
   * Displays real-time operational status and ping health across all cluster services.
   * Secured via Traefik HTTPS termination using the cluster-wide default TLSStore.
@@ -87,8 +90,6 @@ A collection of standalone node services, containers, and network appliances map
 | :--- | :--- | :--- | :--- |
 | **Pi-hole** | Docker / Host | `https://pihole.lambertlab.us` | Network-wide DNS sinkhole, local domain resolution, and tracking ad-blocker. |
 | **Portainer** | `optiplex` | `https://portainer.lambertlab.us` | Graphical management web interface for standalone Docker hosts and containers. |
-| **Cockpit** | `lenovo` | `https://cockpit.lambertlab.us` | Web-based Linux system administration, storage controller monitoring, and terminal access. |
+| **Cockpit** | `workstation` | `https://cockpit.lambertlab.us` | Web-based Linux system administration, storage controller monitoring, and terminal access. |
 | **Code-Server** | `lenovo` | `https://code.lambertlab.us` | Browser-based Visual Studio Code IDE environment running directly on the cluster manager. |
 | **Firefox Web** | `opti74` | `https://firefox.lambertlab.us` | Isolated browser sandbox running on port 4000 for secure, disposable web browsing and testing. |
-| **Redis & RedisInsight** | `workstation` | `https://redisinsight.lambertlab.us` | In-memory key-value caching layer paired with a real-time memory visualizer GUI. |
-| **RetroArch Web** | `workstation` | `https://retroarch.lambertlab.us` | Cloud-hosted browser-based emulator gaming frontend. |
