@@ -11,20 +11,20 @@ theme:
   name: material
   language: en
   palette:
-    # Palette toggle for dark mode (default)
-    - scheme: slate
-      primary: indigo
-      accent: deep purple
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
-    # Palette toggle for light mode
+    # Palette toggle for light mode (default)
     - scheme: default
       primary: indigo
       accent: deep purple
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
   features:
     - navigation.tabs
     - navigation.tabs.sticky
