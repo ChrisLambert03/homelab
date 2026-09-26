@@ -25,5 +25,8 @@ jobs:
       - name: Add local bin to PATH
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
+      - name: Ensure mkdocs plugins are installed
+        run: pipx inject mkdocs-material mkdocs-panzoom-plugin 2>/dev/null || true
+
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --force
