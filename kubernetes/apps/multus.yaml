@@ -13,7 +13,7 @@ spec:
   source:
     repoURL: https://rke2-charts.rancher.io
     chart: rke2-multus
-    targetRevision: v4.3.017
+    targetRevision: v4.3.102
     helm:
       releaseName: multus
       values: |
