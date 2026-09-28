@@ -55,6 +55,10 @@ Virtual machines and latency-sensitive media databases require dedicated, high-p
   * `iqn.2026-06.us.lambertlab:radarr-config` (LUN 0, 20 GiB) - Radarr movie database & configs
   * `iqn.2026-06.us.lambertlab:prowlarr-config` (LUN 0, 2 GiB) - Prowlarr indexer database & configs
 * **Direct Line-Rate Flashing:** By using `qemu-img convert` with native `libiscsi` user-space drivers, master OS templates are written directly into LUNs at full line rate without needing intermediate 64GB Longhorn scratch volumes or triggering HTTP ingress proxy timeouts.
+* **Initiator Resilience & Error Recovery (`open-iscsi`):** To prevent kernel I/O aborts, guest VM crashes, and ext4 `emergency_ro` journal locks during transient network blips or NAS reboots, all cluster nodes (`lenovo`, `optiplex`, `opti74`, `workstation`) configure hardened initiator timeouts via [`ansible/configure-iscsi.yml`](file:///home/chris/homelab/ansible/configure-iscsi.yml):
+  * `node.session.timeo.replacement_timeout = 300`: Pauses I/O queues and permits up to 5 minutes of network reconnection grace time before declaring SCSI block devices offline.
+  * `node.conn[0].timeo.noop_out_interval = 5`: Transmits NOP-Out pings every 5 seconds for rapid socket drop detection.
+  * `node.conn[0].timeo.noop_out_timeout = 5`: Bounded 5-second socket timeout triggering proactive TCP session recovery.
 
 ---
 

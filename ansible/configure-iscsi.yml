@@ -1,0 +1,40 @@
+---
+- name: Harden iSCSI Initiator Configuration
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure open-iscsi is installed
+      ansible.builtin.apt:
+        name: open-iscsi
+        state: present
+        update_cache: false
+
+    - name: Configure iSCSI session replacement timeout to 300 seconds
+      ansible.builtin.lineinfile:
+        path: /etc/iscsi/iscsid.conf
+        regexp: '^(\s*#\s*)?node\.session\.timeo\.replacement_timeout\s*='
+        line: "node.session.timeo.replacement_timeout = 300"
+        state: present
+      notify: Restart iscsid
+
+    - name: Configure iSCSI noop_out_interval to 5 seconds
+      ansible.builtin.lineinfile:
+        path: /etc/iscsi/iscsid.conf
+        regexp: '^(\s*#\s*)?node\.conn\[0\]\.timeo\.noop_out_interval\s*='
+        line: "node.conn[0].timeo.noop_out_interval = 5"
+        state: present
+      notify: Restart iscsid
+
+    - name: Configure iSCSI noop_out_timeout to 5 seconds
+      ansible.builtin.lineinfile:
+        path: /etc/iscsi/iscsid.conf
+        regexp: '^(\s*#\s*)?node\.conn\[0\]\.timeo\.noop_out_timeout\s*='
+        line: "node.conn[0].timeo.noop_out_timeout = 5"
+        state: present
+      notify: Restart iscsid
+
+  handlers:
+    - name: Restart iscsid
+      ansible.builtin.systemd:
+        name: iscsid
+        state: restarted
