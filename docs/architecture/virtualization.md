@@ -141,3 +141,27 @@ The VM manifest mounts a Kubernetes Secret containing a declarative `unattend.xm
 * **Dynamic Computer Naming:** Configured with `<ComputerName>*</ComputerName>`, prompting Windows setup to generate a random `WIN-XXXXXXXX` NetBIOS name, preventing computer object collisions in Active Directory.
 * **Automated Domain Join:** Uses a restricted service account (`svc_domainjoin`) with delegated rights to place computer accounts into `OU=Computers,OU=LambertLab,DC=ad,DC=lambertlab,DC=us`.
 * **Regional & OOBE Bypass:** Automatically suppresses EULA prompts, telemetry questions, Microsoft Account (MSA) login screens, and configures the default local administrator account.
+
+---
+
+## 🛡️ Workload Resilience & Network Partition Tolerations
+
+To balance high availability during network partitions with manual guest power management:
+
+* **Intentional Power Management (`runStrategy: RerunOnFailure`):** Virtual machines utilize `RerunOnFailure` rather than `Always`. This permits administrators to cleanly power down machines from within the guest OS (e.g., Windows Shutdown, OPNsense Halt) or via `virtctl stop` without the controller fighting the shutdown and immediately rebooting the VM.
+* **Network Partition Defense (Node Tolerations):** Because VMs run on `workstation` with non-migratable local SAN iSCSI LUN bindings (`RWO`), temporary network partitions or control-plane failovers (such as Tailscale mesh reconvergence) must not trigger premature pod eviction. All VMs declare extended `tolerationSeconds` (1800s / 30 minutes):
+
+```yaml
+tolerations:
+  - key: "node.kubernetes.io/unreachable"
+    operator: "Exists"
+    effect: "NoExecute"
+    tolerationSeconds: 1800
+  - key: "node.kubernetes.io/not-ready"
+    operator: "Exists"
+    effect: "NoExecute"
+    tolerationSeconds: 1800
+```
+
+This prevents Kubernetes `NodeLifecycleController` from evicting `virt-launcher` pods and triggering unintended ACPI guest shutdown signals during transient control-plane blips, keeping VMs continuously operational on the worker host.
+

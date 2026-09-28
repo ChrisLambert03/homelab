@@ -16,6 +16,15 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/hostname: workstation
+      tolerations:
+        - key: "node.kubernetes.io/unreachable"
+          operator: "Exists"
+          effect: "NoExecute"
+          tolerationSeconds: 1800
+        - key: "node.kubernetes.io/not-ready"
+          operator: "Exists"
+          effect: "NoExecute"
+          tolerationSeconds: 1800
       terminationGracePeriodSeconds: 60
       domain:
         machine:
