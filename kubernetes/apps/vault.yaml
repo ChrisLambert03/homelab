@@ -13,7 +13,7 @@ spec:
   source:
     repoURL: git@github.com:ChrisLambert03/homelab.git
     targetRevision: main
-    path: kubernetes/vault
+    path: kubernetes/security/vault
   destination:
     server: https://kubernetes.default.svc
     namespace: security
