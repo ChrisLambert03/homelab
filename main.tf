@@ -50,12 +50,6 @@ module "lenovo" {
 
 }
 
-# call the libvirt module
-module "libvirt" {
-  source = "./vms"
-  # workstation_ip          = var.workstation_ip
-  #  ssh_user                = var.ssh_user
-}
 
 # Active Directory Module
 module "active_directory" {
