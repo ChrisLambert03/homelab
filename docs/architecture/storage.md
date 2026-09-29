@@ -71,7 +71,7 @@ Critical cluster state (HashiCorp Vault storage, Apache Guacamole's PostgreSQL d
 * **Multipath Daemon Blacklist (`multipathd`):** To prevent host multipath daemons from mistakenly locking Longhorn virtual iSCSI devices (causing `MountVolume.SetUp failed: already mounted or mount point busy`), worker nodes deploy a `devnode "^sd[a-z0-9]+"` blacklist to `/etc/multipath.conf` via `ansible/longhorn-reqs.yml` per the official [Longhorn Knowledge Base: Troubleshooting Volume Mount Failure with multipathd](https://longhorn.io/kb/troubleshooting-volume-with-multipath/).
 
 ```yaml
-# kubernetes/longhorn/storageclass-retain.yaml
+# kubernetes/infrastructure/longhorn/storageclass-retain.yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:

@@ -23,7 +23,7 @@ graph TD
     end
 
     subgraph IaC["Declarative Infrastructure as Code (Terraform)"]
-        TFModule["active_directory/ Module"]
+        TFModule["terraform/active_directory/ Module"]
         SvcTF["svc_terraform Service Account"]
     end
 
@@ -94,7 +94,7 @@ To prevent total administrative lockout in the event of an on-premises virtualiz
 
 ## 📂 Declarative Organizational Unit (OU) Structure
 
-The on-premises directory structure is managed 100% declaratively via Terraform (`active_directory/` module) executing over WinRM:
+The on-premises directory structure is managed 100% declaratively via Terraform (`terraform/active_directory/` module) executing over WinRM:
 
 ```text
 DC=ad,DC=lambertlab,DC=us

@@ -47,19 +47,25 @@ The cluster is anchored by a high-availability 3-node K3s control plane (**`leno
 
 ```text
 .
-├── kubernetes/                  # GitOps Manifests & Helm Configurations
-│   ├── apps/                    # ArgoCD Root App & Sync Waves (0–3)
-│   ├── config/                  # Cluster Config (CoreDNS AD Forwarding, RBAC, Certs)
-│   ├── network/nmstate/         # Multi-Node NMState VXLAN Overlay & Bridges
-│   ├── vms/                     # KubeVirt Definitions (OPNsense, DC01, Win11 Sysprep)
-│   ├── guacamole/               # Apache Guacamole with Multus VXLAN Bridge & LDAPS
-│   └── security/                # HashiCorp Vault & External Secrets Operator
-├── docker/                      # Standalone Host Engine Services (Workstation, Optiplex)
+├── kubernetes/                  # GitOps Domain-Driven Manifests & Helm Charts
+│   ├── apps/                    # ArgoCD Root App & App-of-Apps Sync Waves (1–5)
+│   ├── config/                  # Cluster Configuration (Traefik Middlewares, CoreDNS, Certs)
+│   ├── gaming/                  # Dedicated Game Servers (Palworld, RetroArch)
+│   ├── infrastructure/          # Core Operators, Storage (Longhorn/NAS), NMState & Guacamole
+│   ├── media/                   # Media Automation Suite (Jellyfin, *Arrs, Tdarr)
+│   ├── observability/           # SIEM Agents, Telemetry & Dashboards (Elastic Agent, Homarr, Ntfy)
+│   ├── security/                # HashiCorp Vault & Secret Orchestration
+│   └── vms/                     # KubeVirt Definitions (OPNsense, DC01, Win11 Sysprep)
+├── terraform/                   # Declarative Infrastructure as Code
+│   ├── active_directory/        # Active Directory Module (OUs, Groups, Users, Service Accounts)
+│   ├── cloudflare.tf            # Cloudflare DNS Automation
+│   ├── main.tf                  # Multi-Node Docker Engine & AD Module Orchestrator
+│   ├── tailscale.tf             # Tailscale Mesh Ingress Configuration
+│   └── vault.tf                 # HashiCorp Vault Secret Orchestration
+├── docker/                      # Standalone Host Engine Stacks (Lenovo, Optiplex, Workstation)
 │   └── workstation/elk-stack.tf # Docker ELK Stack, Logstash Pipelines & ILM Policies
-├── active_directory/           # Terraform AD Module (OUs, Groups, Users, SvcAccts)
-├── cloudflare.tf                # Cloudflare DNS Automation
-├── tailscale.tf                 # Tailscale Mesh Ingress Configuration
-└── vault.tf                     # HashiCorp Vault Secret Orchestration
+├── ansible/                     # Host Configuration Playbooks & Hardware Tuning
+└── docs/                        # Material for MkDocs Architecture, Runbooks & Catalog
 ```
 
 ---

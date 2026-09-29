@@ -57,7 +57,7 @@ graph LR
     To ensure that the host RTX A4500 GPU compute and Elasticsearch indexing pipelines remain completely unthrottled:
     
     ```yaml
-    # kubernetes/guacamole/values.yaml
+    # kubernetes/infrastructure/guacamole/values.yaml
     guacd:
       resources:
         requests:

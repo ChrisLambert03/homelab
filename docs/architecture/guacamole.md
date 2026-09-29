@@ -46,7 +46,7 @@ Active Directory Domain Services on `dc01.ad.lambertlab.us` signs its LDAPS cert
 Rather than rebuilding custom Docker images, the Guacamole deployment manifest uses an Alpine Linux `initContainer` (`eclipse-temurin:21-jre-alpine`) that merges the internal root certificate into Java's standard `cacerts` keystore at startup on an `emptyDir` volume:
 
 ```yaml
-# kubernetes/guacamole/values.yaml
+# kubernetes/infrastructure/guacamole/values.yaml
 extraInitContainers:
   - name: inject-ca-cert
     image: eclipse-temurin:21-jre-alpine

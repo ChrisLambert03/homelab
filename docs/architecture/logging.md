@@ -112,7 +112,7 @@ To capture container logs (`/var/log/pods`), cluster-level health, and bare-meta
   * **Pinned Image Tag:** Pinned to `9.3.2` to strictly adhere to Elastic's architectural requirement: $V_{\text{Agent}} \le V_{\text{Fleet Server}}$.
   * **System & Kubernetes Integrations:** With `system.enabled: true` and `preset: perNode`, exactly one agent pod runs on every cluster node, mounting `/var/log`, `/proc`, and `/sys` to monitor host OS telemetry and container logs simultaneously with zero duplication.
   * **Secret Decoupling:** Uses `tokenFromSecret` referencing Kubernetes secret `elastic-agent-token` in `kube-system`. Plaintext enrollment tokens are never committed to Git.
-  * **Memory Sizing:** Resource limits configured with `memory: 2000Mi` in `kubernetes/elastic-agent/values.yaml` to ensure agents do not encounter OOMKilled restarts during high-volume log bursts.
+  * **Memory Sizing:** Resource limits configured with `memory: 2000Mi` in `kubernetes/observability/elastic-agent/values.yaml` to ensure agents do not encounter OOMKilled restarts during high-volume log bursts.
   * **Fleet Server Policy Hygiene:** The standalone Fleet Server container on `workstation` runs unprivileged in Docker with its own PID namespace; its policy omits host `system.process` checks to prevent permission denied errors (the workstation K3s DaemonSet agent handles all workstation host metrics).
 
 ---
