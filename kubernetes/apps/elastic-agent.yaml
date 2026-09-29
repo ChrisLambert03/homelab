@@ -26,7 +26,7 @@ spec:
       helm:
         releaseName: elastic-agent
         valueFiles:
-          - $homelab/kubernetes/elastic-agent/values.yaml
+          - $homelab/kubernetes/observability/elastic-agent/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system

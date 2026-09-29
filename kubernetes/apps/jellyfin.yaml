@@ -26,7 +26,7 @@ spec:
       helm:
         releaseName: jellyfin
         valueFiles:
-          - $homelab/kubernetes/jellyfin/values.yaml
+          - $homelab/kubernetes/media/jellyfin/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: media
