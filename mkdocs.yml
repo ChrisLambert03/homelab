@@ -2,7 +2,7 @@
 site_name: LambertLab Infrastructure Docs
 site_description: Production-Level Hybrid Cloud, KubeVirt, and GitOps Documentation
 site_author: Chris Lambert
-site_url: https://chrislambert03.github.io/homelab/
+site_url: https://docs.lambertlab.us/
 repo_url: https://github.com/ChrisLambert03/homelab
 repo_name: ChrisLambert03/homelab
 edit_uri: blob/main/docs/

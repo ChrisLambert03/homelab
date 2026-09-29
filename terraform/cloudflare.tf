@@ -56,4 +56,15 @@ resource "cloudflare_dns_record" "ms_entra_verification" {
   comment = "Microsoft Entra ID custom domain verification - Managed by Terraform"
 }
 
+# GitHub Pages Custom Subdomain for Homelab Documentation
+resource "cloudflare_dns_record" "docs" {
+  zone_id = data.cloudflare_zone.main.id
+  name    = "docs"
+  content = "chrislambert03.github.io"
+  type    = "CNAME"
+  ttl     = 300
+  proxied = false
+  comment = "GitHub Pages documentation custom domain - Managed by Terraform"
+}
+
 
