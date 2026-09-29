@@ -13,7 +13,7 @@ spec:
   sources:
     - repoURL: git@github.com:ChrisLambert03/homelab.git
       targetRevision: main
-      path: kubernetes/kubevirt-manager
+      path: kubernetes/infrastructure/kubevirt-manager
     - repoURL: https://charts.christianhuth.de
       chart: kubevirt-manager
       targetRevision: 0.7.0

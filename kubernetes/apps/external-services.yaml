@@ -13,34 +13,34 @@ spec:
   sources:
     - repoURL: git@github.com:ChrisLambert03/homelab.git
       targetRevision: main
-      path: kubernetes/cockpit
+      path: kubernetes/infrastructure/external-services/cockpit
     - repoURL: git@github.com:ChrisLambert03/homelab.git
       targetRevision: main
-      path: kubernetes/code
+      path: kubernetes/infrastructure/external-services/code
     - repoURL: git@github.com:ChrisLambert03/homelab.git
       targetRevision: main
-      path: kubernetes/firefox
+      path: kubernetes/infrastructure/external-services/firefox
     - repoURL: git@github.com:ChrisLambert03/homelab.git
       targetRevision: main
-      path: kubernetes/kibana
+      path: kubernetes/observability/kibana
     - repoURL: git@github.com:ChrisLambert03/homelab.git
       targetRevision: main
-      path: kubernetes/nas
+      path: kubernetes/infrastructure/storage/nas
     - repoURL: git@github.com:ChrisLambert03/homelab.git
       targetRevision: main
-      path: kubernetes/pihole
+      path: kubernetes/infrastructure/external-services/pihole
     - repoURL: git@github.com:ChrisLambert03/homelab.git
       targetRevision: main
-      path: kubernetes/portainer
+      path: kubernetes/infrastructure/external-services/portainer
     - repoURL: git@github.com:ChrisLambert03/homelab.git
       targetRevision: main
-      path: kubernetes/redisinsight
+      path: kubernetes/infrastructure/external-services/redisinsight
     - repoURL: git@github.com:ChrisLambert03/homelab.git
       targetRevision: main
-      path: kubernetes/retroarch
+      path: kubernetes/gaming/retroarch
     - repoURL: git@github.com:ChrisLambert03/homelab.git
       targetRevision: main
-      path: kubernetes/tdarr
+      path: kubernetes/media/tdarr
   destination:
     server: https://kubernetes.default.svc
     namespace: external

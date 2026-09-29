@@ -14,7 +14,7 @@
 #     # 1. Local Tailscale companion manifests (ProxyGroup, Gateway Services, CRDs)
 #     - repoURL: git@github.com:ChrisLambert03/homelab.git
 #       targetRevision: main
-#       path: kubernetes/tailscale
+#       path: kubernetes/infrastructure/tailscale
 #
 #     # 2. Upstream Tailscale Operator Helm chart
 #     - repoURL: https://pkgs.tailscale.com/helmcharts
