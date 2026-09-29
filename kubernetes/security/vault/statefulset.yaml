@@ -50,6 +50,13 @@ spec:
               mountPath: /vault/data
             - name: config
               mountPath: /vault/config
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
 
         # The Auto-Unsealer Sidecar
         - name: vault-unsealer
@@ -84,6 +91,13 @@ spec:
                 secretKeyRef:
                   name: vault-secrets
                   key: VAULT_UNSEAL_KEY_3
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
 
       volumes:
         - name: config

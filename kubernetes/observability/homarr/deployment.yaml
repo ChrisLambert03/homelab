@@ -34,6 +34,13 @@ spec:
           ports:
             - containerPort: 7575
               name: http
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
           volumeMounts:
             - name: appdata
               mountPath: "/appdata"
