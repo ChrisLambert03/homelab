@@ -39,6 +39,13 @@ spec:
           ports:
             - containerPort: 8989
               name: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: 2000m
+              memory: 1Gi
           # Health check to ensure K3s restarts the pod if the database locks up (e.g. iSCSI disconnect)
           livenessProbe:
             httpGet:
