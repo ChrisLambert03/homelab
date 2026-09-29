@@ -45,7 +45,7 @@ By replacing traditional standalone hypervisors with KubeVirt, this architecture
 
 ## 🔬 Deep Technical Specifications & Flag Analysis
 
-Deploying modern Windows workloads on KubeVirt requires precise low-level hypervisor tuning to ensure stability, hardware compatibility, and low host resource utilization. Below is an exhaustive breakdown of the architectural specifications and configuration flags defined in `kubernetes/vms/win11/vm.yaml`:
+Deploying modern Windows workloads on KubeVirt requires precise low-level hypervisor tuning to ensure stability, hardware compatibility, and low host resource utilization. Below is an exhaustive breakdown of the architectural specifications and configuration flags defined in `kubernetes/vms/win11/virtualmachine.yaml`:
 
 ### 1. Firmware, Secure Boot & Virtual TPM Subsystem
 
