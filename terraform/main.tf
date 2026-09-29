@@ -1,6 +1,6 @@
 # Call the docker applications module
 module "docker_apps" {
-  source = "./docker/workstation"
+  source = "../docker/workstation"
 
   providers = {
     docker.workstation = docker.workstation
@@ -25,7 +25,7 @@ module "docker_apps" {
 
 # Call the optiplex module
 module "optiplex" {
-  source = "./docker/optiplex"
+  source = "../docker/optiplex"
 
   providers = {
     docker.optiplex = docker.optiplex
@@ -38,7 +38,7 @@ module "optiplex" {
 }
 
 module "lenovo" {
-  source = "./docker/lenovo"
+  source = "../docker/lenovo"
 
   providers = {
     docker.lenovo = docker.lenovo

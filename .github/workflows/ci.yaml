@@ -55,17 +55,21 @@ jobs:
 
       - name: TFLint
         run: tflint --recursive
+        working-directory: terraform
 
       - name: Terraform Init
         run: terraform init
+        working-directory: terraform
         env:
           TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform Validate
         run: terraform validate
+        working-directory: terraform
 
       - name: Terraform Plan
         run: terraform plan -no-color
+        working-directory: terraform
         env:
           TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
           TF_VAR_vault_ip: ${{ secrets.VAULT_IP }}
