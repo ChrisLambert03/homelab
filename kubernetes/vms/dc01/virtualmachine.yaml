@@ -14,8 +14,8 @@ spec:
         kubevirt.io/vm: dc01
         app: active-directory
       annotations:
-        ovn-ad-vpc.vms.kubernetes.io/ip_address: 10.10.0.10
-        ovn-ad-vpc.vms.kubernetes.io/mac_address: 52:54:00:12:34:56
+        ovn-ad-vpc.vms.ovn.kubernetes.io/ip_address: 10.10.0.10
+        ovn-ad-vpc.vms.ovn.kubernetes.io/mac_address: 52:54:00:12:34:56
     spec:
       nodeSelector:
         kubernetes.io/hostname: workstation
@@ -86,6 +86,7 @@ spec:
                 bus: sata
           interfaces:
             - name: lab-lan
+              macAddress: 52:54:00:12:34:56
               binding:
                 name: managedtap
           rng: {}

@@ -13,6 +13,9 @@ spec:
       labels:
         kubevirt.io/vm: opnsense-firewall
         app: opnsense
+      annotations:
+        ovn-ad-vpc.vms.ovn.kubernetes.io/ip_address: 10.10.0.1
+        ovn-ad-vpc.vms.ovn.kubernetes.io/mac_address: 52:54:00:10:10:01
     spec:
       nodeSelector:
         kubernetes.io/hostname: workstation
@@ -56,6 +59,7 @@ spec:
               masquerade: {}
             - name: lab-lan
               model: virtio
+              macAddress: 52:54:00:10:10:01
               binding:
                 name: managedtap
           rng: {}
