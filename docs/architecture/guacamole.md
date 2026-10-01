@@ -117,7 +117,7 @@ podAnnotations:
 ```
 
 * **Dynamic DHCP Allocation:** The pod dynamically receives an IP address directly from Kube-OVN's internal IPAM allocator on the `10.10.0.0/24` subnet.
-* **Direct RDP/SSH Access:** RDP connections to `win11` (`10.10.0.11:3389` or `win11.ad.lambertlab.us:3389`) and LDAPS queries to `dc01` (`10.10.0.10:636` or `dc01.ad.lambertlab.us:636`) flow across the Geneve overlay with **sub-millisecond latency** and zero NAT traversal.
+* **Direct RDP/SSH Access:** RDP connections to `win11` (`win11.ad.lambertlab.us:3389` via dynamic DHCP lease) and LDAPS queries to `dc01` (`dc01.ad.lambertlab.us:636` / `10.10.0.10:636`) flow across the Geneve overlay with **sub-millisecond latency** and zero NAT traversal.
 * **Decoupled from Host Netfilter:** Because Kube-OVN uses Geneve UDP encapsulation across nodes rather than host Linux bridges (`br-lab0`), cross-node traffic is completely decoupled from host iptables `FORWARD` chain drops and physical Wi-Fi multicast restrictions.
 
 ---

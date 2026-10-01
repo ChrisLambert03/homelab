@@ -22,7 +22,7 @@ graph TD
             OPNsense["OPNsense Firewall VM<br/>Gateway: 10.10.0.1"] <--> OVNSwitch
             Guac -.->|"Multus (Dynamic DHCP)"| OVNSwitch
             OVNSwitch --> DC01["DC01 Active Directory<br/>Windows Server 2025: 10.10.0.10"]
-            OVNSwitch --> Win11["Win11 Admin Workstation<br/>Sysprep Specialized: 10.10.0.11"]
+            OVNSwitch --> Win11["Win11 Admin Workstation<br/>Dynamic DHCP (Sysprep Specialized)"]
             CoreDNS["K3s CoreDNS<br/>Multus net1: ovn-ad-vpc"] -->|"Conditional Forward *.ad"| DC01
         end
     end

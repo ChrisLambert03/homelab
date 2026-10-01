@@ -27,7 +27,7 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 * **Namespace:** `vms` (KubeVirt `VirtualMachine`)
 * **Operating System:** Windows 11 Enterprise LTSC
 * **Sync Wave:** `Wave 3`
-* **Internal IP:** `10.10.0.11` (Dynamic / DHCP on `ovn-ad-vpc` via Kube-OVN IPAM)
+* **Internal IP:** Dynamic DHCP via Kube-OVN IPAM (e.g. active lease `10.10.0.11`)
 * **FQDN:** `win11.ad.lambertlab.us`
 * **Hardware Profile:** 4 vCPU, 8 GiB RAM, host-passthrough CPU topology.
 * **Storage Backend:** Dedicated 64 GB raw iSCSI block LUN (`iqn.2026-09.us.lambertlab:win11-boot`) on TerraMaster SAN.

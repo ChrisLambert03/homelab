@@ -23,7 +23,7 @@ graph TD
         OPNsense["OPNsense Firewall VM<br/>Gateway 10.10.0.1"] <--> OVNSwitch
         GuacPod -.->|"Multus CNI: net1 (Dynamic DHCP)"| OVNSwitch
         OVNSwitch --> DC01["DC01 Active Directory<br/>10.10.0.10:636 LDAPS / :3389 RDP"]
-        OVNSwitch --> Win11["Windows 11 Workstation<br/>10.10.0.11:3389 RDP"]
+        OVNSwitch --> Win11["Windows 11 Workstation<br/>Dynamic DHCP (:3389 RDP)"]
         CoreDNS -.->|"Multus CNI: net1 (ovn-ad-vpc)"| DC01
     end
 
