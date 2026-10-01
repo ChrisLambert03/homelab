@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1536,7 +1536,7 @@ Java's JNDI LDAP provider performs strict hostname endpoint identification. In v
 </span></code></pre></div>
 <ul>
 <li><strong>Dynamic DHCP Allocation:</strong> The pod dynamically receives an IP address directly from Kube-OVN's internal IPAM allocator on the <code>10.10.0.0/24</code> subnet.</li>
-<li><strong>Direct RDP/SSH Access:</strong> RDP connections to <code>win11</code> (<code>10.10.0.11:3389</code> or <code>win11.ad.lambertlab.us:3389</code>) and LDAPS queries to <code>dc01</code> (<code>10.10.0.10:636</code> or <code>dc01.ad.lambertlab.us:636</code>) flow across the Geneve overlay with <strong>sub-millisecond latency</strong> and zero NAT traversal.</li>
+<li><strong>Direct RDP/SSH Access:</strong> RDP connections to <code>win11</code> (<code>win11.ad.lambertlab.us:3389</code> via dynamic DHCP lease) and LDAPS queries to <code>dc01</code> (<code>dc01.ad.lambertlab.us:636</code> / <code>10.10.0.10:636</code>) flow across the Geneve overlay with <strong>sub-millisecond latency</strong> and zero NAT traversal.</li>
 <li><strong>Decoupled from Host Netfilter:</strong> Because Kube-OVN uses Geneve UDP encapsulation across nodes rather than host Linux bridges (<code>br-lab0</code>), cross-node traffic is completely decoupled from host iptables <code>FORWARD</code> chain drops and physical Wi-Fi multicast restrictions.</li>
 </ul>
 <hr />

@@ -64,7 +64,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1323,7 +1323,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
             OPNsense["OPNsense Firewall VM&lt;br/&gt;Gateway: 10.10.0.1"] &lt;--&gt; OVNSwitch
             Guac -.-&gt;|"Multus (Dynamic DHCP)"| OVNSwitch
             OVNSwitch --&gt; DC01["DC01 Active Directory&lt;br/&gt;Windows Server 2025: 10.10.0.10"]
-            OVNSwitch --&gt; Win11["Win11 Admin Workstation&lt;br/&gt;Sysprep Specialized: 10.10.0.11"]
+            OVNSwitch --&gt; Win11["Win11 Admin Workstation&lt;br/&gt;Dynamic DHCP (Sysprep Specialized)"]
             CoreDNS["K3s CoreDNS&lt;br/&gt;Multus net1: ovn-ad-vpc"] --&gt;|"Conditional Forward *.ad"| DC01
         end
     end
