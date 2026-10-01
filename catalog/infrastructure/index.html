@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1473,7 +1473,7 @@
 <li>Replaces legacy NMState Linux host bridge (<code>br-lab0</code>) with Geneve UDP encapsulation, bypassing Wi-Fi multicast restrictions and host iptables <code>FORWARD</code> drops.</li>
 <li>VPC Subnet <code>ovn-ad-vpc</code> (<code>10.10.0.0/24</code>) configured with dummy gateway <code>10.10.0.254</code> to allow the virtualized OPNsense firewall to claim <code>10.10.0.1</code>.</li>
 <li>Embedded DHCP server delivering Active Directory DNS (<code>10.10.0.10</code>) and default gateway (<code>10.10.0.1</code>) directly to virtual machines and secondary pod interfaces.</li>
-<li><em>(Legacy Note: NMState Operator remains available in Wave 1 for host networking, but <code>nmstate-policies</code> is deprecated).</em></li>
+<li><em>(Archived Infrastructure: The NMState Operator and Linux host bridge policies have been completely archived and pruned from ArgoCD in favor of Kube-OVN).</em></li>
 </ul>
 <hr />
 <h3 id="5-multus-cni-thick-cni-daemonset">5. Multus CNI (Thick CNI DaemonSet)</h3>
