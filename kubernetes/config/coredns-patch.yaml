@@ -8,3 +8,7 @@ metadata:
     k8s-app: kube-dns
 spec:
   replicas: 3
+  template:
+    metadata:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: vms/ovn-ad-vpc
