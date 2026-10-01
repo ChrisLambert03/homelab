@@ -17,11 +17,6 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system
-  ignoreDifferences:
-    - group: kubeovn.io
-      kind: Subnet
-      jsonPointers:
-        - /spec/excludeIps
   syncPolicy:
     automated:
       prune: true
