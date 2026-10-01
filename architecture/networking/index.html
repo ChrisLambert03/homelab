@@ -599,16 +599,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#software-defined-l2-fabric-br-lab0" class="md-nav__link">
+  <a href="#kube-ovn-software-defined-l2-vpc-ovn-ad-vpc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🌉 Software-Defined L2 Fabric (br-lab0)
+        🌉 Kube-OVN Software-Defined L2 VPC (ovn-ad-vpc)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🌉 Software-Defined L2 Fabric (br-lab0)">
+    <nav class="md-nav" aria-label="🌉 Kube-OVN Software-Defined L2 VPC (ovn-ad-vpc)">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-we-migrated-from-nmstate-br-lab0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why We Migrated from NMState br-lab0
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#multus-cni-secondary-interface-attachment" class="md-nav__link">
@@ -622,21 +633,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#docker-host-netfilter-bridge-forwarding-ip-forward-no-drop" class="md-nav__link">
+  <a href="#coredns-integration-into-the-vpc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Docker Host Netfilter &amp; Bridge Forwarding (ip-forward-no-drop)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#kube-ovn-geneve-secondary-cni-wi-fi-layer-2-overlay" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Kube-OVN Geneve Secondary CNI (Wi-Fi Layer 2 Overlay)
+        CoreDNS Integration into the VPC
       
     </span>
   </a>
@@ -1344,16 +1344,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#software-defined-l2-fabric-br-lab0" class="md-nav__link">
+  <a href="#kube-ovn-software-defined-l2-vpc-ovn-ad-vpc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🌉 Software-Defined L2 Fabric (br-lab0)
+        🌉 Kube-OVN Software-Defined L2 VPC (ovn-ad-vpc)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🌉 Software-Defined L2 Fabric (br-lab0)">
+    <nav class="md-nav" aria-label="🌉 Kube-OVN Software-Defined L2 VPC (ovn-ad-vpc)">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-we-migrated-from-nmstate-br-lab0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why We Migrated from NMState br-lab0
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#multus-cni-secondary-interface-attachment" class="md-nav__link">
@@ -1367,21 +1378,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#docker-host-netfilter-bridge-forwarding-ip-forward-no-drop" class="md-nav__link">
+  <a href="#coredns-integration-into-the-vpc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Docker Host Netfilter &amp; Bridge Forwarding (ip-forward-no-drop)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#kube-ovn-geneve-secondary-cni-wi-fi-layer-2-overlay" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Kube-OVN Geneve Secondary CNI (Wi-Fi Layer 2 Overlay)
+        CoreDNS Integration into the VPC
       
     </span>
   </a>
@@ -1605,55 +1605,31 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <li><strong>Result:</strong> Grants media streaming access to trusted family clients while completely blocking them from querying administrative tools, databases, or cluster control planes.</li>
 </ul>
 <hr />
-<h2 id="software-defined-l2-fabric-br-lab0">🌉 Software-Defined L2 Fabric (<code>br-lab0</code>)</h2>
-<p>Instead of requiring expensive managed switches with 802.1Q VLAN trunking, the cluster implements a <strong>multicast VXLAN overlay</strong> managed declaratively by <strong>NMState</strong>:</p>
+<h2 id="kube-ovn-software-defined-l2-vpc-ovn-ad-vpc">🌉 Kube-OVN Software-Defined L2 VPC (<code>ovn-ad-vpc</code>)</h2>
+<p>The cluster utilizes <strong>Kube-OVN</strong> as a powerful Software-Defined Networking (SDN) overlay, replacing the legacy <code>br-lab0</code> NMState Linux bridge. Kube-OVN builds on top of Open vSwitch (OVS) and OVN to provide advanced enterprise features—such as isolated Virtual Private Clouds (VPCs), distributed routing, embedded IP Address Management (IPAM), and strict Layer-2 isolation—directly within Kubernetes.</p>
+<p>By leveraging Geneve UDP encapsulation, Kube-OVN abstracts the physical network topology. This ensures seamless Layer 2 broadcast domains even across tricky underlay environments (such as Wi-Fi networks which typically drop foreign MACs and multicast frames).</p>
 <ul>
-<li><strong>Bridge Name:</strong> <code>br-lab0</code></li>
-<li><strong>Underlay Interface:</strong> <code>vxlan-lab</code> (VNI <code>100</code>, multicast group <code>239.1.1.1</code>, port <code>4789</code>)</li>
-<li><strong>Static Host Gateways:</strong></li>
-<li><code>lenovo</code>: <code>10.10.0.2/24</code></li>
-<li><code>optiplex</code>: <code>10.10.0.3/24</code></li>
-<li><code>opti74</code>: <code>10.10.0.4/24</code></li>
-<li><code>workstation</code>: <code>10.10.0.5/24</code></li>
+<li><strong>VPC Name:</strong> <code>ovn-cluster</code> (Logical Router) -&gt; <code>ovn-ad-vpc</code> (Logical Switch)</li>
+<li><strong>Subnet CIDR:</strong> <code>10.10.0.0/24</code></li>
+<li><strong>OPNsense Gateway IP:</strong> <code>10.10.0.1</code></li>
 </ul>
+<h3 id="why-we-migrated-from-nmstate-br-lab0">Why We Migrated from NMState <code>br-lab0</code></h3>
+<p>Previously, the cluster relied on a multicast VXLAN overlay (<code>br-lab0</code>) managed declaratively by NMState (NetworkManager State). 
+While NMState is great for declarative host networking, it heavily manipulates host <code>iptables</code> and binds virtual bridges directly to physical host interfaces. Kube-OVN is a much better implementation for Kubernetes because it utilizes a pure Software-Defined Geneve overlay that is completely decoupled from host routing rules and physical network quirks (like Wi-Fi access points aggressively dropping foreign MACs). Additionally, Kube-OVN provides native IP Address Management (IPAM) for seamless DHCP, eliminating the need to manually track static IPs across virtual bridges.</p>
 <h3 id="multus-cni-secondary-interface-attachment">Multus CNI Secondary Interface Attachment</h3>
-<p>Standard Kubernetes pods only receive a Flannel overlay IP (<code>10.42.x.x</code>). Using <strong>Multus CNI</strong>, select pods (like Apache Guacamole) are provisioned with a secondary interface (<code>net1</code>) plugged directly into <code>br-lab0</code>:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># NetworkAttachmentDefinition in default / target namespace</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">k8s.cni.cncf.io/v1</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NetworkAttachmentDefinition</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">metadata</span><span class="p">:</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lab-lan-bridge</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nt">spec</span><span class="p">:</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="s">'{</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="s">"cniVersion":</span><span class="nv"> </span><span class="s">"0.3.1",</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="s">"name":</span><span class="nv"> </span><span class="s">"lab-lan-bridge",</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="s">"type":</span><span class="nv"> </span><span class="s">"bridge",</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="s">"bridge":</span><span class="nv"> </span><span class="s">"br-lab0",</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="s">"hairpinMode":</span><span class="nv"> </span><span class="s">false</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="s">}'</span>
+<p>Standard Kubernetes pods receive a Flannel overlay IP (<code>10.42.x.x</code>). Using <strong>Multus CNI</strong>, select pods (like Apache Guacamole and CoreDNS) are provisioned with a secondary interface (<code>net1</code>) plugged directly into the Kube-OVN <code>ovn-ad-vpc</code> VPC.</p>
+<p>Because the Kube-OVN provider suffix ends in <code>.ovn</code>, Kube-OVN intercepts the Multus attachment and executes IPAM allocation.</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Pod Annotation on Guacamole Deployment (Dynamic DHCP)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">k8s.v1.cni.cncf.io/networks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vms/ovn-ad-vpc</span>
 </span></code></pre></div>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Pod Annotation on Guacamole Deployment</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">k8s.v1.cni.cncf.io/networks</span><span class="p">:</span><span class="w"> </span><span class="s">'[{</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s">"name":</span><span class="nv"> </span><span class="s">"lab-lan-bridge",</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="s">"ips":</span><span class="nv"> </span><span class="s">["10.10.0.50/24"]</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s">}]'</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Pod Annotation for VM or CoreDNS (Static IP Allocation)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">k8s.v1.cni.cncf.io/networks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vms/ovn-ad-vpc</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">ovn-ad-vpc.vms.ovn.kubernetes.io/ip_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.10.0.10</span>
 </span></code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">Hairpin Mode &amp; IPv6 DAD Resolution</p>
-<p>Early testing revealed that enabling <code>hairpinMode: true</code> on Linux bridges caused duplicate address detection (DAD) packet reflections back to KubeVirt VM interfaces. Setting <code>"hairpinMode": false</code> completely eliminates DAD loopbacks while allowing full cross-VM and Pod-to-VM communication.</p>
-</div>
-<h3 id="docker-host-netfilter-bridge-forwarding-ip-forward-no-drop">Docker Host Netfilter &amp; Bridge Forwarding (<code>ip-forward-no-drop</code>)</h3>
-<p>In Kubernetes clusters, <code>net.bridge.bridge-nf-call-iptables = 1</code> is enabled by default to allow iptables to filter bridged packets for CNI overlays and kube-proxy.</p>
-<ul>
-<li><strong>The Collision:</strong> By default, when the Docker daemon starts, it enables <code>net.ipv4.ip_forward = 1</code> and actively sets the iptables <code>FORWARD</code> chain policy to <code>DROP</code> (<code>-P FORWARD DROP</code>).</li>
-<li><strong>The Symptom:</strong> On pure worker nodes running Docker (such as <code>opti74</code>) without libvirt or Tailscale subnet routing to override the policy to <code>ACCEPT</code>, bridged Multus packets traversing <code>br-lab0</code> across hosts (e.g. Apache Guacamole at <code>10.10.0.50</code> on <code>opti74</code> communicating with Active Directory <code>dc01</code> at <code>10.10.0.10</code> on <code>workstation</code>) resolve Layer 2 ARP cleanly, but all subsequent Layer 3 IP traffic (LDAPS TCP 636, ICMP) is intercepted and silently dropped by the host's iptables <code>FORWARD</code> chain.</li>
-<li><strong>The Cluster Invariant:</strong> All nodes running Docker deploy <code>"ip-forward-no-drop": true</code> in <code>/etc/docker/daemon.json</code> via Ansible (<code>ansible/configure-docker-tls-gelf.yml</code>). This instructs Docker not to touch or restrict the host's <code>FORWARD</code> policy, ensuring unhindered Layer 2/Layer 3 bridging across the VXLAN fabric. The playbook also asserts <code>iptables -P FORWARD ACCEPT</code> directly.</li>
-</ul>
-<h3 id="kube-ovn-geneve-secondary-cni-wi-fi-layer-2-overlay">Kube-OVN Geneve Secondary CNI (Wi-Fi Layer 2 Overlay)</h3>
-<p>Physical Wi-Fi access points discard multicast frames and foreign MAC addresses emitted by host bridges. To allow virtual machines on wireless worker nodes to participate in the <code>10.10.0.0/24</code> subnet:
-* <strong>Geneve UDP Encapsulation:</strong> Kube-OVN encapsulates VM Layer 2 frames in standard unicast Geneve UDP packets over Layer 3.
-* <strong>Secondary CNI Mode (<code>nonPrimaryCNI: true</code>):</strong> Kube-OVN operates strictly as a Multus secondary CNI, leaving Flannel as the primary pod network.
-* <strong>Join CIDR (<code>172.18.0.0/16</code>):</strong> Shifted away from <code>100.64.0.0/16</code> to eliminate routing conflicts with the Tailscale CGNAT subnet (<code>100.64.0.0/10</code>).</p>
+<p><a href="https://kubeovn.github.io/docs/v1.16.x/en/advance/multi-nic/">Read more about Kube-OVN Advanced Subnets &amp; Multus IPAM here</a>.</p>
+<h3 id="coredns-integration-into-the-vpc">CoreDNS Integration into the VPC</h3>
+<p>Because OVN VPCs are completely isolated Layer-2 broadcast domains with strict security, standard Pods cannot reach them by default. 
+To enable the cluster to resolve Active Directory queries (<code>dc01.ad.lambertlab.us</code>), the <code>coredns</code> deployment in <code>kube-system</code> is patched to attach a secondary Multus interface directly to <code>ovn-ad-vpc</code>. This gives CoreDNS a secure, direct path to forward DNS queries to <code>10.10.0.10</code>.</p>
 <hr />
 <h2 id="coredns-conditional-forwarding-to-active-directory">🔍 CoreDNS Conditional Forwarding to Active Directory</h2>
 <p>Kubernetes pods routinely need to resolve domain-joined machines like <code>dc01.ad.lambertlab.us</code> or <code>win11-01.ad.lambertlab.us</code>.</p>
