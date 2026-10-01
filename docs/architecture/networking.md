@@ -159,6 +159,13 @@ In Kubernetes clusters, `net.bridge.bridge-nf-call-iptables = 1` is enabled by d
 * **The Symptom:** On pure worker nodes running Docker (such as `opti74`) without libvirt or Tailscale subnet routing to override the policy to `ACCEPT`, bridged Multus packets traversing `br-lab0` across hosts (e.g. Apache Guacamole at `10.10.0.50` on `opti74` communicating with Active Directory `dc01` at `10.10.0.10` on `workstation`) resolve Layer 2 ARP cleanly, but all subsequent Layer 3 IP traffic (LDAPS TCP 636, ICMP) is intercepted and silently dropped by the host's iptables `FORWARD` chain.
 * **The Cluster Invariant:** All nodes running Docker deploy `"ip-forward-no-drop": true` in `/etc/docker/daemon.json` via Ansible (`ansible/configure-docker-tls-gelf.yml`). This instructs Docker not to touch or restrict the host's `FORWARD` policy, ensuring unhindered Layer 2/Layer 3 bridging across the VXLAN fabric. The playbook also asserts `iptables -P FORWARD ACCEPT` directly.
 
+### Kube-OVN Geneve Secondary CNI (Wi-Fi Layer 2 Overlay)
+Physical Wi-Fi access points discard multicast frames and foreign MAC addresses emitted by host bridges. To allow virtual machines on wireless worker nodes to participate in the `10.10.0.0/24` subnet:
+* **Geneve UDP Encapsulation:** Kube-OVN encapsulates VM Layer 2 frames in standard unicast Geneve UDP packets over Layer 3.
+* **Secondary CNI Mode (`nonPrimaryCNI: true`):** Kube-OVN operates strictly as a Multus secondary CNI, leaving Flannel as the primary pod network.
+* **Join CIDR (`172.18.0.0/16`):** Shifted away from `100.64.0.0/16` to eliminate routing conflicts with the Tailscale CGNAT subnet (`100.64.0.0/10`).
+
+
 ---
 
 ## 🔍 CoreDNS Conditional Forwarding to Active Directory

@@ -9,4 +9,8 @@ spec:
   configuration:
     developerConfiguration:
       useEmulation: false
+    network:
+      binding:
+        managedtap:
+          domainAttachmentType: managedTap
   imagePullPolicy: IfNotPresent

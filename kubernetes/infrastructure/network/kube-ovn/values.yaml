@@ -1,0 +1,17 @@
+---
+# Match K3s control-plane labels so ovn-central can schedule
+masterNodesLabels:
+  kube-ovn/role: null
+  node-role.kubernetes.io/control-plane: "true"
+
+networking:
+  # Move the internal Join Subnet away from 100.64.0.0/16
+  # This prevents Kube-OVN from breaking your Tailscale connection (which uses 100.64.0.0/10)
+  join:
+    cidr:
+      v4: "172.18.0.0/16"
+
+cni:
+  # Tell Kube-OVN to run exclusively as a secondary network (Multus).
+  # This prevents it from hijacking Flannel, which runs your default Kubernetes pods.
+  nonPrimaryCNI: true

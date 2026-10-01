@@ -1,0 +1,36 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-ovn
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: infrastructure
+  sources:
+    # 1. Local homelab repo reference (just for providing the values.yaml)
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      ref: homelab
+
+    # 2. Upstream Kube-OVN v2 Helm chart
+    - repoURL: https://kubeovn.github.io/kube-ovn
+      chart: kube-ovn-v2
+      targetRevision: v1.16.9
+      helm:
+        releaseName: kube-ovn
+        valueFiles:
+          - $homelab/kubernetes/infrastructure/network/kube-ovn/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true

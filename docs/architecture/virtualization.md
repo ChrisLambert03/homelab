@@ -165,3 +165,17 @@ tolerations:
 
 This prevents Kubernetes `NodeLifecycleController` from evicting `virt-launcher` pods and triggering unintended ACPI guest shutdown signals during transient control-plane blips, keeping VMs continuously operational on the worker host.
 
+---
+
+## 🌐 Kube-OVN Geneve Overlay & `managedTap` Binding
+
+To enable KubeVirt virtual machines on Wi-Fi worker nodes (`workstation`) to communicate over Layer 2 without relying on physical multicast bridging, the cluster integrates **Kube-OVN** in secondary CNI mode alongside KubeVirt's **`managedTap`** network binding plugin:
+
+### Why `managedTap` is Essential for DHCP
+* **Standard Bridge DHCP Interception:** In default KubeVirt `bridge: {}` mode, `virt-launcher` intercepts guest DHCP requests and serves dummy leases, preventing external/overlay DHCP engines from providing custom options.
+* **`managedTap` Plugin:** Introduced in KubeVirt v1.4+, `managedTap` creates a direct tap device wired to the pod interface without intercepting DHCP or IPv6 RA packets. This allows Kube-OVN's OVN hypervisor engine to deliver:
+  * Dynamic IP allocation (`10.10.0.0/24`)
+  * Default gateway routing to OPNsense (`10.10.0.1`)
+  * Active Directory DNS server delivery (`10.10.0.10` -> `dc01`)
+
+
