@@ -1,0 +1,15 @@
+---
+apiVersion: kubeovn.io/v1
+kind: Subnet
+metadata:
+  name: ovn-ad-vpc
+spec:
+  protocol: IPv4
+  provider: ovn-ad-vpc.vms.ovn
+  cidrBlock: 10.10.0.0/24
+  gateway: 10.10.0.1
+  excludeIps:
+    - 10.10.0.1..10.10.0.9
+  enableDHCP: true
+  # Explicitly tell Kube-OVN DHCP to hand out DC01 as the DNS server to the VMs!
+  dhcpV4Options: "dns_server={10.10.0.10},lease_time=3600,router=10.10.0.1,server_id=10.10.0.1,server_mac=00:00:00:10:10:01"
