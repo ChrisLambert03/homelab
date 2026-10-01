@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -782,6 +782,34 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#kube-ovn-geneve-overlay-managedtap-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌐 Kube-OVN Geneve Overlay &amp; managedTap Binding
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌐 Kube-OVN Geneve Overlay &amp; managedTap Binding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-managedtap-is-essential-for-dhcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why managedTap is Essential for DHCP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1387,6 +1415,34 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#kube-ovn-geneve-overlay-managedtap-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌐 Kube-OVN Geneve Overlay &amp; managedTap Binding
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌐 Kube-OVN Geneve Overlay &amp; managedTap Binding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-managedtap-is-essential-for-dhcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why managedTap is Essential for DHCP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1598,6 +1654,17 @@ This purges the unique Machine SID, clears device driver databases, resets the e
 </span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nt">tolerationSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800</span>
 </span></code></pre></div>
 <p>This prevents Kubernetes <code>NodeLifecycleController</code> from evicting <code>virt-launcher</code> pods and triggering unintended ACPI guest shutdown signals during transient control-plane blips, keeping VMs continuously operational on the worker host.</p>
+<hr />
+<h2 id="kube-ovn-geneve-overlay-managedtap-binding">🌐 Kube-OVN Geneve Overlay &amp; <code>managedTap</code> Binding</h2>
+<p>To enable KubeVirt virtual machines on Wi-Fi worker nodes (<code>workstation</code>) to communicate over Layer 2 without relying on physical multicast bridging, the cluster integrates <strong>Kube-OVN</strong> in secondary CNI mode alongside KubeVirt's <strong><code>managedTap</code></strong> network binding plugin:</p>
+<h3 id="why-managedtap-is-essential-for-dhcp">Why <code>managedTap</code> is Essential for DHCP</h3>
+<ul>
+<li><strong>Standard Bridge DHCP Interception:</strong> In default KubeVirt <code>bridge: {}</code> mode, <code>virt-launcher</code> intercepts guest DHCP requests and serves dummy leases, preventing external/overlay DHCP engines from providing custom options.</li>
+<li><strong><code>managedTap</code> Plugin:</strong> Introduced in KubeVirt v1.4+, <code>managedTap</code> creates a direct tap device wired to the pod interface without intercepting DHCP or IPv6 RA packets. This allows Kube-OVN's OVN hypervisor engine to deliver:</li>
+<li>Dynamic IP allocation (<code>10.10.0.0/24</code>)</li>
+<li>Default gateway routing to OPNsense (<code>10.10.0.1</code>)</li>
+<li>Active Directory DNS server delivery (<code>10.10.0.10</code> -&gt; <code>dc01</code>)</li>
+</ul>
 
 
 

@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -626,6 +626,17 @@
     <span class="md-ellipsis">
       
         Docker Host Netfilter &amp; Bridge Forwarding (ip-forward-no-drop)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kube-ovn-geneve-secondary-cni-wi-fi-layer-2-overlay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kube-OVN Geneve Secondary CNI (Wi-Fi Layer 2 Overlay)
       
     </span>
   </a>
@@ -1366,6 +1377,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#kube-ovn-geneve-secondary-cni-wi-fi-layer-2-overlay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kube-OVN Geneve Secondary CNI (Wi-Fi Layer 2 Overlay)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1627,6 +1649,11 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <li><strong>The Symptom:</strong> On pure worker nodes running Docker (such as <code>opti74</code>) without libvirt or Tailscale subnet routing to override the policy to <code>ACCEPT</code>, bridged Multus packets traversing <code>br-lab0</code> across hosts (e.g. Apache Guacamole at <code>10.10.0.50</code> on <code>opti74</code> communicating with Active Directory <code>dc01</code> at <code>10.10.0.10</code> on <code>workstation</code>) resolve Layer 2 ARP cleanly, but all subsequent Layer 3 IP traffic (LDAPS TCP 636, ICMP) is intercepted and silently dropped by the host's iptables <code>FORWARD</code> chain.</li>
 <li><strong>The Cluster Invariant:</strong> All nodes running Docker deploy <code>"ip-forward-no-drop": true</code> in <code>/etc/docker/daemon.json</code> via Ansible (<code>ansible/configure-docker-tls-gelf.yml</code>). This instructs Docker not to touch or restrict the host's <code>FORWARD</code> policy, ensuring unhindered Layer 2/Layer 3 bridging across the VXLAN fabric. The playbook also asserts <code>iptables -P FORWARD ACCEPT</code> directly.</li>
 </ul>
+<h3 id="kube-ovn-geneve-secondary-cni-wi-fi-layer-2-overlay">Kube-OVN Geneve Secondary CNI (Wi-Fi Layer 2 Overlay)</h3>
+<p>Physical Wi-Fi access points discard multicast frames and foreign MAC addresses emitted by host bridges. To allow virtual machines on wireless worker nodes to participate in the <code>10.10.0.0/24</code> subnet:
+* <strong>Geneve UDP Encapsulation:</strong> Kube-OVN encapsulates VM Layer 2 frames in standard unicast Geneve UDP packets over Layer 3.
+* <strong>Secondary CNI Mode (<code>nonPrimaryCNI: true</code>):</strong> Kube-OVN operates strictly as a Multus secondary CNI, leaving Flannel as the primary pod network.
+* <strong>Join CIDR (<code>172.18.0.0/16</code>):</strong> Shifted away from <code>100.64.0.0/16</code> to eliminate routing conflicts with the Tailscale CGNAT subnet (<code>100.64.0.0/10</code>).</p>
 <hr />
 <h2 id="coredns-conditional-forwarding-to-active-directory">🔍 CoreDNS Conditional Forwarding to Active Directory</h2>
 <p>Kubernetes pods routinely need to resolve domain-joined machines like <code>dc01.ad.lambertlab.us</code> or <code>win11-01.ad.lambertlab.us</code>.</p>
