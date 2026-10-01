@@ -1,6 +1,6 @@
-# L2 VXLAN Overlay & CoreDNS Architecture
+# Software-Defined L2 VPC & CoreDNS Architecture
 
-The **LambertLab** network combines software-defined Layer 2 multicast tunneling, conditional Active Directory DNS forwarding, hardware NIC offload tuning, and multi-cloud edge ingress.
+The **LambertLab** network combines software-defined Layer 2 Geneve VPC tunneling via **Kube-OVN**, conditional Active Directory DNS forwarding over Multus, hardware NIC offload tuning, and multi-cloud edge ingress.
 
 ---
 
@@ -18,13 +18,13 @@ graph TD
         CoreDNS["K3s CoreDNS Forwarder<br/>10.43.0.10:53"]
     end
     
-    subgraph VXLAN["L2 Multicast VXLAN Fabric (br-lab0 / 10.10.0.0/24)"]
-        BridgeNet["br-lab0 Bridge"]
-        GuacPod -.->|"Multus CNI: net1 10.10.0.50"| BridgeNet
-        BridgeNet --> DC01["DC01 Active Directory<br/>10.10.0.10:636 LDAPS / :3389 RDP"]
-        BridgeNet --> Win11["Windows 11 Workstation<br/>10.10.0.155:3389 RDP"]
-        BridgeNet --> OPNsense["OPNsense Firewall VM<br/>Virtual Edge Routing"]
-        CoreDNS -->|"Conditional Forward ad.lambertlab.us"| DC01
+    subgraph OVN["Software-Defined L2 VPC (ovn-ad-vpc / 10.10.0.0/24)"]
+        OVNSwitch["Kube-OVN Geneve Overlay<br/>(Logical Switch ovn-ad-vpc)"]
+        OPNsense["OPNsense Firewall VM<br/>Gateway 10.10.0.1"] <--> OVNSwitch
+        GuacPod -.->|"Multus CNI: net1 (Dynamic DHCP)"| OVNSwitch
+        OVNSwitch --> DC01["DC01 Active Directory<br/>10.10.0.10:636 LDAPS / :3389 RDP"]
+        OVNSwitch --> Win11["Windows 11 Workstation<br/>10.10.0.11:3389 RDP"]
+        CoreDNS -.->|"Multus CNI: net1 (ovn-ad-vpc)"| DC01
     end
 
     subgraph External["External Services over Tailscale"]
@@ -188,7 +188,7 @@ Disabling TCP segmentation offload (TSO) and generic segmentation offload (GSO) 
 
 ## 🔄 Internal VM Hairpin Routing
 
-KubeVirt virtual machines (such as `dc01` and `win11`) reside on the `10.10.0.0/24` L2 VXLAN subnet and do not run Tailscale clients. When VMs need to query cluster services published over external Traefik URLs (e.g. `https://vault.lambertlab.us` or `https://guacamole.lambertlab.us`):
+KubeVirt virtual machines (such as `dc01` and `win11`) reside on the `10.10.0.0/24` Kube-OVN Geneve VPC subnet and do not run Tailscale clients. When VMs need to query cluster services published over external Traefik URLs (e.g. `https://vault.lambertlab.us` or `https://guacamole.lambertlab.us`):
 
 * **Traffic Path:** OPNsense routes `100.64.0.0/10` LAN traffic to the Traefik Service ClusterIP (`10.43.204.125:443`).
 * **Rule:** Always route internal VM traffic targeting cluster ingress to the Traefik Service ClusterIP, never to a physical node's local LAN IP.

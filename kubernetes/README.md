@@ -15,15 +15,15 @@ The cluster state is categorized into the following core domains:
 *   **`media/`**: Self-hosted media and automation stacks.
 *   **`apps/`**: General-purpose workloads and dashboards.
 
-## 🌊 ArgoCD Sync Waves (1–5)
+## 🌊 ArgoCD Sync Waves (0–5)
 
 To ensure that dependencies are met during a cluster bootstrap or disaster recovery, ArgoCD manages applications in strictly defined Sync Waves:
 
-1.  **Wave 1 (Storage & Networking):** Longhorn, Traefik, cert-manager, Multus.
-2.  **Wave 2 (Security & Identity):** OAuth2-Proxy, Vault injectors.
-3.  **Wave 3 (Observability):** Elastic Agents, Prometheus.
-4.  **Wave 4 (Core Services & VMs):** KubeVirt operator, `dc01` Active Directory, Traefik middlewares.
-5.  **Wave 5 (User Apps & Media):** Standard workloads, dashboards, and media servers.
+1.  **Wave 0 (AppProjects Scaffolding):** RBAC boundaries (`infrastructure`, `security`, `media`, `observability`, `gaming`).
+2.  **Wave 1 (Storage, Operators & SDN):** Longhorn, Multus, Kube-OVN, KubeVirt & CDI, cert-manager, NVIDIA GPU operator.
+3.  **Wave 2 (Security, Core Gateways & VPCs):** HashiCorp Vault, External Secrets, CoreDNS forwarders, Kube-OVN Networks (`ovn-ad-vpc`), Apache Guacamole, KubeVirt Manager, ArgoCD HA.
+4.  **Wave 3 (Virtual Machines & Consumer Workloads):** `dc01` Active Directory, `win11` Workstation, OPNsense firewall, ARR media stack, Jellyfin, Homarr, Ntfy, Palworld.
+5.  **Wave 5 (SIEM Host Telemetry):** Elastic Agent DaemonSet for host/cluster log telemetry to ELK.
 
 ## 📜 Manifest Conventions
 

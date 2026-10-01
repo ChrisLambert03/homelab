@@ -10,7 +10,7 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 * **Namespace:** `vms` (KubeVirt `VirtualMachine`)
 * **Operating System:** Windows Server 2025 Standard
 * **Sync Wave:** `Wave 3`
-* **Internal IP:** `10.10.0.10` (Static on `br-lab0`)
+* **Internal IP:** `10.10.0.10` (Static on `ovn-ad-vpc` via Kube-OVN IPAM)
 * **FQDN:** `dc01.ad.lambertlab.us`
 * **Hardware Profile:** 4 vCPU, 8 GiB RAM, host-passthrough CPU topology.
 * **Storage Backend:** Dedicated 80 GB raw iSCSI block LUN (`iqn.2026-09.us.lambertlab:dc01-disk`) on TerraMaster SAN.
@@ -27,7 +27,7 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 * **Namespace:** `vms` (KubeVirt `VirtualMachine`)
 * **Operating System:** Windows 11 Enterprise LTSC
 * **Sync Wave:** `Wave 3`
-* **Internal IP:** `10.10.0.155` (Dynamic / DHCP on `br-lab0`)
+* **Internal IP:** `10.10.0.11` (Dynamic / DHCP on `ovn-ad-vpc` via Kube-OVN IPAM)
 * **FQDN:** `win11.ad.lambertlab.us`
 * **Hardware Profile:** 4 vCPU, 8 GiB RAM, host-passthrough CPU topology.
 * **Storage Backend:** Dedicated 64 GB raw iSCSI block LUN (`iqn.2026-09.us.lambertlab:win11-boot`) on TerraMaster SAN.
@@ -49,7 +49,7 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 * **Storage Backend:** Dedicated 40 GB raw iSCSI block LUN (`iqn.2026-09.us.lambertlab:opnsense-boot`) on TerraMaster SAN; NFS installer mount (`/Volume3/isos/opnsense`).
 * **Architectural Role:** Virtualized edge perimeter router, NAT gateway, and security firewall.
 * **Key Configuration:**
-  * Multi-NIC topology bridging physical host interfaces to the software-defined `br-lab0` VXLAN fabric.
+  * Multi-NIC topology: primary Flannel interface for pod masquerade and secondary Multus interface on `ovn-ad-vpc` (`10.10.0.1`) serving as the default gateway.
   * Internal hairpin routing directing `100.64.0.0/10` LAN queries to the Traefik Ingress Service ClusterIP (`10.43.204.125:443`).
   * Traefik Ingress with custom backend HTTPS serverstransport.
 
@@ -72,7 +72,7 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 * **Ingress Endpoint:** `https://guacamole.lambertlab.us`
 * **Architectural Role:** Clientless HTML5 remote desktop gateway providing browser-based RDP and SSH access.
 * **Key Configuration:**
-  * Multus CNI secondary interface `net1` assigned static IP `10.10.0.50/24` on `br-lab0` for direct wire-speed VM access.
+  * Multus CNI secondary interface `net1` attached to `vms/ovn-ad-vpc` via dynamic DHCP allocation for direct wire-speed VM access.
   * InitContainer automated injection of internal Active Directory Root CA into Java truststore (`cacerts`).
   * Dual authentication chaining via `EXTENSION_PRIORITY: "*,openid"`, supporting Microsoft Entra ID OIDC SSO while preserving local `guacadmin` emergency recovery.
   * Backend PostgreSQL database running on Longhorn distributed storage with `longhorn-retain` policy.

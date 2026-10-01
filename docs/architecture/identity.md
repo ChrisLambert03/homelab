@@ -45,7 +45,7 @@ graph TD
 | **NetBIOS Name** | `LAMBERTLAB` | Legacy compatibility for Windows 11 domain logins (`LAMBERTLAB\username`). |
 | **Primary Cloud Domain** | `lambertlab.us` | Custom domain verified via Cloudflare DNS TXT record (`MS=ms33191728`). |
 | **Alternative UPN Suffix** | `lambertlab.us` | Configured on AD root domain so users log in seamlessly as `user@lambertlab.us`. |
-| **Domain Controller Hostname** | `dc01-ad.vms` | KubeVirt VM pinned to static IP `10.10.0.10` on software-defined `br-lab0`. |
+| **Domain Controller Hostname** | `dc01-ad.vms` | KubeVirt VM pinned to static IP `10.10.0.10` on software-defined `ovn-ad-vpc` (Kube-OVN). |
 | **Directory Functional Level** | Windows Server 2025 | Enables modern Kerberos cryptographic suites and enhanced gMSA policies. |
 
 ---

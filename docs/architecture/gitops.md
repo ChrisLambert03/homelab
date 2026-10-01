@@ -30,9 +30,9 @@ graph TD
             Wave1["Foundations"]
             Longhorn["Longhorn Storage"]
             Multus["Multus Thick CNI"]
+            KubeOVN["Kube-OVN SDN"]
             KubeVirtOp["KubeVirt & CDI"]
             CertMgr["Cert-Manager v1.21.2"]
-            NMStateOp["kubernetes-nmstate"]
             GPUOp["NVIDIA GPU Operator"]
         end
     end
@@ -43,7 +43,7 @@ graph TD
             Vault["HashiCorp Vault"]
             ExtSecrets["External Secrets"]
             ClusterCfg["CoreDNS & TLSStore"]
-            NMStatePol["br-lab0 VXLAN"]
+            KubeOVNNet["ovn-ad-vpc VPC"]
             Guac["Apache Guacamole"]
             KVMgr["KubeVirt Manager"]
             ExtSvc["External Services"]
@@ -57,6 +57,11 @@ graph TD
             MediaStack["ARR Media Stack / Jellyfin"]
             ObsStack["Homarr / Ntfy"]
             GamingStack["Palworld Dedicated"]
+        end
+
+        subgraph W5["Sync Wave 5: SIEM Telemetry"]
+            Wave5["Observability"]
+            ElasticAgent["Elastic Agent DaemonSet"]
         end
     end
 ```
@@ -81,9 +86,10 @@ ArgoCD assigns resources to discrete, sequential **Sync Waves** (evaluated in as
 | Sync Wave | Category | Primary Resources & Applications | Architectural Purpose |
 | :---: | :--- | :--- | :--- |
 | **`0`** | **AppProjects Scaffolding** | `infrastructure`, `security`, `media`, `observability`, `gaming` | Establishes project RBAC boundaries, source repo constraints, and allowed cluster destinations. |
-| **`1`** | **Foundation & Storage** | `longhorn`, `multus`, `kubevirt`, `cdi`, `cert-manager`, `nmstate-operator`, `nvidia-gpu-operator` | Installs core storage drivers, CNI plugins, hypervisor operators, and foundational CRD schemas. |
-| **`2`** | **Security & Core Gateways** | `vault`, `external-secrets`, `cluster-config`, `nmstate-policies`, `guacamole`, `kubevirt-manager`, `external-services` | Configures VXLAN networking (`br-lab0`), secrets engines, custom DNS forwarders, and clientless gateways. |
+| **`1`** | **Foundation & Storage** | `longhorn`, `multus`, `kube-ovn`, `kubevirt`, `cdi`, `cert-manager`, `nvidia-gpu-operator` | Installs core storage drivers, CNI plugins & SDN overlay engine (Kube-OVN), hypervisor operators, and foundational CRD schemas. |
+| **`2`** | **Security & Core Gateways** | `vault`, `external-secrets`, `cluster-config`, `kube-ovn-networks`, `guacamole`, `kubevirt-manager`, `external-services`, `argocd` | Configures Kube-OVN VPC overlay (`ovn-ad-vpc`), secrets engines, custom DNS forwarders, and clientless gateways. *(Legacy `nmstate-policies` deprecated).* |
 | **`3`** | **Consumer Workloads & VMs** | `dc01`, `win11`, `opnsense`, `jellyfin`, `sonarr`, `radarr`, `prowlarr`, `homarr`, `ntfy`, `palworld` | Deploys active virtual machines, database consumers, media applications, and game servers. |
+| **`5`** | **SIEM Host Telemetry** | `elastic-agent` | Deploys cluster-wide Elastic Agent DaemonSet with memory caps, streaming infrastructure logs to ELK. |
 
 ---
 

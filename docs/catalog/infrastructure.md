@@ -43,15 +43,16 @@ This section details the foundational control plane components, software-defined
 
 ---
 
-### 4. NMState Operator & Node Network Configuration Policies
-* **Namespace:** `nmstate`
-* **Version:** Kubernetes-NMState Operator
-* **Sync Waves:** Operator in `Wave 1`, Policies in `Wave 2`
-* **Architectural Role:** Declarative host-level Linux network state manager.
+### 4. Kube-OVN Software-Defined L2 VPC (`ovn-ad-vpc`)
+* **Namespace:** `kube-system` (Engine) & `vms` (Networks)
+* **Version:** Kube-OVN Secondary CNI
+* **Sync Waves:** Operator & Engine in `Wave 1`, Subnets & NADs in `Wave 2`
+* **Architectural Role:** Software-Defined Networking (SDN) overlay providing isolated Layer 2 VPCs, embedded IPAM, and Geneve UDP encapsulation.
 * **Key Configuration:**
-  * Configures multi-node multicast VXLAN bridge `br-lab0` across all cluster nodes.
-  * Underlay interface `vxlan-lab` bound to VNI 100 on multicast group `239.1.1.1:4789`.
-  * Static gateway IP assignment per host: `10.10.0.2` (`lenovo`), `10.10.0.3` (`optiplex`), `10.10.0.4` (`opti74`), `10.10.0.5` (`workstation`).
+  * Replaces legacy NMState Linux host bridge (`br-lab0`) with Geneve UDP encapsulation, bypassing Wi-Fi multicast restrictions and host iptables `FORWARD` drops.
+  * VPC Subnet `ovn-ad-vpc` (`10.10.0.0/24`) configured with dummy gateway `10.10.0.254` to allow the virtualized OPNsense firewall to claim `10.10.0.1`.
+  * Embedded DHCP server delivering Active Directory DNS (`10.10.0.10`) and default gateway (`10.10.0.1`) directly to virtual machines and secondary pod interfaces.
+  * *(Legacy Note: NMState Operator remains available in Wave 1 for host networking, but `nmstate-policies` is deprecated).*
 
 ---
 
@@ -60,9 +61,9 @@ This section details the foundational control plane components, software-defined
 * **Sync Wave:** `Wave 1`
 * **Architectural Role:** Multi-network interface plugin enabling pods and VMs to attach directly to multiple network fabrics.
 * **Key Configuration:**
-  * `NetworkAttachmentDefinition` named `lab-lan-bridge` mapping directly to host bridge `br-lab0`.
-  * Configured with `"hairpinMode": false` to prevent IPv6 Duplicate Address Detection (DAD) reflection loops.
-  * Provides Apache Guacamole and KubeVirt VMs with direct Layer 2 connectivity (`10.10.0.0/24`).
+  * `NetworkAttachmentDefinition` named `ovn-ad-vpc` mapped to provider `ovn-ad-vpc.vms.ovn`.
+  * Intercepts secondary interface attachments for Apache Guacamole (dynamic DHCP) and CoreDNS forwarders.
+  * Pairs with KubeVirt's `managedTap` network binding plugin to provide KVM virtual machines with direct Layer 2 connectivity without DHCP lease interception.
 
 ---
 
@@ -83,7 +84,7 @@ This section details the foundational control plane components, software-defined
 * **Architectural Role:** Zero-trust WireGuard mesh overlay networking.
 * **Key Configuration:**
   * Enables remote access without open public firewall ports.
-  * High-availability subnet router running on `optiplex` advertising both the primary physical LAN and VXLAN overlay (`10.10.0.0/24`).
+  * High-availability subnet router running on `optiplex` advertising both the primary physical LAN and Kube-OVN VPC overlay (`10.10.0.0/24`).
   * Automated DNS automation via Terraform Cloudflare provider referencing Tailscale node IPs.
 
 ---

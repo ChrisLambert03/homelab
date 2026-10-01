@@ -21,7 +21,7 @@ graph TD
         Secret["win11-unattend-secret<br/>Declarative unattend.xml"] -->|"Synthetic CD-ROM"| KVM["QEMU / KVM Guest Engine"]
         SANLUN -->|"VirtIO SCSI Bus viostor"| KVM
         TPMVol[("Persistent Longhorn Volume")] -->|"swtpm State Storage"| KVM
-        Multus["Multus CNI: lab-lan-bridge"] -->|"VirtIO Net NetKVM"| KVM
+        Multus["Multus CNI: ovn-ad-vpc<br/>(managedTap binding)"] -->|"VirtIO Net NetKVM"| KVM
         KVM --> WinOS["Windows 11 Enterprise LTSC<br/>Dynamic WIN-* Domain Joined"]
     end
 ```
@@ -32,9 +32,9 @@ graph TD
 
 | Virtual Machine | Operating System | vCPU / RAM | Storage Backend | Network Interface | Primary Role |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`win11`** | Windows 11 Enterprise LTSC | 4 vCPU / 8 GiB | 64 GB SAN iSCSI LUN | `lab-lan-bridge` (VXLAN) | Domain-Joined Dedicated Admin Workstation |
-| **`dc01`** | Windows Server 2025 | 4 vCPU / 8 GiB | 80 GB SAN iSCSI LUN | `lab-lan-bridge` (VXLAN) | Primary Active Directory Domain Controller (`ad.lambertlab.us`) |
-| **`opnsense`** | FreeBSD 14 / OPNsense | 4 vCPU / 4 GiB | Distributed Longhorn Block | Host NIC Physical Bridge | Edge Gateway, NAT & Security Firewall |
+| **`win11`** | Windows 11 Enterprise LTSC | 4 vCPU / 8 GiB | 64 GB SAN iSCSI LUN | `ovn-ad-vpc` (Geneve / `managedTap`) | Domain-Joined Dedicated Admin Workstation |
+| **`dc01`** | Windows Server 2025 | 4 vCPU / 8 GiB | 80 GB SAN iSCSI LUN | `ovn-ad-vpc` (Geneve / `managedTap`) | Primary Active Directory Domain Controller (`ad.lambertlab.us`) |
+| **`opnsense`** | FreeBSD 14 / OPNsense | 4 vCPU / 4 GiB | Distributed Longhorn Block | `ovn-ad-vpc` (`managedTap`) + Pod Masquerade | Edge Gateway, NAT & Security Firewall |
 
 ---
 

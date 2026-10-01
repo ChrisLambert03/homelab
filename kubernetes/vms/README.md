@@ -5,7 +5,7 @@
 [![KubeVirt](https://img.shields.io/badge/KubeVirt-v1.9.0-purple?style=for-the-badge&logo=redhatopenshift&logoColor=white)](https://kubevirt.io)
 [![QEMU/KVM](https://img.shields.io/badge/Hypervisor-QEMU%2FKVM-orange?style=for-the-badge&logo=qemu&logoColor=white)](https://www.qemu.org)
 [![Storage](https://img.shields.io/badge/Storage-iSCSI_SAN_%2B_NFS-blue?style=for-the-badge&logo=netapp&logoColor=white)](https://en.wikipedia.org/wiki/ISCSI)
-[![Networking](https://img.shields.io/badge/Network-Multus_L2_VXLAN-24A1C1?style=for-the-badge&logo=kubernetes&logoColor=white)](https://github.com/k8snetworkplumbingwg/multus-cni)
+[![Networking](https://img.shields.io/badge/Network-Kube--OVN_L2_VPC-24A1C1?style=for-the-badge&logo=kubernetes&logoColor=white)](https://github.com/kubeovn/kube-ovn)
 [![Windows 11](https://img.shields.io/badge/Windows_11-Enterprise_LTSC-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://www.microsoft.com/en-us/evalcenter/download-windows-11-enterprise)
 [![Active Directory](https://img.shields.io/badge/Active_Directory-ad.lambertlab.us-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/active-directory-domain-services)
 [![GitOps](https://img.shields.io/badge/GitOps-ArgoCD-EF6036?style=for-the-badge&logo=argo&logoColor=white)](https://argoproj.github.io)
@@ -28,7 +28,7 @@ By replacing traditional standalone hypervisors with KubeVirt, this architecture
 - [x] **Hardware-Enforced Windows 11 Security Compliance**: Implemented fully compliant OVMF UEFI Secure Boot paired with persistent virtual TPM 2.0 (`swtpm`) state storage backed by Longhorn, passing all Windows 11 hardware attestation checks out of the box.
 - [x] **Dedicated iSCSI SAN Block Integration**: Architected dedicated low-latency iSCSI block storage targets hosted on the TerraMaster NAS directly into KubeVirt VirtualMachines, delivering native SCSI performance without filesystem overhead.
 - [x] **Multi-vCPU Hyper-V Hypercall Optimization**: Engineered a comprehensive suite of KVM Hyper-V enlightened flags, drastically mitigating virtualization overhead, inter-processor interrupts, and timer latency across guest CPU cores.
-- [x] **Multi-Node L2 VXLAN Network Bridging**: Integrated Multus CNI with cluster-wide multicast VXLAN bridging (`br-lab0`), granting VMs native Layer 2 presence on the isolated virtual LAN fabric for transparent Active Directory DNS, LDAP, and Kerberos operations without NAT.
+- [x] **Multi-Node Software-Defined L2 VPC Overlay**: Integrated Multus CNI with Kube-OVN Geneve encapsulation and `managedTap` binding, granting VMs native Layer 2 presence on the isolated virtual LAN fabric (`ovn-ad-vpc`) for transparent Active Directory DNS, LDAP, and Kerberos operations without host bridge netfilter drops.
 - [x] **Declarative GitOps Lifecycle Management**: Bound all virtual machine definitions, persistent volumes, and configuration state to ArgoCD synchronization waves with automated drift detection and self-healing.
 
 ---
@@ -37,9 +37,9 @@ By replacing traditional standalone hypervisors with KubeVirt, this architecture
 
 | Virtual Machine | Operating System | Profile | Storage Architecture | Network Interface | Primary Role |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`win11`** | Windows 11 Enterprise LTSC | 4 vCPU / 8 GiB RAM | 64 GB iSCSI Block LUN | `lab-lan-bridge` (VXLAN) | Domain-Joined Dedicated Admin Workstation |
-| **`dc01`** | Windows Server 2025 | 4 vCPU / 8 GiB RAM | 80 GB iSCSI Block LUN | `lab-lan-bridge` (VXLAN) | Primary Domain Controller (`ad.lambertlab.us`) |
-| **`opnsense`** | FreeBSD 14 / OPNsense | 4 vCPU / 4 GiB RAM | Distributed Longhorn Block | Host NIC Physical Bridge | Edge Routing Gateway, NAT, & Firewall |
+| **`win11`** | Windows 11 Enterprise LTSC | 4 vCPU / 8 GiB RAM | 64 GB iSCSI Block LUN | `ovn-ad-vpc` (Geneve / `managedTap`) | Domain-Joined Dedicated Admin Workstation |
+| **`dc01`** | Windows Server 2025 | 4 vCPU / 8 GiB RAM | 80 GB iSCSI Block LUN | `ovn-ad-vpc` (Geneve / `managedTap`) | Primary Domain Controller (`ad.lambertlab.us`) |
+| **`opnsense`** | FreeBSD 14 / OPNsense | 4 vCPU / 4 GiB RAM | Distributed Longhorn Block | `ovn-ad-vpc` (`managedTap`) + Pod Masquerade | Edge Routing Gateway, NAT, & Firewall |
 
 ---
 
@@ -188,15 +188,15 @@ iscsi:
   lun: 0
   fsType: ext4
 
-# Network: Multus Layer 2 VXLAN
+# Network: Multus Layer 2 Kube-OVN VPC
 networks:
   - name: lab-lan
     multus:
-      networkName: lab-lan-bridge
+      networkName: ovn-ad-vpc
 ```
 
 * **Dedicated iSCSI Target**: Bound to `iqn.2026-09.us.lambertlab:win11-boot` hosted on the TerraMaster SAN SATA SSD pool. iSCSI delivers dedicated SCSI command queuing with sub-2ms random I/O latency, completely bypassing NFS file-locking mechanics.
-* **Multus CNI (`lab-lan-bridge`)**: Connects the virtual machine directly to the physical cluster's `br-lab0` multicast VXLAN overlay. This places the VM directly on the flat virtual LAN subnet alongside `dc01` and OPNsense, enabling native Active Directory Kerberos ticket exchanges, LDAP queries, and dynamic DNS registration without traversing Kubernetes NAT gateways.
+* **Multus CNI (`ovn-ad-vpc`) & `managedTap`**: Connects the virtual machine directly into the Kube-OVN Software-Defined L2 VPC overlay. Paired with KubeVirt's `managedTap` network binding plugin, the VM receives unhindered Layer 2 connectivity alongside `dc01` and OPNsense, enabling native Active Directory Kerberos ticket exchanges, LDAP queries, dynamic DHCP IPAM, and dynamic DNS registration without traversing Kubernetes NAT gateways or suffering Wi-Fi multicast drops.
 
 ---
 

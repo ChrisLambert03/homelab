@@ -1,6 +1,10 @@
-# Runbook: L2 Bridge Watchdog Self-Healing
+# Runbook: L2 Bridge Watchdog Self-Healing (Legacy)
 
-This runbook covers the background, diagnosis, and automated self-healing architecture for the **`br-lab0`** multicast VXLAN bridge network.
+> [!NOTE]
+> **Archived Architectural Reference:**
+> This runbook is retained for historical and troubleshooting reference. The cluster has migrated from the NMState Linux host bridge (`br-lab0`) to the **Kube-OVN Software-Defined L2 VPC** (`ovn-ad-vpc`), which uses Geneve UDP encapsulation. Because Kube-OVN operates in user-space/OVS rather than enslaving physical host NICs into Linux bridges, asynchronous USB NIC boot latency issues and bridge carrier drops have been permanently eliminated, and the `bridge-watchdog` DaemonSet is no longer deployed.
+
+This runbook covers the background, diagnosis, and automated self-healing architecture previously utilized for the **`br-lab0`** multicast VXLAN bridge network.
 
 ---
 

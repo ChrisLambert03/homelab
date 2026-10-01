@@ -24,8 +24,9 @@ Workloads are logically grouped into four functional categories:
 | **Cert-Manager** | Infrastructure | `cert-manager` | ArgoCD Helm (Wave 1) | In-Cluster API | Ephemeral |
 | **KubeVirt Operator** | Infrastructure | `kubevirt` | ArgoCD Manifest (Wave 1) | In-Cluster API | Ephemeral |
 | **Containerized Data Importer (CDI)** | Infrastructure | `cdi` | ArgoCD Manifest (Wave 1) | `cdi.lambertlab.us` | Longhorn Scratch |
-| **Longhorn** | Infrastructure | `longhorn-system` | ArgoCD Helm (Wave 1) | `longhorn.lambertlab.us` | Multi-Node SSD / NVMe |
-| **NMState Operator** | Infrastructure | `nmstate` | ArgoCD OCI (Wave 1) | In-Cluster Host Net | Ephemeral |
+| **Kube-OVN** | Infrastructure | `kube-system` | ArgoCD Helm (Wave 1) | In-Cluster SDN Engine | Ephemeral |
+| **Kube-OVN Networks** | Infrastructure | `vms` | ArgoCD Manifest (Wave 2) | L2 VPC Subnet (`ovn-ad-vpc`) | Ephemeral |
+| **NMState Operator** | Infrastructure | `nmstate` | ArgoCD OCI (Wave 1) | In-Cluster Host Net (Legacy) | Ephemeral |
 | **Multus CNI** | Infrastructure | `kube-system` | ArgoCD Manifest (Wave 1) | Host CNI Plugins | Ephemeral |
 | **CoreDNS Forwarder** | Infrastructure | `kube-system` | ArgoCD Manifest (Wave 2) | Port 53 (ClusterIP) | Ephemeral |
 | **NVIDIA GPU Operator** | Infrastructure | `gpu-operator` | ArgoCD Helm (Wave 1) | `workstation` Host | Host Driver / Passthrough |

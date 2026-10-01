@@ -73,7 +73,7 @@ nav:
   - Overview: index.md
   - Architecture:
       - Hardware & Node Fleet: architecture/hardware.md
-      - L2 VXLAN & CoreDNS Fabric: architecture/networking.md
+      - Software-Defined L2 VPC & CoreDNS Fabric: architecture/networking.md
       - Storage Hierarchy & SAN: architecture/storage.md
       - Hybrid Identity & Entra ID: architecture/identity.md
       - Apache Guacamole Gateway: architecture/guacamole.md
@@ -87,7 +87,7 @@ nav:
       - Media & Home Automation: catalog/media-automation.md
       - Security & Productivity Tools: catalog/security-tools.md
   - Operational Runbooks:
-      - Bridge Self-Healing Watchdog: runbooks/bridge-watchdog.md
+      - Bridge Self-Healing Watchdog (Legacy): runbooks/bridge-watchdog.md
       - Direct iSCSI Line-Rate Flashing: runbooks/iscsi-flashing.md
       - ELK Stack & Index Lifecycle Management (ILM): runbooks/elk-ilm-maintenance.md
       - Disaster Recovery & Quorum: runbooks/disaster-recovery.md

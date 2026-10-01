@@ -23,13 +23,13 @@ The Kubernetes cluster runs **K3s v1.36** utilizing an embedded **`etcd` Raft co
 ```mermaid
 graph LR
     subgraph ControlPlane["3-Node etcd Raft Quorum (HA Master)"]
-        L["lenovo (Manager)<br/>10.10.0.2"] --- O1["optiplex (Worker)<br/>10.10.0.3"]
-        O1 --- O2["opti74 (Worker)<br/>10.10.0.4"]
+        L["lenovo (Control Plane / Manager)"] --- O1["optiplex (Control Plane / Worker)"]
+        O1 --- O2["opti74 (Control Plane / Worker)"]
         O2 --- L
     end
     
     subgraph ComputeCluster["Dedicated Heavy Compute"]
-        W["workstation<br/>10.10.0.5<br/>Xeon 16c/32t + RTX A4500"]
+        W["workstation (Worker)<br/>Xeon 16c/32t + RTX A4500"]
     end
 
     subgraph StorageSAN["Storage Appliance"]

@@ -24,10 +24,10 @@ sequenceDiagram
     User->>Entra: Submit MFA & Entra Credentials
     Entra-->>Tomcat: Return ID Token & Claims (preferred_username)
     Tomcat->>DB: Query Local Permissions (guacadmin emergency check)
-    Tomcat->>DC: LDAPS Bind & Query (via Multus net1: 10.10.0.50)
+    Tomcat->>DC: LDAPS Bind & Query (dc01.ad.lambertlab.us:636)
     DC-->>Tomcat: Return User DN & Security Groups (memberOf)
     Tomcat->>guacd: Establish Guacamole Protocol Stream
-    guacd->>VM: Native RDP Handshake over br-lab0 (10.10.0.155:3389)
+    guacd->>VM: Native RDP Handshake over ovn-ad-vpc (win11.ad.lambertlab.us:3389)
     VM-->>guacd: RDP Video/Input Framebuffers
     guacd-->>Tomcat: Encoded Guacamole Instruction Stream
     Tomcat-->>User: Encrypted HTML5 Canvas WebSocket Stream
@@ -104,26 +104,21 @@ Setting `EXTENSION_PRIORITY: "*,openid"` enforces that the local database and LD
 
 ---
 
-## 🌉 Software-Defined L2 Network Bridging (Multus CNI)
+## 🌉 Software-Defined L2 VPC Attachment (Multus CNI & Kube-OVN)
 
-Standard Kubernetes pods route egress traffic through flannel SNAT gateways, preventing direct Layer 2 connectivity to virtual machines and triggering firewall inspection delays.
+Standard Kubernetes pods route egress traffic through Flannel SNAT gateways, preventing direct Layer 2 connectivity to virtual machines and triggering firewall inspection delays.
 
-Guacamole overcomes this by utilizing **Multus CNI** to attach directly to the cluster-wide multicast VXLAN bridge (`br-lab0`):
+Guacamole overcomes this by utilizing **Multus CNI** to attach directly into the Kube-OVN **`ovn-ad-vpc`** Software-Defined L2 VPC:
 
 ```yaml
+# kubernetes/infrastructure/guacamole/values.yaml
 podAnnotations:
-  k8s.v1.cni.cncf.io/networks: '[{
-    "name": "lab-lan-bridge",
-    "ips": ["10.10.0.50/24"]
-  }]'
+  k8s.v1.cni.cncf.io/networks: vms/ovn-ad-vpc
 ```
 
-* **Interface `net1`:** Receives static IP `10.10.0.50` directly on the `10.10.0.0/24` subnet.
-* **Direct RDP/SSH Access:** RDP connections to `win11` (`10.10.0.155:3389`) and LDAPS queries to `dc01` (`10.10.0.10:636`) flow across the VXLAN tunnel with **sub-millisecond latency** and zero NAT traversal.
-
-> [!IMPORTANT]
-> **Host Netfilter & Cross-Node Bridging:**
-> Because Multus attaches directly to `br-lab0`, bridged cross-node IP packets pass through host iptables via `br_netfilter` (`net.bridge.bridge-nf-call-iptables = 1`). To prevent worker nodes running Docker (like `opti74`) from silently dropping LDAPS (port 636) or RDP traffic, all cluster nodes mandate `"ip-forward-no-drop": true` in `/etc/docker/daemon.json` and maintain an iptables `FORWARD` chain policy of `ACCEPT`.
+* **Dynamic DHCP Allocation:** The pod dynamically receives an IP address directly from Kube-OVN's internal IPAM allocator on the `10.10.0.0/24` subnet.
+* **Direct RDP/SSH Access:** RDP connections to `win11` (`10.10.0.11:3389` or `win11.ad.lambertlab.us:3389`) and LDAPS queries to `dc01` (`10.10.0.10:636` or `dc01.ad.lambertlab.us:636`) flow across the Geneve overlay with **sub-millisecond latency** and zero NAT traversal.
+* **Decoupled from Host Netfilter:** Because Kube-OVN uses Geneve UDP encapsulation across nodes rather than host Linux bridges (`br-lab0`), cross-node traffic is completely decoupled from host iptables `FORWARD` chain drops and physical Wi-Fi multicast restrictions.
 
 ---
 
