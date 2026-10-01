@@ -56,14 +56,15 @@ spec:
               masquerade: {}
             - name: lab-lan
               model: virtio
-              bridge: {}
+              binding:
+                name: managedtap
           rng: {}
       networks:
         - name: default
           pod: {}
         - name: lab-lan
           multus:
-            networkName: lab-lan-bridge
+            networkName: ovn-ad-vpc
       volumes:
         - name: boot-disk
           persistentVolumeClaim:

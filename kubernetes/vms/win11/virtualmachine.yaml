@@ -95,12 +95,13 @@ spec:
                 bus: sata
           interfaces:
             - name: lab-lan
-              bridge: {}
+              binding:
+                name: managedtap
           rng: {}
       networks:
         - name: lab-lan
           multus:
-            networkName: lab-lan-bridge
+            networkName: ovn-ad-vpc
       volumes:
         - name: boot-disk
           persistentVolumeClaim:

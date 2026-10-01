@@ -13,6 +13,9 @@ spec:
       labels:
         kubevirt.io/vm: dc01
         app: active-directory
+      annotations:
+        ovn-ad-vpc.vms.kubernetes.io/ip_address: 10.10.0.10
+        ovn-ad-vpc.vms.kubernetes.io/mac_address: 52:54:00:12:34:56
     spec:
       nodeSelector:
         kubernetes.io/hostname: workstation
@@ -83,12 +86,13 @@ spec:
                 bus: sata
           interfaces:
             - name: lab-lan
-              bridge: {}
+              binding:
+                name: managedtap
           rng: {}
       networks:
         - name: lab-lan
           multus:
-            networkName: lab-lan-bridge
+            networkName: ovn-ad-vpc
       volumes:
         - name: boot-disk
           persistentVolumeClaim:
