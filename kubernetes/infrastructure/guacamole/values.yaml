@@ -6,10 +6,8 @@
 # Multus L2 VXLAN Network Attachment (Lab LAN)
 # ----------------------------------------------------
 podAnnotations:
-  k8s.v1.cni.cncf.io/networks: '[{
-    "name": "lab-lan-bridge",
-    "ips": ["10.10.0.50/24"]
-  }]'
+  k8s.v1.cni.cncf.io/networks: vms/ovn-ad-vpc
+  ovn-ad-vpc.vms.ovn.kubernetes.io/ip_address: 10.10.0.50
 
 guacamole:
   contextPath: ROOT
