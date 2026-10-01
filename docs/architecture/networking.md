@@ -109,62 +109,41 @@ graph TD
 
 ---
 
-## 🌉 Software-Defined L2 Fabric (`br-lab0`)
+## 🌉 Kube-OVN Software-Defined L2 VPC (`ovn-ad-vpc`)
 
-Instead of requiring expensive managed switches with 802.1Q VLAN trunking, the cluster implements a **multicast VXLAN overlay** managed declaratively by **NMState**:
+The cluster utilizes **Kube-OVN** as a powerful Software-Defined Networking (SDN) overlay, replacing the legacy `br-lab0` NMState Linux bridge. Kube-OVN builds on top of Open vSwitch (OVS) and OVN to provide advanced enterprise features—such as isolated Virtual Private Clouds (VPCs), distributed routing, embedded IP Address Management (IPAM), and strict Layer-2 isolation—directly within Kubernetes.
 
-* **Bridge Name:** `br-lab0`
-* **Underlay Interface:** `vxlan-lab` (VNI `100`, multicast group `239.1.1.1`, port `4789`)
-* **Static Host Gateways:**
-  * `lenovo`: `10.10.0.2/24`
-  * `optiplex`: `10.10.0.3/24`
-  * `opti74`: `10.10.0.4/24`
-  * `workstation`: `10.10.0.5/24`
+By leveraging Geneve UDP encapsulation, Kube-OVN abstracts the physical network topology. This ensures seamless Layer 2 broadcast domains even across tricky underlay environments (such as Wi-Fi networks which typically drop foreign MACs and multicast frames).
+
+* **VPC Name:** `ovn-cluster` (Logical Router) -> `ovn-ad-vpc` (Logical Switch)
+* **Subnet CIDR:** `10.10.0.0/24`
+* **OPNsense Gateway IP:** `10.10.0.1`
+
+### Why We Migrated from NMState `br-lab0`
+Previously, the cluster relied on a multicast VXLAN overlay (`br-lab0`) managed declaratively by NMState (NetworkManager State). 
+While NMState is great for declarative host networking, it heavily manipulates host `iptables` and binds virtual bridges directly to physical host interfaces. Kube-OVN is a much better implementation for Kubernetes because it utilizes a pure Software-Defined Geneve overlay that is completely decoupled from host routing rules and physical network quirks (like Wi-Fi access points aggressively dropping foreign MACs). Additionally, Kube-OVN provides native IP Address Management (IPAM) for seamless DHCP, eliminating the need to manually track static IPs across virtual bridges.
 
 ### Multus CNI Secondary Interface Attachment
-Standard Kubernetes pods only receive a Flannel overlay IP (`10.42.x.x`). Using **Multus CNI**, select pods (like Apache Guacamole) are provisioned with a secondary interface (`net1`) plugged directly into `br-lab0`:
+Standard Kubernetes pods receive a Flannel overlay IP (`10.42.x.x`). Using **Multus CNI**, select pods (like Apache Guacamole and CoreDNS) are provisioned with a secondary interface (`net1`) plugged directly into the Kube-OVN `ovn-ad-vpc` VPC.
+
+Because the Kube-OVN provider suffix ends in `.ovn`, Kube-OVN intercepts the Multus attachment and executes IPAM allocation.
 
 ```yaml
-# NetworkAttachmentDefinition in default / target namespace
-apiVersion: k8s.cni.cncf.io/v1
-kind: NetworkAttachmentDefinition
-metadata:
-  name: lab-lan-bridge
-spec:
-  config: '{
-    "cniVersion": "0.3.1",
-    "name": "lab-lan-bridge",
-    "type": "bridge",
-    "bridge": "br-lab0",
-    "hairpinMode": false
-  }'
+# Pod Annotation on Guacamole Deployment (Dynamic DHCP)
+k8s.v1.cni.cncf.io/networks: vms/ovn-ad-vpc
 ```
 
 ```yaml
-# Pod Annotation on Guacamole Deployment
-k8s.v1.cni.cncf.io/networks: '[{
-  "name": "lab-lan-bridge",
-  "ips": ["10.10.0.50/24"]
-}]'
+# Pod Annotation for VM or CoreDNS (Static IP Allocation)
+k8s.v1.cni.cncf.io/networks: vms/ovn-ad-vpc
+ovn-ad-vpc.vms.ovn.kubernetes.io/ip_address: 10.10.0.10
 ```
 
-!!! tip "Hairpin Mode & IPv6 DAD Resolution"
-    Early testing revealed that enabling `hairpinMode: true` on Linux bridges caused duplicate address detection (DAD) packet reflections back to KubeVirt VM interfaces. Setting `"hairpinMode": false` completely eliminates DAD loopbacks while allowing full cross-VM and Pod-to-VM communication.
+[Read more about Kube-OVN Advanced Subnets & Multus IPAM here](https://kubeovn.github.io/docs/v1.16.x/en/advance/multi-nic/).
 
-### Docker Host Netfilter & Bridge Forwarding (`ip-forward-no-drop`)
-
-In Kubernetes clusters, `net.bridge.bridge-nf-call-iptables = 1` is enabled by default to allow iptables to filter bridged packets for CNI overlays and kube-proxy.
-
-* **The Collision:** By default, when the Docker daemon starts, it enables `net.ipv4.ip_forward = 1` and actively sets the iptables `FORWARD` chain policy to `DROP` (`-P FORWARD DROP`).
-* **The Symptom:** On pure worker nodes running Docker (such as `opti74`) without libvirt or Tailscale subnet routing to override the policy to `ACCEPT`, bridged Multus packets traversing `br-lab0` across hosts (e.g. Apache Guacamole at `10.10.0.50` on `opti74` communicating with Active Directory `dc01` at `10.10.0.10` on `workstation`) resolve Layer 2 ARP cleanly, but all subsequent Layer 3 IP traffic (LDAPS TCP 636, ICMP) is intercepted and silently dropped by the host's iptables `FORWARD` chain.
-* **The Cluster Invariant:** All nodes running Docker deploy `"ip-forward-no-drop": true` in `/etc/docker/daemon.json` via Ansible (`ansible/configure-docker-tls-gelf.yml`). This instructs Docker not to touch or restrict the host's `FORWARD` policy, ensuring unhindered Layer 2/Layer 3 bridging across the VXLAN fabric. The playbook also asserts `iptables -P FORWARD ACCEPT` directly.
-
-### Kube-OVN Geneve Secondary CNI (Wi-Fi Layer 2 Overlay)
-Physical Wi-Fi access points discard multicast frames and foreign MAC addresses emitted by host bridges. To allow virtual machines on wireless worker nodes to participate in the `10.10.0.0/24` subnet:
-* **Geneve UDP Encapsulation:** Kube-OVN encapsulates VM Layer 2 frames in standard unicast Geneve UDP packets over Layer 3.
-* **Secondary CNI Mode (`nonPrimaryCNI: true`):** Kube-OVN operates strictly as a Multus secondary CNI, leaving Flannel as the primary pod network.
-* **Join CIDR (`172.18.0.0/16`):** Shifted away from `100.64.0.0/16` to eliminate routing conflicts with the Tailscale CGNAT subnet (`100.64.0.0/10`).
-
+### CoreDNS Integration into the VPC
+Because OVN VPCs are completely isolated Layer-2 broadcast domains with strict security, standard Pods cannot reach them by default. 
+To enable the cluster to resolve Active Directory queries (`dc01.ad.lambertlab.us`), the `coredns` deployment in `kube-system` is patched to attach a secondary Multus interface directly to `ovn-ad-vpc`. This gives CoreDNS a secure, direct path to forward DNS queries to `10.10.0.10`.
 
 ---
 
