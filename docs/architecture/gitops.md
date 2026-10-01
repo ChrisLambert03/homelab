@@ -87,7 +87,7 @@ ArgoCD assigns resources to discrete, sequential **Sync Waves** (evaluated in as
 | :---: | :--- | :--- | :--- |
 | **`0`** | **AppProjects Scaffolding** | `infrastructure`, `security`, `media`, `observability`, `gaming` | Establishes project RBAC boundaries, source repo constraints, and allowed cluster destinations. |
 | **`1`** | **Foundation & Storage** | `longhorn`, `multus`, `kube-ovn`, `kubevirt`, `cdi`, `cert-manager`, `nvidia-gpu-operator` | Installs core storage drivers, CNI plugins & SDN overlay engine (Kube-OVN), hypervisor operators, and foundational CRD schemas. |
-| **`2`** | **Security & Core Gateways** | `vault`, `external-secrets`, `cluster-config`, `kube-ovn-networks`, `guacamole`, `kubevirt-manager`, `external-services`, `argocd` | Configures Kube-OVN VPC overlay (`ovn-ad-vpc`), secrets engines, custom DNS forwarders, and clientless gateways. *(Legacy `nmstate-policies` deprecated).* |
+| **`2`** | **Security & Core Gateways** | `vault`, `external-secrets`, `cluster-config`, `kube-ovn-networks`, `guacamole`, `kubevirt-manager`, `external-services`, `argocd` | Configures Kube-OVN VPC overlay (`ovn-ad-vpc`), secrets engines, custom DNS forwarders, and clientless gateways. *(NMState operator & policies archived/pruned).* |
 | **`3`** | **Consumer Workloads & VMs** | `dc01`, `win11`, `opnsense`, `jellyfin`, `sonarr`, `radarr`, `prowlarr`, `homarr`, `ntfy`, `palworld` | Deploys active virtual machines, database consumers, media applications, and game servers. |
 | **`5`** | **SIEM Host Telemetry** | `elastic-agent` | Deploys cluster-wide Elastic Agent DaemonSet with memory caps, streaming infrastructure logs to ELK. |
 

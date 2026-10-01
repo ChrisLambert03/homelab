@@ -1,4 +1,12 @@
-# ---
+---
+# ==============================================================================
+# ARCHIVED / LEGACY APPLICATION: nmstate-policies
+# ==============================================================================
+# This application is archived and commented out to trigger ArgoCD pruning.
+# The cluster has migrated from the legacy NMState Linux host bridge (br-lab0)
+# to the Kube-OVN Software-Defined L2 VPC (ovn-ad-vpc) utilizing Geneve overlay.
+# The host bridge policies are no longer enforced.
+# ==============================================================================
 # apiVersion: argoproj.io/v1alpha1
 # kind: Application
 # metadata:

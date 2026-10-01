@@ -51,7 +51,7 @@ The cluster is anchored by a high-availability 3-node K3s control plane (**`leno
 │   ├── apps/                    # ArgoCD Root App & App-of-Apps Sync Waves (1–5)
 │   ├── config/                  # Cluster Configuration (Traefik Middlewares, CoreDNS, Certs)
 │   ├── gaming/                  # Dedicated Game Servers (Palworld, RetroArch)
-│   ├── infrastructure/          # Core Operators, Storage (Longhorn/NAS), NMState & Guacamole
+│   ├── infrastructure/          # Core Operators, Storage (Longhorn/NAS), Kube-OVN & Guacamole
 │   ├── media/                   # Media Automation Suite (Jellyfin, *Arrs, Tdarr)
 │   ├── observability/           # SIEM Agents, Telemetry & Dashboards (Elastic Agent, Homarr, Ntfy)
 │   ├── security/                # HashiCorp Vault & Secret Orchestration

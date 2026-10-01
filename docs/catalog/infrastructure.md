@@ -52,7 +52,7 @@ This section details the foundational control plane components, software-defined
   * Replaces legacy NMState Linux host bridge (`br-lab0`) with Geneve UDP encapsulation, bypassing Wi-Fi multicast restrictions and host iptables `FORWARD` drops.
   * VPC Subnet `ovn-ad-vpc` (`10.10.0.0/24`) configured with dummy gateway `10.10.0.254` to allow the virtualized OPNsense firewall to claim `10.10.0.1`.
   * Embedded DHCP server delivering Active Directory DNS (`10.10.0.10`) and default gateway (`10.10.0.1`) directly to virtual machines and secondary pod interfaces.
-  * *(Legacy Note: NMState Operator remains available in Wave 1 for host networking, but `nmstate-policies` is deprecated).*
+  * *(Archived Infrastructure: The NMState Operator and Linux host bridge policies have been completely archived and pruned from ArgoCD in favor of Kube-OVN).*
 
 ---
 

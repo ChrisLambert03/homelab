@@ -26,7 +26,7 @@ Workloads are logically grouped into four functional categories:
 | **Containerized Data Importer (CDI)** | Infrastructure | `cdi` | ArgoCD Manifest (Wave 1) | `cdi.lambertlab.us` | Longhorn Scratch |
 | **Kube-OVN** | Infrastructure | `kube-system` | ArgoCD Helm (Wave 1) | In-Cluster SDN Engine | Ephemeral |
 | **Kube-OVN Networks** | Infrastructure | `vms` | ArgoCD Manifest (Wave 2) | L2 VPC Subnet (`ovn-ad-vpc`) | Ephemeral |
-| **NMState Operator** | Infrastructure | `nmstate` | ArgoCD OCI (Wave 1) | In-Cluster Host Net (Legacy) | Ephemeral |
+| **NMState Operator (Archived)** | Infrastructure | `nmstate` | Pruned (Wave 1) | Decommissioned (Replaced by Kube-OVN) | Ephemeral |
 | **Multus CNI** | Infrastructure | `kube-system` | ArgoCD Manifest (Wave 1) | Host CNI Plugins | Ephemeral |
 | **CoreDNS Forwarder** | Infrastructure | `kube-system` | ArgoCD Manifest (Wave 2) | Port 53 (ClusterIP) | Ephemeral |
 | **NVIDIA GPU Operator** | Infrastructure | `gpu-operator` | ArgoCD Helm (Wave 1) | `workstation` Host | Host Driver / Passthrough |
