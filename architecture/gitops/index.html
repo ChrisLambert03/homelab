@@ -485,7 +485,7 @@
   <span class="md-ellipsis">
     
   
-    L2 VXLAN & CoreDNS Fabric
+    Software-Defined L2 VPC & CoreDNS Fabric
   
 
     
@@ -1062,7 +1062,7 @@
   <span class="md-ellipsis">
     
   
-    Bridge Self-Healing Watchdog
+    Bridge Self-Healing Watchdog (Legacy)
   
 
     
@@ -1336,9 +1336,9 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
             Wave1["Foundations"]
             Longhorn["Longhorn Storage"]
             Multus["Multus Thick CNI"]
+            KubeOVN["Kube-OVN SDN"]
             KubeVirtOp["KubeVirt &amp; CDI"]
             CertMgr["Cert-Manager v1.21.2"]
-            NMStateOp["kubernetes-nmstate"]
             GPUOp["NVIDIA GPU Operator"]
         end
     end
@@ -1349,7 +1349,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
             Vault["HashiCorp Vault"]
             ExtSecrets["External Secrets"]
             ClusterCfg["CoreDNS &amp; TLSStore"]
-            NMStatePol["br-lab0 VXLAN"]
+            KubeOVNNet["ovn-ad-vpc VPC"]
             Guac["Apache Guacamole"]
             KVMgr["KubeVirt Manager"]
             ExtSvc["External Services"]
@@ -1363,6 +1363,11 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
             MediaStack["ARR Media Stack / Jellyfin"]
             ObsStack["Homarr / Ntfy"]
             GamingStack["Palworld Dedicated"]
+        end
+
+        subgraph W5["Sync Wave 5: SIEM Telemetry"]
+            Wave5["Observability"]
+            ElasticAgent["Elastic Agent DaemonSet"]
         end
     end</code></pre> 
     
@@ -1398,20 +1403,26 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <tr>
 <td style="text-align: center;"><strong><code>1</code></strong></td>
 <td style="text-align: left;"><strong>Foundation &amp; Storage</strong></td>
-<td style="text-align: left;"><code>longhorn</code>, <code>multus</code>, <code>kubevirt</code>, <code>cdi</code>, <code>cert-manager</code>, <code>nmstate-operator</code>, <code>nvidia-gpu-operator</code></td>
-<td style="text-align: left;">Installs core storage drivers, CNI plugins, hypervisor operators, and foundational CRD schemas.</td>
+<td style="text-align: left;"><code>longhorn</code>, <code>multus</code>, <code>kube-ovn</code>, <code>kubevirt</code>, <code>cdi</code>, <code>cert-manager</code>, <code>nvidia-gpu-operator</code></td>
+<td style="text-align: left;">Installs core storage drivers, CNI plugins &amp; SDN overlay engine (Kube-OVN), hypervisor operators, and foundational CRD schemas.</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong><code>2</code></strong></td>
 <td style="text-align: left;"><strong>Security &amp; Core Gateways</strong></td>
-<td style="text-align: left;"><code>vault</code>, <code>external-secrets</code>, <code>cluster-config</code>, <code>nmstate-policies</code>, <code>guacamole</code>, <code>kubevirt-manager</code>, <code>external-services</code></td>
-<td style="text-align: left;">Configures VXLAN networking (<code>br-lab0</code>), secrets engines, custom DNS forwarders, and clientless gateways.</td>
+<td style="text-align: left;"><code>vault</code>, <code>external-secrets</code>, <code>cluster-config</code>, <code>kube-ovn-networks</code>, <code>guacamole</code>, <code>kubevirt-manager</code>, <code>external-services</code>, <code>argocd</code></td>
+<td style="text-align: left;">Configures Kube-OVN VPC overlay (<code>ovn-ad-vpc</code>), secrets engines, custom DNS forwarders, and clientless gateways. <em>(Legacy <code>nmstate-policies</code> deprecated).</em></td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong><code>3</code></strong></td>
 <td style="text-align: left;"><strong>Consumer Workloads &amp; VMs</strong></td>
 <td style="text-align: left;"><code>dc01</code>, <code>win11</code>, <code>opnsense</code>, <code>jellyfin</code>, <code>sonarr</code>, <code>radarr</code>, <code>prowlarr</code>, <code>homarr</code>, <code>ntfy</code>, <code>palworld</code></td>
 <td style="text-align: left;">Deploys active virtual machines, database consumers, media applications, and game servers.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong><code>5</code></strong></td>
+<td style="text-align: left;"><strong>SIEM Host Telemetry</strong></td>
+<td style="text-align: left;"><code>elastic-agent</code></td>
+<td style="text-align: left;">Deploys cluster-wide Elastic Agent DaemonSet with memory caps, streaming infrastructure logs to ELK.</td>
 </tr>
 </tbody>
 </table>

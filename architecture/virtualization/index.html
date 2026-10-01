@@ -485,7 +485,7 @@
   <span class="md-ellipsis">
     
   
-    L2 VXLAN & CoreDNS Fabric
+    Software-Defined L2 VPC & CoreDNS Fabric
   
 
     
@@ -1151,7 +1151,7 @@
   <span class="md-ellipsis">
     
   
-    Bridge Self-Healing Watchdog
+    Bridge Self-Healing Watchdog (Legacy)
   
 
     
@@ -1505,7 +1505,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
         Secret["win11-unattend-secret&lt;br/&gt;Declarative unattend.xml"] --&gt;|"Synthetic CD-ROM"| KVM["QEMU / KVM Guest Engine"]
         SANLUN --&gt;|"VirtIO SCSI Bus viostor"| KVM
         TPMVol[("Persistent Longhorn Volume")] --&gt;|"swtpm State Storage"| KVM
-        Multus["Multus CNI: lab-lan-bridge"] --&gt;|"VirtIO Net NetKVM"| KVM
+        Multus["Multus CNI: ovn-ad-vpc&lt;br/&gt;(managedTap binding)"] --&gt;|"VirtIO Net NetKVM"| KVM
         KVM --&gt; WinOS["Windows 11 Enterprise LTSC&lt;br/&gt;Dynamic WIN-* Domain Joined"]
     end</code></pre> 
     
@@ -1529,7 +1529,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <td style="text-align: left;">Windows 11 Enterprise LTSC</td>
 <td style="text-align: left;">4 vCPU / 8 GiB</td>
 <td style="text-align: left;">64 GB SAN iSCSI LUN</td>
-<td style="text-align: left;"><code>lab-lan-bridge</code> (VXLAN)</td>
+<td style="text-align: left;"><code>ovn-ad-vpc</code> (Geneve / <code>managedTap</code>)</td>
 <td style="text-align: left;">Domain-Joined Dedicated Admin Workstation</td>
 </tr>
 <tr>
@@ -1537,7 +1537,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <td style="text-align: left;">Windows Server 2025</td>
 <td style="text-align: left;">4 vCPU / 8 GiB</td>
 <td style="text-align: left;">80 GB SAN iSCSI LUN</td>
-<td style="text-align: left;"><code>lab-lan-bridge</code> (VXLAN)</td>
+<td style="text-align: left;"><code>ovn-ad-vpc</code> (Geneve / <code>managedTap</code>)</td>
 <td style="text-align: left;">Primary Active Directory Domain Controller (<code>ad.lambertlab.us</code>)</td>
 </tr>
 <tr>
@@ -1545,7 +1545,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <td style="text-align: left;">FreeBSD 14 / OPNsense</td>
 <td style="text-align: left;">4 vCPU / 4 GiB</td>
 <td style="text-align: left;">Distributed Longhorn Block</td>
-<td style="text-align: left;">Host NIC Physical Bridge</td>
+<td style="text-align: left;"><code>ovn-ad-vpc</code> (<code>managedTap</code>) + Pod Masquerade</td>
 <td style="text-align: left;">Edge Gateway, NAT &amp; Security Firewall</td>
 </tr>
 </tbody>

@@ -482,7 +482,7 @@
   <span class="md-ellipsis">
     
   
-    L2 VXLAN & CoreDNS Fabric
+    Software-Defined L2 VPC & CoreDNS Fabric
   
 
     
@@ -868,10 +868,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-nmstate-operator-node-network-configuration-policies" class="md-nav__link">
+  <a href="#4-kube-ovn-software-defined-l2-vpc-ovn-ad-vpc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. NMState Operator &amp; Node Network Configuration Policies
+        4. Kube-OVN Software-Defined L2 VPC (ovn-ad-vpc)
       
     </span>
   </a>
@@ -1128,7 +1128,7 @@
   <span class="md-ellipsis">
     
   
-    Bridge Self-Healing Watchdog
+    Bridge Self-Healing Watchdog (Legacy)
   
 
     
@@ -1305,10 +1305,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-nmstate-operator-node-network-configuration-policies" class="md-nav__link">
+  <a href="#4-kube-ovn-software-defined-l2-vpc-ovn-ad-vpc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. NMState Operator &amp; Node Network Configuration Policies
+        4. Kube-OVN Software-Defined L2 VPC (ovn-ad-vpc)
       
     </span>
   </a>
@@ -1463,16 +1463,17 @@
 <li>Cloudflare API tokens stored in HashiCorp Vault and synchronized via External Secrets Operator.</li>
 </ul>
 <hr />
-<h3 id="4-nmstate-operator-node-network-configuration-policies">4. NMState Operator &amp; Node Network Configuration Policies</h3>
+<h3 id="4-kube-ovn-software-defined-l2-vpc-ovn-ad-vpc">4. Kube-OVN Software-Defined L2 VPC (<code>ovn-ad-vpc</code>)</h3>
 <ul>
-<li><strong>Namespace:</strong> <code>nmstate</code></li>
-<li><strong>Version:</strong> Kubernetes-NMState Operator</li>
-<li><strong>Sync Waves:</strong> Operator in <code>Wave 1</code>, Policies in <code>Wave 2</code></li>
-<li><strong>Architectural Role:</strong> Declarative host-level Linux network state manager.</li>
+<li><strong>Namespace:</strong> <code>kube-system</code> (Engine) &amp; <code>vms</code> (Networks)</li>
+<li><strong>Version:</strong> Kube-OVN Secondary CNI</li>
+<li><strong>Sync Waves:</strong> Operator &amp; Engine in <code>Wave 1</code>, Subnets &amp; NADs in <code>Wave 2</code></li>
+<li><strong>Architectural Role:</strong> Software-Defined Networking (SDN) overlay providing isolated Layer 2 VPCs, embedded IPAM, and Geneve UDP encapsulation.</li>
 <li><strong>Key Configuration:</strong></li>
-<li>Configures multi-node multicast VXLAN bridge <code>br-lab0</code> across all cluster nodes.</li>
-<li>Underlay interface <code>vxlan-lab</code> bound to VNI 100 on multicast group <code>239.1.1.1:4789</code>.</li>
-<li>Static gateway IP assignment per host: <code>10.10.0.2</code> (<code>lenovo</code>), <code>10.10.0.3</code> (<code>optiplex</code>), <code>10.10.0.4</code> (<code>opti74</code>), <code>10.10.0.5</code> (<code>workstation</code>).</li>
+<li>Replaces legacy NMState Linux host bridge (<code>br-lab0</code>) with Geneve UDP encapsulation, bypassing Wi-Fi multicast restrictions and host iptables <code>FORWARD</code> drops.</li>
+<li>VPC Subnet <code>ovn-ad-vpc</code> (<code>10.10.0.0/24</code>) configured with dummy gateway <code>10.10.0.254</code> to allow the virtualized OPNsense firewall to claim <code>10.10.0.1</code>.</li>
+<li>Embedded DHCP server delivering Active Directory DNS (<code>10.10.0.10</code>) and default gateway (<code>10.10.0.1</code>) directly to virtual machines and secondary pod interfaces.</li>
+<li><em>(Legacy Note: NMState Operator remains available in Wave 1 for host networking, but <code>nmstate-policies</code> is deprecated).</em></li>
 </ul>
 <hr />
 <h3 id="5-multus-cni-thick-cni-daemonset">5. Multus CNI (Thick CNI DaemonSet)</h3>
@@ -1481,9 +1482,9 @@
 <li><strong>Sync Wave:</strong> <code>Wave 1</code></li>
 <li><strong>Architectural Role:</strong> Multi-network interface plugin enabling pods and VMs to attach directly to multiple network fabrics.</li>
 <li><strong>Key Configuration:</strong></li>
-<li><code>NetworkAttachmentDefinition</code> named <code>lab-lan-bridge</code> mapping directly to host bridge <code>br-lab0</code>.</li>
-<li>Configured with <code>"hairpinMode": false</code> to prevent IPv6 Duplicate Address Detection (DAD) reflection loops.</li>
-<li>Provides Apache Guacamole and KubeVirt VMs with direct Layer 2 connectivity (<code>10.10.0.0/24</code>).</li>
+<li><code>NetworkAttachmentDefinition</code> named <code>ovn-ad-vpc</code> mapped to provider <code>ovn-ad-vpc.vms.ovn</code>.</li>
+<li>Intercepts secondary interface attachments for Apache Guacamole (dynamic DHCP) and CoreDNS forwarders.</li>
+<li>Pairs with KubeVirt's <code>managedTap</code> network binding plugin to provide KVM virtual machines with direct Layer 2 connectivity without DHCP lease interception.</li>
 </ul>
 <hr />
 <h3 id="6-coredns-active-directory-conditional-forwarder">6. CoreDNS Active Directory Conditional Forwarder</h3>
@@ -1504,7 +1505,7 @@
 <li><strong>Architectural Role:</strong> Zero-trust WireGuard mesh overlay networking.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Enables remote access without open public firewall ports.</li>
-<li>High-availability subnet router running on <code>optiplex</code> advertising both the primary physical LAN and VXLAN overlay (<code>10.10.0.0/24</code>).</li>
+<li>High-availability subnet router running on <code>optiplex</code> advertising both the primary physical LAN and Kube-OVN VPC overlay (<code>10.10.0.0/24</code>).</li>
 <li>Automated DNS automation via Terraform Cloudflare provider referencing Tailscale node IPs.</li>
 </ul>
 <hr />

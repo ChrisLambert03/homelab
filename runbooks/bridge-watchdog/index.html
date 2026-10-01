@@ -29,7 +29,7 @@
     
     
       
-        <title>Bridge Self-Healing Watchdog - LambertLab Infrastructure Docs</title>
+        <title>Bridge Self-Healing Watchdog (Legacy) - LambertLab Infrastructure Docs</title>
       
     
     
@@ -85,7 +85,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#runbook-l2-bridge-watchdog-self-healing" class="md-skip">
+        <a href="#runbook-l2-bridge-watchdog-self-healing-legacy" class="md-skip">
           Skip to content
         </a>
       
@@ -121,7 +121,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Bridge Self-Healing Watchdog
+              Bridge Self-Healing Watchdog (Legacy)
             
           </span>
         </div>
@@ -482,7 +482,7 @@
   <span class="md-ellipsis">
     
   
-    L2 VXLAN & CoreDNS Fabric
+    Software-Defined L2 VPC & CoreDNS Fabric
   
 
     
@@ -952,7 +952,7 @@
   <span class="md-ellipsis">
     
   
-    Bridge Self-Healing Watchdog
+    Bridge Self-Healing Watchdog (Legacy)
   
 
     
@@ -970,7 +970,7 @@
   <span class="md-ellipsis">
     
   
-    Bridge Self-Healing Watchdog
+    Bridge Self-Healing Watchdog (Legacy)
   
 
     
@@ -1302,8 +1302,13 @@
   
 
 
-<h1 id="runbook-l2-bridge-watchdog-self-healing">Runbook: L2 Bridge Watchdog Self-Healing</h1>
-<p>This runbook covers the background, diagnosis, and automated self-healing architecture for the <strong><code>br-lab0</code></strong> multicast VXLAN bridge network.</p>
+<h1 id="runbook-l2-bridge-watchdog-self-healing-legacy">Runbook: L2 Bridge Watchdog Self-Healing (Legacy)</h1>
+<blockquote>
+<p>[!NOTE]
+<strong>Archived Architectural Reference:</strong>
+This runbook is retained for historical and troubleshooting reference. The cluster has migrated from the NMState Linux host bridge (<code>br-lab0</code>) to the <strong>Kube-OVN Software-Defined L2 VPC</strong> (<code>ovn-ad-vpc</code>), which uses Geneve UDP encapsulation. Because Kube-OVN operates in user-space/OVS rather than enslaving physical host NICs into Linux bridges, asynchronous USB NIC boot latency issues and bridge carrier drops have been permanently eliminated, and the <code>bridge-watchdog</code> DaemonSet is no longer deployed.</p>
+</blockquote>
+<p>This runbook covers the background, diagnosis, and automated self-healing architecture previously utilized for the <strong><code>br-lab0</code></strong> multicast VXLAN bridge network.</p>
 <hr />
 <h2 id="the-problem-usb-nic-boot-latency-bridge-carrier-loss">⚠️ The Problem: USB NIC Boot Latency &amp; Bridge Carrier Loss</h2>
 <h3 id="symptoms">Symptoms</h3>

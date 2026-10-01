@@ -599,7 +599,7 @@
   <span class="md-ellipsis">
     
   
-    L2 VXLAN & CoreDNS Fabric
+    Software-Defined L2 VPC & CoreDNS Fabric
   
 
     
@@ -1057,7 +1057,7 @@
   <span class="md-ellipsis">
     
   
-    Bridge Self-Healing Watchdog
+    Bridge Self-Healing Watchdog (Legacy)
   
 
     
@@ -1318,13 +1318,13 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
         Traefik --&gt; KubeVirtMgr["KubeVirt Manager Web UI"]
         Traefik --&gt; Catalog["30+ App Workloads"]
 
-        subgraph L2VXLAN["Software-Defined L2 VXLAN Fabric (br-lab0: 10.10.0.0/24)"]
-            Bridge["br-lab0 Virtual Bridge"]
-            Guac -.-&gt;|"Multus net1: 10.10.0.50"| Bridge
-            Bridge --&gt; DC01["DC01 Active Directory&lt;br/&gt;Windows Server 2025: 10.10.0.10"]
-            Bridge --&gt; Win11["Win11 Admin Workstation&lt;br/&gt;Sysprep Specialized: 10.10.0.155"]
-            Bridge &lt;--&gt; OPNsense["OPNsense Firewall VM&lt;br/&gt;Virtual Edge Routing"]
-            CoreDNS["K3s CoreDNS&lt;br/&gt;health_check 5s max_fails 2"] --&gt;|"Conditional Forward *.ad"| DC01
+        subgraph OVNVPC["Software-Defined L2 VPC Overlay (ovn-ad-vpc: 10.10.0.0/24)"]
+            OVNSwitch["Kube-OVN Logical Switch&lt;br/&gt;Geneve Encap &amp; OVN IPAM"]
+            OPNsense["OPNsense Firewall VM&lt;br/&gt;Gateway: 10.10.0.1"] &lt;--&gt; OVNSwitch
+            Guac -.-&gt;|"Multus (Dynamic DHCP)"| OVNSwitch
+            OVNSwitch --&gt; DC01["DC01 Active Directory&lt;br/&gt;Windows Server 2025: 10.10.0.10"]
+            OVNSwitch --&gt; Win11["Win11 Admin Workstation&lt;br/&gt;Sysprep Specialized: 10.10.0.11"]
+            CoreDNS["K3s CoreDNS&lt;br/&gt;Multus net1: ovn-ad-vpc"] --&gt;|"Conditional Forward *.ad"| DC01
         end
     end
 
@@ -1359,15 +1359,15 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <ul>
 <li><strong>Dual Directory Model:</strong> Seamless identity federation combining on-premises Active Directory (<code>ad.lambertlab.us</code>, NetBIOS <code>LAMBERTLAB</code>) with Microsoft Entra ID.</li>
 <li><strong>Entra Cloud Sync:</strong> Zero-touch Password Hash Synchronization (PHS) running under an Active Directory Group Managed Service Account (<code>provAgentgMSA$</code>).</li>
-<li><strong>Clientless Remote Gateway:</strong> Apache Guacamole provides browser-based HTML5 RDP/SSH access with Entra ID OIDC SSO, on-premises LDAPS authentication with custom Root CA JVM truststore injection, and native Multus L2 VXLAN pod networking.</li>
+<li><strong>Clientless Remote Gateway:</strong> Apache Guacamole provides browser-based HTML5 RDP/SSH access with Entra ID OIDC SSO, on-premises LDAPS authentication with custom Root CA JVM truststore injection, and native Multus secondary pod networking directly into the Kube-OVN VPC.</li>
 </ul>
 </div>
 <div class="tabbed-block">
 <ul>
-<li><strong>NMState Multicast VXLAN (<code>br-lab0</code>):</strong> Multi-node Layer 2 broadcast overlay connecting physical nodes and virtual machines without requiring expensive 802.1Q managed switch VLAN trunking.</li>
-<li><strong>Direct Pod Bridging (Multus CNI):</strong> Apache Guacamole pod attaches a secondary interface (<code>net1</code>, <code>10.10.0.50/24</code>) directly into <code>br-lab0</code>, communicating with domain controllers and desktops at wire speed with zero NAT overhead.</li>
-<li><strong>CoreDNS Conditional Health-Checking:</strong> In-cluster CoreDNS conditionally routes <code>*.ad.lambertlab.us</code> to DC01 (<code>10.10.0.10</code>) with automated health checks (<code>health_check 5s</code>, <code>max_fails 2</code>) preventing cluster-wide UDP timeout cascades.</li>
-<li><strong>Self-Healing Bridge Watchdog:</strong> Lightweight Kubernetes DaemonSet continuously detects and recovers un-enslaved VXLAN links caused by asynchronous USB NIC boot latency.</li>
+<li><strong>Kube-OVN Software-Defined L2 VPC (<code>ovn-ad-vpc</code>):</strong> Enterprise SDN overlay powered by Geneve UDP encapsulation, decoupling virtual machine Layer 2 broadcast domains from host network interfaces and physical Wi-Fi restrictions.</li>
+<li><strong>Direct Pod Bridging (Multus CNI):</strong> Apache Guacamole pod attaches a secondary interface (<code>net1</code>) directly into <code>ovn-ad-vpc</code> with dynamic DHCP allocation, communicating with domain controllers and desktops at wire speed with zero NAT overhead.</li>
+<li><strong>CoreDNS Direct VPC Integration:</strong> In-cluster CoreDNS attaches a secondary Multus interface (<code>vms/ovn-ad-vpc</code>) directly into the VPC, conditionally routing <code>*.ad.lambertlab.us</code> to DC01 (<code>10.10.0.10</code>) with automated health checks (<code>health_check 5s</code>, <code>max_fails 2</code>).</li>
+<li><strong>Subnet IPAM Quirk Mitigation:</strong> Subnet manifest declares a dummy gateway (<code>10.10.0.254</code>), preventing Kube-OVN's mutating webhook from reserving and excluding <code>10.10.0.1</code>, allowing the virtualized OPNsense firewall to claim the <code>.1</code> gateway IP.</li>
 </ul>
 </div>
 <div class="tabbed-block">
@@ -1390,7 +1390,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <h3 id="architecture-deep-dives">🏛️ Architecture Deep-Dives</h3>
 <ul>
 <li><a href="architecture/hardware/">Hardware Architecture &amp; Fleet Topology</a>: Node hardware specifications, 3-node etcd Raft quorum, and workstation compute guardrails.</li>
-<li><a href="architecture/networking/">L2 Multicast VXLAN &amp; CoreDNS Fabric</a>: NMState multicast VXLAN, Multus pod attachment, and CoreDNS health-checked forwarders.</li>
+<li><a href="architecture/networking/">Software-Defined L2 VPC &amp; CoreDNS Fabric</a>: Kube-OVN Geneve overlay, Multus pod attachment, and CoreDNS health-checked forwarders.</li>
 <li><a href="architecture/storage/">Storage Hierarchy &amp; SAN Architecture</a>: When and why to use SAN iSCSI vs Longhorn vs NFS vs local NVMe.</li>
 <li><a href="architecture/identity/">Hybrid Identity &amp; Entra ID Federation</a>: Dual-directory identity, Cloud Sync gMSA, PHS, and RBAC security groups.</li>
 <li><a href="architecture/guacamole/">Apache Guacamole Gateway</a>: Clientless remote desktop, LDAPS Root CA JVM truststore injection, and OIDC SSO.</li>
@@ -1401,14 +1401,14 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <h3 id="application-service-catalog">📦 Application Service Catalog</h3>
 <ul>
 <li><a href="catalog/">Catalog Overview &amp; Master Matrix</a>: Complete directory, cluster namespaces, Docker contexts, and ingress endpoints.</li>
-<li><a href="catalog/infrastructure/">Core Infrastructure &amp; Networking</a>: ArgoCD, Traefik, Cert-Manager, NMState, Multus, CoreDNS, Tailscale, Longhorn, KubeVirt, and TerraMaster TOS.</li>
+<li><a href="catalog/infrastructure/">Core Infrastructure &amp; Networking</a>: ArgoCD, Traefik, Cert-Manager, Kube-OVN, Multus, CoreDNS, Tailscale, Longhorn, KubeVirt, and TerraMaster TOS.</li>
 <li><a href="catalog/workstations-vms/">Virtual Machines &amp; Identity</a>: DC01, Windows 11 Workstation, OPNsense Gateway, KubeVirt Manager, and Apache Guacamole.</li>
 <li><a href="catalog/media-automation/">Media &amp; Home Automation</a>: Jellyfin, Sonarr, Radarr, Prowlarr, Tdarr, and Palworld Dedicated Server.</li>
 <li><a href="catalog/security-tools/">Security &amp; Productivity Tools</a>: HashiCorp Vault, External Secrets, ELK Stack (Elasticsearch, Logstash, Kibana), Homarr, Ntfy, Beszel, Pi-hole, Portainer, Firefox Sandbox, and developer tools.</li>
 </ul>
 <h3 id="operational-runbooks">🛠️ Operational Runbooks</h3>
 <ul>
-<li><a href="runbooks/bridge-watchdog/">Bridge Self-Healing Watchdog</a>: Background, diagnosis, and automated recovery for USB NIC boot latency on <code>br-lab0</code>.</li>
+<li><a href="runbooks/bridge-watchdog/">Bridge Self-Healing Watchdog (Legacy)</a>: Background, diagnosis, and automated recovery for USB NIC boot latency on <code>br-lab0</code>.</li>
 <li><a href="runbooks/iscsi-flashing/">Direct iSCSI Line-Rate Flashing</a>: Step-by-step user-space <code>qemu-img convert</code> flashing guide bypassing CDI and ingress timeouts.</li>
 <li><a href="runbooks/elk-ilm-maintenance/">ELK Stack &amp; Index Lifecycle Management (ILM) Maintenance</a>: Managing single-node index templates, troubleshooting unassigned replica shards, and testing GELF pipelines.</li>
 <li><a href="runbooks/disaster-recovery/">Disaster Recovery &amp; Cluster Quorum</a>: Host reboot sequence, etcd Raft recovery, KubeVirt VM restoration, and break-glass administrative procedures.</li>

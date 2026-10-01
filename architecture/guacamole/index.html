@@ -485,7 +485,7 @@
   <span class="md-ellipsis">
     
   
-    L2 VXLAN & CoreDNS Fabric
+    Software-Defined L2 VPC & CoreDNS Fabric
   
 
     
@@ -700,10 +700,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#software-defined-l2-network-bridging-multus-cni" class="md-nav__link">
+  <a href="#software-defined-l2-vpc-attachment-multus-cni-kube-ovn" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🌉 Software-Defined L2 Network Bridging (Multus CNI)
+        🌉 Software-Defined L2 VPC Attachment (Multus CNI &amp; Kube-OVN)
       
     </span>
   </a>
@@ -1129,7 +1129,7 @@
   <span class="md-ellipsis">
     
   
-    Bridge Self-Healing Watchdog
+    Bridge Self-Healing Watchdog (Legacy)
   
 
     
@@ -1339,10 +1339,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#software-defined-l2-network-bridging-multus-cni" class="md-nav__link">
+  <a href="#software-defined-l2-vpc-attachment-multus-cni-kube-ovn" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🌉 Software-Defined L2 Network Bridging (Multus CNI)
+        🌉 Software-Defined L2 VPC Attachment (Multus CNI &amp; Kube-OVN)
       
     </span>
   </a>
@@ -1464,10 +1464,10 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
     User-&gt;&gt;Entra: Submit MFA &amp; Entra Credentials
     Entra--&gt;&gt;Tomcat: Return ID Token &amp; Claims (preferred_username)
     Tomcat-&gt;&gt;DB: Query Local Permissions (guacadmin emergency check)
-    Tomcat-&gt;&gt;DC: LDAPS Bind &amp; Query (via Multus net1: 10.10.0.50)
+    Tomcat-&gt;&gt;DC: LDAPS Bind &amp; Query (dc01.ad.lambertlab.us:636)
     DC--&gt;&gt;Tomcat: Return User DN &amp; Security Groups (memberOf)
     Tomcat-&gt;&gt;guacd: Establish Guacamole Protocol Stream
-    guacd-&gt;&gt;VM: Native RDP Handshake over br-lab0 (10.10.0.155:3389)
+    guacd-&gt;&gt;VM: Native RDP Handshake over ovn-ad-vpc (win11.ad.lambertlab.us:3389)
     VM--&gt;&gt;guacd: RDP Video/Input Framebuffers
     guacd--&gt;&gt;Tomcat: Encoded Guacamole Instruction Stream
     Tomcat--&gt;&gt;User: Encrypted HTML5 Canvas WebSocket Stream</code></pre> 
@@ -1527,24 +1527,18 @@ Java's JNDI LDAP provider performs strict hostname endpoint identification. In v
 </span></code></pre></div>
 <p>Setting <code>EXTENSION_PRIORITY: "*,openid"</code> enforces that the local database and LDAP extensions execute <em>before</em> the OpenID Connect redirect kicks in. This ensures that the built-in <code>guacadmin</code> emergency account can always log in directly via the web form if internet connectivity or Entra ID is degraded.</p>
 <hr />
-<h2 id="software-defined-l2-network-bridging-multus-cni">🌉 Software-Defined L2 Network Bridging (Multus CNI)</h2>
-<p>Standard Kubernetes pods route egress traffic through flannel SNAT gateways, preventing direct Layer 2 connectivity to virtual machines and triggering firewall inspection delays.</p>
-<p>Guacamole overcomes this by utilizing <strong>Multus CNI</strong> to attach directly to the cluster-wide multicast VXLAN bridge (<code>br-lab0</code>):</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">podAnnotations</span><span class="p">:</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">k8s.v1.cni.cncf.io/networks</span><span class="p">:</span><span class="w"> </span><span class="s">'[{</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="s">"name":</span><span class="nv"> </span><span class="s">"lab-lan-bridge",</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="s">"ips":</span><span class="nv"> </span><span class="s">["10.10.0.50/24"]</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="s">}]'</span>
+<h2 id="software-defined-l2-vpc-attachment-multus-cni-kube-ovn">🌉 Software-Defined L2 VPC Attachment (Multus CNI &amp; Kube-OVN)</h2>
+<p>Standard Kubernetes pods route egress traffic through Flannel SNAT gateways, preventing direct Layer 2 connectivity to virtual machines and triggering firewall inspection delays.</p>
+<p>Guacamole overcomes this by utilizing <strong>Multus CNI</strong> to attach directly into the Kube-OVN <strong><code>ovn-ad-vpc</code></strong> Software-Defined L2 VPC:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># kubernetes/infrastructure/guacamole/values.yaml</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">podAnnotations</span><span class="p">:</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">k8s.v1.cni.cncf.io/networks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vms/ovn-ad-vpc</span>
 </span></code></pre></div>
 <ul>
-<li><strong>Interface <code>net1</code>:</strong> Receives static IP <code>10.10.0.50</code> directly on the <code>10.10.0.0/24</code> subnet.</li>
-<li><strong>Direct RDP/SSH Access:</strong> RDP connections to <code>win11</code> (<code>10.10.0.155:3389</code>) and LDAPS queries to <code>dc01</code> (<code>10.10.0.10:636</code>) flow across the VXLAN tunnel with <strong>sub-millisecond latency</strong> and zero NAT traversal.</li>
+<li><strong>Dynamic DHCP Allocation:</strong> The pod dynamically receives an IP address directly from Kube-OVN's internal IPAM allocator on the <code>10.10.0.0/24</code> subnet.</li>
+<li><strong>Direct RDP/SSH Access:</strong> RDP connections to <code>win11</code> (<code>10.10.0.11:3389</code> or <code>win11.ad.lambertlab.us:3389</code>) and LDAPS queries to <code>dc01</code> (<code>10.10.0.10:636</code> or <code>dc01.ad.lambertlab.us:636</code>) flow across the Geneve overlay with <strong>sub-millisecond latency</strong> and zero NAT traversal.</li>
+<li><strong>Decoupled from Host Netfilter:</strong> Because Kube-OVN uses Geneve UDP encapsulation across nodes rather than host Linux bridges (<code>br-lab0</code>), cross-node traffic is completely decoupled from host iptables <code>FORWARD</code> chain drops and physical Wi-Fi multicast restrictions.</li>
 </ul>
-<blockquote>
-<p>[!IMPORTANT]
-<strong>Host Netfilter &amp; Cross-Node Bridging:</strong>
-Because Multus attaches directly to <code>br-lab0</code>, bridged cross-node IP packets pass through host iptables via <code>br_netfilter</code> (<code>net.bridge.bridge-nf-call-iptables = 1</code>). To prevent worker nodes running Docker (like <code>opti74</code>) from silently dropping LDAPS (port 636) or RDP traffic, all cluster nodes mandate <code>"ip-forward-no-drop": true</code> in <code>/etc/docker/daemon.json</code> and maintain an iptables <code>FORWARD</code> chain policy of <code>ACCEPT</code>.</p>
-</blockquote>
 <hr />
 <h2 id="compute-guardrails-proxy-hygiene">🛡️ Compute Guardrails &amp; Proxy Hygiene</h2>
 <h3 id="1-guacd-cpu-core-capping">1. <code>guacd</code> CPU Core Capping</h3>

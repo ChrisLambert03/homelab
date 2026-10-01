@@ -482,7 +482,7 @@
   <span class="md-ellipsis">
     
   
-    L2 VXLAN & CoreDNS Fabric
+    Software-Defined L2 VPC & CoreDNS Fabric
   
 
     
@@ -1012,7 +1012,7 @@
   <span class="md-ellipsis">
     
   
-    Bridge Self-Healing Watchdog
+    Bridge Self-Healing Watchdog (Legacy)
   
 
     
@@ -1256,19 +1256,27 @@
 <td style="text-align: left;">Longhorn Scratch</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Longhorn</strong></td>
+<td style="text-align: left;"><strong>Kube-OVN</strong></td>
 <td style="text-align: left;">Infrastructure</td>
-<td style="text-align: left;"><code>longhorn-system</code></td>
+<td style="text-align: left;"><code>kube-system</code></td>
 <td style="text-align: left;">ArgoCD Helm (Wave 1)</td>
-<td style="text-align: left;"><code>longhorn.lambertlab.us</code></td>
-<td style="text-align: left;">Multi-Node SSD / NVMe</td>
+<td style="text-align: left;">In-Cluster SDN Engine</td>
+<td style="text-align: left;">Ephemeral</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Kube-OVN Networks</strong></td>
+<td style="text-align: left;">Infrastructure</td>
+<td style="text-align: left;"><code>vms</code></td>
+<td style="text-align: left;">ArgoCD Manifest (Wave 2)</td>
+<td style="text-align: left;">L2 VPC Subnet (<code>ovn-ad-vpc</code>)</td>
+<td style="text-align: left;">Ephemeral</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>NMState Operator</strong></td>
 <td style="text-align: left;">Infrastructure</td>
 <td style="text-align: left;"><code>nmstate</code></td>
 <td style="text-align: left;">ArgoCD OCI (Wave 1)</td>
-<td style="text-align: left;">In-Cluster Host Net</td>
+<td style="text-align: left;">In-Cluster Host Net (Legacy)</td>
 <td style="text-align: left;">Ephemeral</td>
 </tr>
 <tr>
