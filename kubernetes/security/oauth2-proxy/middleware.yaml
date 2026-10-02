@@ -8,6 +8,7 @@ spec:
   forwardAuth:
     address: http://oauth2-proxy.security.svc.cluster.local:80
     trustForwardHeader: true
+    authSigninURL: "https://auth.lambertlab.us/oauth2/start?rd=$scheme://$host$escaped_request_uri"
     authResponseHeaders:
       - X-Auth-Request-User
       - X-Auth-Request-Email
