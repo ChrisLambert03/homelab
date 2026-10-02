@@ -15,6 +15,7 @@ extraArgs:
   cookie-domain: ".lambertlab.us"
   whitelist-domain: ".lambertlab.us"
   reverse-proxy: "true"
+  skip-provider-button: "true"
   oidc-groups-claim: "groups"
   allowed-group: "d958b901-3dea-4048-a342-f7aa26f6982d"
 
