@@ -1,0 +1,38 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: oauth2-proxy
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: security
+  sources:
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      ref: homelab
+      path: kubernetes/security/oauth2-proxy
+      directory:
+        exclude: 'values.yaml'
+
+    - repoURL: https://oauth2-proxy.github.io/manifests
+      chart: oauth2-proxy
+      targetRevision: 10.7.1
+      helm:
+        releaseName: oauth2-proxy
+        valueFiles:
+          - $homelab/kubernetes/security/oauth2-proxy/values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: security
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

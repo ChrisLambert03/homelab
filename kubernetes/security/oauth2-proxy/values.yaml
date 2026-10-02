@@ -1,0 +1,28 @@
+---
+replicaCount: 1
+
+# We map our existing secret to the proxy config
+config:
+  existingSecret: oauth2-proxy-auth
+
+# The official chart passes everything else natively through extraArgs
+extraArgs:
+  provider: "oidc"
+  oidc-issuer-url: "https://login.microsoftonline.com/c8e5d5f1-237a-45a1-a913-5908b6042e39/v2.0"
+  redirect-url: "https://auth.lambertlab.us/oauth2/callback"
+  email-domain: "*"
+  cookie-secure: "true"
+  cookie-domain: ".lambertlab.us"
+  whitelist-domain: ".lambertlab.us"
+  reverse-proxy: "true"
+  trusted-ip: "10.42.0.0/16"
+  oidc-groups-claim: "groups"
+  allowed-group: "d958b901-3dea-4048-a342-f7aa26f6982d"
+
+ingress:
+  enabled: true
+  className: traefik
+  path: /oauth2
+  pathType: Prefix
+  hosts:
+    - auth.lambertlab.us
