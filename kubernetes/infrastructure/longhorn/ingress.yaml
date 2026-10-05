@@ -6,7 +6,7 @@ metadata:
   namespace: longhorn-system
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,longhorn-system-oauth-auth@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: default-https-redirect@kubernetescrd,default-admin-only-access@kubernetescrd,longhorn-system-oauth-auth@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:

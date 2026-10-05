@@ -1,0 +1,14 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: oauth-auth
+  namespace: kubevirt
+spec:
+  forwardAuth:
+    address: http://oauth2-proxy.security.svc.cluster.local:80/?allowed_groups=3e58fa8d-8aa7-454f-a9d1-a9871dd3bbe3
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-Auth-Request-User
+      - X-Auth-Request-Email
+      - X-Auth-Request-Preferred-Username
