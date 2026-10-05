@@ -6,7 +6,7 @@ metadata:
   namespace: security
 spec:
   forwardAuth:
-    address: http://oauth2-proxy.security.svc.cluster.local:80
+    address: http://oauth2-proxy.security.svc.cluster.local:80/oauth2/auth
     trustForwardHeader: true
     authSigninURL: "https://auth.lambertlab.us/oauth2/start?rd=$scheme://$host$escaped_request_uri"
     authResponseHeaders:
