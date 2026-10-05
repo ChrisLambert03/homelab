@@ -3,10 +3,10 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: oauth-auth
-  namespace: security
+  namespace: longhorn-system
 spec:
   forwardAuth:
-    address: http://oauth2-proxy.security.svc.cluster.local:80/
+    address: http://oauth2-proxy.security.svc.cluster.local:80/?allowed_groups=this-is-a-fake-group-id
     trustForwardHeader: true
     authResponseHeaders:
       - X-Auth-Request-User
