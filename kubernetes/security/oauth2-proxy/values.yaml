@@ -19,6 +19,7 @@ extraArgs:
   allowed-group: "d958b901-3dea-4048-a342-f7aa26f6982d"
   scope: "openid profile email"
   skip-provider-button: "true"
+  upstream: "static://202"
 
 ingress:
   enabled: true
