@@ -17,6 +17,7 @@ extraArgs:
   reverse-proxy: "true"
   oidc-groups-claim: "groups"
   allowed-group: "d958b901-3dea-4048-a342-f7aa26f6982d"
+  scope: "openid profile email"
 
 ingress:
   enabled: true
