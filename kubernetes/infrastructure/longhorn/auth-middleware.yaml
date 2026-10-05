@@ -6,7 +6,7 @@ metadata:
   namespace: longhorn-system
 spec:
   forwardAuth:
-    address: http://oauth2-proxy.security.svc.cluster.local:80/?allowed_groups=this-is-a-fake-group-id
+    address: http://oauth2-proxy.security.svc.cluster.local:80/?allowed_groups=d958b901-3dea-4048-a342-f7aa26f6982d
     trustForwardHeader: true
     authResponseHeaders:
       - X-Auth-Request-User
