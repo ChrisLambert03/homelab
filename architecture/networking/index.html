@@ -698,6 +698,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#zero-trust-network-policies-microsegmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛡️ Zero-Trust Network Policies (Microsegmentation)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛡️ Zero-Trust Network Policies (Microsegmentation)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-universal-default-deny-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Universal Default-Deny Baseline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centralized-gitops-governance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralized GitOps Governance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1443,6 +1482,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#zero-trust-network-policies-microsegmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛡️ Zero-Trust Network Policies (Microsegmentation)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛡️ Zero-Trust Network Policies (Microsegmentation)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-universal-default-deny-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Universal Default-Deny Baseline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centralized-gitops-governance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralized GitOps Governance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1662,6 +1740,16 @@ To enable the cluster to resolve Active Directory queries (<code>dc01.ad.lambert
 <li><strong>Traffic Path:</strong> OPNsense routes <code>100.64.0.0/10</code> LAN traffic to the Traefik Service ClusterIP (<code>10.43.204.125:443</code>).</li>
 <li><strong>Rule:</strong> Always route internal VM traffic targeting cluster ingress to the Traefik Service ClusterIP, never to a physical node's local LAN IP.</li>
 </ul>
+<hr />
+<h2 id="zero-trust-network-policies-microsegmentation">🛡️ Zero-Trust Network Policies (Microsegmentation)</h2>
+<p>To prevent lateral movement across the cluster in the event of a compromised container (e.g., a zero-day in a media application or dashboard), the cluster implements strict <strong>Zero-Trust Network Policies</strong> across all core application namespaces (<code>media</code>, <code>guacamole</code>, <code>observability</code>, <code>gaming</code>, <code>external-secrets</code>).</p>
+<h3 id="the-universal-default-deny-baseline">The Universal Default-Deny Baseline</h3>
+<p>Each protected namespace enforces a strict Default-Deny Ingress policy that blocks all incoming traffic with exactly two exceptions:
+1. <strong>Intra-Namespace Communication:</strong> Pods within the same namespace are allowed to communicate freely (e.g., Guacamole frontend communicating with Guacamole PostgreSQL, or Radarr querying Sonarr).
+2. <strong>Traefik Ingress Controller:</strong> Traffic originating from the <code>kube-system</code> namespace (which houses Traefik and K3s LoadBalancers) is explicitly allowed. This ensures external traffic routed via Ingress or UDP LoadBalancer reaches the pods successfully.</p>
+<p>This architecture entirely drops unauthorized cross-namespace requests at the kernel firewall level (enforced by K3s <code>kube-router</code> embedded in the Flannel CNI).</p>
+<h3 id="centralized-gitops-governance">Centralized GitOps Governance</h3>
+<p>All Network Policies are decoupled from their individual application Helm charts and are instead stored centrally in the <code>kubernetes/network-policies</code> directory. A dedicated ArgoCD Application (<code>network-policies.yaml</code>) pinned to <strong>Sync Wave 1</strong> enforces these firewalls across the cluster globally before any application workloads are deployed in Sync Wave 2 and 3.</p>
 
 
 
