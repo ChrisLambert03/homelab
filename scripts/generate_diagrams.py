@@ -26,7 +26,7 @@ from diagrams.generic.storage import Storage
 from diagrams.azure.identity import ActiveDirectory, AzureActiveDirectory, EntraConnect
 from diagrams.elastic.elasticsearch import Elasticsearch, Logstash, Kibana, Beats
 
-OUT_DIR = os.path.abspath("docs/assets/diagrams")
+OUT_DIR = os.path.abspath("diagrams")
 os.makedirs(OUT_DIR, exist_ok=True)
 
 GRAPH_ATTRS = {
@@ -320,6 +320,8 @@ def generate_gitops_waves():
                 Deployment("CDI"),
                 Deployment("Cert-Manager"),
                 Deployment("Multus CNI"),
+                Deployment("Kube-OVN"),
+                NetworkPolicy("Zero-Trust Policies"),
             ]
 
         with Cluster("Sync Wave 2: Infrastructure & Gateways"):
@@ -350,6 +352,25 @@ def generate_gitops_waves():
         root_app >> Edge(label="Wave 5: Telemetry", color="red") >> w5
 
 
+def generate_zero_trust_network():
+    print("Generating: zero_trust_network.png...")
+    attrs = {**GRAPH_ATTRS, "rankdir": "TB"}
+    with Diagram("Zero-Trust Network Policy Architecture", show=False, filename=f"{OUT_DIR}/zero_trust_network", outformat="png", graph_attr=attrs):
+        traefik = Ingress("Traefik (kube-system)\nGlobal Entrypoint")
+        with Cluster("Namespace: media"):
+            np_media = NetworkPolicy("media-default-deny\n(Drop All Ingress)")
+            sonarr = Pod("Sonarr")
+            radarr = Pod("Radarr")
+            traefik >> Edge(label="Explicit Allow", color="darkgreen") >> np_media
+            np_media >> [sonarr, radarr]
+            sonarr << Edge(label="Intra-Namespace Allow", color="darkgreen") >> radarr
+        with Cluster("Namespace: observability"):
+            np_obs = NetworkPolicy("observability-default-deny\n(Drop All Ingress)")
+            homarr = Pod("Homarr")
+            traefik >> Edge(label="Explicit Allow", color="darkgreen") >> np_obs
+            np_obs >> homarr
+            homarr >> Edge(label="Blocked Cross-Namespace", color="red", style="dashed") >> sonarr
+
 if __name__ == "__main__":
     generate_systems_provisioning_map()
     generate_hardware_topology()
@@ -358,4 +379,5 @@ if __name__ == "__main__":
     generate_siem_pipeline()
     generate_virtualization_architecture()
     generate_gitops_waves()
+    generate_zero_trust_network()
     print("All 7 architecture diagrams generated successfully!")

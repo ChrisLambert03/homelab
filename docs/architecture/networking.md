@@ -192,3 +192,20 @@ KubeVirt virtual machines (such as `dc01` and `win11`) reside on the `10.10.0.0/
 
 * **Traffic Path:** OPNsense routes `100.64.0.0/10` LAN traffic to the Traefik Service ClusterIP (`10.43.204.125:443`).
 * **Rule:** Always route internal VM traffic targeting cluster ingress to the Traefik Service ClusterIP, never to a physical node's local LAN IP.
+
+---
+
+## 🛡️ Zero-Trust Network Policies (Microsegmentation)
+
+To prevent lateral movement across the cluster in the event of a compromised container (e.g., a zero-day in a media application or dashboard), the cluster implements strict **Zero-Trust Network Policies** across all core application namespaces (`media`, `guacamole`, `observability`, `gaming`, `external-secrets`).
+
+### The Universal Default-Deny Baseline
+
+Each protected namespace enforces a strict Default-Deny Ingress policy that blocks all incoming traffic with exactly two exceptions:
+1. **Intra-Namespace Communication:** Pods within the same namespace are allowed to communicate freely (e.g., Guacamole frontend communicating with Guacamole PostgreSQL, or Radarr querying Sonarr).
+2. **Traefik Ingress Controller:** Traffic originating from the `kube-system` namespace (which houses Traefik and K3s LoadBalancers) is explicitly allowed. This ensures external traffic routed via Ingress or UDP LoadBalancer reaches the pods successfully.
+
+This architecture entirely drops unauthorized cross-namespace requests at the kernel firewall level (enforced by K3s `kube-router` embedded in the Flannel CNI).
+
+### Centralized GitOps Governance
+All Network Policies are decoupled from their individual application Helm charts and are instead stored centrally in the `kubernetes/network-policies` directory. A dedicated ArgoCD Application (`network-policies.yaml`) pinned to **Sync Wave 1** enforces these firewalls across the cluster globally before any application workloads are deployed in Sync Wave 2 and 3.
