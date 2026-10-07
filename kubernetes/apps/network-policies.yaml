@@ -1,0 +1,26 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: network-policies
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: security
+  source:
+    repoURL: git@github.com:ChrisLambert03/homelab.git
+    targetRevision: main
+    path: kubernetes/network-policies
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true
