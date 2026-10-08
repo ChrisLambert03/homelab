@@ -941,6 +941,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#3-oauth2-proxy-traefik-forwardauth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. OAuth2-Proxy &amp; Traefik ForwardAuth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#3-centralized-elk-stack-elastic-agent" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1250,6 +1261,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#3-oauth2-proxy-traefik-forwardauth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. OAuth2-Proxy &amp; Traefik ForwardAuth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#3-centralized-elk-stack-elastic-agent" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1361,6 +1383,19 @@
 <li><strong>Key Configuration:</strong></li>
 <li>Configures <code>ClusterSecretStore</code> pointing directly to HashiCorp Vault.</li>
 <li>Eliminates plaintext secrets from Git repositories while allowing applications to consume standard Kubernetes secrets declaratively.</li>
+</ul>
+<hr />
+<h3 id="3-oauth2-proxy-traefik-forwardauth">3. OAuth2-Proxy &amp; Traefik ForwardAuth</h3>
+<ul>
+<li><strong>Namespace:</strong> <code>security</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
+<li><strong>Ingress Endpoint:</strong> <code>https://auth.lambertlab.us</code></li>
+<li><strong>Architectural Role:</strong> Zero-Trust authentication gateway leveraging Microsoft Entra ID (OIDC) to protect internal applications via Traefik <code>ForwardAuth</code> middlewares.</li>
+<li><strong>Key Configuration:</strong></li>
+<li>Configured with the <strong><code>static://202</code> upstream pattern</strong>. Instead of proxying traffic directly, it acts purely as an authentication oracle for Traefik. It returns HTTP 202 (Accepted) for valid sessions, instructing Traefik to allow the request through to the target backend.</li>
+<li>Bound to the primary Microsoft Entra ID tenant via OIDC SSO.</li>
+<li>Secures wildcard subdomains (<code>cookie-domain: .lambertlab.us</code>), allowing a single login event at the perimeter to grant access across all protected internal portals.</li>
+<li>Synchronizes Entra ID group claims into headers for downstream application RBAC.</li>
 </ul>
 <hr />
 <h3 id="3-centralized-elk-stack-elastic-agent">3. Centralized ELK Stack &amp; Elastic Agent</h3>
