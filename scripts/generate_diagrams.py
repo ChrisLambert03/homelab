@@ -23,7 +23,7 @@ from diagrams.k8s.storage import StorageClass, PV, PVC
 from diagrams.k8s.infra import Node, Master, ETCD
 from diagrams.generic.os import Windows, Ubuntu
 from diagrams.generic.storage import Storage
-from diagrams.azure.identity import ActiveDirectory, AzureActiveDirectory, EntraConnect
+from diagrams.azure.identity import ActiveDirectory, Users, Groups
 from diagrams.elastic.elasticsearch import Elasticsearch, Logstash, Kibana, Beats
 
 OUT_DIR = os.path.abspath("diagrams")
@@ -56,20 +56,21 @@ def generate_systems_provisioning_map():
 
         with Cluster("Hybrid Identity Federation Pipeline"):
             adds = ActiveDirectory("DC01 Active Directory\n(AD DS / Kerberos / LDAPS)")
-            entra = AzureActiveDirectory("Microsoft Entra ID\n(OIDC SSO / Cloud Sync)")
+            entra = ActiveDirectory("Microsoft Entra ID\n(OIDC SSO / Cloud Sync)")
 
         with Cluster("K3s Cluster (Sync Waves 1 -> 5)"):
             with Cluster("Wave 1: Core Operators & Software-Defined Fabric"):
                 infra_ops = [
                     Deployment("Longhorn Engine"),
-                    Deployment("NMState Operator"),
+                    Deployment("Kube-OVN VPC"),
                     Deployment("KubeVirt & CDI"),
                     Deployment("Cert-Manager"),
                 ]
 
             with Cluster("Wave 2: Ingress & Gateway Infrastructure"):
-                guac = Deployment("Apache Guacamole\n(Multus L2 VXLAN)")
+                guac = Deployment("Apache Guacamole\n(Multus L2 VPC)")
                 eso = Deployment("External Secrets\nOperator")
+                oauth2 = Deployment("OAuth2-Proxy\n(Traefik ForwardAuth)")
 
             with Cluster("Wave 3: Virtual Machines & Application Workloads"):
                 opnsense = OPNSense("OPNsense Firewall VM\n(Edge Perimeter)")
@@ -102,7 +103,7 @@ def generate_systems_provisioning_map():
         tf >> Edge(label="Secrets Engine", color="gray") >> vault
 
         argo >> Edge(label="Wave 1", color="darkgreen") >> infra_ops
-        argo >> Edge(label="Wave 2", color="darkgreen") >> [guac, eso]
+        argo >> Edge(label="Wave 2", color="darkgreen") >> [guac, eso, oauth2]
         argo >> Edge(label="Wave 3", color="darkgreen") >> [opnsense, win11, dc01_vm, jellyfin, arrs]
         argo >> Edge(label="Wave 5", color="darkgreen") >> eagent
 
@@ -207,13 +208,13 @@ def generate_identity_federation():
             adds = ActiveDirectory("Active Directory DS\n(ad.lambertlab.us)")
             ca = Storage("Enterprise Root CA\n(lambertlab-DC01-CA)")
             dns = Service("AD Dynamic DNS\n(10.10.0.10:53)")
-            cloud_sync = EntraConnect("Entra Cloud Sync Agent\n(gMSA: provAgentgMSA$)")
+            cloud_sync = ActiveDirectory("Entra Cloud Sync Agent\n(gMSA: provAgentgMSA$)")
             adds >> cloud_sync
             adds >> ca
 
         with Cluster("Microsoft Entra ID (Cloud Tenant)"):
-            entra_users = AzureActiveDirectory("Synchronized Users\n(chris@lambertlab.us)")
-            entra_groups = AzureActiveDirectory("Security Groups\n(LambertLab-Admins)")
+            entra_users = Users("Synchronized Users\n(chris@lambertlab.us)")
+            entra_groups = Groups("Security Groups\n(LambertLab-Admins)")
             break_glass = User("Break-Glass Admin\n(Cloud-Only Account)")
 
         with Cluster("OIDC Authenticated Applications"):
@@ -273,8 +274,8 @@ def generate_virtualization_architecture():
             cdi = Deployment("CDI (Containerized Data Importer)")
             kv_mgr = Deployment("KubeVirt Manager Web UI\n(NoVNC Console)")
 
-        with Cluster("Software-Defined L2 VXLAN Network Fabric"):
-            vxlan_bridge = Switch("br-lab0 Multicast VXLAN Bridge\n(10.10.0.0/24 Overlay)")
+        with Cluster("Software-Defined L2 VPC Network Fabric"):
+            vxlan_bridge = Switch("ovn-ad-vpc Geneve UDP Overlay\n(10.10.0.0/24 VPC)")
 
         with Cluster("Virtual Machines (Wave 3)"):
             with Cluster("OPNsense Edge Perimeter VM"):
@@ -315,7 +316,6 @@ def generate_gitops_waves():
         with Cluster("Sync Wave 1: Core Operators"):
             w1 = [
                 Deployment("Longhorn"),
-                Deployment("NMState"),
                 Deployment("KubeVirt"),
                 Deployment("CDI"),
                 Deployment("Cert-Manager"),
@@ -329,6 +329,7 @@ def generate_gitops_waves():
                 Argocd("ArgoCD HA"),
                 Vault("HashiCorp Vault"),
                 Deployment("External Secrets"),
+                Deployment("OAuth2-Proxy"),
                 Deployment("Apache Guacamole"),
                 Deployment("Traefik ACLs"),
             ]
