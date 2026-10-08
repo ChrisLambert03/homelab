@@ -31,6 +31,19 @@ This section documents secrets orchestration, centralized Security Information a
 
 ---
 
+### 3. OAuth2-Proxy & Traefik ForwardAuth
+* **Namespace:** `security`
+* **Sync Wave:** `Wave 2`
+* **Ingress Endpoint:** `https://auth.lambertlab.us`
+* **Architectural Role:** Zero-Trust authentication gateway leveraging Microsoft Entra ID (OIDC) to protect internal applications via Traefik `ForwardAuth` middlewares.
+* **Key Configuration:**
+  * Configured with the **`static://202` upstream pattern**. Instead of proxying traffic directly, it acts purely as an authentication oracle for Traefik. It returns HTTP 202 (Accepted) for valid sessions, instructing Traefik to allow the request through to the target backend.
+  * Bound to the primary Microsoft Entra ID tenant via OIDC SSO.
+  * Secures wildcard subdomains (`cookie-domain: .lambertlab.us`), allowing a single login event at the perimeter to grant access across all protected internal portals.
+  * Synchronizes Entra ID group claims into headers for downstream application RBAC.
+
+---
+
 ### 3. Centralized ELK Stack & Elastic Agent
 * **Host Environment:** `workstation` (Docker Engine managed via Terraform `docker/workstation/elk-stack.tf`) & Kubernetes `kube-system` (Elastic Agent DaemonSet via ArgoCD Wave 5)
 * **Ingress Endpoint:** `https://kibana.lambertlab.us` (Internal ES on `:9200`, Logstash on `:12201` GELF)
