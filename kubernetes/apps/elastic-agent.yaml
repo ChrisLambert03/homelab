@@ -22,7 +22,7 @@ spec:
     # 2. Upstream Elastic Helm Chart using $homelab values.yaml
     - repoURL: https://helm.elastic.co
       chart: elastic-agent
-      targetRevision: 9.5.4
+      targetRevision: 9.5.5
       helm:
         releaseName: elastic-agent
         valueFiles:
