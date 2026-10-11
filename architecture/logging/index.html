@@ -1495,7 +1495,7 @@ Increasing the heap ceiling to 2048 MB ensures smooth visual aggregation and uni
 <li><strong>Fleet Server (<code>workstation</code> :8220):</strong>
   Deployed via Terraform (<code>docker/workstation/elk-stack.tf</code>) attached to the Docker <code>elk</code> network, communicating directly with Elasticsearch (<code>http://elasticsearch:9200</code>). Exposes port <code>8220</code> over the Tailscale overlay network (<code>https://100.106.96.18:8220</code>).</li>
 <li><strong>Fleet-Managed DaemonSet (<code>elastic-agent</code>):</strong>
-  Deployed via ArgoCD (<code>kubernetes/apps/elastic-agent.yaml</code>) utilizing the upstream Elastic Helm chart (<code>https://helm.elastic.co</code>, chart: <code>elastic-agent:9.5.4</code>).</li>
+  Deployed via ArgoCD (<code>kubernetes/apps/elastic-agent.yaml</code>) utilizing the upstream Elastic Helm chart (<code>https://helm.elastic.co</code>, chart: <code>elastic-agent:9.5.5</code>).</li>
 <li><strong>Pinned Image Tag:</strong> Pinned to <code>9.3.2</code> to strictly adhere to Elastic's architectural requirement: $V_{\text{Agent}} \le V_{\text{Fleet Server}}$.</li>
 <li><strong>System &amp; Kubernetes Integrations:</strong> With <code>system.enabled: true</code> and <code>preset: perNode</code>, exactly one agent pod runs on every cluster node, mounting <code>/var/log</code>, <code>/proc</code>, and <code>/sys</code> to monitor host OS telemetry and container logs simultaneously with zero duplication.</li>
 <li><strong>Secret Decoupling:</strong> Uses <code>tokenFromSecret</code> referencing Kubernetes secret <code>elastic-agent-token</code> in <code>kube-system</code>. Plaintext enrollment tokens are never committed to Git.</li>
