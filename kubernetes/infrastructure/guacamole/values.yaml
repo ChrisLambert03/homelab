@@ -12,13 +12,12 @@ guacamole:
   contextPath: ROOT
   extraEnv:
     # ----------------------------------------------------
-    # Java JVM Truststore & Hostname Verification Options
+    # Java JVM Truststore Options
     # ----------------------------------------------------
     - name: JAVA_TOOL_OPTIONS
       value: >-
         -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/custom-cacerts
         -Djavax.net.ssl.trustStorePassword=changeit
-        -Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true
 
     # ----------------------------------------------------
     # Extension Priority (Local/LDAP first, then OpenID)

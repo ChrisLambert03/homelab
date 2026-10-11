@@ -76,12 +76,11 @@ extraEnv:
     value: >-
       -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/custom-cacerts
       -Djavax.net.ssl.trustStorePassword=changeit
-      -Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true
 ```
 
-> [!TIP]
-> **Why `disableEndpointIdentification=true` is Required:**
-> Java's JNDI LDAP provider performs strict hostname endpoint identification. In virtualized lab environments where the AD domain controller certificate Subject Alternative Name (SAN) may match `dc01.ad.lambertlab.us` while routing takes place over static L2 IP mappings (`10.10.0.10`), disabling endpoint identification prevents spurious TLS hostname mismatches while preserving full cryptographic channel encryption.
+> [!NOTE]
+> **Strict TLS Hostname & Endpoint Identification:**
+> With CoreDNS conditional forwarding (`ad.lambertlab.us` -> `10.10.0.10`) active over Multus, Guacamole resolves `dc01.ad.lambertlab.us` natively. Java's default strict TLS endpoint identification verifies that the Subject Alternative Name (SAN) on `dc01`'s certificate matches the query hostname without needing to bypass endpoint identification checks.
 
 ---
 
