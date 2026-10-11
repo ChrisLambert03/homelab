@@ -1531,6 +1531,7 @@
 <li>Synchronous block replication (2x–3x) across physical node SSDs/NVMes.</li>
 <li>Custom StorageClass <code>longhorn-retain</code> with <code>reclaimPolicy: Retain</code> protecting databases and stateful volume claims from accidental deletion.</li>
 <li>Automated snapshot scheduling and volume backup integration.</li>
+<li>Deployed via upstream Helm chart (<code>longhorn:1.13.0</code>) with <code>preUpgradeChecker.jobEnabled: false</code> per <a href="https://longhorn.io/docs/1.13.0/deploy/install/install-with-argocd/">Longhorn Argo CD guidelines</a>.</li>
 </ul>
 <hr />
 <h3 id="10-kubevirt-operator-containerized-data-importer-cdi">10. KubeVirt Operator &amp; Containerized Data Importer (CDI)</h3>
