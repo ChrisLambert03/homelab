@@ -59,6 +59,7 @@ This section details the foundational control plane components, software-defined
 
 ### 5. Multus CNI (Thick CNI DaemonSet)
 * **Namespace:** `kube-system`
+* **Version:** Helm `v4.3.104` (Thick CNI DaemonSet)
 * **Sync Wave:** `Wave 1`
 * **Architectural Role:** Multi-network interface plugin enabling pods and VMs to attach directly to multiple network fabrics.
 * **Key Configuration:**
