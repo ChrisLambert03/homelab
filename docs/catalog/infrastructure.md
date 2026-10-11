@@ -51,6 +51,7 @@ This section details the foundational control plane components, software-defined
 * **Key Configuration:**
   * Replaces legacy NMState Linux host bridge (`br-lab0`) with Geneve UDP encapsulation, bypassing Wi-Fi multicast restrictions and host iptables `FORWARD` drops.
   * VPC Subnet `ovn-ad-vpc` (`10.10.0.0/24`) configured with dummy gateway `10.10.0.254` to allow the virtualized OPNsense firewall to claim `10.10.0.1`.
+  * High-Availability OVN central databases: Deploys a 3-node OVSDB Raft cluster for OVN Northbound & Southbound databases across control-plane nodes (`lenovo`, `opti74`, `optiplex`).
   * Embedded DHCP server delivering Active Directory DNS (`10.10.0.10`) and default gateway (`10.10.0.1`) directly to virtual machines and secondary pod interfaces.
   * *(Archived Infrastructure: The NMState Operator and Linux host bridge policies have been completely archived and pruned from ArgoCD in favor of Kube-OVN).*
 

@@ -4,6 +4,12 @@ masterNodesLabels:
   kube-ovn/role: null
   node-role.kubernetes.io/control-plane: "true"
 
+# Explicit master node IPs for 3-node HA Raft clustering (required for ArgoCD client-side rendering)
+masterNodes:
+  - "100.95.104.11"
+  - "100.65.236.98"
+  - "100.74.145.55"
+
 networking:
   # Move the internal Join Subnet away from 100.64.0.0/16
   # This prevents Kube-OVN from breaking your Tailscale connection (which uses 100.64.0.0/10)

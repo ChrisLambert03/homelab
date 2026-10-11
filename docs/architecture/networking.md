@@ -118,6 +118,7 @@ By leveraging Geneve UDP encapsulation, Kube-OVN abstracts the physical network 
 * **VPC Name:** `ovn-cluster` (Logical Router) -> `ovn-ad-vpc` (Logical Switch)
 * **Subnet CIDR:** `10.10.0.0/24`
 * **OPNsense Gateway IP:** `10.10.0.1`
+* **High Availability Architecture:** 3-node OVSDB Raft cluster (`ovn-central` and `kube-ovn-controller`) synchronized across control-plane nodes (`lenovo`, `opti74`, `optiplex`).
 
 ### Why We Migrated from NMState `br-lab0`
 Previously, the cluster relied on a multicast VXLAN overlay (`br-lab0`) managed declaratively by NMState (NetworkManager State). 
