@@ -19,7 +19,7 @@ spec:
       targetRevision: 1.13.0
       helm:
         releaseName: longhorn
-        valuesObject:
+        values: |
           # Disabling preUpgradeChecker.jobEnabled is required and officially recommended
           # by Longhorn for GitOps/ArgoCD deployments. ArgoCD does not handle Helm pre-upgrade
           # hooks sequentially, which causes the check job to fail or hang waiting for RBAC/hooks.
