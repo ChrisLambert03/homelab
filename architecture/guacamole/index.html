@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1507,12 +1507,11 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="no">-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/custom-cacerts</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="no">-Djavax.net.ssl.trustStorePassword=changeit</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="no">-Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true</span>
 </span></code></pre></div>
 <blockquote>
-<p>[!TIP]
-<strong>Why <code>disableEndpointIdentification=true</code> is Required:</strong>
-Java's JNDI LDAP provider performs strict hostname endpoint identification. In virtualized lab environments where the AD domain controller certificate Subject Alternative Name (SAN) may match <code>dc01.ad.lambertlab.us</code> while routing takes place over static L2 IP mappings (<code>10.10.0.10</code>), disabling endpoint identification prevents spurious TLS hostname mismatches while preserving full cryptographic channel encryption.</p>
+<p>[!NOTE]
+<strong>Strict TLS Hostname &amp; Endpoint Identification:</strong>
+With CoreDNS conditional forwarding (<code>ad.lambertlab.us</code> -&gt; <code>10.10.0.10</code>) active over Multus, Guacamole resolves <code>dc01.ad.lambertlab.us</code> natively. Java's default strict TLS endpoint identification verifies that the Subject Alternative Name (SAN) on <code>dc01</code>'s certificate matches the query hostname without needing to bypass endpoint identification checks.</p>
 </blockquote>
 <hr />
 <h2 id="multi-provider-authentication-chaining">⛓️ Multi-Provider Authentication Chaining</h2>
