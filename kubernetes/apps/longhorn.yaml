@@ -16,9 +16,18 @@ spec:
       path: kubernetes/infrastructure/longhorn
     - repoURL: https://charts.longhorn.io
       chart: longhorn
-      targetRevision: 1.12.1
+      targetRevision: 1.13.0
       helm:
         releaseName: longhorn
+        valuesObject:
+          # Disabling preUpgradeChecker.jobEnabled is required and officially recommended
+          # by Longhorn for GitOps/ArgoCD deployments. ArgoCD does not handle Helm pre-upgrade
+          # hooks sequentially, which causes the check job to fail or hang waiting for RBAC/hooks.
+          # Full version validation and data integrity checks remain active in the longhorn-manager
+          # daemonset via upgradeVersionCheck.
+          # Ref: https://longhorn.io/docs/1.13.0/deploy/install/install-with-argocd/
+          preUpgradeChecker:
+            jobEnabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system

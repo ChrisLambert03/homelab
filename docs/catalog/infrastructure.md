@@ -110,6 +110,7 @@ This section details the foundational control plane components, software-defined
   * Synchronous block replication (2x–3x) across physical node SSDs/NVMes.
   * Custom StorageClass `longhorn-retain` with `reclaimPolicy: Retain` protecting databases and stateful volume claims from accidental deletion.
   * Automated snapshot scheduling and volume backup integration.
+  * Deployed via upstream Helm chart (`longhorn:1.13.0`) with `preUpgradeChecker.jobEnabled: false` per [Longhorn Argo CD guidelines](https://longhorn.io/docs/1.13.0/deploy/install/install-with-argocd/).
 
 ---
 
