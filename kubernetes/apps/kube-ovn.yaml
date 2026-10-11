@@ -19,7 +19,7 @@ spec:
     # 2. Upstream Kube-OVN v2 Helm chart
     - repoURL: https://kubeovn.github.io/kube-ovn
       chart: kube-ovn-v2
-      targetRevision: v1.16.9
+      targetRevision: v1.16.12
       helm:
         releaseName: kube-ovn
         valueFiles:
