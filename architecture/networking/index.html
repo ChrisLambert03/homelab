@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1690,6 +1690,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <li><strong>VPC Name:</strong> <code>ovn-cluster</code> (Logical Router) -&gt; <code>ovn-ad-vpc</code> (Logical Switch)</li>
 <li><strong>Subnet CIDR:</strong> <code>10.10.0.0/24</code></li>
 <li><strong>OPNsense Gateway IP:</strong> <code>10.10.0.1</code></li>
+<li><strong>High Availability Architecture:</strong> 3-node OVSDB Raft cluster (<code>ovn-central</code> and <code>kube-ovn-controller</code>) synchronized across control-plane nodes (<code>lenovo</code>, <code>opti74</code>, <code>optiplex</code>).</li>
 </ul>
 <h3 id="why-we-migrated-from-nmstate-br-lab0">Why We Migrated from NMState <code>br-lab0</code></h3>
 <p>Previously, the cluster relied on a multicast VXLAN overlay (<code>br-lab0</code>) managed declaratively by NMState (NetworkManager State). 

@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1472,6 +1472,7 @@
 <li><strong>Key Configuration:</strong></li>
 <li>Replaces legacy NMState Linux host bridge (<code>br-lab0</code>) with Geneve UDP encapsulation, bypassing Wi-Fi multicast restrictions and host iptables <code>FORWARD</code> drops.</li>
 <li>VPC Subnet <code>ovn-ad-vpc</code> (<code>10.10.0.0/24</code>) configured with dummy gateway <code>10.10.0.254</code> to allow the virtualized OPNsense firewall to claim <code>10.10.0.1</code>.</li>
+<li>High-Availability OVN central databases: Deploys a 3-node OVSDB Raft cluster for OVN Northbound &amp; Southbound databases across control-plane nodes (<code>lenovo</code>, <code>opti74</code>, <code>optiplex</code>).</li>
 <li>Embedded DHCP server delivering Active Directory DNS (<code>10.10.0.10</code>) and default gateway (<code>10.10.0.1</code>) directly to virtual machines and secondary pod interfaces.</li>
 <li><em>(Archived Infrastructure: The NMState Operator and Linux host bridge policies have been completely archived and pruned from ArgoCD in favor of Kube-OVN).</em></li>
 </ul>
