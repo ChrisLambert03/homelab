@@ -105,7 +105,7 @@ variable "kibana_secret_key" {
 variable "kibana_system_password" {
   description = "Password for the kibana_system user in Elasticsearch"
   type        = string
-  default     = "homelabpassword"
+  sensitive   = true
 }
 
 variable "fleet_server_service_token" {

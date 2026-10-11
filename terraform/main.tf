@@ -16,6 +16,7 @@ module "docker_apps" {
 
   elastic_password           = local.elastic_password
   kibana_secret_key          = local.kibana_secret_key
+  kibana_system_password     = local.kibana_system_password
   fleet_server_service_token = local.fleet_server_service_token
   beszel_key                 = local.beszel_key
   beszel_token               = local.beszel_token_workstation

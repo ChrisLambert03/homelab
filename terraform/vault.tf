@@ -19,6 +19,7 @@ locals {
 
   # homarr_secret_key = tostring(data.vault_kv_secret_v2.homelab_secrets.data["homarr_secret_key"]) Migrated to Kubernetes
   kibana_secret_key          = tostring(data.vault_kv_secret_v2.homelab_secrets.data["kibana_secret_key"])
+  kibana_system_password     = tostring(data.vault_kv_secret_v2.homelab_secrets.data["kibana_system_password"])
   elastic_password           = tostring(data.vault_kv_secret_v2.homelab_secrets.data["elastic_password"])
   fleet_server_service_token = tostring(data.vault_kv_secret_v2.homelab_secrets.data["fleet_server_service_token"])
   ad_svc_terraform_password  = tostring(data.vault_kv_secret_v2.homelab_secrets.data["ad_svc_terraform_password"])
