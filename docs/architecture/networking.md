@@ -202,9 +202,10 @@ To prevent lateral movement across the cluster in the event of a compromised con
 
 ### The Universal Default-Deny Baseline
 
-Each protected namespace enforces a strict Default-Deny Ingress policy that blocks all incoming traffic with exactly two exceptions:
+Each protected namespace enforces a strict Default-Deny Ingress policy that blocks all incoming traffic with standard exceptions:
 1. **Intra-Namespace Communication:** Pods within the same namespace are allowed to communicate freely (e.g., Guacamole frontend communicating with Guacamole PostgreSQL, or Radarr querying Sonarr).
 2. **Traefik Ingress Controller:** Traffic originating from the `kube-system` namespace (which houses Traefik and K3s LoadBalancers) is explicitly allowed. This ensures external traffic routed via Ingress or UDP LoadBalancer reaches the pods successfully.
+3. **Admission Webhooks (Targeted Ingress):** Workloads running Kubernetes admission webhooks (e.g., External Secrets Operator webhook on containerPort `10250`) declare targeted NetworkPolicies matching their specific pod label and containerPort to permit control-plane API server validation requests. Because the K3s API server operates on host networking outside pod selectors, traffic is permitted by destination port, with Layer 7 authentication enforced by mutual TLS (mTLS) with the cluster CA.
 
 This architecture entirely drops unauthorized cross-namespace requests at the kernel firewall level (enforced by K3s `kube-router` embedded in the Flannel CNI).
 
