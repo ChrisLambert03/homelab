@@ -46,6 +46,12 @@ resource "docker_container" "elasticsearch" {
     type   = "bind"
   }
 
+  mounts {
+    target = "/usr/share/elasticsearch/snapshots"
+    source = "/home/chris/services/elasticsearch/snapshots"
+    type   = "bind"
+  }
+
   env = [
     "discovery.type=single-node",
     "ES_JAVA_OPTS=${var.es_java_opts}",
@@ -54,6 +60,7 @@ resource "docker_container" "elasticsearch" {
     "ELASTIC_PASSWORD=${var.elastic_password}",
     # Bypasses the requirement for HTTPS/TLS on local single-node HTTP
     "xpack.security.http.ssl.enabled=false",
+    "path.repo=/usr/share/elasticsearch/snapshots",
   ]
 
   healthcheck {

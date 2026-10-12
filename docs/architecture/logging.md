@@ -42,9 +42,9 @@ graph TD
 
 ---
 
-## 🔬 ELK Stack (Elasticsearch, Logstash, Kibana) Configuration & Compute Realities
+## 🔬 ELK Stack Configuration & Compute Realities
 
-The ELK stack is deployed in Docker on `workstation` via Terraform (`docker/workstation/elk-stack.tf`), taking advantage of its 16-core / 32-thread Xeon CPU and dedicated high-speed NVMe storage:
+Elasticsearch and Kibana are deployed to Kubernetes under the **ECK Operator** (`v3.5.0`) in the `observability` namespace (`kubernetes/observability/`), scheduled onto `workstation` to leverage its 16-core / 32-thread Xeon CPU and high-speed local NVMe storage:
 
 ### 1. Ingestion Protocol: Docker GELF over Tailscale (Port 12201 UDP/TCP)
 Docker daemons across all cluster nodes stream container `stdout` and `stderr` directly to Logstash over the private Tailscale mesh network:

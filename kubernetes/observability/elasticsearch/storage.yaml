@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: elasticsearch-data-pv
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  hostPath:
+    path: /home/chris/services/elasticsearch/data
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - workstation
+  claimRef:
+    namespace: observability
+    name: elasticsearch-data-elasticsearch-es-default-0
