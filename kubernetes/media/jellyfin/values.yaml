@@ -8,6 +8,7 @@ strategy:
 image:
   repository: lscr.io/linuxserver/jellyfin
   tag: "latest"        # pin to a specific version once you're happy with it, e.g. "10.10.7"
+  pullPolicy: Always
 
 # Pin to the node with the GPU
 nodeSelector:
