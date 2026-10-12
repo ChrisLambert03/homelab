@@ -116,7 +116,7 @@ This section details the foundational control plane components, software-defined
 
 ### 10. KubeVirt Operator & Containerized Data Importer (CDI)
 * **Namespaces:** `kubevirt`, `cdi`
-* **Versions:** KubeVirt `v1.9.0`, CDI `v1.66.0`
+* **Versions:** KubeVirt `v1.9.0`, CDI `v1.66.1`
 * **Sync Wave:** Decoupled into `Wave 1` (Operators & CRDs) and `Wave 2` (Runtime Config & Ingress)
 * **Ingress Endpoint:** `https://cdi.lambertlab.us` (CDI uploadproxy)
 * **Architectural Role:** Bare-metal virtualization management and virtual disk ingestion engine.
