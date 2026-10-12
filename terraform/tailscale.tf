@@ -14,8 +14,3 @@ data "tailscale_device" "lenovo" {
   name = "lenovo.${var.tailscale_tailnet}"
 }
 
-# Commented out - decommissioned VIP service
-# data "tailscale_service" "k8s_gateway" {
-#   name = "svc:k8s-gateway"
-# }
-
