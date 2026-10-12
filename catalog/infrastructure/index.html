@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -955,6 +955,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#12-elastic-cloud-on-kubernetes-eck-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Elastic Cloud on Kubernetes (ECK) Operator
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1392,6 +1403,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#12-elastic-cloud-on-kubernetes-eck-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Elastic Cloud on Kubernetes (ECK) Operator
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1559,6 +1581,18 @@
 <li>Traefik Ingress with automatic wildcard TLS termination (<code>*.lambertlab.us</code>).</li>
 <li>Protected by the <code>default-admin-only-access</code> Traefik middleware, restricting appliance access to administrative Tailscale clients.</li>
 <li>Enables secure browser management of iSCSI target LUNs, NFS pools, and hardware health over HTTPS.</li>
+</ul>
+<hr />
+<h3 id="12-elastic-cloud-on-kubernetes-eck-operator">12. Elastic Cloud on Kubernetes (ECK) Operator</h3>
+<ul>
+<li><strong>Namespace:</strong> <code>observability</code></li>
+<li><strong>Version:</strong> Helm <code>3.5.0</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 1</code></li>
+<li><strong>Architectural Role:</strong> Kubernetes operator automating the provisioning, orchestration, and lifecycle management of the Elastic Stack (Elasticsearch, Kibana, Logstash, Beats, and Elastic Agent).</li>
+<li><strong>Key Configuration:</strong></li>
+<li>Deployed via official Elastic Helm repository (<code>https://helm.elastic.co</code>, chart: <code>eck-operator</code>).</li>
+<li>Manages global Custom Resource Definitions (<code>kibanas</code>, <code>elasticsearches</code>, <code>logstashes</code>, <code>agents</code>).</li>
+<li>Resource-bounded controller with <code>100m</code> CPU / <code>150Mi</code> RAM baseline requests and <code>1000m</code> CPU / <code>1Gi</code> RAM burst limits.</li>
 </ul>
 
 
