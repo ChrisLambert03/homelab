@@ -784,15 +784,26 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-planned-dashboards-discover-views-target-roadmap" class="md-nav__link">
+  <a href="#6-elastic-autoops-cloud-connect-automated-cluster-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Planned Dashboards &amp; Discover Views (Target Roadmap)
+        6. Elastic AutoOps Cloud Connect (Automated Cluster Monitoring)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6. Planned Dashboards &amp; Discover Views (Target Roadmap)">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-planned-dashboards-discover-views-target-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Planned Dashboards &amp; Discover Views (Target Roadmap)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Planned Dashboards &amp; Discover Views (Target Roadmap)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1322,15 +1333,26 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-planned-dashboards-discover-views-target-roadmap" class="md-nav__link">
+  <a href="#6-elastic-autoops-cloud-connect-automated-cluster-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Planned Dashboards &amp; Discover Views (Target Roadmap)
+        6. Elastic AutoOps Cloud Connect (Automated Cluster Monitoring)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="6. Planned Dashboards &amp; Discover Views (Target Roadmap)">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-planned-dashboards-discover-views-target-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Planned Dashboards &amp; Discover Views (Target Roadmap)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Planned Dashboards &amp; Discover Views (Target Roadmap)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1503,7 +1525,11 @@ Increasing the heap ceiling to 2048 MB ensures smooth visual aggregation and uni
 <li><strong>Memory Sizing:</strong> Resource limits configured with <code>memory: 2000Mi</code> in <code>kubernetes/observability/elastic-agent/values.yaml</code> to ensure agents do not encounter OOMKilled restarts during high-volume log bursts.</li>
 </ul>
 <hr />
-<h3 id="6-planned-dashboards-discover-views-target-roadmap">6. Planned Dashboards &amp; Discover Views (Target Roadmap)</h3>
+<h3 id="6-elastic-autoops-cloud-connect-automated-cluster-monitoring">6. Elastic AutoOps Cloud Connect (Automated Cluster Monitoring)</h3>
+<p>To monitor cluster performance, shard allocation, and operational health against Elastic best practices, the cluster connects to <strong>Elastic AutoOps Cloud</strong>:
+* <strong>Deployment Model:</strong> Deployed via ArgoCD (<code>kubernetes/apps/autoops.yaml</code>) utilizing Kustomize (<code>kubernetes/observability/autoops/kustomization.yaml</code>) which references Elastic's upstream deployment directly from <code>elastic/autoops-install</code> (<code>autoops_agent_deployment.yaml</code>) alongside an <code>ExternalSecret</code> managing <code>autoops-secret</code> from Vault.</p>
+<hr />
+<h3 id="7-planned-dashboards-discover-views-target-roadmap">7. Planned Dashboards &amp; Discover Views (Target Roadmap)</h3>
 <p>Homelab telemetry streams into the <code>logs-*</code> and <code>metrics-*</code> data views in Kibana (<code>https://kibana.lambertlab.us</code>). The following curated searches and operational dashboards represent the target implementation roadmap:</p>
 <h4 id="a-target-discover-saved-searches">A. Target Discover Saved Searches</h4>
 <table>
