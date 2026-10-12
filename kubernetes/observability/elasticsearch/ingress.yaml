@@ -1,11 +1,22 @@
 ---
-apiVersion: traefik.io/v1alpha1
-kind: ServersTransport
+apiVersion: v1
+kind: Service
 metadata:
-  name: elasticsearch-transport
+  name: elasticsearch-es-http-service
   namespace: observability
+  annotations:
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+    traefik.ingress.kubernetes.io/service.serverstransport: default-insecure-transport@kubernetescrd
 spec:
-  insecureSkipVerify: true
+  type: ClusterIP
+  selector:
+    common.k8s.elastic.co/type: elasticsearch
+    elasticsearch.k8s.elastic.co/cluster-name: elasticsearch
+  ports:
+    - name: https
+      port: 9200
+      protocol: TCP
+      targetPort: 9200
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -14,8 +25,6 @@ metadata:
   namespace: observability
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/service.serverstransport: observability-elasticsearch-transport@kubernetescrd
-    traefik.ingress.kubernetes.io/service.serversscheme: https
 spec:
   ingressClassName: traefik
   rules:
@@ -26,6 +35,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: elasticsearch-es-http
+                name: elasticsearch-es-http-service
                 port:
                   number: 9200

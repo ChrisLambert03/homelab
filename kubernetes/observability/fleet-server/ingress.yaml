@@ -1,11 +1,22 @@
 ---
-apiVersion: traefik.io/v1alpha1
-kind: ServersTransport
+apiVersion: v1
+kind: Service
 metadata:
-  name: fleet-server-transport
+  name: fleet-server-agent-http-service
   namespace: observability
+  annotations:
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+    traefik.ingress.kubernetes.io/service.serverstransport: default-insecure-transport@kubernetescrd
 spec:
-  insecureSkipVerify: true
+  type: ClusterIP
+  selector:
+    agent.k8s.elastic.co/name: fleet-server
+    common.k8s.elastic.co/type: agent
+  ports:
+    - name: https
+      port: 8220
+      protocol: TCP
+      targetPort: 8220
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -14,8 +25,6 @@ metadata:
   namespace: observability
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/service.serverstransport: observability-fleet-server-transport@kubernetescrd
-    traefik.ingress.kubernetes.io/service.serversscheme: https
 spec:
   ingressClassName: traefik
   rules:
@@ -26,6 +35,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: fleet-server-agent-http
+                name: fleet-server-agent-http-service
                 port:
                   number: 8220
