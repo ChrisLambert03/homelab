@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1401,10 +1401,10 @@
 <hr />
 <h3 id="3-centralized-elk-stack-elastic-agent">3. Centralized ELK Stack &amp; Elastic Agent</h3>
 <ul>
-<li><strong>Host Environment:</strong> <code>workstation</code> (Elasticsearch &amp; Logstash via Docker Engine) &amp; Kubernetes <code>observability</code> (ECK Kibana operator-managed) &amp; <code>kube-system</code> (Elastic Agent DaemonSet)</li>
+<li><strong>Host Environment:</strong> Kubernetes <code>observability</code> (ECK Operator-managed Elasticsearch, Logstash, Kibana on <code>workstation</code>) &amp; <code>kube-system</code> (Elastic Agent DaemonSet)</li>
 <li><strong>Ingress Endpoint:</strong> <code>https://kibana.lambertlab.us</code> (Internal ES on <code>:9200</code>, Logstash on <code>:12201</code> GELF)</li>
 <li><strong>Architectural Role:</strong> Production-level Security Information and Event Management (SIEM) and log analytics pipeline.</li>
-<li><strong>Storage Backend:</strong> Dedicated local NVMe storage (<code>/usr/share/elasticsearch/data</code>) on <code>workstation</code>.</li>
+<li><strong>Storage Backend:</strong> Dedicated local NVMe storage (<code>/home/chris/services/elasticsearch/data</code>) on <code>workstation</code>.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Single-node cluster enforcing <code>number_of_replicas: 0</code> across templates to maintain solid green health and prevent Index Lifecycle Management (ILM) stalls.</li>
 <li>Docker GELF input on port 12201 (UDP/TCP) streaming container logs over Tailscale from all physical nodes.</li>

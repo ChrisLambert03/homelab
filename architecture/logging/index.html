@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1448,7 +1448,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 </div>
 <hr />
 <h2 id="elk-stack-configuration-compute-realities">🔬 ELK Stack Configuration &amp; Compute Realities</h2>
-<p>Elasticsearch and Kibana are deployed to Kubernetes under the <strong>ECK Operator</strong> (<code>v3.5.0</code>) in the <code>observability</code> namespace (<code>kubernetes/observability/</code>), scheduled onto <code>workstation</code> to leverage its 16-core / 32-thread Xeon CPU and high-speed local NVMe storage:</p>
+<p>Elasticsearch, Logstash, and Kibana are deployed to Kubernetes under the <strong>ECK Operator</strong> (<code>v3.5.0</code>) in the <code>observability</code> namespace (<code>kubernetes/observability/</code>), scheduled onto <code>workstation</code> to leverage its 16-core / 32-thread Xeon CPU and high-speed local NVMe storage:</p>
 <h3 id="1-ingestion-protocol-docker-gelf-over-tailscale-port-12201-udptcp">1. Ingestion Protocol: Docker GELF over Tailscale (Port 12201 UDP/TCP)</h3>
 <p>Docker daemons across all cluster nodes stream container <code>stdout</code> and <code>stderr</code> directly to Logstash over the private Tailscale mesh network:
 * <strong>Zero Local Disk Wear:</strong> Container logs stream over network buffers directly into Logstash, eliminating local disk log rotation wear across manager and worker nodes.
