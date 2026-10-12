@@ -117,19 +117,14 @@ KubeVirt DataVolumes and CDI upload proxies append dynamic status hashes and upl
 
 Before any Kubernetes manifests are committed to `main` or synchronized by ArgoCD, all resources undergo static OpenAPI schema verification via **`kubeconform`** to guarantee 0 syntax or API regressions.
 
-### 1. The `schemas/` Directory & Cluster Extraction Convention
-While standard Kubernetes resources (`Deployments`, `Services`, `Ingresses`, `Secrets`) are validated automatically against core Kubernetes OpenAPI schemas, Custom Resource Definitions (CRDs)—such as Kube-OVN, External Secrets, and ECK—require dedicated schemas.
+### 1. Hybrid Schema Lookup Architecture
+Kubernetes manifests are validated against a 3-tier schema resolution chain:
+1. **Core Kubernetes APIs (`default`):** Standard resources (Deployments, Services, Ingresses, Secrets) validate automatically against upstream Kubernetes OpenAPI schemas.
+2. **Local Cluster CRDs (`schemas/`):** Custom resources extracted directly from cluster CRDs with strict version parity (e.g. Kube-OVN subnets and `schemas/clustersecretstore_v1.json`).
+3. **Datree CRD Catalog (`datreeio/CRDs-catalog`):** Third-party ecosystem operators (ArgoCD, cert-manager, Traefik, KubeVirt) resolve dynamically from Datree's open-source schema catalog hosted on GitHub at [`github.com/datreeio/CRDs-catalog`](https://github.com/datreeio/CRDs-catalog).
 
-To guarantee **100% version parity** with the active cluster and ensure deterministic, offline CI execution without external API dependencies or rate limits, all custom schemas are extracted directly from the installed cluster CRDs and committed to `schemas/`.
-
-* **Naming Convention:** All schemas are stored in lowercase in the format:
-  ```
-  schemas/<lowercase-kind>_<version>.json
-  ```
-  *(e.g., `schemas/subnet_v1.json`, `schemas/clustersecretstore_v1.json`)*
-
-### 2. Extracting New CRD Schemas
-When introducing a new operator or custom resource to the cluster, extract its active OpenAPI v3 schema directly into `schemas/`:
+### 2. Extracting Local CRD Schemas
+When introducing custom operator CRDs to the cluster, extract their active OpenAPI v3 schema directly into `schemas/`:
 
 ```bash
 kubectl get crd <crd-plural-name> \
@@ -156,5 +151,8 @@ kubeconform -summary \
   -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{ .Group }}/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json' \
   kubernetes/
 ```
+
+
+
 
 
