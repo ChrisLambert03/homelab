@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1376,13 +1376,14 @@
 <hr />
 <h3 id="2-external-secrets-operator-eso">2. External Secrets Operator (ESO)</h3>
 <ul>
-<li><strong>Namespace:</strong> <code>security</code></li>
+<li><strong>Namespace:</strong> <code>external-secrets</code></li>
 <li><strong>Version:</strong> Helm <code>v2.12.0</code></li>
 <li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
 <li><strong>Architectural Role:</strong> Kubernetes operator dynamically synchronizing external secret backends into native Kubernetes Secret objects.</li>
 <li><strong>Key Configuration:</strong></li>
-<li>Configures <code>ClusterSecretStore</code> pointing directly to HashiCorp Vault.</li>
-<li>Eliminates plaintext secrets from Git repositories while allowing applications to consume standard Kubernetes secrets declaratively.</li>
+<li>Configures <code>ClusterSecretStore</code> named <code>vault-backend</code> pointing directly to in-cluster HashiCorp Vault (<code>http://vault.security.svc:8200</code>).</li>
+<li>Authenticates using a scoped Vault token via <code>tokenSecretRef</code> stored in <code>external-secrets/vault-token</code>.</li>
+<li>Eliminates plaintext secrets from Git repositories while allowing workloads across all namespaces to consume standard Kubernetes secrets declaratively.</li>
 </ul>
 <hr />
 <h3 id="3-oauth2-proxy-traefik-forwardauth">3. OAuth2-Proxy &amp; Traefik ForwardAuth</h3>

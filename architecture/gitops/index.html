@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -749,6 +749,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#pre-merge-ci-validation-crd-schema-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Pre-Merge CI Validation &amp; CRD Schema Verification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧪 Pre-Merge CI Validation &amp; CRD Schema Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-hybrid-schema-lookup-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Hybrid Schema Lookup Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-extracting-local-crd-schemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Extracting Local CRD Schemas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-local-pre-push-validation-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Local Pre-Push Validation Command
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1265,6 +1315,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#pre-merge-ci-validation-crd-schema-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Pre-Merge CI Validation &amp; CRD Schema Verification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧪 Pre-Merge CI Validation &amp; CRD Schema Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-hybrid-schema-lookup-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Hybrid Schema Lookup Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-extracting-local-crd-schemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Extracting Local CRD Schemas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-local-pre-push-validation-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Local Pre-Push Validation Command
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1439,6 +1539,35 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 </span></code></pre></div>
 <h3 id="2-kubevirt-cdi-dynamic-crd-schemas">2. KubeVirt &amp; CDI Dynamic CRD Schemas</h3>
 <p>KubeVirt DataVolumes and CDI upload proxies append dynamic status hashes and upload tokens (<code>cdi.kubevirt.io/storage.pod.phase</code>). ArgoCD ignores runtime CDI annotations to prevent false out-of-sync indicators while preserving GitOps authority over storage sizes and source definitions.</p>
+<hr />
+<h2 id="pre-merge-ci-validation-crd-schema-verification">🧪 Pre-Merge CI Validation &amp; CRD Schema Verification</h2>
+<p>Before any Kubernetes manifests are committed to <code>main</code> or synchronized by ArgoCD, all resources undergo static OpenAPI schema verification via <strong><code>kubeconform</code></strong> to guarantee 0 syntax or API regressions.</p>
+<h3 id="1-hybrid-schema-lookup-architecture">1. Hybrid Schema Lookup Architecture</h3>
+<p>Kubernetes manifests are validated against a 3-tier schema resolution chain:
+1. <strong>Core Kubernetes APIs (<code>default</code>):</strong> Standard resources (Deployments, Services, Ingresses, Secrets) validate automatically against upstream Kubernetes OpenAPI schemas.
+2. <strong>Local Cluster CRDs (<code>schemas/</code>):</strong> Custom resources extracted directly from cluster CRDs with strict version parity (e.g. Kube-OVN subnets and <code>schemas/clustersecretstore_v1.json</code>).
+3. <strong>Datree CRD Catalog (<code>datreeio/CRDs-catalog</code>):</strong> Third-party ecosystem operators (ArgoCD, cert-manager, Traefik, KubeVirt) resolve dynamically from Datree's open-source schema catalog hosted on GitHub at <a href="https://github.com/datreeio/CRDs-catalog"><code>github.com/datreeio/CRDs-catalog</code></a>.</p>
+<h3 id="2-extracting-local-crd-schemas">2. Extracting Local CRD Schemas</h3>
+<p>When introducing custom operator CRDs to the cluster, extract their active OpenAPI v3 schema directly into <code>schemas/</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>crd<span class="w"> </span>&lt;crd-plural-name&gt;<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.versions[?(@.name=="&lt;version&gt;")].schema.openAPIV3Schema}'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>&gt;<span class="w"> </span>schemas/&lt;lowercase-kind&gt;_&lt;version&gt;.json
+</span></code></pre></div>
+<p><em>Example for ClusterSecretStore (<code>v1</code>):</em>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>crd<span class="w"> </span>clustersecretstores.external-secrets.io<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">'{.spec.versions[?(@.name=="v1")].schema.openAPIV3Schema}'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>&gt;<span class="w"> </span>schemas/clustersecretstore_v1.json
+</span></code></pre></div></p>
+<h3 id="3-local-pre-push-validation-command">3. Local Pre-Push Validation Command</h3>
+<p>Run the targeted check before pushing to Git:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.local/bin:</span><span class="nv">$PATH</span><span class="s2">"</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>kubeconform<span class="w"> </span>-summary<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-ignore-filename-pattern<span class="w"> </span><span class="s1">'(values\.yaml|-patch\.yaml|-crd\.yaml)$'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-schema-location<span class="w"> </span>default<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-schema-location<span class="w"> </span><span class="s1">'schemas/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-schema-location<span class="w"> </span><span class="s1">'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{ .Group }}/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>kubernetes/
+</span></code></pre></div>
 
 
 
