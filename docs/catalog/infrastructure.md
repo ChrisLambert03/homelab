@@ -117,10 +117,11 @@ This section details the foundational control plane components, software-defined
 ### 10. KubeVirt Operator & Containerized Data Importer (CDI)
 * **Namespaces:** `kubevirt`, `cdi`
 * **Versions:** KubeVirt `v1.9.0`, CDI `v1.66.0`
-* **Sync Wave:** `Wave 1`
+* **Sync Wave:** Decoupled into `Wave 1` (Operators & CRDs) and `Wave 2` (Runtime Config & Ingress)
 * **Ingress Endpoint:** `https://cdi.lambertlab.us` (CDI uploadproxy)
 * **Architectural Role:** Bare-metal virtualization management and virtual disk ingestion engine.
 * **Key Configuration:**
+  * Decoupled GitOps architecture (`kubevirt` / `cdi` in Wave 1 and `kubevirt-config` / `cdi-config` in Wave 2) eliminating cold-start webhook race conditions.
   * Native virtualization running on Linux KVM/QEMU hypervisor.
   * Facilitates live VM lifecycle operations (`virtctl`).
   * Traefik custom `ServersTransport` proxying `cdi-uploadproxy` with certificate validation bypass.

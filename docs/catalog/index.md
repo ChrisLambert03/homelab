@@ -23,7 +23,9 @@ Workloads are logically grouped into four functional categories:
 | **Traefik Ingress** | Infrastructure | `kube-system` | K3s Native / Helm | Ports 80, 443 (Edge) | Ephemeral |
 | **Cert-Manager** | Infrastructure | `cert-manager` | ArgoCD Helm (Wave 1) | In-Cluster API | Ephemeral |
 | **KubeVirt Operator** | Infrastructure | `kubevirt` | ArgoCD Manifest (Wave 1) | In-Cluster API | Ephemeral |
-| **Containerized Data Importer (CDI)** | Infrastructure | `cdi` | ArgoCD Manifest (Wave 1) | `cdi.lambertlab.us` | Longhorn Scratch |
+| **KubeVirt Runtime Config** | Infrastructure | `kubevirt` | ArgoCD Manifest (Wave 2) | In-Cluster API | Ephemeral |
+| **Containerized Data Importer (CDI) Operator** | Infrastructure | `cdi` | ArgoCD Manifest (Wave 1) | In-Cluster API | Ephemeral |
+| **Containerized Data Importer (CDI) Config** | Infrastructure | `cdi` | ArgoCD Manifest (Wave 2) | `cdi.lambertlab.us` | Longhorn Scratch |
 | **Kube-OVN** | Infrastructure | `kube-system` | ArgoCD Helm (Wave 1) | In-Cluster SDN Engine | Ephemeral |
 | **Kube-OVN Networks** | Infrastructure | `vms` | ArgoCD Manifest (Wave 2) | L2 VPC Subnet (`ovn-ad-vpc`) | Ephemeral |
 | **NMState Operator (Archived)** | Infrastructure | `nmstate` | Pruned (Wave 1) | Decommissioned (Replaced by Kube-OVN) | Ephemeral |
