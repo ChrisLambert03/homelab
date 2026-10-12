@@ -12,6 +12,8 @@ spec:
   config:
     server.publicBaseUrl: "https://kibana.lambertlab.us"
     logging.root.level: "warn"
+    xpack.fleet.agents.elasticsearch.hosts: ["https://elasticsearch-es-http.observability.svc:9200"]
+    xpack.fleet.agents.fleet_server.hosts: ["https://fleet-server-agent-http.observability.svc:8220"]
   secureSettings:
     - secretName: kibana-secure-settings
   http:
