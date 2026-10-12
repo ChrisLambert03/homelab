@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1370,6 +1370,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <li><strong>Volume Snapshotting:</strong> Longhorn schedules automated periodic volume snapshots distributed across healthy control plane nodes.</li>
 <li><strong>Multipath Daemon Blacklist (<code>multipathd</code>):</strong> To prevent host multipath daemons from mistakenly locking Longhorn virtual iSCSI devices (causing <code>MountVolume.SetUp failed: already mounted or mount point busy</code>), worker nodes deploy a <code>devnode "^sd[a-z0-9]+"</code> blacklist to <code>/etc/multipath.conf</code> via <code>ansible/longhorn-reqs.yml</code> per the official <a href="https://longhorn.io/kb/troubleshooting-volume-with-multipath/">Longhorn Knowledge Base: Troubleshooting Volume Mount Failure with multipathd</a>.</li>
 <li><strong>GitOps Pre-Upgrade Hook Management:</strong> When deploying or upgrading Longhorn via ArgoCD (<code>kubernetes/apps/longhorn.yaml</code>), the Helm pre-upgrade check job is explicitly disabled (<code>preUpgradeChecker.jobEnabled: false</code>) per the official <a href="https://longhorn.io/docs/1.13.0/deploy/install/install-with-argocd/">Longhorn Documentation: Installing with Argo CD</a>. In declarative GitOps workflows, Helm hook jobs can deadlock or crash-loop waiting for new ServiceAccount/RBAC resources. Full version validation and data integrity checks remain active within the <code>longhorn-manager</code> DaemonSet (<code>upgradeVersionCheck: true</code>).</li>
+<li><strong>Automated Rolling Engine Upgrades:</strong> Configured with <code>defaultSettings.concurrentAutomaticEngineUpgradePerNodeLimit: 1</code> in <code>kubernetes/apps/longhorn.yaml</code>. Whenever the Longhorn manager is upgraded in future releases, volume engines are automatically live-migrated one-by-one per node with zero I/O downtime.</li>
 </ul>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># kubernetes/infrastructure/longhorn/storageclass-retain.yaml</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage.k8s.io/v1</span>
