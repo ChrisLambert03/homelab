@@ -28,7 +28,7 @@ This section documents secrets orchestration, centralized Security Information a
 * **Key Configuration:**
   * Configures `ClusterSecretStore` named `vault-backend` pointing directly to in-cluster HashiCorp Vault (`http://vault.security.svc:8200`).
   * Authenticates using a scoped Vault token via `tokenSecretRef` stored in `external-secrets/vault-token`.
-  * Eliminates plaintext secrets from Git repositories while allowing workloads across all namespaces to consume standard Kubernetes secrets declaratively.
+  * Eliminates plaintext secrets from Git repositories while allowing workloads across all namespaces to consume standard Kubernetes secrets declaratively via `ExternalSecret` manifests (such as `kibana-secure-settings` in `observability`).
 
 ---
 
