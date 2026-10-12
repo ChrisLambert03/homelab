@@ -79,6 +79,8 @@ spec:
   destinations:
     - namespace: observability
       server: https://kubernetes.default.svc
+    - namespace: autoops-agents
+      server: https://kubernetes.default.svc
   clusterResourceWhitelist:
     - group: "*"
       kind: "*"

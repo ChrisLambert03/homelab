@@ -117,7 +117,14 @@ To capture container logs (`/var/log/pods`), cluster-level health, and bare-meta
 
 ---
 
-### 6. Planned Dashboards & Discover Views (Target Roadmap)
+### 6. Elastic AutoOps Cloud Connect (Automated Cluster Monitoring)
+
+To monitor cluster performance, shard allocation, and operational health against Elastic best practices, the cluster connects to **Elastic AutoOps Cloud**:
+* **Deployment Model:** Deployed via ArgoCD (`kubernetes/apps/autoops.yaml`) utilizing Kustomize (`kubernetes/observability/autoops/kustomization.yaml`) which references Elastic's upstream deployment directly from `elastic/autoops-install` (`autoops_agent_deployment.yaml`) alongside an `ExternalSecret` managing `autoops-secret` from Vault.
+
+---
+
+### 7. Planned Dashboards & Discover Views (Target Roadmap)
 
 Homelab telemetry streams into the `logs-*` and `metrics-*` data views in Kibana (`https://kibana.lambertlab.us`). The following curated searches and operational dashboards represent the target implementation roadmap:
 
