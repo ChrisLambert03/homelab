@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1538,10 +1538,11 @@
 <ul>
 <li><strong>Namespaces:</strong> <code>kubevirt</code>, <code>cdi</code></li>
 <li><strong>Versions:</strong> KubeVirt <code>v1.9.0</code>, CDI <code>v1.66.0</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 1</code></li>
+<li><strong>Sync Wave:</strong> Decoupled into <code>Wave 1</code> (Operators &amp; CRDs) and <code>Wave 2</code> (Runtime Config &amp; Ingress)</li>
 <li><strong>Ingress Endpoint:</strong> <code>https://cdi.lambertlab.us</code> (CDI uploadproxy)</li>
 <li><strong>Architectural Role:</strong> Bare-metal virtualization management and virtual disk ingestion engine.</li>
 <li><strong>Key Configuration:</strong></li>
+<li>Decoupled GitOps architecture (<code>kubevirt</code> / <code>cdi</code> in Wave 1 and <code>kubevirt-config</code> / <code>cdi-config</code> in Wave 2) eliminating cold-start webhook race conditions.</li>
 <li>Native virtualization running on Linux KVM/QEMU hypervisor.</li>
 <li>Facilitates live VM lifecycle operations (<code>virtctl</code>).</li>
 <li>Traefik custom <code>ServersTransport</code> proxying <code>cdi-uploadproxy</code> with certificate validation bypass.</li>
