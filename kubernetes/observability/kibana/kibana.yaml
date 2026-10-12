@@ -1,0 +1,32 @@
+---
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: kibana
+  namespace: observability
+spec:
+  version: 9.3.2
+  count: 1
+  config:
+    elasticsearch.hosts:
+      - "http://100.106.96.18:9200"
+    elasticsearch.username: "kibana_system"
+    server.publicBaseUrl: "https://kibana.lambertlab.us"
+    logging.root.level: "warn"
+  secureSettings:
+    - secretName: kibana-secure-settings
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
+  podTemplate:
+    spec:
+      containers:
+        - name: kibana
+          resources:
+            requests:
+              memory: 1.5Gi
+              cpu: 500m
+            limits:
+              memory: 3Gi
+              cpu: 2

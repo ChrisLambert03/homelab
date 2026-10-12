@@ -46,7 +46,7 @@ This section documents secrets orchestration, centralized Security Information a
 ---
 
 ### 3. Centralized ELK Stack & Elastic Agent
-* **Host Environment:** `workstation` (Docker Engine managed via Terraform `docker/workstation/elk-stack.tf`) & Kubernetes `kube-system` (Elastic Agent DaemonSet via ArgoCD Wave 5)
+* **Host Environment:** `workstation` (Elasticsearch & Logstash via Docker Engine) & Kubernetes `observability` (ECK Kibana operator-managed) & `kube-system` (Elastic Agent DaemonSet)
 * **Ingress Endpoint:** `https://kibana.lambertlab.us` (Internal ES on `:9200`, Logstash on `:12201` GELF)
 * **Architectural Role:** Production-level Security Information and Event Management (SIEM) and log analytics pipeline.
 * **Storage Backend:** Dedicated local NVMe storage (`/usr/share/elasticsearch/data`) on `workstation`.
@@ -55,6 +55,7 @@ This section documents secrets orchestration, centralized Security Information a
   * Docker GELF input on port 12201 (UDP/TCP) streaming container logs over Tailscale from all physical nodes.
   * Elastic Agent DaemonSet deployed in `kube-system` streaming Kubernetes node, container, and pod telemetry.
   * Logstash mutate filter recording exact receipt timestamps (`received_at => "%{@timestamp}"`).
+  * Kibana deployed via Elastic Cloud on Kubernetes (ECK) operator in `observability`, pulling secure settings (`elasticsearch.password`, encryption keys) from HashiCorp Vault via External Secrets Operator.
   * Kibana tuned with `NODE_OPTIONS=--max-old-space-size=2048` to prevent V8 JavaScript heap exhaustion during complex visual log queries.
   * Traefik Ingress with `default-admin-only-access` security middleware.
 
