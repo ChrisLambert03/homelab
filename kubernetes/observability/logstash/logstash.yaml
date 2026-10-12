@@ -1,0 +1,78 @@
+---
+apiVersion: logstash.k8s.elastic.co/v1alpha1
+kind: Logstash
+metadata:
+  name: logstash
+  namespace: observability
+spec:
+  version: 9.3.2
+  count: 1
+  elasticsearchRefs:
+    - clusterName: eck
+      name: elasticsearch
+  pipelines:
+    - pipeline.id: main
+      config.string: |
+        input {
+          gelf {
+            port => 12201
+            type => "docker"
+          }
+        }
+        filter {
+          mutate {
+            add_field => { "received_at" => "%{@timestamp}" }
+          }
+        }
+        output {
+          elasticsearch {
+            hosts => [ "${ECK_ES_HOSTS}" ]
+            user => "${ECK_ES_USER}"
+            password => "${ECK_ES_PASSWORD}"
+            ssl_certificate_authorities => "${ECK_ES_SSL_CERTIFICATE_AUTHORITY}"
+            index => "logstash-%{+YYYY.MM.dd}"
+            data_stream => false
+          }
+        }
+  services:
+    - name: gelf
+      service:
+        spec:
+          type: ClusterIP
+          ports:
+            - name: gelf-udp
+              port: 12201
+              protocol: UDP
+              targetPort: 12201
+            - name: gelf-tcp
+              port: 12201
+              protocol: TCP
+              targetPort: 12201
+  podTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/name: logstash
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: workstation
+      containers:
+        - name: logstash
+          ports:
+            - name: gelf-udp
+              containerPort: 12201
+              hostPort: 12201
+              protocol: UDP
+            - name: gelf-tcp
+              containerPort: 12201
+              hostPort: 12201
+              protocol: TCP
+          env:
+            - name: LS_JAVA_OPTS
+              value: "-Xms2g -Xmx2g"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              cpu: "2"
+              memory: 4Gi

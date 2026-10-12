@@ -47,9 +47,9 @@ Workloads are logically grouped into four functional categories:
 | **Palworld Dedicated** | Gaming | `gaming` | ArgoCD Manifest (Wave 3) | Port 8211 UDP (`opti74`) | Longhorn Retained Volume (25Gi) |
 | **HashiCorp Vault** | Security | `security` | ArgoCD Manifest (Wave 2) | `vault.lambertlab.us` | 1 GiB Longhorn Retained |
 | **External Secrets Operator** | Security | `security` | ArgoCD Helm (Wave 2) | In-Cluster API | Ephemeral |
-| **Elasticsearch 8.x** | SIEM / Logging | `workstation` (Docker) | Terraform Docker | Port 9200 (Internal) | Dedicated Local NVMe |
-| **Logstash** | SIEM / Logging | `workstation` (Docker) | Terraform Docker | Port 12201 (GELF UDP/TCP) | Ephemeral Pipeline |
-| **Kibana** | SIEM / Logging | `workstation` (Docker) | Terraform Docker | `kibana.lambertlab.us` | Ephemeral |
+| **Elasticsearch** | SIEM / Logging | `observability` | ECK Operator (Wave 2) | Port 9200 (Internal) | Dedicated Local NVMe (`workstation`) |
+| **Logstash** | SIEM / Logging | `observability` | ECK Operator (Wave 3) | Port 12201 (GELF UDP/TCP) | Ephemeral Pipeline (`workstation`) |
+| **Kibana** | SIEM / Logging | `observability` | ECK Operator (Wave 3) | `kibana.lambertlab.us` | Ephemeral (`workstation`) |
 | **Elastic Agent** | SIEM / Logging | `kube-system` | ArgoCD Helm (Wave 5) | In-Cluster Host DaemonSet | Ephemeral DaemonSet |
 | **ECK Operator** | Infrastructure | `observability` | ArgoCD Helm (Wave 1) | In-Cluster Operator API | Ephemeral Controller |
 | **Homarr Dashboard** | Observability | `observability` | ArgoCD Manifest (Wave 3) | `homarr.lambertlab.us` | Local Host Storage (`lenovo`) |
