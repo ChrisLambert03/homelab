@@ -4,7 +4,7 @@ agent:
     tag: "9.3.2"
   fleet:
     enabled: true
-    url: "https://fleet-server-agent-http.observability.svc:8220"
+    url: "https://fleet.lambertlab.us"
     insecure: true
     preset: perNode
     tokenFromSecret:

@@ -47,7 +47,7 @@ This section documents secrets orchestration, centralized Security Information a
 
 ### 3. Centralized ELK Stack & Elastic Agent
 * **Host Environment:** Kubernetes `observability` (ECK Operator-managed Elasticsearch, Logstash, Kibana on `workstation`) & `kube-system` (Elastic Agent DaemonSet)
-* **Ingress Endpoint:** `https://kibana.lambertlab.us` (Internal ES on `:9200`, Logstash on `:12201` GELF)
+* **Ingress Endpoints:** `https://kibana.lambertlab.us`, `https://fleet.lambertlab.us`, `https://es.lambertlab.us` (Logstash on `:12201` GELF)
 * **Architectural Role:** Production-level Security Information and Event Management (SIEM) and log analytics pipeline.
 * **Storage Backend:** Dedicated local NVMe storage (`/home/chris/services/elasticsearch/data`) on `workstation`.
 * **Key Configuration:**
