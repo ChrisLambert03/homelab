@@ -18,7 +18,7 @@
         <link rel="prev" href="../iscsi-flashing/">
       
       
-        <link rel="next" href="../disaster-recovery/">
+        <link rel="next" href="../elk-eck-migration/">
       
       
         
@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -85,7 +85,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#runbook-elk-stack-elasticsearch-logstash-kibana-single-node-index-lifecycle-management-ilm" class="md-skip">
+        <a href="#runbook-elk-stack-single-node-index-lifecycle-management-ilm" class="md-skip">
           Skip to content
         </a>
       
@@ -1195,6 +1195,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../elk-eck-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECK Migration & AutoOps Runbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../disaster-recovery/" class="md-nav__link">
         
   
@@ -1402,18 +1430,18 @@
   
 
 
-<h1 id="runbook-elk-stack-elasticsearch-logstash-kibana-single-node-index-lifecycle-management-ilm">Runbook: ELK Stack (Elasticsearch, Logstash, Kibana) &amp; Single-Node Index Lifecycle Management (ILM)</h1>
-<p>This runbook documents operational maintenance, health verification, Index Lifecycle Management (ILM) policies, and troubleshooting procedures for the <strong>LambertLab</strong> centralized ELK Stack (Elasticsearch, Logstash, Kibana) and Security Information and Event Management (SIEM) platform.</p>
+<h1 id="runbook-elk-stack-single-node-index-lifecycle-management-ilm">Runbook: ELK Stack &amp; Single-Node Index Lifecycle Management (ILM)</h1>
+<p>This runbook documents operational maintenance, health verification, Index Lifecycle Management (ILM) policies, and troubleshooting procedures for the <strong>LambertLab</strong> centralized ELK Stack (Elasticsearch, Logstash, Kibana) running on Kubernetes under the <strong>ECK Operator (<code>v3.5.0</code>)</strong> in the <code>observability</code> namespace.</p>
 <hr />
 <h2 id="the-problem-single-node-elasticsearch-cluster-health-yellow">⚠️ The Problem: Single-Node Elasticsearch Cluster Health (<code>YELLOW</code>)</h2>
 <h3 id="symptoms">Symptoms</h3>
 <ul>
 <li>Elasticsearch cluster health reports <code>status: "yellow"</code>:
-  <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>elastic:&lt;password&gt;<span class="w"> </span><span class="s2">"http://workstation:9200/_cluster/health?pretty"</span>
+  <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>elastic:&lt;elastic_password&gt;<span class="w"> </span><span class="s2">"https://es.lambertlab.us/_cluster/health?pretty"</span>
 </span></code></pre></div></li>
 <li>Output displays <code>unassigned_shards &gt; 0</code>.</li>
 <li>Automated Index Lifecycle Management (ILM) policies fail to advance indices from Hot to Warm, Cold, or Delete phases.</li>
-<li>Indices accumulate indefinitely, leading to disk space exhaustion on <code>workstation</code> NVMe storage.</li>
+<li>Indices accumulate indefinitely, leading to disk space exhaustion on <code>workstation</code> local NVMe storage.</li>
 </ul>
 <h3 id="root-cause-diagnosis">Root Cause Diagnosis</h3>
 <p>By default, Elasticsearch index templates configure indices with <code>number_of_replicas: 1</code>. In a single-node cluster (configured with <code>discovery.type=single-node</code>), there is only one node (<code>workstation</code>). Elasticsearch refuses to allocate a replica shard on the same physical node as the primary shard, leaving the replica permanently unassigned. Because the cluster cannot fulfill its replica policy, its health status degrades to <strong><code>YELLOW</code></strong>, causing ILM retention and rollover automation to stall.</p>
@@ -1421,7 +1449,7 @@
 <h2 id="operational-resolution-enforcing-number_of_replicas-0">🛠️ Operational Resolution: Enforcing <code>number_of_replicas: 0</code></h2>
 <h3 id="step-1-update-existing-indices-immediately">Step 1: Update Existing Indices Immediately</h3>
 <p>Run the following REST command to immediately strip replica requirements across all active indices:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-u<span class="w"> </span>elastic:&lt;password&gt;<span class="w"> </span><span class="s2">"http://workstation:9200/*/_settings"</span><span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-u<span class="w"> </span>elastic:&lt;elastic_password&gt;<span class="w"> </span><span class="s2">"https://es.lambertlab.us/*/_settings"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="s1">    "index": {</span>
@@ -1430,16 +1458,16 @@
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">  }'</span>
 </span></code></pre></div>
 <p>Within seconds, the unassigned shards will clear and cluster health will transition to <strong><code>GREEN</code></strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>elastic:&lt;password&gt;<span class="w"> </span><span class="s2">"http://workstation:9200/_cluster/health?pretty"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"status"</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>elastic:&lt;elastic_password&gt;<span class="w"> </span><span class="s2">"https://es.lambertlab.us/_cluster/health?pretty"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">"status"</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Expected output: "status" : "green"</span>
 </span></code></pre></div>
 <hr />
 <h3 id="step-2-configure-global-component-template-for-future-indices">Step 2: Configure Global Component Template for Future Indices</h3>
-<p>To ensure all future daily indices (<code>homelab-logs-YYYY.MM.dd</code>) are created with zero replicas out of the box, apply a high-priority index template:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-u<span class="w"> </span>elastic:&lt;password&gt;<span class="w"> </span><span class="s2">"http://workstation:9200/_index_template/homelab_single_node_template"</span><span class="w"> </span><span class="se">\</span>
+<p>To ensure all future daily indices (<code>homelab-logs-YYYY.MM.dd</code>, <code>logstash-*</code>) are created with zero replicas out of the box, apply a high-priority index template:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-u<span class="w"> </span>elastic:&lt;elastic_password&gt;<span class="w"> </span><span class="s2">"https://es.lambertlab.us/_index_template/homelab_single_node_template"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s1">    "index_patterns": ["homelab-logs-*", "*"],</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s1">    "index_patterns": ["homelab-logs-*", "logstash-*", "*"],</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s1">    "priority": 500,</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">    "template": {</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">      "settings": {</span>
@@ -1453,26 +1481,26 @@
 <hr />
 <h2 id="testing-ingestion-pipelines">🔍 Testing Ingestion Pipelines</h2>
 <h3 id="1-verifying-docker-gelf-over-tailscale-port-12201">1. Verifying Docker GELF over Tailscale (Port 12201)</h3>
-<p>To test whether Logstash is actively accepting GELF logs over the Tailscale network mesh, send a test payload using Python or Netcat from any cluster node (<code>lenovo</code>, <code>optiplex</code>, or <code>opti74</code>):</p>
+<p>To test whether Logstash is actively accepting GELF logs over the Tailscale network mesh, send a test payload using Netcat from any cluster node (<code>lenovo</code>, <code>optiplex</code>, or <code>opti74</code>):</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Send a test GELF UDP packet to Logstash on workstation</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'{"version": "1.1", "host": "test-node", "short_message": "GELF test ping", "level": 6}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>-u<span class="w"> </span>-w<span class="w"> </span><span class="m">1</span><span class="w"> </span>workstation<span class="w"> </span><span class="m">12201</span>
 </span></code></pre></div>
 <p>Confirm ingestion by querying the most recent documents in Elasticsearch:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>elastic:&lt;password&gt;<span class="w"> </span><span class="s2">"http://workstation:9200/homelab-logs-*/_search?q=GELF+test+ping&amp;pretty"</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>elastic:&lt;elastic_password&gt;<span class="w"> </span><span class="s2">"https://es.lambertlab.us/logstash-*/_search?q=GELF+test+ping&amp;pretty"</span>
 </span></code></pre></div>
 <h3 id="2-inspecting-logstash-pipeline-status">2. Inspecting Logstash Pipeline Status</h3>
-<p>Check Logstash container logs on <code>workstation</code>:</p>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>docker<span class="w"> </span>--context<span class="w"> </span>workstation-engine<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>logstash<span class="w"> </span>--tail<span class="w"> </span><span class="m">50</span>
+<p>Check ECK Logstash pod logs in Kubernetes:</p>
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>observability<span class="w"> </span>logstash-ls-0<span class="w"> </span>-f<span class="w"> </span>--tail<span class="w"> </span><span class="m">50</span>
 </span></code></pre></div>
 Healthy output should confirm active input on <code>0.0.0.0:12201</code> (GELF UDP/TCP) with zero pipeline worker exceptions.</p>
 <hr />
 <h2 id="storage-hygiene-data-pruning">💾 Storage Hygiene &amp; Data Pruning</h2>
 <ul>
-<li><strong>Storage Path:</strong> Local workstation NVMe at <code>/usr/share/elasticsearch/data</code>.</li>
+<li><strong>Storage Path:</strong> Dedicated workstation NVMe at <code>/home/chris/services/elasticsearch/data</code> bound via PersistentVolume <code>elasticsearch-data-pv</code>.</li>
 <li><strong>Prohibition:</strong> Never configure Elasticsearch data paths targeting 1Gbps network iSCSI or NFS shares.</li>
 <li><strong>Emergency Index Deletion:</strong> If workstation disk space drops below 15% and immediate pruning is necessary:
-  <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Delete indices older than 30 days</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-u<span class="w"> </span>elastic:&lt;password&gt;<span class="w"> </span><span class="s2">"http://workstation:9200/homelab-logs-2026.08.*"</span>
+  <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Delete older logstash indices</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-u<span class="w"> </span>elastic:&lt;elastic_password&gt;<span class="w"> </span><span class="s2">"https://es.lambertlab.us/logstash-2026.08.*"</span>
 </span></code></pre></div></li>
 </ul>
 
