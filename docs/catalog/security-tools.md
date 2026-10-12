@@ -21,13 +21,14 @@ This section documents secrets orchestration, centralized Security Information a
 ---
 
 ### 2. External Secrets Operator (ESO)
-* **Namespace:** `security`
+* **Namespace:** `external-secrets`
 * **Version:** Helm `v2.12.0`
 * **Sync Wave:** `Wave 2`
 * **Architectural Role:** Kubernetes operator dynamically synchronizing external secret backends into native Kubernetes Secret objects.
 * **Key Configuration:**
-  * Configures `ClusterSecretStore` pointing directly to HashiCorp Vault.
-  * Eliminates plaintext secrets from Git repositories while allowing applications to consume standard Kubernetes secrets declaratively.
+  * Configures `ClusterSecretStore` named `vault-backend` pointing directly to in-cluster HashiCorp Vault (`http://vault.security.svc:8200`).
+  * Authenticates using a scoped Vault token via `tokenSecretRef` stored in `external-secrets/vault-token`.
+  * Eliminates plaintext secrets from Git repositories while allowing workloads across all namespaces to consume standard Kubernetes secrets declaratively.
 
 ---
 

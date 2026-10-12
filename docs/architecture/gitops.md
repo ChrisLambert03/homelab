@@ -110,3 +110,51 @@ ignoreDifferences:
 
 ### 2. KubeVirt & CDI Dynamic CRD Schemas
 KubeVirt DataVolumes and CDI upload proxies append dynamic status hashes and upload tokens (`cdi.kubevirt.io/storage.pod.phase`). ArgoCD ignores runtime CDI annotations to prevent false out-of-sync indicators while preserving GitOps authority over storage sizes and source definitions.
+
+---
+
+## 🧪 Pre-Merge CI Validation & CRD Schema Verification
+
+Before any Kubernetes manifests are committed to `main` or synchronized by ArgoCD, all resources undergo static OpenAPI schema verification via **`kubeconform`** to guarantee 0 syntax or API regressions.
+
+### 1. The `schemas/` Directory & Cluster Extraction Convention
+While standard Kubernetes resources (`Deployments`, `Services`, `Ingresses`, `Secrets`) are validated automatically against core Kubernetes OpenAPI schemas, Custom Resource Definitions (CRDs)—such as Kube-OVN, External Secrets, and ECK—require dedicated schemas.
+
+To guarantee **100% version parity** with the active cluster and ensure deterministic, offline CI execution without external API dependencies or rate limits, all custom schemas are extracted directly from the installed cluster CRDs and committed to `schemas/`.
+
+* **Naming Convention:** All schemas are stored in lowercase in the format:
+  ```
+  schemas/<lowercase-kind>_<version>.json
+  ```
+  *(e.g., `schemas/subnet_v1.json`, `schemas/clustersecretstore_v1.json`)*
+
+### 2. Extracting New CRD Schemas
+When introducing a new operator or custom resource to the cluster, extract its active OpenAPI v3 schema directly into `schemas/`:
+
+```bash
+kubectl get crd <crd-plural-name> \
+  -o jsonpath='{.spec.versions[?(@.name=="<version>")].schema.openAPIV3Schema}' \
+  > schemas/<lowercase-kind>_<version>.json
+```
+
+*Example for ClusterSecretStore (`v1`):*
+```bash
+kubectl get crd clustersecretstores.external-secrets.io \
+  -o jsonpath='{.spec.versions[?(@.name=="v1")].schema.openAPIV3Schema}' \
+  > schemas/clustersecretstore_v1.json
+```
+
+### 3. Local Pre-Push Validation Command
+Run the targeted check before pushing to Git:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+kubeconform -summary \
+  -ignore-filename-pattern '(values\.yaml|-patch\.yaml|-crd\.yaml)$' \
+  -schema-location default \
+  -schema-location 'schemas/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json' \
+  -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{ .Group }}/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json' \
+  kubernetes/
+```
+
+

@@ -36,4 +36,4 @@ To maintain uniformity across domains, all applications generally follow this st
 *   `pvc.yaml` / `storage.yaml`
 *   `virtualmachine.yaml` (For KubeVirt resources)
 
-*Note: All manifests must pass `kubeconform` OpenAPI schema validation before being merged into the `main` branch.*
+*Note: All manifests must pass `kubeconform` OpenAPI schema validation before being merged into the `main` branch. Custom Resource Definitions (CRDs) are validated against local schemas extracted directly from cluster CRDs and committed to `schemas/<kind>_<version>.json`.*
