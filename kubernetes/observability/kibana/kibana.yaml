@@ -7,10 +7,9 @@ metadata:
 spec:
   version: 9.3.2
   count: 1
+  elasticsearchRef:
+    name: elasticsearch
   config:
-    elasticsearch.hosts:
-      - "http://100.106.96.18:9200"
-    elasticsearch.username: "kibana_system"
     server.publicBaseUrl: "https://kibana.lambertlab.us"
     logging.root.level: "warn"
   secureSettings:
