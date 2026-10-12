@@ -11,10 +11,10 @@ module "docker_apps" {
   jellyfin_macvlan_ip  = local.jellyfin_macvlan_ip
   blue_drive_path      = local.blue_drive_path
   black_drive_path     = local.black_drive_path
-  homlab_domain = local.homlab_domain
-  beszel_key     = local.beszel_key
-  beszel_token   = local.beszel_token_workstation
-  tdarr_auth_key = local.tdarr_auth_key
+  homlab_domain        = local.homlab_domain
+  beszel_key           = local.beszel_key
+  beszel_token         = local.beszel_token_workstation
+  tdarr_auth_key       = local.tdarr_auth_key
 
 }
 
