@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1383,7 +1383,7 @@
 <li><strong>Key Configuration:</strong></li>
 <li>Configures <code>ClusterSecretStore</code> named <code>vault-backend</code> pointing directly to in-cluster HashiCorp Vault (<code>http://vault.security.svc:8200</code>).</li>
 <li>Authenticates using a scoped Vault token via <code>tokenSecretRef</code> stored in <code>external-secrets/vault-token</code>.</li>
-<li>Eliminates plaintext secrets from Git repositories while allowing workloads across all namespaces to consume standard Kubernetes secrets declaratively.</li>
+<li>Eliminates plaintext secrets from Git repositories while allowing workloads across all namespaces to consume standard Kubernetes secrets declaratively via <code>ExternalSecret</code> manifests (such as <code>kibana-secure-settings</code> in <code>observability</code>).</li>
 </ul>
 <hr />
 <h3 id="3-oauth2-proxy-traefik-forwardauth">3. OAuth2-Proxy &amp; Traefik ForwardAuth</h3>
