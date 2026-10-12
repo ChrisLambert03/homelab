@@ -51,6 +51,7 @@ Workloads are logically grouped into four functional categories:
 | **Logstash** | SIEM / Logging | `workstation` (Docker) | Terraform Docker | Port 12201 (GELF UDP/TCP) | Ephemeral Pipeline |
 | **Kibana** | SIEM / Logging | `workstation` (Docker) | Terraform Docker | `kibana.lambertlab.us` | Ephemeral |
 | **Elastic Agent** | SIEM / Logging | `kube-system` | ArgoCD Helm (Wave 5) | In-Cluster Host DaemonSet | Ephemeral DaemonSet |
+| **ECK Operator** | Infrastructure | `observability` | ArgoCD Helm (Wave 1) | In-Cluster Operator API | Ephemeral Controller |
 | **Homarr Dashboard** | Observability | `observability` | ArgoCD Manifest (Wave 3) | `homarr.lambertlab.us` | Local Host Storage (`lenovo`) |
 | **Ntfy Notifications** | Observability | `observability` | ArgoCD Manifest (Wave 3) | `ntfy.lambertlab.us` | Longhorn Retained Volume (1Gi) |
 | **Beszel Hub & Agents** | Observability | `lenovo` (Hub) / Nodes | Terraform Docker | `beszel.lambertlab.us` | Local Docker Volume |

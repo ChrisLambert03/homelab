@@ -138,3 +138,16 @@ This section details the foundational control plane components, software-defined
   * Traefik Ingress with automatic wildcard TLS termination (`*.lambertlab.us`).
   * Protected by the `default-admin-only-access` Traefik middleware, restricting appliance access to administrative Tailscale clients.
   * Enables secure browser management of iSCSI target LUNs, NFS pools, and hardware health over HTTPS.
+
+---
+
+### 12. Elastic Cloud on Kubernetes (ECK) Operator
+* **Namespace:** `observability`
+* **Version:** Helm `3.5.0`
+* **Sync Wave:** `Wave 1`
+* **Architectural Role:** Kubernetes operator automating the provisioning, orchestration, and lifecycle management of the Elastic Stack (Elasticsearch, Kibana, Logstash, Beats, and Elastic Agent).
+* **Key Configuration:**
+  * Deployed via official Elastic Helm repository (`https://helm.elastic.co`, chart: `eck-operator`).
+  * Manages global Custom Resource Definitions (`kibanas`, `elasticsearches`, `logstashes`, `agents`).
+  * Resource-bounded controller with `100m` CPU / `150Mi` RAM baseline requests and `1000m` CPU / `1Gi` RAM burst limits.
+
