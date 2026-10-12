@@ -28,6 +28,8 @@ spec:
           # Ref: https://longhorn.io/docs/1.13.0/deploy/install/install-with-argocd/
           preUpgradeChecker:
             jobEnabled: false
+          defaultSettings:
+            concurrentAutomaticEngineUpgradePerNodeLimit: 1
   destination:
     server: https://kubernetes.default.svc
     namespace: longhorn-system
