@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1401,7 +1401,7 @@
 <hr />
 <h3 id="3-centralized-elk-stack-elastic-agent">3. Centralized ELK Stack &amp; Elastic Agent</h3>
 <ul>
-<li><strong>Host Environment:</strong> <code>workstation</code> (Docker Engine managed via Terraform <code>docker/workstation/elk-stack.tf</code>) &amp; Kubernetes <code>kube-system</code> (Elastic Agent DaemonSet via ArgoCD Wave 5)</li>
+<li><strong>Host Environment:</strong> <code>workstation</code> (Elasticsearch &amp; Logstash via Docker Engine) &amp; Kubernetes <code>observability</code> (ECK Kibana operator-managed) &amp; <code>kube-system</code> (Elastic Agent DaemonSet)</li>
 <li><strong>Ingress Endpoint:</strong> <code>https://kibana.lambertlab.us</code> (Internal ES on <code>:9200</code>, Logstash on <code>:12201</code> GELF)</li>
 <li><strong>Architectural Role:</strong> Production-level Security Information and Event Management (SIEM) and log analytics pipeline.</li>
 <li><strong>Storage Backend:</strong> Dedicated local NVMe storage (<code>/usr/share/elasticsearch/data</code>) on <code>workstation</code>.</li>
@@ -1410,6 +1410,7 @@
 <li>Docker GELF input on port 12201 (UDP/TCP) streaming container logs over Tailscale from all physical nodes.</li>
 <li>Elastic Agent DaemonSet deployed in <code>kube-system</code> streaming Kubernetes node, container, and pod telemetry.</li>
 <li>Logstash mutate filter recording exact receipt timestamps (<code>received_at =&gt; "%{@timestamp}"</code>).</li>
+<li>Kibana deployed via Elastic Cloud on Kubernetes (ECK) operator in <code>observability</code>, pulling secure settings (<code>elasticsearch.password</code>, encryption keys) from HashiCorp Vault via External Secrets Operator.</li>
 <li>Kibana tuned with <code>NODE_OPTIONS=--max-old-space-size=2048</code> to prevent V8 JavaScript heap exhaustion during complex visual log queries.</li>
 <li>Traefik Ingress with <code>default-admin-only-access</code> security middleware.</li>
 </ul>

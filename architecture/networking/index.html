@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1748,7 +1748,7 @@ To enable the cluster to resolve Active Directory queries (<code>dc01.ad.lambert
 <p>Each protected namespace enforces a strict Default-Deny Ingress policy that blocks all incoming traffic with standard exceptions:
 1. <strong>Intra-Namespace Communication:</strong> Pods within the same namespace are allowed to communicate freely (e.g., Guacamole frontend communicating with Guacamole PostgreSQL, or Radarr querying Sonarr).
 2. <strong>Traefik Ingress Controller:</strong> Traffic originating from the <code>kube-system</code> namespace (which houses Traefik and K3s LoadBalancers) is explicitly allowed. This ensures external traffic routed via Ingress or UDP LoadBalancer reaches the pods successfully.
-3. <strong>Admission Webhooks (Targeted Ingress):</strong> Workloads running Kubernetes admission webhooks (e.g., External Secrets Operator webhook on containerPort <code>10250</code>) declare targeted NetworkPolicies matching their specific pod label and containerPort to permit control-plane API server validation requests. Because the K3s API server operates on host networking outside pod selectors, traffic is permitted by destination port, with Layer 7 authentication enforced by mutual TLS (mTLS) with the cluster CA.</p>
+3. <strong>Admission Webhooks (Targeted Ingress):</strong> Workloads running Kubernetes admission webhooks (e.g., External Secrets Operator webhook on containerPort <code>10250</code> and ECK Elastic Operator webhook on containerPort <code>9443</code>) declare targeted NetworkPolicies matching their specific pod label and containerPort to permit control-plane API server validation requests. Because the K3s API server operates on host networking outside pod selectors, traffic is permitted by destination port, with Layer 7 authentication enforced by mutual TLS (mTLS) with the cluster CA.</p>
 <p>This architecture entirely drops unauthorized cross-namespace requests at the kernel firewall level (enforced by K3s <code>kube-router</code> embedded in the Flannel CNI).</p>
 <h3 id="centralized-gitops-governance">Centralized GitOps Governance</h3>
 <p>All Network Policies are decoupled from their individual application Helm charts and are instead stored centrally in the <code>kubernetes/network-policies</code> directory. A dedicated ArgoCD Application (<code>network-policies.yaml</code>) pinned to <strong>Sync Wave 1</strong> enforces these firewalls across the cluster globally before any application workloads are deployed in Sync Wave 2 and 3.</p>
