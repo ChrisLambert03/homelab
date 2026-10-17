@@ -26,7 +26,7 @@ resource "docker_container" "tdarr_server" {
     "serverIP=0.0.0.0", # Bind to all interfaces
     "serverPort=8266",
     "webUIPort=8265",
-    "internalNode=true",
+    "internalNode=false",
     "inContainer=true", # Disabled 
     "ffmpegVersion=7",
     "nodeName=ThinkmateServer",
@@ -115,7 +115,7 @@ resource "docker_container" "tdarr_node" {
     "maxLogSizeMB=10",
     "pollInterval=2000",
     "transcodegpuWorkers=1",
-    "transcodecpuWorkers=1",
+    "transcodecpuWorkers=0",
     "auth=true",
     "apiKey=tapi_${var.tdarr_auth_key}",
     "NVIDIA_VISIBLE_DEVICES=all",
