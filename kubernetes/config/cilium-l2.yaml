@@ -13,4 +13,23 @@ kind: CiliumL2AnnouncementPolicy
 metadata:
   name: lan-announcement-policy
 spec:
+  serviceSelector:
+    matchExpressions:
+      - key: app
+        operator: NotIn
+        values:
+          - palworld
+  loadBalancerIPs: true
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: palworld-l2-policy
+spec:
+  serviceSelector:
+    matchLabels:
+      app: palworld
+  nodeSelector:
+    matchLabels:
+      kubernetes.io/hostname: opti74
   loadBalancerIPs: true

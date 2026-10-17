@@ -4,8 +4,8 @@ kind: Service
 metadata:
   name: palworld-svc
   namespace: gaming
-  annotations:
-    svc.k3s.io/loadbalancer-target: opti74
+  labels:
+    app: palworld
 spec:
   type: LoadBalancer
   ports:

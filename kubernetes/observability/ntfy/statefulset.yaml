@@ -25,15 +25,9 @@ spec:
             - name: TZ
               value: "America/New_York"
             - name: NTFY_BASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: ntfy-secrets
-                  key: base-url
+              value: "https://ntfy.lambertlab.us"
             - name: NTFY_UPSTREAM_BASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: ntfy-secrets
-                  key: upstream-base-url
+              value: "https://ntfy.sh"
             - name: NTFY_BEHIND_PROXY
               value: "true"
             - name: NTFY_CACHE_FILE

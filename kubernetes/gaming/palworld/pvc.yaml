@@ -7,8 +7,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: longhorn-retain
-  volumeName: pvc-128f9d6f-b4be-424c-a692-9752a1f132ac
+  storageClassName: longhorn-1-replica
   resources:
     requests:
       storage: 25Gi
