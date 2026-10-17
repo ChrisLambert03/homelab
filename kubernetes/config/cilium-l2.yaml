@@ -1,0 +1,16 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: lan-pool
+spec:
+  blocks:
+    - start: 10.0.0.202
+      stop: 10.0.0.215
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: lan-announcement-policy
+spec:
+  loadBalancerIPs: true
