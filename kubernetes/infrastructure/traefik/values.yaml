@@ -5,8 +5,7 @@ deployment:
 service:
   enabled: true
   spec:
-    type: LoadBalancer
-    loadBalancerIP: "10.0.0.202"
+    type: ClusterIP
 
 ports:
   web:
@@ -41,3 +40,7 @@ providers:
     allowCrossNamespace: true
   kubernetesIngress:
     enabled: true
+    publishedService:
+      enabled: false
+    ingressEndpoint:
+      hostname: "traefik.kube-system.svc.cluster.local"
