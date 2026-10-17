@@ -155,7 +155,7 @@ Kubernetes pods routinely need to resolve domain-joined machines like `dc01.ad.l
 Because Windows clients update their DNS dynamically via Active Directory Dynamic DNS (DDNS), cluster CoreDNS forwarders are configured with **active health checking**:
 
 ```yaml
-# kubernetes/config/coredns-custom.yaml
+# kubernetes/config/coredns.yaml
 ad.lambertlab.us:53 {
     forward . 10.10.0.10 {
         health_check 5s

@@ -74,7 +74,7 @@ This section details the foundational control plane components, software-defined
 * **Sync Wave:** `Wave 2`
 * **Architectural Role:** In-cluster DNS resolver providing transparent Active Directory hostname resolution.
 * **Key Configuration:**
-  * Configured via `kubernetes/config/coredns-custom.yaml`.
+  * Configured via `kubernetes/config/coredns.yaml`.
   * Conditional zone forwarder for `ad.lambertlab.us:53` pointing to DC01 (`10.10.0.10`).
   * Enforces active health checking: `health_check 5s` and `max_fails 2`, failing fast when DC01 reboots to eliminate 30+ second application UDP lookup timeouts.
 
