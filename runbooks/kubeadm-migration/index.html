@@ -1,0 +1,2292 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Production-Level Hybrid Cloud, KubeVirt, and GitOps Documentation">
+      
+      
+        <meta name="author" content="Chris Lambert">
+      
+      
+        <link rel="canonical" href="https://docs.lambertlab.us/runbooks/kubeadm-migration/">
+      
+      
+        <link rel="prev" href="../disaster-recovery/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>K3s to Vanilla Kubeadm HA Migration SOP - LambertLab Infrastructure Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/panzoom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <meta name="panzoom-theme" content="material">
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#runbook-k3s-to-vanilla-kubeadm-ha-cilium-ebpf-migration-sop" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="LambertLab Infrastructure Docs" class="md-header__button md-logo" aria-label="LambertLab Infrastructure Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LambertLab Infrastructure Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              K3s to Vanilla Kubeadm HA Migration SOP
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="deep-purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ChrisLambert03/homelab" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ChrisLambert03/homelab
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../architecture/hardware/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../catalog/" class="md-tabs__link">
+          
+  
+  
+  Service Catalog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../bridge-watchdog/" class="md-tabs__link">
+          
+  
+  
+  Operational Runbooks
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="LambertLab Infrastructure Docs" class="md-nav__button md-logo" aria-label="LambertLab Infrastructure Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    LambertLab Infrastructure Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ChrisLambert03/homelab" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ChrisLambert03/homelab
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/hardware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware & Node Fleet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/networking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Software-Defined L2 VPC & CoreDNS Fabric
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage Hierarchy & SAN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/identity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Identity & Entra ID
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/guacamole/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apache Guacamole Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/virtualization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KubeVirt & Virtualization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/gitops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitOps Engine & Sync Waves
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Information & Event Management (SIEM)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service Catalog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Service Catalog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../catalog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview & Master Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../catalog/infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Infrastructure & Networking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../catalog/workstations-vms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Virtual Machines & Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../catalog/media-automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Media & Home Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../catalog/security-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security & Productivity Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operational Runbooks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operational Runbooks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bridge-watchdog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bridge Self-Healing Watchdog (Legacy)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../iscsi-flashing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Direct iSCSI Line-Rate Flashing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elk-ilm-maintenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ELK Stack & Index Lifecycle Management (ILM)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elk-eck-migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECK Migration & AutoOps Runbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../disaster-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Disaster Recovery & Quorum
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    K3s to Vanilla Kubeadm HA Migration SOP
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    K3s to Vanilla Kubeadm HA Migration SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#target-architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Target Architecture Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Target Architecture Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#physical-node-role-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical Node &amp; Role Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-1-pre-migration-safety-backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔒 Phase 1: Pre-Migration Safety &amp; Backups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-host-operating-system-preparation-all-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧹 Phase 2: Host Operating System Preparation (All Nodes)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧹 Phase 2: Host Operating System Preparation (All Nodes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-decommission-legacy-k3s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Decommission Legacy K3s
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-kernel-modules-sysctl-network-forwarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Kernel Modules &amp; Sysctl Network Forwarding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-upstream-containerd-installation-systemd-cgroups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Upstream containerd Installation &amp; Systemd Cgroups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-install-kubernetes-binaries-v1371" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Install Kubernetes Binaries (v1.37.1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-explicit-kubelet-node-ip-pinning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Explicit Kubelet Node IP Pinning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-nvidia-gpu-runtime-workstation-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. NVIDIA GPU Runtime (Workstation Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-primary-control-plane-bootstrap-lenovo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ Phase 3: Primary Control Plane Bootstrap (lenovo)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚡ Phase 3: Primary Control Plane Bootstrap (lenovo)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-stage-kube-vip-static-pod-manifest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Stage kube-vip Static Pod Manifest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-initialize-cluster-with-kubeadm-configyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Initialize Cluster with kubeadm-config.yaml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-cilium-cni-in-pure-ebpf-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌐 Phase 4: Cilium CNI in Pure eBPF Mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌐 Phase 4: Cilium CNI in Pure eBPF Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architectural-decisions-parameter-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architectural Decisions &amp; Parameter Breakdown:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-joining-secondary-control-planes-optiplex-opti74" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🤝 Phase 5: Joining Secondary Control Planes (optiplex &amp; opti74)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🤝 Phase 5: Joining Secondary Control Planes (optiplex &amp; opti74)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-stage-kube-vipyaml-on-secondary-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Stage kube-vip.yaml on Secondary Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-generate-control-plane-join-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Generate Control Plane Join Command
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-execute-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Execute Join
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-6-joining-dedicated-worker-node-workstation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠️ Phase 6: Joining Dedicated Worker Node (workstation)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-7-verification-cluster-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Phase 7: Verification &amp; Cluster Health Checks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✅ Phase 7: Verification &amp; Cluster Health Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-node-fleet-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Node Fleet Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-cilium-pod-ipam-mesh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Cilium Pod IPAM Mesh
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-ha-leases-control-plane-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. HA Leases &amp; Control Plane Failover
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-hubble-observability-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Hubble Observability Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-8-next-steps-gitops-reconciliation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Phase 8: Next Steps (GitOps Reconciliation)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#target-architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Target Architecture Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Target Architecture Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#physical-node-role-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physical Node &amp; Role Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-1-pre-migration-safety-backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔒 Phase 1: Pre-Migration Safety &amp; Backups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-host-operating-system-preparation-all-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧹 Phase 2: Host Operating System Preparation (All Nodes)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧹 Phase 2: Host Operating System Preparation (All Nodes)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-decommission-legacy-k3s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Decommission Legacy K3s
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-kernel-modules-sysctl-network-forwarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Kernel Modules &amp; Sysctl Network Forwarding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-upstream-containerd-installation-systemd-cgroups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Upstream containerd Installation &amp; Systemd Cgroups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-install-kubernetes-binaries-v1371" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Install Kubernetes Binaries (v1.37.1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-explicit-kubelet-node-ip-pinning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Explicit Kubelet Node IP Pinning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-nvidia-gpu-runtime-workstation-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. NVIDIA GPU Runtime (Workstation Only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-primary-control-plane-bootstrap-lenovo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ Phase 3: Primary Control Plane Bootstrap (lenovo)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚡ Phase 3: Primary Control Plane Bootstrap (lenovo)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-stage-kube-vip-static-pod-manifest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Stage kube-vip Static Pod Manifest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-initialize-cluster-with-kubeadm-configyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Initialize Cluster with kubeadm-config.yaml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-cilium-cni-in-pure-ebpf-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌐 Phase 4: Cilium CNI in Pure eBPF Mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌐 Phase 4: Cilium CNI in Pure eBPF Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architectural-decisions-parameter-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architectural Decisions &amp; Parameter Breakdown:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-joining-secondary-control-planes-optiplex-opti74" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🤝 Phase 5: Joining Secondary Control Planes (optiplex &amp; opti74)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🤝 Phase 5: Joining Secondary Control Planes (optiplex &amp; opti74)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-stage-kube-vipyaml-on-secondary-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Stage kube-vip.yaml on Secondary Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-generate-control-plane-join-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Generate Control Plane Join Command
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-execute-join" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Execute Join
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-6-joining-dedicated-worker-node-workstation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠️ Phase 6: Joining Dedicated Worker Node (workstation)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-7-verification-cluster-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Phase 7: Verification &amp; Cluster Health Checks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="✅ Phase 7: Verification &amp; Cluster Health Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-node-fleet-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Node Fleet Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-cilium-pod-ipam-mesh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Cilium Pod IPAM Mesh
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-ha-leases-control-plane-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. HA Leases &amp; Control Plane Failover
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-hubble-observability-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Hubble Observability Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-8-next-steps-gitops-reconciliation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Phase 8: Next Steps (GitOps Reconciliation)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/ChrisLambert03/homelab/blob/main/docs/runbooks/kubeadm-migration.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="runbook-k3s-to-vanilla-kubeadm-ha-cilium-ebpf-migration-sop">Runbook: K3s to Vanilla Kubeadm HA &amp; Cilium eBPF Migration SOP</h1>
+<p>This Standard Operating Procedure (SOP) documents the architectural design, teardown, bootstrap, and verification procedures for migrating the <strong>LambertLab</strong> cluster from K3s to an enterprise-grade vanilla upstream <strong><code>kubeadm</code> (v1.37.1)</strong> architecture with stacked etcd High Availability, <strong><code>kube-vip</code></strong> control plane failover, <strong>Cilium</strong> in pure eBPF mode (replacing <code>kube-proxy</code>), and dedicated NVIDIA GPU worker orchestration.</p>
+<hr />
+<h2 id="target-architecture-overview">🏗️ Target Architecture Overview</h2>
+<div class="panzoom-box" data-key="alt" id="panzoom0" oncontextmenu="return false;">
+    <div class="panzoom-info-box panzoom-info-box-top">
+Hold "Alt" / "Option" to enable pan &amp; zoom
+</div>
+    <nav class="panzoom-nav panzoom-top-nav panzoom-nav-infobox-top">
+    <button class="panzoom-reset panzoom-button">
+    <svg class="panzoom-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M125.7 160l50.3 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L48 224c-17.7 0-32-14.3-32-32L16 64c0-17.7 14.3-32 32-32s32 14.3 32 32l0 51.2L97.6 97.6c87.5-87.5 229.3-87.5 316.8 0s87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3s-163.8-62.5-226.3 0L125.7 160z"></path>
+    </svg>
+</button><button class="panzoom-max panzoom-button">
+    <svg class="panzoom-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 32C14.3 32 0 46.3 0 64l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96z"></path>
+    </svg>
+</button><button class="panzoom-min panzoom-button panzoom-hidden">
+    <svg class="panzoom-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M160 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96zM32 320c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM352 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 320c-17.7 0-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0z"></path>
+    </svg>
+</button>
+    </nav>
+    <pre class="mermaid"><code>flowchart TD
+    subgraph LAN["Physical Home Network (10.0.0.0/24)"]
+        VIP["Floating Control Plane VIP&lt;br/&gt;10.0.0.201:6443&lt;br/&gt;(kube-vip Leader Election)"]
+        Router["Router / Gateway&lt;br/&gt;10.0.0.1"]
+        NAS["TerraMaster F4-425 Plus&lt;br/&gt;10.0.0.60 (NFS / iSCSI)"]
+    end
+
+    subgraph ControlPlane["3-Node Stacked HA Control Plane &amp; etcd Quorum"]
+        Lenovo["lenovo (10.0.0.11)&lt;br/&gt;Interface: eno1&lt;br/&gt;etcd Member #1 + kube-vip"]
+        Optiplex["optiplex (10.0.0.12)&lt;br/&gt;Interface: eno1&lt;br/&gt;etcd Member #2 + kube-vip"]
+        Opti74["opti74 (10.0.0.13)&lt;br/&gt;Interface: enx00e04c68b94d&lt;br/&gt;etcd Member #3 + kube-vip"]
+    end
+
+    subgraph Compute["Dedicated Compute Engine"]
+        Workstation["workstation (10.0.0.14)&lt;br/&gt;Interface: enp5s0&lt;br/&gt;Dual Xeon, 128GB RAM, RTX A4500&lt;br/&gt;NVIDIA Container Toolkit (CDI)"]
+    end
+
+    VIP --- Lenovo
+    VIP --- Optiplex
+    VIP --- Opti74
+    Workstation --&gt;|API Traffic| VIP
+
+    subgraph CNI["Cilium eBPF Mesh (Pod Subnet: 10.244.0.0/16)"]
+        Lenovo -.- C1["10.244.0.0/24"]
+        Optiplex -.- C2["10.244.1.0/24"]
+        Opti74 -.- C3["10.244.2.0/24"]
+        Workstation -.- C4["10.244.3.0/24"]
+    end</code></pre> 
+    
+</div>
+<h3 id="physical-node-role-matrix">Physical Node &amp; Role Matrix</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Node Hostname</th>
+<th style="text-align: left;">Hardware Specifications</th>
+<th style="text-align: left;">Target Roles</th>
+<th style="text-align: left;">Network Interface</th>
+<th style="text-align: left;">LAN IP</th>
+<th style="text-align: left;">Pod CIDR (Cilium IPAM)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong><code>lenovo</code></strong></td>
+<td style="text-align: left;">Intel Core i7-6700T, 32GB RAM</td>
+<td style="text-align: left;"><code>control-plane</code>, <code>etcd</code> (Bootstrap S1)</td>
+<td style="text-align: left;"><code>eno1</code></td>
+<td style="text-align: left;"><code>10.0.0.11</code></td>
+<td style="text-align: left;"><code>10.244.0.0/24</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>optiplex</code></strong></td>
+<td style="text-align: left;">Intel Core i7-4770, 16GB RAM</td>
+<td style="text-align: left;"><code>control-plane</code>, <code>etcd</code></td>
+<td style="text-align: left;"><code>eno1</code></td>
+<td style="text-align: left;"><code>10.0.0.12</code></td>
+<td style="text-align: left;"><code>10.244.1.0/24</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>opti74</code></strong></td>
+<td style="text-align: left;">Intel Core i7-6700, 32GB RAM</td>
+<td style="text-align: left;"><code>control-plane</code>, <code>etcd</code></td>
+<td style="text-align: left;"><code>enx00e04c68b94d</code> (USB)</td>
+<td style="text-align: left;"><code>10.0.0.13</code></td>
+<td style="text-align: left;"><code>10.244.2.0/24</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>workstation</code></strong></td>
+<td style="text-align: left;">2x Xeon E5-2667 v4, 128GB RAM, RTX A4500</td>
+<td style="text-align: left;"><code>worker</code> (Compute, GPU)</td>
+<td style="text-align: left;"><code>enp5s0</code></td>
+<td style="text-align: left;"><code>10.0.0.14</code></td>
+<td style="text-align: left;"><code>10.244.3.0/24</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Floating VIP</strong></td>
+<td style="text-align: left;">Virtual IP (<code>kube-vip</code> Static Pod)</td>
+<td style="text-align: left;"><code>controlPlaneEndpoint</code></td>
+<td style="text-align: left;">Layer 2 ARP Broadcast</td>
+<td style="text-align: left;"><strong><code>10.0.0.201</code></strong></td>
+<td style="text-align: left;">N/A</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="phase-1-pre-migration-safety-backups">🔒 Phase 1: Pre-Migration Safety &amp; Backups</h2>
+<p>Before decommissioning the legacy K3s cluster, full application state and storage volumes were captured and verified:</p>
+<ol>
+<li><strong>Longhorn Persistent Volume Snapshots:</strong>
+   Targeted NFS storage appliance at <code>nfs://10.0.0.60:/Volume4/longhorn</code>:</li>
+<li><code>data-vault-0</code>: Snapshot verified on NAS.</li>
+<li><code>data-guacamole-postgresql-0</code>: Snapshot verified on NAS.</li>
+<li><code>cache-ntfy-0</code>: Snapshot verified on NAS.</li>
+<li><strong>HashiCorp Vault Raft Database Backup:</strong>
+   Direct Raft engine snapshot saved to local administrative storage:
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vault<span class="w"> </span>operator<span class="w"> </span>raft<span class="w"> </span>snapshot<span class="w"> </span>save<span class="w"> </span>/home/chris/cluster-backup-20261015/vault-backup.snap
+</span></code></pre></div></li>
+</ol>
+<hr />
+<h2 id="phase-2-host-operating-system-preparation-all-nodes">🧹 Phase 2: Host Operating System Preparation (All Nodes)</h2>
+<h3 id="1-decommission-legacy-k3s">1. Decommission Legacy K3s</h3>
+<p>Cleanly uninstall the K3s supervisor and purge stale CNI devices to prevent iptables/routing collisions:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On worker nodes:</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>/usr/local/bin/k3s-agent-uninstall.sh<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>sudo<span class="w"> </span>/usr/local/bin/k3s-uninstall.sh
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># On control plane nodes:</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sudo<span class="w"> </span>/usr/local/bin/k3s-uninstall.sh
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Purge leftover state and network interfaces:</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sudo<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/etc/rancher<span class="w"> </span>/var/lib/rancher<span class="w"> </span>/var/lib/kubelet<span class="w"> </span>/etc/cni<span class="w"> </span>/opt/cni<span class="w"> </span>/var/lib/cni
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>sudo<span class="w"> </span>ip<span class="w"> </span>link<span class="w"> </span>delete<span class="w"> </span>cni0<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>sudo<span class="w"> </span>ip<span class="w"> </span>link<span class="w"> </span>delete<span class="w"> </span>flannel.1<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+</span></code></pre></div>
+<h3 id="2-kernel-modules-sysctl-network-forwarding">2. Kernel Modules &amp; Sysctl Network Forwarding</h3>
+<p>Kubernetes and containerd require Linux bridge netfilter and IP packet forwarding:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | sudo tee /etc/modules-load.d/k8s.conf</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="s">overlay</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s">br_netfilter</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s">EOF</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>sudo<span class="w"> </span>modprobe<span class="w"> </span>overlay
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>sudo<span class="w"> </span>modprobe<span class="w"> </span>br_netfilter
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF | sudo tee /etc/sysctl.d/k8s.conf</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s">net.bridge.bridge-nf-call-iptables  = 1</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s">net.bridge.bridge-nf-call-ip6tables = 1</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s">net.ipv4.ip_forward                 = 1</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s">EOF</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>sudo<span class="w"> </span>sysctl<span class="w"> </span>--system
+</span></code></pre></div>
+<h3 id="3-upstream-containerd-installation-systemd-cgroups">3. Upstream <code>containerd</code> Installation &amp; Systemd Cgroups</h3>
+<p>Generate the default containerd configuration and enforce <code>SystemdCgroup = true</code> to match Kubernetes v1.37 cgroup requirements:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/containerd
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>containerd<span class="w"> </span>config<span class="w"> </span>default<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/containerd/config.toml
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>sudo<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'s/SystemdCgroup = false/SystemdCgroup = true/g'</span><span class="w"> </span>/etc/containerd/config.toml
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>containerd
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>containerd
+</span></code></pre></div>
+<p><em>Verification:</em>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>grep<span class="w"> </span>SystemdCgroup<span class="w"> </span>/etc/containerd/config.toml
+</span></code></pre></div></p>
+<h3 id="4-install-kubernetes-binaries-v1371">4. Install Kubernetes Binaries (v1.37.1)</h3>
+<p>Pin the official community repository packages:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://pkgs.k8s.io/core:/stable:/v1.37/deb/Release.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>gpg<span class="w"> </span>--dearmor<span class="w"> </span>-o<span class="w"> </span>/etc/apt/keyrings/kubernetes-apt-keyring.gpg
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.37/deb/ /'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/kubernetes.list
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>sudo<span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>kubelet<span class="w"> </span>kubeadm<span class="w"> </span>kubectl
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>sudo<span class="w"> </span>apt-mark<span class="w"> </span>hold<span class="w"> </span>kubelet<span class="w"> </span>kubeadm<span class="w"> </span>kubectl
+</span></code></pre></div>
+<h3 id="5-explicit-kubelet-node-ip-pinning">5. Explicit Kubelet Node IP Pinning</h3>
+<p>Homelab nodes frequently have multiple network interfaces (Tailscale <code>tailscale0</code>, Docker bridges, KVM <code>virbr0</code>, or secondary USB adapters). To prevent Kubelet from binding to the wrong interface, pin each node's physical LAN IP in <code>/etc/default/kubelet</code>:</p>
+<ul>
+<li><strong><code>lenovo</code>:</strong>
+  <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'KUBELET_EXTRA_ARGS="--node-ip=10.0.0.11"'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/default/kubelet
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>kubelet
+</span></code></pre></div></li>
+<li><strong><code>optiplex</code>:</strong>
+  <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'KUBELET_EXTRA_ARGS="--node-ip=10.0.0.12"'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/default/kubelet
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+</span></code></pre></div></li>
+<li><strong><code>opti74</code>:</strong>
+  <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'KUBELET_EXTRA_ARGS="--node-ip=10.0.0.13"'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/default/kubelet
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+</span></code></pre></div></li>
+<li><strong><code>workstation</code>:</strong>
+  <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'KUBELET_EXTRA_ARGS="--node-ip=10.0.0.14"'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/default/kubelet
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+</span></code></pre></div></li>
+</ul>
+<h3 id="6-nvidia-gpu-runtime-workstation-only">6. NVIDIA GPU Runtime (Workstation Only)</h3>
+<p>On <code>workstation</code>, configure NVIDIA Container Toolkit CDI integration:</p>
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>sudo<span class="w"> </span>nvidia-ctk<span class="w"> </span>runtime<span class="w"> </span>configure<span class="w"> </span>--runtime<span class="o">=</span>containerd
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>containerd
+</span></code></pre></div>
+<em>(Produces <code>/etc/containerd/conf.d/99-nvidia.toml</code> imported by containerd)</em>.</p>
+<hr />
+<h2 id="phase-3-primary-control-plane-bootstrap-lenovo">⚡ Phase 3: Primary Control Plane Bootstrap (<code>lenovo</code>)</h2>
+<h3 id="1-stage-kube-vip-static-pod-manifest">1. Stage <code>kube-vip</code> Static Pod Manifest</h3>
+<p>Deploy the floating control plane VIP (<code>10.0.0.201</code>) on interface <code>eno1</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/kubernetes/manifests
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VIP</span><span class="o">=</span><span class="s2">"10.0.0.201"</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">INTERFACE</span><span class="o">=</span><span class="s2">"eno1"</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KVVERSION</span><span class="o">=</span><span class="s2">"v1.2.4"</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nb">alias</span><span class="w"> </span>kube-vip<span class="o">=</span><span class="s2">"sudo ctr image pull ghcr.io/kube-vip/kube-vip:</span><span class="nv">$KVVERSION</span><span class="s2">; sudo ctr run --rm --net-host ghcr.io/kube-vip/kube-vip:</span><span class="nv">$KVVERSION</span><span class="s2"> vip /kube-vip"</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>kube-vip<span class="w"> </span>manifest<span class="w"> </span>pod<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span>--interface<span class="w"> </span><span class="nv">$INTERFACE</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span>--address<span class="w"> </span><span class="nv">$VIP</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span>--controlplane<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span>--services<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span>--arp<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span>--leaderElection<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/kubernetes/manifests/kube-vip.yaml
+</span></code></pre></div>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>Kubeconfig Volume Mount Note:</strong>
+In Kubernetes v1.29+ / v1.37, during the raw <code>kubeadm init</code> bootstrap phase prior to RBAC application, the volume mount in <code>/etc/kubernetes/manifests/kube-vip.yaml</code> points to <code>/etc/kubernetes/super-admin.conf</code> on the host, while retaining <code>mountPath: /etc/kubernetes/admin.conf</code> inside the container.</p>
+</blockquote>
+<h3 id="2-initialize-cluster-with-kubeadm-configyaml">2. Initialize Cluster with <code>kubeadm-config.yaml</code></h3>
+<p>The cluster configuration disables <code>kube-proxy</code> and defines the pod subnet:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nn">---</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubeadm.k8s.io/v1beta4</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">InitConfiguration</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nt">localAPIEndpoint</span><span class="p">:</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="nt">advertiseAddress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0.0.11</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span><span class="nt">bindPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6443</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="nt">nodeRegistration</span><span class="p">:</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span><span class="nt">criSocket</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unix:///run/containerd/containerd.sock</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IfNotPresent</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lenovo</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span><span class="nt">taints</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="nn">---</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kubeadm.k8s.io/v1beta4</span>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterConfiguration</span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="nt">kubernetesVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.37.1</span>
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="nt">clusterName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">homelab-cluster</span>
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="nt">controlPlaneEndpoint</span><span class="p">:</span><span class="w"> </span><span class="s">"10.0.0.201:6443"</span>
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="nt">networking</span><span class="p">:</span>
+</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="w">  </span><span class="nt">podSubnet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.244.0.0/16</span>
+</span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">  </span><span class="nt">serviceSubnet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.96.0.0/12</span>
+</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">  </span><span class="nt">dnsDomain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster.local</span>
+</span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="nt">proxy</span><span class="p">:</span>
+</span><span id="__span-12-23"><a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="w">  </span><span class="nt">disabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># Replaced completely by Cilium eBPF</span>
+</span><span id="__span-12-24"><a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="nt">etcd</span><span class="p">:</span>
+</span><span id="__span-12-25"><a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="w">  </span><span class="nt">local</span><span class="p">:</span>
+</span><span id="__span-12-26"><a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a><span class="w">    </span><span class="nt">dataDir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/lib/etcd</span>
+</span></code></pre></div>
+<p>Run initialization on <code>lenovo</code>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>sudo<span class="w"> </span>kubeadm<span class="w"> </span>init<span class="w"> </span>--config<span class="w"> </span>/home/chris/homelab/kubeadm-config.yaml<span class="w"> </span>--upload-certs
+</span></code></pre></div></p>
+<p>Set up user credentials:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="nv">$HOME</span>/.kube
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>sudo<span class="w"> </span>cp<span class="w"> </span>-i<span class="w"> </span>/etc/kubernetes/admin.conf<span class="w"> </span><span class="nv">$HOME</span>/.kube/config
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>sudo<span class="w"> </span>chown<span class="w"> </span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span>:<span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="w"> </span><span class="nv">$HOME</span>/.kube/config
+</span></code></pre></div></p>
+<hr />
+<h2 id="phase-4-cilium-cni-in-pure-ebpf-mode">🌐 Phase 4: Cilium CNI in Pure eBPF Mode</h2>
+<p>Deploy Cilium via Helm using the official <strong>"Kubernetes Without kube-proxy"</strong> quick-start pattern:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>cilium<span class="w"> </span>https://helm.cilium.io/
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>helm<span class="w"> </span>repo<span class="w"> </span>update
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>helm<span class="w"> </span>install<span class="w"> </span>cilium<span class="w"> </span>cilium/cilium<span class="w"> </span>--version<span class="w"> </span><span class="m">1</span>.20.3<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span>--namespace<span class="w"> </span>kube-system<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span>--set<span class="w"> </span><span class="nv">kubeProxyReplacement</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span>--set<span class="w"> </span><span class="nv">k8sServiceHost</span><span class="o">=</span><span class="s2">"10.0.0.201"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span>--set<span class="w"> </span><span class="nv">k8sServicePort</span><span class="o">=</span><span class="s2">"6443"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span>--set<span class="w"> </span>ipam.mode<span class="o">=</span>kubernetes<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span>--set<span class="w"> </span>hubble.relay.enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span>--set<span class="w"> </span>hubble.ui.enabled<span class="o">=</span><span class="nb">true</span>
+</span></code></pre></div>
+<h3 id="architectural-decisions-parameter-breakdown">Architectural Decisions &amp; Parameter Breakdown:</h3>
+<ul>
+<li><strong><code>kubeProxyReplacement=true</code>:</strong> Directs Cilium eBPF programs to attach to socket layer and cgroups to manage <code>ClusterIP</code>, <code>NodePort</code>, and <code>LoadBalancer</code> routing without iptables.</li>
+<li><strong><code>k8sServiceHost="10.0.0.201"</code> &amp; <code>k8sServicePort="6443"</code>:</strong> Points Cilium agents directly to the <code>kube-vip</code> endpoint so agents can reach the API server prior to in-cluster service discovery availability.</li>
+<li><strong><code>ipam.mode=kubernetes</code> (Critical):</strong> Cilium's default <code>cluster-pool</code> IPAM assigns <code>10.0.0.0/8</code>, which conflicts with the physical <code>10.0.0.0/24</code> home LAN. Setting <code>ipam.mode=kubernetes</code> instructs Cilium to inherit the <code>podSubnet: 10.244.0.0/16</code> delegated by Kubernetes (<code>10.244.0.0/24</code> for lenovo, <code>10.244.1.0/24</code> for optiplex, etc.).</li>
+<li><strong><code>hubble.relay.enabled=true</code> &amp; <code>hubble.ui.enabled=true</code>:</strong> Deploys flow aggregation and web visualization.</li>
+</ul>
+<hr />
+<h2 id="phase-5-joining-secondary-control-planes-optiplex-opti74">🤝 Phase 5: Joining Secondary Control Planes (<code>optiplex</code> &amp; <code>opti74</code>)</h2>
+<h3 id="1-stage-kube-vipyaml-on-secondary-nodes">1. Stage <code>kube-vip.yaml</code> on Secondary Nodes</h3>
+<p>Generate the manifest using the node's specific physical network interface. Note that secondary nodes use <code>admin.conf</code> directly:</p>
+<ul>
+<li>
+<p><strong>On <code>optiplex</code> (interface <code>eno1</code>):</strong>
+  <div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VIP</span><span class="o">=</span><span class="s2">"10.0.0.201"</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">INTERFACE</span><span class="o">=</span><span class="s2">"eno1"</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KVVERSION</span><span class="o">=</span><span class="s2">"v1.2.4"</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="nb">alias</span><span class="w"> </span>kube-vip<span class="o">=</span><span class="s2">"sudo ctr image pull ghcr.io/kube-vip/kube-vip:</span><span class="nv">$KVVERSION</span><span class="s2">; sudo ctr run --rm --net-host ghcr.io/kube-vip/kube-vip:</span><span class="nv">$KVVERSION</span><span class="s2"> vip /kube-vip"</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/kubernetes/manifests
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>kube-vip<span class="w"> </span>manifest<span class="w"> </span>pod<span class="w"> </span>--interface<span class="w"> </span><span class="nv">$INTERFACE</span><span class="w"> </span>--address<span class="w"> </span><span class="nv">$VIP</span><span class="w"> </span>--controlplane<span class="w"> </span>--services<span class="w"> </span>--arp<span class="w"> </span>--leaderElection<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/kubernetes/manifests/kube-vip.yaml
+</span></code></pre></div></p>
+</li>
+<li>
+<p><strong>On <code>opti74</code> (interface <code>enx00e04c68b94d</code>):</strong>
+  <div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VIP</span><span class="o">=</span><span class="s2">"10.0.0.201"</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">INTERFACE</span><span class="o">=</span><span class="s2">"enx00e04c68b94d"</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KVVERSION</span><span class="o">=</span><span class="s2">"v1.2.4"</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="nb">alias</span><span class="w"> </span>kube-vip<span class="o">=</span><span class="s2">"sudo ctr image pull ghcr.io/kube-vip/kube-vip:</span><span class="nv">$KVVERSION</span><span class="s2">; sudo ctr run --rm --net-host ghcr.io/kube-vip/kube-vip:</span><span class="nv">$KVVERSION</span><span class="s2"> vip /kube-vip"</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/kubernetes/manifests
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>kube-vip<span class="w"> </span>manifest<span class="w"> </span>pod<span class="w"> </span>--interface<span class="w"> </span><span class="nv">$INTERFACE</span><span class="w"> </span>--address<span class="w"> </span><span class="nv">$VIP</span><span class="w"> </span>--controlplane<span class="w"> </span>--services<span class="w"> </span>--arp<span class="w"> </span>--leaderElection<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/kubernetes/manifests/kube-vip.yaml
+</span></code></pre></div></p>
+</li>
+</ul>
+<h3 id="2-generate-control-plane-join-command">2. Generate Control Plane Join Command</h3>
+<p>On <code>lenovo</code>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>sudo<span class="w"> </span>kubeadm<span class="w"> </span>init<span class="w"> </span>phase<span class="w"> </span>upload-certs<span class="w"> </span>--upload-certs
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Output gives: &lt;certificate-key&gt;</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>kubeadm<span class="w"> </span>token<span class="w"> </span>create<span class="w"> </span>--print-join-command<span class="w"> </span>--certificate-key<span class="w"> </span>&lt;certificate-key&gt;
+</span></code></pre></div></p>
+<h3 id="3-execute-join">3. Execute Join</h3>
+<p>Run the generated join command with <code>sudo</code> on both <code>optiplex</code> and <code>opti74</code>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>sudo<span class="w"> </span>kubeadm<span class="w"> </span>join<span class="w"> </span><span class="m">10</span>.0.0.201:6443<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span>--token<span class="w"> </span>&lt;token&gt;<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span>--discovery-token-ca-cert-hash<span class="w"> </span>sha256:&lt;hash&gt;<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>--control-plane<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">  </span>--certificate-key<span class="w"> </span>&lt;certificate-key&gt;
+</span></code></pre></div></p>
+<blockquote>
+<p>[!NOTE]
+During join, etcd initially attaches the node as a non-voting "learner" while synchronizing Raft state. Transient warnings (<code>etcdserver: can only promote a learner member which is in sync with leader</code>) are expected for several seconds until the initial Raft log replication catches up.</p>
+</blockquote>
+<hr />
+<h2 id="phase-6-joining-dedicated-worker-node-workstation">🛠️ Phase 6: Joining Dedicated Worker Node (<code>workstation</code>)</h2>
+<p>Because <code>workstation</code> is a pure compute worker:
+* <strong>No <code>kube-vip</code> static pod is placed on <code>workstation</code>.</strong>
+* Worker join does not use <code>--control-plane</code> or <code>--certificate-key</code>.</p>
+<p>Run on <code>workstation</code>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>sudo<span class="w"> </span>kubeadm<span class="w"> </span>join<span class="w"> </span><span class="m">10</span>.0.0.201:6443<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span>--token<span class="w"> </span>&lt;token&gt;<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span>--discovery-token-ca-cert-hash<span class="w"> </span>sha256:&lt;hash&gt;
+</span></code></pre></div></p>
+<p>Label the node role:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>kubectl<span class="w"> </span>label<span class="w"> </span>node<span class="w"> </span>workstation<span class="w"> </span>node-role.kubernetes.io/worker<span class="o">=</span>worker
+</span></code></pre></div></p>
+<hr />
+<h2 id="phase-7-verification-cluster-health-checks">✅ Phase 7: Verification &amp; Cluster Health Checks</h2>
+<h3 id="1-node-fleet-status">1. Node Fleet Status</h3>
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
+</span></code></pre></div>
+<em>Expected Output:</em> All 4 nodes report <code>STATUS: Ready</code> with versions matching <code>v1.37.1</code> and their correct respective internal LAN IPs (<code>10.0.0.11</code>, <code>10.0.0.12</code>, <code>10.0.0.13</code>, <code>10.0.0.14</code>).</p>
+<h3 id="2-cilium-pod-ipam-mesh">2. Cilium Pod IPAM Mesh</h3>
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>ciliumnodes
+</span></code></pre></div>
+<em>Expected Output:</em>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>NAME          CILIUMINTERNALIP   INTERNALIP   AGE
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>lenovo        10.244.0.49        10.0.0.11    ...
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>optiplex      10.244.1.149       10.0.0.12    ...
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>opti74        10.244.2.171       10.0.0.13    ...
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>workstation   10.244.3.86        10.0.0.14    ...
+</span></code></pre></div></p>
+<h3 id="3-ha-leases-control-plane-failover">3. HA Leases &amp; Control Plane Failover</h3>
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>leases<span class="w"> </span>-n<span class="w"> </span>kube-system
+</span></code></pre></div>
+<em>Expected Output:</em>
+* <code>plndr-cp-lock</code>: Held by the active <code>kube-vip</code> leader node.
+* <code>kube-controller-manager</code> &amp; <code>kube-scheduler</code>: Active leader leases held.
+* Individual <code>apiserver-&lt;id&gt;</code> heartbeat leases active for each control-plane member.</p>
+<h3 id="4-hubble-observability-dashboard">4. Hubble Observability Dashboard</h3>
+<p>Access the network dependency graph locally:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>svc/hubble-ui<span class="w"> </span><span class="m">12000</span>:80
+</span></code></pre></div>
+Navigate to <code>http://localhost:12000</code> to inspect live cluster service communication.</p>
+<hr />
+<h2 id="phase-8-next-steps-gitops-reconciliation">🚀 Phase 8: Next Steps (GitOps Reconciliation)</h2>
+<p>With the foundation active, proceed to workload restoration:
+1. <strong>Apply Cilium LoadBalancer IP Pool:</strong>
+   Configure L2 announcements and reserve LAN IP blocks (e.g. <code>10.0.0.200/29</code>) for Traefik ingress.
+2. <strong>Restore Storage Engine (Longhorn CSI):</strong>
+   Install Longhorn, bind <code>nfs://10.0.0.60:/Volume4/longhorn</code>, and restore persistent volume claims for Vault and Postgres.
+3. <strong>Re-bootstrap Argo CD:</strong>
+   Deploy Argo CD in manual sync mode to phase the GitOps rollout across sync waves.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.instant", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/javascripts/panzoom.min.js"></script>
+      
+        <script src="../../assets/javascripts/zoompan.js"></script>
+      
+    
+  </body>
+</html>
