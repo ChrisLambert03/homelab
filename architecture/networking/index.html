@@ -1769,7 +1769,7 @@ To enable the cluster to resolve Active Directory queries (<code>dc01.ad.lambert
 <h2 id="coredns-conditional-forwarding-to-active-directory">🔍 CoreDNS Conditional Forwarding to Active Directory</h2>
 <p>Kubernetes pods routinely need to resolve domain-joined machines like <code>dc01.ad.lambertlab.us</code> or <code>win11-01.ad.lambertlab.us</code>.</p>
 <p>Because Windows clients update their DNS dynamically via Active Directory Dynamic DNS (DDNS), cluster CoreDNS forwarders are configured with <strong>active health checking</strong>:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># kubernetes/config/coredns-custom.yaml</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># kubernetes/config/coredns.yaml</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="l l-Scalar l-Scalar-Plain">ad.lambertlab.us:53 {</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">forward . 10.10.0.10 {</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">health_check 5s</span>

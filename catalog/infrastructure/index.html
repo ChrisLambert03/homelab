@@ -1573,7 +1573,7 @@
 <li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
 <li><strong>Architectural Role:</strong> In-cluster DNS resolver providing transparent Active Directory hostname resolution.</li>
 <li><strong>Key Configuration:</strong></li>
-<li>Configured via <code>kubernetes/config/coredns-custom.yaml</code>.</li>
+<li>Configured via <code>kubernetes/config/coredns.yaml</code>.</li>
 <li>Conditional zone forwarder for <code>ad.lambertlab.us:53</code> pointing to DC01 (<code>10.10.0.10</code>).</li>
 <li>Enforces active health checking: <code>health_check 5s</code> and <code>max_fails 2</code>, failing fast when DC01 reboots to eliminate 30+ second application UDP lookup timeouts.</li>
 </ul>
