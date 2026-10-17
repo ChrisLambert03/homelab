@@ -1482,6 +1482,7 @@
 <li><strong>Key Configuration:</strong></li>
 <li>Displays real-time operational status and ping health across all cluster services.</li>
 <li>Secured via Traefik HTTPS termination using the cluster-wide default TLSStore.</li>
+<li>Secrets Management: Database encryption key (<code>SECRET_ENCRYPTION_KEY</code>) dynamically synchronized from HashiCorp Vault (<code>secret/data/homelab</code>) via <code>ExternalSecret</code> (<code>homarr-secrets</code>).</li>
 </ul>
 <hr />
 <h3 id="5-ntfy-push-notification-service">5. Ntfy Push Notification Service</h3>
