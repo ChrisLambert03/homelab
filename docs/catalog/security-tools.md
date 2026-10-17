@@ -71,6 +71,7 @@ This section documents secrets orchestration, centralized Security Information a
 * **Key Configuration:**
   * Displays real-time operational status and ping health across all cluster services.
   * Secured via Traefik HTTPS termination using the cluster-wide default TLSStore.
+  * Secrets Management: Database encryption key (`SECRET_ENCRYPTION_KEY`) dynamically synchronized from HashiCorp Vault (`secret/data/homelab`) via `ExternalSecret` (`homarr-secrets`).
 
 ---
 
