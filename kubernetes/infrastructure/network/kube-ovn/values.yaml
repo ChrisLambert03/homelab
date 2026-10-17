@@ -1,14 +1,14 @@
 ---
-# Match K3s control-plane labels so ovn-central can schedule
+# Match vanilla kubeadm control-plane labels so ovn-central can schedule
 masterNodesLabels:
-  kube-ovn/role: null
-  node-role.kubernetes.io/control-plane: "true"
+  kube-ovn/role: master
+  node-role.kubernetes.io/control-plane: ""
 
 # Explicit master node IPs for 3-node HA Raft clustering (required for ArgoCD client-side rendering)
 masterNodes:
-  - "100.95.104.11"
-  - "100.65.236.98"
-  - "100.74.145.55"
+  - "10.0.0.11"
+  - "10.0.0.12"
+  - "10.0.0.13"
 
 networking:
   # Move the internal Join Subnet away from 100.64.0.0/16
@@ -19,5 +19,5 @@ networking:
 
 cni:
   # Tell Kube-OVN to run exclusively as a secondary network (Multus).
-  # This prevents it from hijacking Flannel, which runs your default Kubernetes pods.
+  # This prevents it from hijacking Cilium, which runs your default Kubernetes pods.
   nonPrimaryCNI: true
