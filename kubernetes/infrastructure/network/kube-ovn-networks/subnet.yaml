@@ -10,7 +10,7 @@ spec:
   logicalGateway: false
   gateway: 10.10.0.254
   excludeIps:
-    - 10.10.0.2..10.10.0.9
+    - 10.10.0.1..10.10.0.20
     - 10.10.0.254
   enableDHCP: true
   # Explicitly tell Kube-OVN DHCP to hand out DC01 as the DNS server to the VMs!
