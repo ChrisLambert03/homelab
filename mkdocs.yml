@@ -92,3 +92,4 @@ nav:
       - ELK Stack & Index Lifecycle Management (ILM): runbooks/elk-ilm-maintenance.md
       - ECK Migration & AutoOps Runbook: runbooks/elk-eck-migration.md
       - Disaster Recovery & Quorum: runbooks/disaster-recovery.md
+      - K3s to Vanilla Kubeadm HA Migration SOP: runbooks/kubeadm-migration.md

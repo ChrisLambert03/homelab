@@ -1,0 +1,17 @@
+---
+# Cilium Helm Values (eBPF Kube-Proxy Replacement & Multus Chaining)
+cni:
+  exclusive: false
+
+hubble:
+  relay:
+    enabled: true
+  ui:
+    enabled: true
+
+ipam:
+  mode: kubernetes
+
+k8sServiceHost: "10.0.0.201"
+k8sServicePort: 6443
+kubeProxyReplacement: true

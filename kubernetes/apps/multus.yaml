@@ -11,26 +11,16 @@ metadata:
 spec:
   project: infrastructure
   source:
-    repoURL: https://rke2-charts.rancher.io
-    chart: rke2-multus
-    targetRevision: v4.3.104
-    helm:
-      releaseName: multus
-      values: |
-        config:
-          fullnameOverride: multus
-          cni_conf:
-            confDir: /var/lib/rancher/k3s/agent/etc/cni/net.d
-            binDir: /var/lib/rancher/k3s/data/cni/
-            kubeconfig: /var/lib/rancher/k3s/agent/etc/cni/net.d/multus.d/multus.kubeconfig
-            multusAutoconfigDir: /var/lib/rancher/k3s/agent/etc/cni/net.d
+    repoURL: git@github.com:ChrisLambert03/homelab.git
+    targetRevision: main
+    path: kubernetes/infrastructure/multus
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+#    automated:
+#      prune: true
+#      selfHeal: true
     syncOptions:
       - CreateNamespace=false
       - ServerSideApply=true
