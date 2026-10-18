@@ -151,3 +151,14 @@ This section details the foundational control plane components, software-defined
   * Manages global Custom Resource Definitions (`kibanas`, `elasticsearches`, `logstashes`, `agents`).
   * Resource-bounded controller with `100m` CPU / `150Mi` RAM baseline requests and `1000m` CPU / `1Gi` RAM burst limits.
 
+---
+
+### 13. Kubernetes Metrics Server
+* **Namespace:** `kube-system`
+* **Version:** Helm `3.12.2` (upstream `kubernetes-sigs/metrics-server`)
+* **Sync Wave:** `Wave 1`
+* **Architectural Role:** Core metrics aggregator exposing the `metrics.k8s.io` API for `kubectl top node`, `kubectl top pod`, and autoscaling pipelines.
+* **Key Configuration:**
+  * Configured with `--kubelet-insecure-tls` to scrape Kubelet Summary APIs over HTTPS across nodes without rejecting self-signed Kubelet serving certificates.
+  * Registers `v1beta1.metrics.k8s.io` directly with the Kubernetes API aggregation layer.
+
