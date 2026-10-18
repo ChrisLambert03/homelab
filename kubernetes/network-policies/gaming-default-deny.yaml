@@ -15,3 +15,13 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: kube-system
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: UDP
+          port: 8211
+        - protocol: TCP
+          port: 25575
+        - protocol: TCP
+          port: 8212

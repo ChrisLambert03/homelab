@@ -109,3 +109,16 @@ A collection of standalone node services, containers, and network appliances map
 | **Cockpit** | `workstation` | `https://cockpit.lambertlab.us` | Web-based Linux system administration, storage controller monitoring, and terminal access. |
 | **Code-Server** | `lenovo` | `https://code.lambertlab.us` | Browser-based Visual Studio Code IDE environment running directly on the cluster manager. |
 | **Firefox Web** | `opti74` | `https://firefox.lambertlab.us` | Isolated browser sandbox running on port 4000 for secure, disposable web browsing and testing. |
+
+---
+
+### 8. Zero-Trust Network Policies
+* **Namespace:** Cluster-wide (`kubernetes/network-policies`)
+* **AppProject:** `security`
+* **Sync Wave:** `Wave 1`
+* **Architectural Role:** Declarative namespace-level network isolation rules enforcing default-deny ingress semantics across security, media, observability, and gaming namespaces.
+* **Key Configuration:**
+  * Enforces `policyTypes: [Ingress]` across target namespaces to restrict unauthorized lateral pod-to-pod movement while preserving outbound egress and DNS functionality.
+  * Allows cross-namespace ingress exclusively from `traefik` and CoreDNS (`kube-system`).
+  * Dedicated gaming policy (`gaming-default-deny`) allows incoming player traffic on ports 8211/UDP, 25575/TCP, and 8212/TCP from `0.0.0.0/0` directly to the Palworld LoadBalancer VIP (`10.0.0.205`).
+
