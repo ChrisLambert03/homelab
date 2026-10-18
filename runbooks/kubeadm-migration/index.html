@@ -2210,7 +2210,9 @@ During join, etcd initially attaches the node as a non-voting "learner" while sy
 * <code>kube-controller-manager</code> &amp; <code>kube-scheduler</code>: Active leader leases held.
 * Individual <code>apiserver-&lt;id&gt;</code> heartbeat leases active for each control-plane member.</p>
 <h3 id="4-hubble-observability-dashboard">4. Hubble Observability Dashboard</h3>
-<p>Access the network dependency graph locally:
+<p>Access the network dependency graph directly via Traefik Ingress:
+* <strong>URL:</strong> <code>https://hubble.lambertlab.us</code> (Protected by <code>default-admin-only-access</code> Tailscale IP allowlist)</p>
+<p>Or via local port-forwarding fallback:
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>kubectl<span class="w"> </span>port-forward<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>svc/hubble-ui<span class="w"> </span><span class="m">12000</span>:80
 </span></code></pre></div>
 Navigate to <code>http://localhost:12000</code> to inspect live cluster service communication.</p>
