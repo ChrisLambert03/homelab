@@ -4,95 +4,6 @@ In **LambertLab**, Git is the absolute single source of truth for all Kubernetes
 
 ---
 
-## 🔄 App-of-Apps Topology & Sync Waves
-
-```mermaid
-graph TD
-    Root["root-apps Application<br/>(App-of-Apps Pattern)"]
-
-    subgraph W0["Sync Wave 0: Bootstrap Scaffolding & Credentials"]
-        Wave0["AppProjects & cluster-base"]
-        P["AppProjects Scaffolding"]
-        CB["cluster-base (Secrets & Admin RBAC)"]
-    end
-
-    subgraph W1["Sync Wave 1: Primary CNI Fabric"]
-        Wave1["Cilium & Policies"]
-        Cilium["Cilium eBPF CNI"]
-        NetPol["Network Policies"]
-    end
-
-    subgraph W2["Sync Wave 2: Secondary CNI & Metrics"]
-        Wave2["Multus & Metrics"]
-        Multus["Multus Meta-CNI"]
-        CiliumCfg["cilium-config (L2 Pools)"]
-        Metrics["Metrics Server"]
-    end
-
-    subgraph W3["Sync Wave 3: SDN Engine & Storage"]
-        Wave3["Overlay SDN & PVs"]
-        KubeOVN["Kube-OVN Engine"]
-        LocalPath["Local Path Provisioner"]
-        Longhorn["Longhorn Storage"]
-        MediaStorage["Media Storage PVs"]
-    end
-
-    subgraph W4["Sync Wave 4: SDN Networks & Dual-Homed DNS"]
-        Wave4["VPCs & CoreDNS"]
-        OVNNet["kube-ovn-networks (ovn-ad-vpc)"]
-        CoreDNS["coredns (AD Forwarder & Multus Patch)"]
-    end
-
-    subgraph W5["Sync Wave 5: Ingress & Compute Operators"]
-        Wave5["Foundational Operators"]
-        Traefik["Traefik Ingress DaemonSet"]
-        CertMgr["Cert-Manager Operator"]
-        ESO["External Secrets Operator"]
-        Vault["HashiCorp Vault"]
-        KubeVirt["KubeVirt & CDI Operators"]
-        GPU["NVIDIA GPU Operator"]
-        ECK["ECK Operator"]
-    end
-
-    subgraph W6["Sync Wave 6: Ingress Config, Certs & Runtimes"]
-        Wave6["Runtimes & Configs"]
-        TraefikCfg["traefik-config (Middlewares & TLSStore)"]
-        CertMgrCfg["cert-manager-config (Issuer & Wildcard)"]
-        ESOCfg["external-secrets-config (vault-backend)"]
-        KubeVirtCfg["KubeVirt & CDI Configs"]
-        ES["Elasticsearch Cluster"]
-        OAuth2Proxy["OAuth2-Proxy"]
-    end
-
-    subgraph W7["Sync Wave 7: Management Platforms & Observability"]
-        Wave7["Platform Gateways"]
-        ArgoHA["ArgoCD HA & Ingress"]
-        KVMgr["KubeVirt Manager"]
-        ExtSvc["External Services"]
-        Guac["Apache Guacamole (ovn-ad-vpc)"]
-        Kibana["Kibana & Logstash"]
-        Fleet["Fleet Server"]
-    end
-
-    subgraph W8["Sync Wave 8: Workloads, VMs & Consumer Apps"]
-        Wave8["Workloads & Guests"]
-        DC01VM["DC01 Active Directory"]
-        Win11VM["Win11 Workstation"]
-        OPNsenseVM["OPNsense Firewall"]
-        Workloads["Media Stack, Homarr, Ntfy, Palworld"]
-    end
-
-    subgraph W9["Sync Wave 9: Host Telemetry & Day-2 Operations"]
-        Wave9["Host Telemetry"]
-        ElasticAgent["Elastic Agent DaemonSet"]
-        AutoOps["AutoOps Maintenance Agents"]
-    end
-
-    Root --> W0
-    W0 --> W1 --> W2 --> W3 --> W4 --> W5 --> W6 --> W7 --> W8 --> W9
-```
-
----
 
 ## ⚡ High-Availability Controller Architecture
 
@@ -183,7 +94,92 @@ kubeconform -summary \
   kubernetes/
 ```
 
+---
 
+## 🔄 App-of-Apps Topology & Sync Waves
 
+```mermaid
+graph TD
+    Root["root-apps Application<br/>(App-of-Apps Pattern)"]
 
+    subgraph W0["Sync Wave 0: Bootstrap Scaffolding & Credentials"]
+        Wave0["AppProjects & cluster-base"]
+        P["AppProjects Scaffolding"]
+        CB["cluster-base (Secrets & Admin RBAC)"]
+    end
 
+    subgraph W1["Sync Wave 1: Primary CNI Fabric"]
+        Wave1["Cilium & Policies"]
+        Cilium["Cilium eBPF CNI"]
+        NetPol["Network Policies"]
+    end
+
+    subgraph W2["Sync Wave 2: Secondary CNI & Metrics"]
+        Wave2["Multus & Metrics"]
+        Multus["Multus Meta-CNI"]
+        CiliumCfg["cilium-config (L2 Pools)"]
+        Metrics["Metrics Server"]
+    end
+
+    subgraph W3["Sync Wave 3: SDN Engine & Storage"]
+        Wave3["Overlay SDN & PVs"]
+        KubeOVN["Kube-OVN Engine"]
+        LocalPath["Local Path Provisioner"]
+        Longhorn["Longhorn Storage"]
+        MediaStorage["Media Storage PVs"]
+    end
+
+    subgraph W4["Sync Wave 4: SDN Networks & Dual-Homed DNS"]
+        Wave4["VPCs & CoreDNS"]
+        OVNNet["kube-ovn-networks (ovn-ad-vpc)"]
+        CoreDNS["coredns (AD Forwarder & Multus Patch)"]
+    end
+
+    subgraph W5["Sync Wave 5: Ingress & Compute Operators"]
+        Wave5["Foundational Operators"]
+        Traefik["Traefik Ingress DaemonSet"]
+        CertMgr["Cert-Manager Operator"]
+        ESO["External Secrets Operator"]
+        Vault["HashiCorp Vault"]
+        KubeVirt["KubeVirt & CDI Operators"]
+        GPU["NVIDIA GPU Operator"]
+        ECK["ECK Operator"]
+    end
+
+    subgraph W6["Sync Wave 6: Ingress Config, Certs & Runtimes"]
+        Wave6["Runtimes & Configs"]
+        TraefikCfg["traefik-config (Middlewares & TLSStore)"]
+        CertMgrCfg["cert-manager-config (Issuer & Wildcard)"]
+        ESOCfg["external-secrets-config (vault-backend)"]
+        KubeVirtCfg["KubeVirt & CDI Configs"]
+        ES["Elasticsearch Cluster"]
+        OAuth2Proxy["OAuth2-Proxy"]
+    end
+
+    subgraph W7["Sync Wave 7: Management Platforms & Observability"]
+        Wave7["Platform Gateways"]
+        ArgoHA["ArgoCD HA & Ingress"]
+        KVMgr["KubeVirt Manager"]
+        ExtSvc["External Services"]
+        Guac["Apache Guacamole (ovn-ad-vpc)"]
+        Kibana["Kibana & Logstash"]
+        Fleet["Fleet Server"]
+    end
+
+    subgraph W8["Sync Wave 8: Workloads, VMs & Consumer Apps"]
+        Wave8["Workloads & Guests"]
+        DC01VM["DC01 Active Directory"]
+        Win11VM["Win11 Workstation"]
+        OPNsenseVM["OPNsense Firewall"]
+        Workloads["Media Stack, Homarr, Ntfy, Palworld"]
+    end
+
+    subgraph W9["Sync Wave 9: Host Telemetry & Day-2 Operations"]
+        Wave9["Host Telemetry"]
+        ElasticAgent["Elastic Agent DaemonSet"]
+        AutoOps["AutoOps Maintenance Agents"]
+    end
+
+    Root --> W0
+    W0 --> W1 --> W2 --> W3 --> W4 --> W5 --> W6 --> W7 --> W8 --> W9
+```
