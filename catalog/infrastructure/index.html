@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -977,6 +977,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#14-cilium-ebpf-cni-l2-announcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Cilium eBPF CNI &amp; L2 Announcement
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1492,6 +1503,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#14-cilium-ebpf-cni-l2-announcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Cilium eBPF CNI &amp; L2 Announcement
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1529,7 +1551,7 @@
 <h3 id="1-argocd-high-availability-ha">1. ArgoCD High Availability (HA)</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>argocd</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 2</code> (AppProjects in <code>Wave 0</code>)</li>
+<li><strong>Sync Wave:</strong> <code>Wave 7</code> (AppProjects in <code>Wave 0</code>)</li>
 <li><strong>Ingress Endpoint:</strong> <code>https://argocd.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> GitOps continuous delivery engine. Reconciles cluster state against <code>origin/main</code> across deterministic synchronization waves.</li>
 <li><strong>Key Configuration:</strong></li>
@@ -1542,11 +1564,12 @@
 <h3 id="2-traefik-edge-ingress-controller">2. Traefik Edge Ingress Controller</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>kube-system</code></li>
-<li><strong>Management:</strong> Native K3s Ingress Controller</li>
+<li><strong>Version:</strong> Helm <code>42.0.0</code></li>
+<li><strong>Sync Waves:</strong> <code>Wave 5</code> (DaemonSet Controller), <code>Wave 6</code> (Middlewares &amp; TLSStore)</li>
 <li><strong>Endpoints:</strong> Ports 80 (HTTP redirect), 443 (HTTPS termination)</li>
 <li><strong>Architectural Role:</strong> Cluster edge reverse proxy terminating external client TLS and enforcing security middlewares.</li>
 <li><strong>Key Configuration:</strong></li>
-<li>Wildcard TLSStore configured in <code>kube-system</code> referencing <code>wildcard-lambertlab-us-tls</code>.</li>
+<li>Wildcard TLSStore configured in <code>kube-system</code> referencing <code>lambertlab-wildcard-tls</code>.</li>
 <li>Security middlewares: <code>default-https-redirect</code> and <code>default-admin-only-access</code> restricting administrative dashboards.</li>
 <li>Direct Tailscale multi-A round-robin ingress preserving remote client source IPs without intermediate SNAT.</li>
 </ul>
@@ -1555,7 +1578,7 @@
 <ul>
 <li><strong>Namespace:</strong> <code>cert-manager</code></li>
 <li><strong>Version:</strong> Helm <code>v1.21.2</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 1</code></li>
+<li><strong>Sync Waves:</strong> <code>Wave 5</code> (Operator &amp; Webhooks), <code>Wave 6</code> (ExternalSecret, ClusterIssuer, Wildcard Certificate)</li>
 <li><strong>Architectural Role:</strong> Automated TLS x509 certificate management.</li>
 <li><strong>Key Configuration:</strong></li>
 <li><code>ClusterIssuer</code> utilizing Let's Encrypt ACME with Cloudflare DNS-01 API challenges.</li>
@@ -1567,7 +1590,7 @@
 <ul>
 <li><strong>Namespace:</strong> <code>kube-system</code> (Engine) &amp; <code>vms</code> (Networks)</li>
 <li><strong>Version:</strong> Helm <code>v1.16.12</code> (Secondary CNI)</li>
-<li><strong>Sync Waves:</strong> Operator &amp; Engine in <code>Wave 1</code>, Subnets &amp; NADs in <code>Wave 2</code></li>
+<li><strong>Sync Waves:</strong> <code>Wave 3</code> (Operator &amp; Engine), <code>Wave 4</code> (Subnets &amp; NADs)</li>
 <li><strong>Architectural Role:</strong> Software-Defined Networking (SDN) overlay providing isolated Layer 2 VPCs, embedded IPAM, and Geneve UDP encapsulation.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Replaces legacy NMState Linux host bridge (<code>br-lab0</code>) with Geneve UDP encapsulation, bypassing Wi-Fi multicast restrictions and host iptables <code>FORWARD</code> drops.</li>
@@ -1581,7 +1604,7 @@
 <ul>
 <li><strong>Namespace:</strong> <code>kube-system</code></li>
 <li><strong>Version:</strong> Helm <code>v4.3.104</code> (Thick CNI DaemonSet)</li>
-<li><strong>Sync Wave:</strong> <code>Wave 1</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
 <li><strong>Architectural Role:</strong> Multi-network interface plugin enabling pods and VMs to attach directly to multiple network fabrics.</li>
 <li><strong>Key Configuration:</strong></li>
 <li><code>NetworkAttachmentDefinition</code> named <code>ovn-ad-vpc</code> mapped to provider <code>ovn-ad-vpc.vms.ovn</code>.</li>
@@ -1592,18 +1615,19 @@
 <h3 id="6-coredns-active-directory-conditional-forwarder">6. CoreDNS Active Directory Conditional Forwarder</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>kube-system</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 4</code></li>
 <li><strong>Architectural Role:</strong> In-cluster DNS resolver providing transparent Active Directory hostname resolution.</li>
 <li><strong>Key Configuration:</strong></li>
-<li>Configured via <code>kubernetes/config/coredns.yaml</code>.</li>
+<li>Configured via <code>kubernetes/config/coredns/coredns.yaml</code> and <code>coredns-patch.yaml</code>.</li>
 <li>Conditional zone forwarder for <code>ad.lambertlab.us:53</code> pointing to DC01 (<code>10.10.0.10</code>).</li>
 <li>Enforces active health checking: <code>health_check 5s</code> and <code>max_fails 2</code>, failing fast when DC01 reboots to eliminate 30+ second application UDP lookup timeouts.</li>
+<li>Dual-homed pod attachment via Multus annotation <code>k8s.v1.cni.cncf.io/networks: vms/ovn-ad-vpc</code>.</li>
 </ul>
 <hr />
 <h3 id="7-tailscale-operator-mesh-gateway">7. Tailscale Operator &amp; Mesh Gateway</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>tailscale</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 1</code></li>
+<li><strong>Sync Wave:</strong> Inactive / Commented Out</li>
 <li><strong>Architectural Role:</strong> Zero-trust WireGuard mesh overlay networking.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Enables remote access without open public firewall ports.</li>
@@ -1614,7 +1638,7 @@
 <h3 id="8-nvidia-gpu-operator">8. NVIDIA GPU Operator</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>gpu-operator</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 1</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 5</code></li>
 <li><strong>Architectural Role:</strong> Automates management of NVIDIA software components on GPU worker nodes (<code>workstation</code>).</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Probes and provisions NVIDIA drivers, Container Toolkit, and Kubernetes device plugins for the host <strong>RTX A4500 (20 GB VRAM)</strong>.</li>
@@ -1624,7 +1648,7 @@
 <h3 id="9-longhorn-distributed-block-storage">9. Longhorn Distributed Block Storage</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>longhorn-system</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 1</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://longhorn.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> Highly available, distributed cloud-native block storage.</li>
 <li><strong>Key Configuration:</strong></li>
@@ -1638,11 +1662,11 @@
 <ul>
 <li><strong>Namespaces:</strong> <code>kubevirt</code>, <code>cdi</code></li>
 <li><strong>Versions:</strong> KubeVirt <code>v1.9.0</code>, CDI <code>v1.66.1</code></li>
-<li><strong>Sync Wave:</strong> Decoupled into <code>Wave 1</code> (Operators &amp; CRDs) and <code>Wave 2</code> (Runtime Config &amp; Ingress)</li>
+<li><strong>Sync Wave:</strong> Decoupled into <code>Wave 5</code> (Operators &amp; CRDs) and <code>Wave 6</code> (Runtime Config &amp; Ingress)</li>
 <li><strong>Ingress Endpoint:</strong> <code>https://cdi.lambertlab.us</code> (CDI uploadproxy)</li>
 <li><strong>Architectural Role:</strong> Bare-metal virtualization management and virtual disk ingestion engine.</li>
 <li><strong>Key Configuration:</strong></li>
-<li>Decoupled GitOps architecture (<code>kubevirt</code> / <code>cdi</code> in Wave 1 and <code>kubevirt-config</code> / <code>cdi-config</code> in Wave 2) eliminating cold-start webhook race conditions.</li>
+<li>Decoupled GitOps architecture (<code>kubevirt</code> / <code>cdi</code> in Wave 5 and <code>kubevirt-config</code> / <code>cdi-config</code> in Wave 6) eliminating cold-start webhook race conditions.</li>
 <li>Native virtualization running on Linux KVM/QEMU hypervisor.</li>
 <li>Facilitates live VM lifecycle operations (<code>virtctl</code>).</li>
 <li>Traefik custom <code>ServersTransport</code> proxying <code>cdi-uploadproxy</code> with certificate validation bypass.</li>
@@ -1651,7 +1675,7 @@
 <h3 id="11-terramaster-tos-web-portal">11. TerraMaster TOS Web Portal</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>external</code> (Managed via <code>kubernetes/apps/external-services.yaml</code>)</li>
-<li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 7</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://nas.lambertlab.us</code></li>
 <li><strong>Backend Target:</strong> Port 8181 on <code>nas.lan</code> via Kubernetes <code>type: ExternalName</code> Service</li>
 <li><strong>Architectural Role:</strong> Centralized storage appliance operating system web management console.</li>
@@ -1665,7 +1689,7 @@
 <ul>
 <li><strong>Namespace:</strong> <code>observability</code></li>
 <li><strong>Version:</strong> Helm <code>3.5.0</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 1</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 5</code></li>
 <li><strong>Architectural Role:</strong> Kubernetes operator automating the provisioning, orchestration, and lifecycle management of the Elastic Stack (Elasticsearch, Kibana, Logstash, Beats, and Elastic Agent).</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Deployed via official Elastic Helm repository (<code>https://helm.elastic.co</code>, chart: <code>eck-operator</code>).</li>
@@ -1677,11 +1701,22 @@
 <ul>
 <li><strong>Namespace:</strong> <code>kube-system</code></li>
 <li><strong>Version:</strong> Helm <code>3.12.2</code> (upstream <code>kubernetes-sigs/metrics-server</code>)</li>
-<li><strong>Sync Wave:</strong> <code>Wave 1</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
 <li><strong>Architectural Role:</strong> Core metrics aggregator exposing the <code>metrics.k8s.io</code> API for <code>kubectl top node</code>, <code>kubectl top pod</code>, and autoscaling pipelines.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Configured with <code>--kubelet-insecure-tls</code> to scrape Kubelet Summary APIs over HTTPS across nodes without rejecting self-signed Kubelet serving certificates.</li>
 <li>Registers <code>v1beta1.metrics.k8s.io</code> directly with the Kubernetes API aggregation layer.</li>
+</ul>
+<hr />
+<h3 id="14-cilium-ebpf-cni-l2-announcement">14. Cilium eBPF CNI &amp; L2 Announcement</h3>
+<ul>
+<li><strong>Namespace:</strong> <code>kube-system</code></li>
+<li><strong>Sync Waves:</strong> <code>Wave 1</code> (eBPF CNI &amp; IPAM), <code>Wave 2</code> (<code>cilium-config</code> L2 pools &amp; announcement policies)</li>
+<li><strong>Architectural Role:</strong> Primary cluster CNI providing eBPF kube-proxy replacement, pod IPAM, network policies, and Layer 2 service load balancing.</li>
+<li><strong>Key Configuration:</strong></li>
+<li>eBPF routing replacing iptables kube-proxy.</li>
+<li><code>CiliumLoadBalancerIPPool</code> (<code>lan-pool</code>, 10.0.0.202–215) providing bare-metal LoadBalancer IPs.</li>
+<li>Node-targeted L2 announcement policies (e.g., pinning Palworld VIPs to <code>opti74</code>).</li>
 </ul>
 
 

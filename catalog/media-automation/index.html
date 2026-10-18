@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1375,7 +1375,7 @@
 <h3 id="1-jellyfin-media-server">1. Jellyfin Media Server</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>media</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 8</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://jellyfin.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> Privacy-focused, high-performance open-source media streaming server.</li>
 <li><strong>Storage Backend:</strong> Persistent application configuration and transcode cache on host NVMe (<code>/home/chris/services/k3s-jellyfin/config</code> on <code>workstation</code>, 15Gi <code>hostPath</code>); media libraries mounted via ReadWriteMany (RWX) NFS shares directly from the TerraMaster NAS 14TB pool (<code>/Volume1/data</code>).</li>
@@ -1388,7 +1388,7 @@
 <h3 id="2-sonarr">2. Sonarr</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>media</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 8</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://sonarr.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> Automated TV series collection manager and download scheduler.</li>
 <li><strong>Storage Backend:</strong> Dedicated 20 GB raw iSCSI block LUN (<code>iqn.2026-06.us.lambertlab:sonarr-config</code> on TerraMaster SAN) for application database and settings; ReadWriteMany NFS mount (<code>/Volume1/data</code>) for media library organization.</li>
@@ -1400,7 +1400,7 @@
 <h3 id="3-radarr">3. Radarr</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>media</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 8</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://radarr.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> Automated movie collection manager and quality profile scheduler.</li>
 <li><strong>Storage Backend:</strong> Dedicated 20 GB raw iSCSI block LUN (<code>iqn.2026-06.us.lambertlab:radarr-config</code> on TerraMaster SAN) for movie database and configurations; ReadWriteMany NFS mount (<code>/Volume1/data</code>) for media library management.</li>
@@ -1413,7 +1413,7 @@
 <h3 id="4-prowlarr">4. Prowlarr</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>media</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 8</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://prowlarr.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> Centralized indexer proxy integrating Usenet and BitTorrent feeds.</li>
 <li><strong>Storage Backend:</strong> Dedicated 2 GB raw iSCSI block LUN (<code>iqn.2026-06.us.lambertlab:prowlarr-config</code> on TerraMaster SAN) for indexer SQLite database and configurations.</li>
@@ -1438,7 +1438,7 @@
 <ul>
 <li><strong>Namespace:</strong> <code>gaming</code></li>
 <li><strong>AppProject:</strong> <code>gaming</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 8</code></li>
 <li><strong>Network Ports:</strong> Port 8211 UDP (Game), 25575 TCP (RCON), 8212 TCP (REST API)</li>
 <li><strong>LoadBalancer VIP:</strong> <code>10.0.0.205</code> announced exclusively by <code>opti74</code> via Cilium L2 announcement policy (<code>palworld-l2-policy</code>).</li>
 <li><strong>Architectural Role:</strong> Dedicated, high-performance multi-player game server.</li>

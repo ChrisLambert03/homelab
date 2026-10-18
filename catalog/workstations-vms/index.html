@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1354,7 +1354,7 @@
 <ul>
 <li><strong>Namespace:</strong> <code>vms</code> (KubeVirt <code>VirtualMachine</code>)</li>
 <li><strong>Operating System:</strong> Windows Server 2025 Standard</li>
-<li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 8</code></li>
 <li><strong>Internal IP:</strong> <code>10.10.0.10</code> (Static on <code>ovn-ad-vpc</code> via Kube-OVN IPAM)</li>
 <li><strong>FQDN:</strong> <code>dc01.ad.lambertlab.us</code></li>
 <li><strong>Hardware Profile:</strong> 4 vCPU, 8 GiB RAM, host-passthrough CPU topology.</li>
@@ -1371,7 +1371,7 @@
 <ul>
 <li><strong>Namespace:</strong> <code>vms</code> (KubeVirt <code>VirtualMachine</code>)</li>
 <li><strong>Operating System:</strong> Windows 11 Enterprise LTSC</li>
-<li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 8</code></li>
 <li><strong>Internal IP:</strong> Dynamic DHCP via Kube-OVN IPAM (e.g. active lease <code>10.10.0.11</code>)</li>
 <li><strong>FQDN:</strong> <code>win11.ad.lambertlab.us</code></li>
 <li><strong>Hardware Profile:</strong> 4 vCPU, 8 GiB RAM, host-passthrough CPU topology.</li>
@@ -1388,13 +1388,13 @@
 <ul>
 <li><strong>Namespace:</strong> <code>vms</code> (KubeVirt <code>VirtualMachine</code>)</li>
 <li><strong>Operating System:</strong> FreeBSD 14 / OPNsense</li>
-<li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 8</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://opnsense.lambertlab.us</code></li>
 <li><strong>Hardware Profile:</strong> 4 vCPU, 4 GiB RAM.</li>
 <li><strong>Storage Backend:</strong> Dedicated 40 GB raw iSCSI block LUN (<code>iqn.2026-09.us.lambertlab:opnsense-boot</code>) on TerraMaster SAN; NFS installer mount (<code>/Volume3/isos/opnsense</code>).</li>
 <li><strong>Architectural Role:</strong> Virtualized edge perimeter router, NAT gateway, and security firewall.</li>
 <li><strong>Key Configuration:</strong></li>
-<li>Multi-NIC topology: primary Flannel interface for pod masquerade and secondary Multus interface on <code>ovn-ad-vpc</code> (<code>10.10.0.1</code>) serving as the default gateway.</li>
+<li>Multi-NIC topology: primary Cilium interface for pod masquerade and secondary Multus interface on <code>ovn-ad-vpc</code> (<code>10.10.0.1</code>) serving as the default gateway.</li>
 <li>Internal hairpin routing directing <code>100.64.0.0/10</code> LAN queries to the Traefik Ingress Service ClusterIP (<code>10.43.204.125:443</code>).</li>
 <li>Traefik Ingress with custom backend HTTPS serverstransport.</li>
 </ul>
@@ -1402,7 +1402,7 @@
 <h3 id="4-kubevirt-manager-web-ui">4. KubeVirt Manager Web UI</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>kubevirt-manager</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 7</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://kubevirt-manager.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> Intuitive, web-based management graphical interface for KubeVirt virtual machines, disks, and network attachments.</li>
 <li><strong>Key Configuration:</strong></li>
@@ -1413,7 +1413,7 @@
 <h3 id="5-apache-guacamole-gateway">5. Apache Guacamole Gateway</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>guacamole</code></li>
-<li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 7</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://guacamole.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> Clientless HTML5 remote desktop gateway providing browser-based RDP and SSH access.</li>
 <li><strong>Key Configuration:</strong></li>
@@ -1421,7 +1421,7 @@
 <li>InitContainer automated injection of internal Active Directory Root CA into Java truststore (<code>cacerts</code>).</li>
 <li>Dual authentication chaining via <code>EXTENSION_PRIORITY: "*,openid"</code>, supporting Microsoft Entra ID OIDC SSO while preserving local <code>guacadmin</code> emergency recovery.</li>
 <li>Backend PostgreSQL database running on Longhorn distributed storage with <code>longhorn-retain</code> policy.</li>
-<li><code>guacd</code> resource limit guardrail (<code>cpu: 2000m</code>) preventing thread pool exhaustion on 32-thread Xeon compute nodes.</li>
+<li><code>guacd</code> resource limit (<code>cpu: 2000m</code>) preventing thread pool exhaustion on 32-thread Xeon compute nodes.</li>
 </ul>
 
 
