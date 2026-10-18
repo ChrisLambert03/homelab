@@ -44,7 +44,7 @@ Workloads are logically grouped into four functional categories:
 | **Radarr** | Media | `media` | ArgoCD Manifest (Wave 3) | `radarr.lambertlab.us` | 20 GB SAN iSCSI LUN + Bulk NFS |
 | **Prowlarr** | Media | `media` | ArgoCD Manifest (Wave 3) | `prowlarr.lambertlab.us` | 2 GB SAN iSCSI LUN |
 | **Tdarr (Transcoder)** | Media | `workstation` (Docker) | Terraform Docker | `tdarr.lambertlab.us` | 14TB TerraMaster NFS Pool |
-| **Palworld Dedicated** | Gaming | `gaming` | ArgoCD Manifest (Wave 3) | Port 8211 UDP (`opti74`) | Longhorn Retained Volume (25Gi) |
+| **Palworld Dedicated** | Gaming | `gaming` | ArgoCD Manifest (Wave 3) | `10.0.0.205:8211` (`opti74`) | Longhorn 1-Replica Volume (25Gi) |
 | **HashiCorp Vault** | Security | `security` | ArgoCD Manifest (Wave 2) | `vault.lambertlab.us` | 1 GiB Longhorn Retained |
 | **External Secrets Operator** | Security | `security` | ArgoCD Helm (Wave 2) | In-Cluster API | Ephemeral |
 | **Elasticsearch** | SIEM / Logging | `observability` | ECK Operator (Wave 2) | Port 9200 (Internal) | Dedicated Local NVMe (`workstation`) |

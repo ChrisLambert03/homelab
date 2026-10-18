@@ -72,9 +72,10 @@ This section documents the automated media indexing, hardware-accelerated transc
 * **Namespace:** `gaming`
 * **AppProject:** `gaming`
 * **Sync Wave:** `Wave 3`
-* **Network Port:** Port 8211 UDP
+* **Network Ports:** Port 8211 UDP (Game), 25575 TCP (RCON), 8212 TCP (REST API)
+* **LoadBalancer VIP:** `10.0.0.205` announced exclusively by `opti74` via Cilium L2 announcement policy (`palworld-l2-policy`).
 * **Architectural Role:** Dedicated, high-performance multi-player game server.
 * **Key Configuration:**
   * Pod pinned deterministically to `opti74` via `nodeSelector: kubernetes.io/hostname: opti74` to isolate gaming memory consumption from core manager workloads.
-  * Backed by a retained Longhorn persistent volume claim (`palworld-data`) to guarantee player progression and world state survive cluster sync waves.
-  * Configured with memory limits (`limits.memory: 12Gi`) and auto-restart policies to manage game server memory leaks.
+  * Backed by a single-replica retained Longhorn persistent volume claim (`palworld-pvc` via `longhorn-1-replica`) to guarantee player progression survives cluster sync waves without multi-node replica storage overhead.
+  * Configured with memory limits (`limits.memory: 10Gi`) and auto-restart policies to manage game server memory leaks.
