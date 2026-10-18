@@ -366,7 +366,10 @@ kubectl get leases -n kube-system
 * Individual `apiserver-<id>` heartbeat leases active for each control-plane member.
 
 ### 4. Hubble Observability Dashboard
-Access the network dependency graph locally:
+Access the network dependency graph directly via Traefik Ingress:
+* **URL:** `https://hubble.lambertlab.us` (Protected by `default-admin-only-access` Tailscale IP allowlist)
+
+Or via local port-forwarding fallback:
 ```bash
 kubectl port-forward -n kube-system svc/hubble-ui 12000:80
 ```

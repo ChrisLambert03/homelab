@@ -20,7 +20,8 @@ Workloads are logically grouped into four functional categories:
 | Workload | Category | Environment / Namespace | Management Engine | Ingress / Endpoint | Storage Tier |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **ArgoCD HA** | Infrastructure | `argocd` | ArgoCD Helm (Wave 2) | `argocd.lambertlab.us` | Stateless / In-Memory |
-| **Traefik Ingress** | Infrastructure | `kube-system` | K3s Native / Helm | Ports 80, 443 (Edge) | Ephemeral |
+| **Traefik Ingress** | Infrastructure | `kube-system` | Upstream DaemonSet / Helm (Wave 2) | Ports 80, 443 (Edge) | Ephemeral |
+| **Cilium & Hubble UI** | Networking / Observability | `kube-system` | ArgoCD Helm (Wave 1) | `hubble.lambertlab.us` | Ephemeral |
 | **Cert-Manager** | Infrastructure | `cert-manager` | ArgoCD Helm (Wave 1) | In-Cluster API | Ephemeral |
 | **KubeVirt Operator** | Infrastructure | `kubevirt` | ArgoCD Manifest (Wave 1) | In-Cluster API | Ephemeral |
 | **KubeVirt Runtime Config** | Infrastructure | `kubevirt` | ArgoCD Manifest (Wave 2) | In-Cluster API | Ephemeral |
