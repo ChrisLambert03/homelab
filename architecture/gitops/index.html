@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -678,17 +678,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#app-of-apps-topology-sync-waves" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🔄 App-of-Apps Topology &amp; Sync Waves
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#high-availability-controller-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -796,6 +785,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#app-of-apps-topology-sync-waves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔄 App-of-Apps Topology &amp; Sync Waves
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1300,17 +1300,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#app-of-apps-topology-sync-waves" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🔄 App-of-Apps Topology &amp; Sync Waves
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#high-availability-controller-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1421,6 +1410,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#app-of-apps-topology-sync-waves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔄 App-of-Apps Topology &amp; Sync Waves
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1448,112 +1448,6 @@
 
 <h1 id="gitops-engine-argocd-high-availability-architecture">GitOps Engine &amp; ArgoCD High-Availability Architecture</h1>
 <p>In <strong>LambertLab</strong>, Git is the absolute single source of truth for all Kubernetes cluster state. Cluster workloads, operators, Custom Resource Definitions (CRDs), and virtual machines are reconciled declaratively by <strong>ArgoCD High Availability (HA)</strong>.</p>
-<hr />
-<h2 id="app-of-apps-topology-sync-waves">🔄 App-of-Apps Topology &amp; Sync Waves</h2>
-<div class="panzoom-box" data-key="alt" id="panzoom0" oncontextmenu="return false;">
-    <div class="panzoom-info-box panzoom-info-box-top">
-Hold "Alt" / "Option" to enable pan &amp; zoom
-</div>
-    <nav class="panzoom-nav panzoom-top-nav panzoom-nav-infobox-top">
-    <button class="panzoom-reset panzoom-button">
-    <svg class="panzoom-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-        <path d="M125.7 160l50.3 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L48 224c-17.7 0-32-14.3-32-32L16 64c0-17.7 14.3-32 32-32s32 14.3 32 32l0 51.2L97.6 97.6c87.5-87.5 229.3-87.5 316.8 0s87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3s-163.8-62.5-226.3 0L125.7 160z"></path>
-    </svg>
-</button><button class="panzoom-max panzoom-button">
-    <svg class="panzoom-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-        <path d="M32 32C14.3 32 0 46.3 0 64l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96z"></path>
-    </svg>
-</button><button class="panzoom-min panzoom-button panzoom-hidden">
-    <svg class="panzoom-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
-        <path d="M160 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96zM32 320c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM352 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 320c-17.7 0-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0z"></path>
-    </svg>
-</button>
-    </nav>
-    <pre class="mermaid"><code>graph TD
-    Root["root-apps Application&lt;br/&gt;(App-of-Apps Pattern)"]
-
-    subgraph W0["Sync Wave 0: Bootstrap Scaffolding &amp; Credentials"]
-        Wave0["AppProjects &amp; cluster-base"]
-        P["AppProjects Scaffolding"]
-        CB["cluster-base (Secrets &amp; Admin RBAC)"]
-    end
-
-    subgraph W1["Sync Wave 1: Primary CNI Fabric"]
-        Wave1["Cilium &amp; Policies"]
-        Cilium["Cilium eBPF CNI"]
-        NetPol["Network Policies"]
-    end
-
-    subgraph W2["Sync Wave 2: Secondary CNI &amp; Metrics"]
-        Wave2["Multus &amp; Metrics"]
-        Multus["Multus Meta-CNI"]
-        CiliumCfg["cilium-config (L2 Pools)"]
-        Metrics["Metrics Server"]
-    end
-
-    subgraph W3["Sync Wave 3: SDN Engine &amp; Storage"]
-        Wave3["Overlay SDN &amp; PVs"]
-        KubeOVN["Kube-OVN Engine"]
-        LocalPath["Local Path Provisioner"]
-        Longhorn["Longhorn Storage"]
-        MediaStorage["Media Storage PVs"]
-    end
-
-    subgraph W4["Sync Wave 4: SDN Networks &amp; Dual-Homed DNS"]
-        Wave4["VPCs &amp; CoreDNS"]
-        OVNNet["kube-ovn-networks (ovn-ad-vpc)"]
-        CoreDNS["coredns (AD Forwarder &amp; Multus Patch)"]
-    end
-
-    subgraph W5["Sync Wave 5: Ingress &amp; Compute Operators"]
-        Wave5["Foundational Operators"]
-        Traefik["Traefik Ingress DaemonSet"]
-        CertMgr["Cert-Manager Operator"]
-        ESO["External Secrets Operator"]
-        Vault["HashiCorp Vault"]
-        KubeVirt["KubeVirt &amp; CDI Operators"]
-        GPU["NVIDIA GPU Operator"]
-        ECK["ECK Operator"]
-    end
-
-    subgraph W6["Sync Wave 6: Ingress Config, Certs &amp; Runtimes"]
-        Wave6["Runtimes &amp; Configs"]
-        TraefikCfg["traefik-config (Middlewares &amp; TLSStore)"]
-        CertMgrCfg["cert-manager-config (Issuer &amp; Wildcard)"]
-        ESOCfg["external-secrets-config (vault-backend)"]
-        KubeVirtCfg["KubeVirt &amp; CDI Configs"]
-        ES["Elasticsearch Cluster"]
-        OAuth2Proxy["OAuth2-Proxy"]
-    end
-
-    subgraph W7["Sync Wave 7: Management Platforms &amp; Observability"]
-        Wave7["Platform Gateways"]
-        ArgoHA["ArgoCD HA &amp; Ingress"]
-        KVMgr["KubeVirt Manager"]
-        ExtSvc["External Services"]
-        Guac["Apache Guacamole (ovn-ad-vpc)"]
-        Kibana["Kibana &amp; Logstash"]
-        Fleet["Fleet Server"]
-    end
-
-    subgraph W8["Sync Wave 8: Workloads, VMs &amp; Consumer Apps"]
-        Wave8["Workloads &amp; Guests"]
-        DC01VM["DC01 Active Directory"]
-        Win11VM["Win11 Workstation"]
-        OPNsenseVM["OPNsense Firewall"]
-        Workloads["Media Stack, Homarr, Ntfy, Palworld"]
-    end
-
-    subgraph W9["Sync Wave 9: Host Telemetry &amp; Day-2 Operations"]
-        Wave9["Host Telemetry"]
-        ElasticAgent["Elastic Agent DaemonSet"]
-        AutoOps["AutoOps Maintenance Agents"]
-    end
-
-    Root --&gt; W0
-    W0 --&gt; W1 --&gt; W2 --&gt; W3 --&gt; W4 --&gt; W5 --&gt; W6 --&gt; W7 --&gt; W8 --&gt; W9</code></pre> 
-    
-</div>
 <hr />
 <h2 id="high-availability-controller-architecture">⚡ High-Availability Controller Architecture</h2>
 <p>ArgoCD is deployed in full <strong>High Availability (HA)</strong> mode across the 3-node control plane quorum (<code>lenovo</code>, <code>optiplex</code>, <code>opti74</code>):</p>
@@ -1680,6 +1574,112 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-schema-location<span class="w"> </span><span class="s1">'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{ .Group }}/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json'</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>kubernetes/
 </span></code></pre></div>
+<hr />
+<h2 id="app-of-apps-topology-sync-waves">🔄 App-of-Apps Topology &amp; Sync Waves</h2>
+<div class="panzoom-box" data-key="alt" id="panzoom0" oncontextmenu="return false;">
+    <div class="panzoom-info-box panzoom-info-box-top">
+Hold "Alt" / "Option" to enable pan &amp; zoom
+</div>
+    <nav class="panzoom-nav panzoom-top-nav panzoom-nav-infobox-top">
+    <button class="panzoom-reset panzoom-button">
+    <svg class="panzoom-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M125.7 160l50.3 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L48 224c-17.7 0-32-14.3-32-32L16 64c0-17.7 14.3-32 32-32s32 14.3 32 32l0 51.2L97.6 97.6c87.5-87.5 229.3-87.5 316.8 0s87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3s-163.8-62.5-226.3 0L125.7 160z"></path>
+    </svg>
+</button><button class="panzoom-max panzoom-button">
+    <svg class="panzoom-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 32C14.3 32 0 46.3 0 64l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96z"></path>
+    </svg>
+</button><button class="panzoom-min panzoom-button panzoom-hidden">
+    <svg class="panzoom-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M160 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96zM32 320c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM352 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 320c-17.7 0-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0z"></path>
+    </svg>
+</button>
+    </nav>
+    <pre class="mermaid"><code>graph TD
+    Root["root-apps Application&lt;br/&gt;(App-of-Apps Pattern)"]
+
+    subgraph W0["Sync Wave 0: Bootstrap Scaffolding &amp; Credentials"]
+        Wave0["AppProjects &amp; cluster-base"]
+        P["AppProjects Scaffolding"]
+        CB["cluster-base (Secrets &amp; Admin RBAC)"]
+    end
+
+    subgraph W1["Sync Wave 1: Primary CNI Fabric"]
+        Wave1["Cilium &amp; Policies"]
+        Cilium["Cilium eBPF CNI"]
+        NetPol["Network Policies"]
+    end
+
+    subgraph W2["Sync Wave 2: Secondary CNI &amp; Metrics"]
+        Wave2["Multus &amp; Metrics"]
+        Multus["Multus Meta-CNI"]
+        CiliumCfg["cilium-config (L2 Pools)"]
+        Metrics["Metrics Server"]
+    end
+
+    subgraph W3["Sync Wave 3: SDN Engine &amp; Storage"]
+        Wave3["Overlay SDN &amp; PVs"]
+        KubeOVN["Kube-OVN Engine"]
+        LocalPath["Local Path Provisioner"]
+        Longhorn["Longhorn Storage"]
+        MediaStorage["Media Storage PVs"]
+    end
+
+    subgraph W4["Sync Wave 4: SDN Networks &amp; Dual-Homed DNS"]
+        Wave4["VPCs &amp; CoreDNS"]
+        OVNNet["kube-ovn-networks (ovn-ad-vpc)"]
+        CoreDNS["coredns (AD Forwarder &amp; Multus Patch)"]
+    end
+
+    subgraph W5["Sync Wave 5: Ingress &amp; Compute Operators"]
+        Wave5["Foundational Operators"]
+        Traefik["Traefik Ingress DaemonSet"]
+        CertMgr["Cert-Manager Operator"]
+        ESO["External Secrets Operator"]
+        Vault["HashiCorp Vault"]
+        KubeVirt["KubeVirt &amp; CDI Operators"]
+        GPU["NVIDIA GPU Operator"]
+        ECK["ECK Operator"]
+    end
+
+    subgraph W6["Sync Wave 6: Ingress Config, Certs &amp; Runtimes"]
+        Wave6["Runtimes &amp; Configs"]
+        TraefikCfg["traefik-config (Middlewares &amp; TLSStore)"]
+        CertMgrCfg["cert-manager-config (Issuer &amp; Wildcard)"]
+        ESOCfg["external-secrets-config (vault-backend)"]
+        KubeVirtCfg["KubeVirt &amp; CDI Configs"]
+        ES["Elasticsearch Cluster"]
+        OAuth2Proxy["OAuth2-Proxy"]
+    end
+
+    subgraph W7["Sync Wave 7: Management Platforms &amp; Observability"]
+        Wave7["Platform Gateways"]
+        ArgoHA["ArgoCD HA &amp; Ingress"]
+        KVMgr["KubeVirt Manager"]
+        ExtSvc["External Services"]
+        Guac["Apache Guacamole (ovn-ad-vpc)"]
+        Kibana["Kibana &amp; Logstash"]
+        Fleet["Fleet Server"]
+    end
+
+    subgraph W8["Sync Wave 8: Workloads, VMs &amp; Consumer Apps"]
+        Wave8["Workloads &amp; Guests"]
+        DC01VM["DC01 Active Directory"]
+        Win11VM["Win11 Workstation"]
+        OPNsenseVM["OPNsense Firewall"]
+        Workloads["Media Stack, Homarr, Ntfy, Palworld"]
+    end
+
+    subgraph W9["Sync Wave 9: Host Telemetry &amp; Day-2 Operations"]
+        Wave9["Host Telemetry"]
+        ElasticAgent["Elastic Agent DaemonSet"]
+        AutoOps["AutoOps Maintenance Agents"]
+    end
+
+    Root --&gt; W0
+    W0 --&gt; W1 --&gt; W2 --&gt; W3 --&gt; W4 --&gt; W5 --&gt; W6 --&gt; W7 --&gt; W8 --&gt; W9</code></pre> 
+    
+</div>
 
 
 
