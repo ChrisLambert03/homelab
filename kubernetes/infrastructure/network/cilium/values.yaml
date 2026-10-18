@@ -8,6 +8,9 @@ hubble:
     enabled: true
   ui:
     enabled: true
+  tls:
+    auto:
+      method: cronJob
 
 ipam:
   mode: kubernetes
