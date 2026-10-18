@@ -4,19 +4,7 @@ kind: Service
 metadata:
   name: firefox
 spec:
+  type: ExternalName
+  externalName: opti74.lan
   ports:
     - port: 4000
-      targetPort: 4000
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: firefox
-  labels:
-    kubernetes.io/service-name: firefox
-addressType: IPv4
-ports:
-  - port: 4000
-endpoints:
-  - addresses:
-      - "100.65.236.98"

@@ -12,6 +12,15 @@ data:
             lameduck 5s
         }
         ready
+        hosts {
+            10.0.0.11 lenovo.lan lenovo
+            10.0.0.12 optiplex.lan optiplex
+            10.0.0.13 opti74.lan opti74
+            10.0.0.14 workstation.lan workstation
+            10.0.0.60 nas.lan nas
+            100.124.184.120 pihole.lan pihole.tailnet pihole-optiplex
+            fallthrough
+        }
         kubernetes cluster.local in-addr.arpa ip6.arpa {
             pods insecure
             fallthrough in-addr.arpa ip6.arpa

@@ -4,19 +4,7 @@ kind: Service
 metadata:
   name: pihole
 spec:
+  type: ExternalName
+  externalName: pihole.lan
   ports:
     - port: 80
-      targetPort: 80
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: pihole
-  labels:
-    kubernetes.io/service-name: pihole
-addressType: IPv4
-ports:
-  - port: 80
-endpoints:
-  - addresses:
-      - "100.124.184.120"

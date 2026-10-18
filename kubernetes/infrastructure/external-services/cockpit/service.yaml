@@ -7,19 +7,7 @@ metadata:
     traefik.ingress.kubernetes.io/service.serversscheme: https
     traefik.ingress.kubernetes.io/service.serverstransport: default-insecure-transport@kubernetescrd
 spec:
+  type: ExternalName
+  externalName: workstation.lan
   ports:
     - port: 9090
-      targetPort: 9090
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: cockpit
-  labels:
-    kubernetes.io/service-name: cockpit
-addressType: IPv4
-ports:
-  - port: 9090
-endpoints:
-  - addresses:
-      - "100.106.96.18"

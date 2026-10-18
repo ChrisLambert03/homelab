@@ -132,7 +132,7 @@ This section details the foundational control plane components, software-defined
 * **Namespace:** `external` (Managed via `kubernetes/apps/external-services.yaml`)
 * **Sync Wave:** `Wave 2`
 * **Ingress Endpoint:** `https://nas.lambertlab.us`
-* **Backend Target:** Port 8181 on `san.lambertlab.us` via Kubernetes Service & EndpointSlice
+* **Backend Target:** Port 8181 on `nas.lan` via Kubernetes `type: ExternalName` Service
 * **Architectural Role:** Centralized storage appliance operating system web management console.
 * **Key Configuration:**
   * Traefik Ingress with automatic wildcard TLS termination (`*.lambertlab.us`).

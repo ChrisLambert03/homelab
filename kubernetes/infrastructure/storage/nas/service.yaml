@@ -4,19 +4,7 @@ kind: Service
 metadata:
   name: nas
 spec:
+  type: ExternalName
+  externalName: nas.lan
   ports:
     - port: 8181
-      targetPort: 8181
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: nas
-  labels:
-    kubernetes.io/service-name: nas
-addressType: IPv4
-ports:
-  - port: 8181
-endpoints:
-  - addresses:
-      - "10.0.0.60"

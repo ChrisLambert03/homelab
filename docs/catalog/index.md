@@ -33,7 +33,7 @@ Workloads are logically grouped into four functional categories:
 | **CoreDNS Forwarder** | Infrastructure | `kube-system` | ArgoCD Manifest (Wave 2) | Port 53 (ClusterIP) | Ephemeral |
 | **NVIDIA GPU Operator** | Infrastructure | `gpu-operator` | ArgoCD Helm (Wave 1) | `workstation` Host | Host Driver / Passthrough |
 | **Metrics Server** | Infrastructure | `kube-system` | ArgoCD Helm (Wave 1) | In-Cluster API (`metrics.k8s.io`) | Ephemeral |
-| **TerraMaster TOS** | Infrastructure | `external` / Appliance | EndpointSlice & Ingress | `nas.lambertlab.us` | Appliance OS |
+| **TerraMaster TOS** | Infrastructure | `external` / Appliance | ExternalName & Ingress | `nas.lambertlab.us` | Appliance OS |
 | **Tailscale Operator & Subnet** | Infrastructure | `tailscale` | ArgoCD Helm / Host | `*.lambertlab.us` Mesh | Ephemeral |
 | **DC01 Active Directory** | Virtualization | `vms` (KubeVirt) | ArgoCD Manifest (Wave 3) | `dc01.ad.lambertlab.us` | 80 GB SAN iSCSI LUN |
 | **Windows 11 Workstation** | Virtualization | `vms` (KubeVirt) | ArgoCD Manifest (Wave 3) | `win11.ad.lambertlab.us` | 64 GB SAN iSCSI LUN |
@@ -58,8 +58,8 @@ Workloads are logically grouped into four functional categories:
 | **Homarr Dashboard** | Observability | `observability` | ArgoCD Manifest (Wave 3) | `homarr.lambertlab.us` | Local Host Storage (`lenovo`) |
 | **Ntfy Notifications** | Observability | `observability` | ArgoCD Manifest (Wave 3) | `ntfy.lambertlab.us` | Longhorn Retained Volume (1Gi) |
 | **Beszel Hub & Agents** | Observability | `lenovo` (Hub) / Nodes | Terraform Docker | `beszel.lambertlab.us` | Local Docker Volume |
-| **Pi-hole** | Security | `external` / Docker | EndpointSlice & Ingress | `pihole.lambertlab.us` | Local Docker Volume |
+| **Pi-hole** | Security | `external` / Docker | ExternalName & Ingress | `pihole.lambertlab.us` | Local Docker Volume |
 | **Portainer** | Management | `optiplex` (Docker) | Terraform Docker | `portainer.lambertlab.us` | Local Docker Volume |
-| **Cockpit** | Management | `workstation` / Node | EndpointSlice & Ingress | `cockpit.lambertlab.us` | Host System |
-| **Code-Server** | Developer Tools | `lenovo` / Node | EndpointSlice & Ingress | `code.lambertlab.us` | Host Filesystem |
-| **Firefox Web Sandbox** | Developer Tools | `external` (`opti74`) | EndpointSlice & Ingress | `firefox.lambertlab.us` | Ephemeral Container |
+| **Cockpit** | Management | `workstation` / Node | ExternalName & Ingress | `cockpit.lambertlab.us` | Host System |
+| **Code-Server** | Developer Tools | `lenovo` / Node | ExternalName & Ingress | `code.lambertlab.us` | Host Filesystem |
+| **Firefox Web Sandbox** | Developer Tools | `external` (`opti74`) | ExternalName & Ingress | `firefox.lambertlab.us` | Ephemeral Container |

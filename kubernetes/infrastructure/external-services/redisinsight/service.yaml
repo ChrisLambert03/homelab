@@ -4,19 +4,7 @@ kind: Service
 metadata:
   name: redisinsight
 spec:
+  type: ExternalName
+  externalName: workstation.lan
   ports:
     - port: 5540
-      targetPort: 5540
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: redisinsight
-  labels:
-    kubernetes.io/service-name: redisinsight
-addressType: IPv4
-ports:
-  - port: 5540
-endpoints:
-  - addresses:
-      - "100.106.96.18"

@@ -99,16 +99,16 @@ This section documents secrets orchestration, centralized Security Information a
 
 ---
 
-### 7. External Services Suite (EndpointSlice Integrations)
-A collection of standalone node services, containers, and network appliances mapped into Kubernetes via ArgoCD (`kubernetes/apps/external-services.yaml`):
+### 7. External Services Suite (ExternalName Integrations)
+A collection of standalone node services, containers, and network appliances mapped into Kubernetes via `type: ExternalName` Services backed by CoreDNS static LAN host resolution (`*.lan`), managed via ArgoCD (`kubernetes/apps/external-services.yaml`):
 
 | Service | Host / Address | Ingress Endpoint | Description |
 | :--- | :--- | :--- | :--- |
-| **Pi-hole** | Docker / Host | `https://pihole.lambertlab.us` | Network-wide DNS sinkhole, local domain resolution, and tracking ad-blocker. |
-| **Portainer** | `optiplex` | `https://portainer.lambertlab.us` | Graphical management web interface for standalone Docker hosts and containers. |
-| **Cockpit** | `workstation` | `https://cockpit.lambertlab.us` | Web-based Linux system administration, storage controller monitoring, and terminal access. |
-| **Code-Server** | `lenovo` | `https://code.lambertlab.us` | Browser-based Visual Studio Code IDE environment running directly on the cluster manager. |
-| **Firefox Web** | `opti74` | `https://firefox.lambertlab.us` | Isolated browser sandbox running on port 4000 for secure, disposable web browsing and testing. |
+| **Pi-hole** | `pihole.lan:80` (`100.124.184.120`) | `https://pihole.lambertlab.us` | Network-wide DNS sinkhole, local domain resolution, and tracking ad-blocker running in Tailscale network container. |
+| **Portainer** | `optiplex.lan:9000` | `https://portainer.lambertlab.us` | Graphical management web interface for standalone Docker hosts and containers. |
+| **Cockpit** | `workstation.lan:9090` | `https://cockpit.lambertlab.us` | Web-based Linux system administration, storage controller monitoring, and terminal access. |
+| **Code-Server** | `lenovo.lan:9882` | `https://code.lambertlab.us` | Browser-based Visual Studio Code IDE environment running directly on the cluster manager. |
+| **Firefox Web** | `opti74.lan:4000` | `https://firefox.lambertlab.us` | Isolated browser sandbox running on port 4000 for secure, disposable web browsing and testing. |
 
 ---
 

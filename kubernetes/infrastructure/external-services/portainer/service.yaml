@@ -4,19 +4,7 @@ kind: Service
 metadata:
   name: portainer
 spec:
+  type: ExternalName
+  externalName: optiplex.lan
   ports:
     - port: 9000
-      targetPort: 9000
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: portainer
-  labels:
-    kubernetes.io/service-name: portainer
-addressType: IPv4
-ports:
-  - port: 9000
-endpoints:
-  - addresses:
-      - "100.74.145.55"
