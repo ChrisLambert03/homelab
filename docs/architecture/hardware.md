@@ -47,36 +47,9 @@ graph LR
 
 ---
 
-## ⚡ Workstation Dual Role & Compute Guardrails
+## ⚡ Workstation Dual Role
 
 `workstation` serves a dual purpose: it acts as a Kubernetes worker node scheduling GPU-accelerated workloads (Jellyfin transcoding, Tdarr pipelines) while simultaneously serving as a bare-metal Docker host running the centralized **ELK Stack (Elasticsearch, Logstash, Kibana)** for Security Information and Event Management (SIEM).
-
-!!! warning "Crucial Compute Guardrail: Guacamole / `guacd` Thread Capping"
-    Because `workstation` has a 16-core / 32-thread Xeon CPU, services that dynamically probe host hardware (such as Apache Guacamole's `guacd` proxy) will automatically probe `sysconf` and spawn **32 concurrent worker threads** if uncapped.
-
-    To ensure that the host RTX A4500 GPU compute and Elasticsearch indexing pipelines remain completely unthrottled:
-    
-    ```yaml
-    # kubernetes/infrastructure/guacamole/values.yaml
-    guacd:
-      resources:
-        requests:
-          cpu: "100m"
-          memory: "128Mi"
-        limits:
-          cpu: "2000m"      # Hard-capped at 2 cores
-          memory: "1024Mi"
-    ```
-    Capping `guacd` at `2000m` leaves 30 CPU threads completely free for Elasticsearch indexing, Machine Learning models, and media transcoding pipelines.
-
----
-
-## 🧹 Host Storage Hygiene & Operational Rules
-
-!!! danger "Node Storage Guardrails"
-    - **Lenovo Manager SSD:** Lenovo's primary root NVMe drive (`/dev/sda2`) is approximately 116 GB. Retain snap packages at 2 (`sudo snap set system refresh.retain=2`) and periodically purge system journal logs (`journalctl --vacuum-time=3d`) or runner cache.
-    - **No VM Disk Staging on Lenovo:** Under no circumstances should 25+ GB virtual machine disk images, ISO files, or CDI scratch volumes be staged on Lenovo's local root disk. All ISOs must be placed on the TerraMaster NAS (`/Volume3/isos`).
-    - **Strict Mount Prohibitions:** Tools, automated scripts, and agents must never inspect, list, read, or execute against `/mnt/blue_drive/`, `/mnt/black_drive/`, or `/mnt/media_data/` on any node.
 
 ---
 

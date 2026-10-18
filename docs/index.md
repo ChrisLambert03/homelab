@@ -77,7 +77,7 @@ graph TD
 ## 📖 Complete Documentation Index
 
 ### 🏛️ Architecture Deep-Dives
-- [Hardware Architecture & Fleet Topology](architecture/hardware.md): Node hardware specifications, 3-node etcd Raft quorum, and workstation compute guardrails.
+- [Hardware Architecture & Fleet Topology](architecture/hardware.md): Node hardware specifications, 3-node etcd Raft quorum, and fleet topology.
 - [Software-Defined L2 VPC & CoreDNS Fabric](architecture/networking.md): Kube-OVN Geneve overlay, Multus pod attachment, and CoreDNS health-checked forwarders.
 - [Storage Hierarchy & SAN Architecture](architecture/storage.md): When and why to use SAN iSCSI vs Longhorn vs NFS vs local NVMe.
 - [Hybrid Identity & Entra ID Federation](architecture/identity.md): Dual-directory identity, Cloud Sync gMSA, PHS, and RBAC security groups.
