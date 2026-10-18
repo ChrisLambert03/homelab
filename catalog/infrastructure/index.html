@@ -966,6 +966,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#13-kubernetes-metrics-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Kubernetes Metrics Server
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1470,6 +1481,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#13-kubernetes-metrics-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Kubernetes Metrics Server
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1649,6 +1671,17 @@
 <li>Deployed via official Elastic Helm repository (<code>https://helm.elastic.co</code>, chart: <code>eck-operator</code>).</li>
 <li>Manages global Custom Resource Definitions (<code>kibanas</code>, <code>elasticsearches</code>, <code>logstashes</code>, <code>agents</code>).</li>
 <li>Resource-bounded controller with <code>100m</code> CPU / <code>150Mi</code> RAM baseline requests and <code>1000m</code> CPU / <code>1Gi</code> RAM burst limits.</li>
+</ul>
+<hr />
+<h3 id="13-kubernetes-metrics-server">13. Kubernetes Metrics Server</h3>
+<ul>
+<li><strong>Namespace:</strong> <code>kube-system</code></li>
+<li><strong>Version:</strong> Helm <code>3.12.2</code> (upstream <code>kubernetes-sigs/metrics-server</code>)</li>
+<li><strong>Sync Wave:</strong> <code>Wave 1</code></li>
+<li><strong>Architectural Role:</strong> Core metrics aggregator exposing the <code>metrics.k8s.io</code> API for <code>kubectl top node</code>, <code>kubectl top pod</code>, and autoscaling pipelines.</li>
+<li><strong>Key Configuration:</strong></li>
+<li>Configured with <code>--kubelet-insecure-tls</code> to scrape Kubelet Summary APIs over HTTPS across nodes without rejecting self-signed Kubelet serving certificates.</li>
+<li>Registers <code>v1beta1.metrics.k8s.io</code> directly with the Kubernetes API aggregation layer.</li>
 </ul>
 
 
