@@ -44,8 +44,10 @@ providers:
   kubernetesCRD:
     enabled: true
     allowCrossNamespace: true
+    allowExternalNameServices: true
   kubernetesIngress:
     enabled: true
+    allowExternalNameServices: true
     publishedService:
       enabled: false
     ingressEndpoint:
