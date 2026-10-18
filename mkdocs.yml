@@ -89,7 +89,7 @@ nav:
   - Operational Runbooks:
       - Bridge Self-Healing Watchdog (Legacy): runbooks/bridge-watchdog.md
       - Direct iSCSI Line-Rate Flashing: runbooks/iscsi-flashing.md
-      - ELK Stack & Index Lifecycle Management (ILM): runbooks/elk-ilm-maintenance.md
+      - Elastic Stack & Index Lifecycle Management (ILM): runbooks/elk-ilm-maintenance.md
       - ECK Migration & AutoOps Runbook: runbooks/elk-eck-migration.md
       - Disaster Recovery & Quorum: runbooks/disaster-recovery.md
       - K3s to Vanilla Kubeadm HA Migration SOP: runbooks/kubeadm-migration.md

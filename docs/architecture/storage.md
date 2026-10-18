@@ -12,7 +12,7 @@ graph TD
         VMs["KubeVirt VMs<br/>(DC01, Win11, OPNsense)"]
         StatefulPods["Stateful Pods<br/>(Vault, Guac DB, Ntfy, Palworld)"]
         MediaPods["Media Automation<br/>(Sonarr, Radarr, Prowlarr, Jellyfin)"]
-        SIEM["Docker ELK Stack & Jellyfin Cache<br/>(Elasticsearch, Host Configs)"]
+        SIEM["Kubernetes Elastic Stack & GPU Cache<br/>(Elasticsearch NVMe PV, Host Configs)"]
     end
 
     subgraph StorageTiers["Multi-Tier Storage Backends"]
@@ -36,9 +36,9 @@ graph TD
 | Storage Tier | Backend Protocol | Host Provider | Primary Use Cases | Performance Characteristics |
 | :--- | :--- | :--- | :--- | :--- |
 | **Tier 1: SAN iSCSI** | iSCSI Block Targets | TerraMaster F4-425 Plus (`san.lambertlab.us`) | KubeVirt VM boot disks (`win11`, `dc01`, `opnsense`) & Media SQLite DBs (`sonarr`, `radarr`, `prowlarr`) | Lowest latency (< 2ms random I/O), direct block access, bypasses overlay filesystem overhead |
-| **Tier 2: Distributed Block** | Longhorn CSI | Multi-Node K3s NVMe/SSDs | State-backed cluster pods (PostgreSQL, Vault, Ntfy, Palworld) | Synchronous 2-3x cross-node replication, automated CSI volume snapshots, `longhorn-retain` policy |
+| **Tier 2: Distributed Block** | Longhorn CSI | Multi-Node Cluster NVMe/SSDs | State-backed cluster pods (PostgreSQL, Vault, Ntfy, Palworld) | Synchronous 2-3x cross-node replication, automated CSI volume snapshots, `longhorn-retain` policy |
 | **Tier 3: Bulk Network File** | NFSv4 Pools | TerraMaster F4-425 Plus (`nas.lambertlab.us`) | Media libraries (`/Volume1/data`), ISO repositories (`/Volume3/isos`), VirtIO drivers | High-capacity bulk throughput, multi-client read/write sharing (ReadWriteMany) |
-| **Tier 4: Local NVMe** | Direct Host Filesystem | `workstation` & `lenovo` Host Disks | Docker ELK Stack indices, Jellyfin config/transcode cache, Homarr appdata | Extreme write IOPs, zero network latency |
+| **Tier 4: Local NVMe** | Direct Host Filesystem / Local PV | `workstation` & `lenovo` Host Disks | Kubernetes Elastic Stack indices (`elasticsearch-data-pv`), Jellyfin config/transcode cache, Homarr appdata | Extreme write IOPs, zero network latency |
 
 ---
 
@@ -88,11 +88,3 @@ parameters:
   staleReplicaTimeout: "2880"
 ```
 
----
-
-## 🚫 Storage Hygiene & Strict Rules
-
-!!! danger "Critical Safety & Operational Rules"
-    - **Prohibited Mounts:** Under no circumstances should automated scripts or tools inspect, modify, or run commands against `/mnt/blue_drive/`, `/mnt/black_drive/`, or `/mnt/media_data/`.
-    - **Never Put Elasticsearch on Network Storage:** Elasticsearch indices MUST reside on local `workstation` NVMe. Staging high-IOPS write indices on 1Gbps network iSCSI causes severe indexing queues and thread pool exhaustion.
-    - **Lenovo Root SSD Hygiene:** Lenovo's primary root SSD (`/dev/sda2`) is ~116 GB. Never stage 25+ GB VM disk images or ISOs directly on the manager node's root filesystem. Always upload templates directly to the NAS (`/Volume3/isos`).

@@ -10,9 +10,9 @@ Following a whole-home power failure or physical infrastructure maintenance, nod
 
 ```mermaid
 graph TD
-    Step1["Step 1: Storage Appliance<br/>TerraMaster F4-425 Plus (san.lambertlab.us)<br/>Wait 2-3 mins for iSCSI/NFS ready"] --> Step2["Step 2: Primary Control Plane Manager<br/>lenovo (etcd quorum member #1)<br/>Initializes K3s API server"]
-    Step2 --> Step3["Step 3: Secondary Quorum Members<br/>optiplex & opti74 (etcd members #2 & #3)<br/>Restores Raft quorum & Flannel"]
-    Step3 --> Step4["Step 4: Dedicated Compute Engine<br/>workstation (GPU & Docker ELK Stack)<br/>Starts Elasticsearch NVMe engine"]
+    Step1["Step 1: Storage Appliance<br/>TerraMaster F4-425 Plus (san.lambertlab.us)<br/>Wait 2-3 mins for iSCSI/NFS ready"] --> Step2["Step 2: Primary Control Plane Manager<br/>lenovo (etcd quorum member #1)<br/>Initializes kubeadm API server & kube-vip"]
+    Step2 --> Step3["Step 3: Secondary Quorum Members<br/>optiplex & opti74 (etcd members #2 & #3)<br/>Restores Raft quorum & Cilium eBPF"]
+    Step3 --> Step4["Step 4: Dedicated Compute Engine<br/>workstation (GPU & ECK Elastic Stack)<br/>Starts Elasticsearch NVMe engine"]
     Step4 --> Step5["Step 5: Virtual Machine Verification<br/>KubeVirt mounts SAN iSCSI LUNs<br/>DC01, Win11, OPNsense boot"]
 ```
 
@@ -23,10 +23,14 @@ Power on the NAS appliance first and wait until storage daemons initialize (~2â€
 * *Failure Risk:* Booting Kubernetes nodes before SAN targets are online causes KubeVirt PVC mounts to enter `FailedMount` or `CrashLoopBackOff`.
 
 ### Stage 2: Manager Node (`lenovo`)
-Power on `lenovo`. The K3s server supervisor boots and attempts to initialize the embedded etcd Raft engine:
-* Check K3s service status:
+Power on `lenovo`. The `kubelet` systemd service boots and automatically initializes the static control plane pods (`etcd`, `kube-apiserver`, `kube-controller-manager`, `kube-scheduler`, and `kube-vip`) from `/etc/kubernetes/manifests/`:
+* Check kubelet service status:
   ```bash
-  sudo systemctl status k3s
+  sudo systemctl status kubelet
+  ```
+* Verify control plane static pods are running:
+  ```bash
+  sudo crictl ps | grep -E "kube-apiserver|etcd|kube-vip"
   ```
 
 ### Stage 3: Secondary Control Plane Members (`optiplex` & `opti74`)
@@ -39,8 +43,13 @@ Power on `optiplex` and `opti74` simultaneously:
 
 ### Stage 4: Heavy Compute Engine (`workstation`)
 Power on `workstation`:
-* K3s kubelet connects to the control plane.
-* Docker engine starts the local ELK Stack (Elasticsearch, Logstash, Kibana), mounting local NVMe storage and opening GELF port 12201.
+* The node `kubelet` connects to the control plane.
+* Docker engine starts local GPU media workloads (Jellyfin transcoding, Tdarr pipelines).
+* The Kubernetes control plane / ECK operator resumes the in-cluster **Elastic Stack** workloads on `workstation`, re-binding the local NVMe PersistentVolume (`elasticsearch-data-pv`) to initialize `elasticsearch-es-default-0`, `logstash-ls-0`, and `fleet-server-agent` with GELF listening on port 12201.
+* Verify Elastic Stack pods reach `Running` status:
+  ```bash
+  kubectl get pods -n observability -o wide
+  ```
 
 ---
 
@@ -49,21 +58,16 @@ Power on `workstation`:
 If two of the three control plane nodes suffer permanent hardware loss, etcd will lose Raft consensus and the API server will reject all write requests.
 
 ### Single Node Quorum Re-seeding (Disaster Recovery)
-If only `lenovo` survives, force single-node etcd cluster bootstrapping:
+If only `lenovo` survives catastrophic hardware loss on `optiplex` and `opti74`, re-bootstrap etcd as a single-node cluster:
 
-1. Stop K3s on the surviving node:
+1. Edit the static pod manifest for etcd on `lenovo`:
    ```bash
-   sudo systemctl stop k3s
+   sudo nano /etc/kubernetes/manifests/etcd.yaml
    ```
-2. Reset etcd cluster state on the single node:
-   ```bash
-   sudo k3s server --cluster-reset
-   ```
-3. Restart K3s:
-   ```bash
-   sudo systemctl start k3s
-   ```
-4. Once healthy, re-join worker nodes or replace failed control plane hardware using standard K3s join tokens.
+2. Add the flag `--force-new-cluster` to the `etcd` command arguments in the manifest.
+3. Kubelet will automatically restart the etcd pod and force a new single-member consensus quorum.
+4. Once the API server is healthy and accepting requests, remove `--force-new-cluster` from `/etc/kubernetes/manifests/etcd.yaml` so normal consensus operations resume.
+5. Re-join replacement control plane nodes using `kubeadm join 10.0.0.201:6443 --control-plane`.
 
 ---
 

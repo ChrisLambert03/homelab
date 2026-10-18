@@ -50,7 +50,7 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 * **Architectural Role:** Virtualized edge perimeter router, NAT gateway, and security firewall.
 * **Key Configuration:**
   * Multi-NIC topology: primary Cilium interface for pod masquerade and secondary Multus interface on `ovn-ad-vpc` (`10.10.0.1`) serving as the default gateway.
-  * Internal hairpin routing directing `100.64.0.0/10` LAN queries to the Traefik Ingress Service ClusterIP (`10.43.204.125:443`).
+  * Internal hairpin routing directing `100.64.0.0/10` LAN queries to the Traefik Ingress Service ClusterIP (port 443).
   * Traefik Ingress with custom backend HTTPS serverstransport.
 
 ---

@@ -45,7 +45,7 @@ This section documents secrets orchestration, centralized Security Information a
 
 ---
 
-### 4. Centralized ELK Stack & Elastic Agent
+### 4. Centralized Elastic Stack & Elastic Agent
 * **Host Environment:** Kubernetes `observability` (ECK Operator-managed Elasticsearch, Logstash, Kibana on `workstation`) & `kube-system` (Elastic Agent DaemonSet)
 * **Sync Waves:** `Wave 5` (ECK Operator), `Wave 6` (Elasticsearch Cluster), `Wave 7` (Kibana, Logstash, Fleet Server), `Wave 9` (Elastic Agent DaemonSet)
 * **Ingress Endpoints:** `https://kibana.lambertlab.us`, `https://fleet.lambertlab.us`, `https://es.lambertlab.us` (Logstash on `:12201` GELF)

@@ -4,6 +4,7 @@ In **LambertLab**, Git is the absolute single source of truth for all Kubernetes
 
 ---
 
+Root application orchestration follows the **App-of-Apps** pattern (`root-apps`), which recursively discovers and reconciles 40+ child applications across a graduated **10-wave synchronization topology (Waves 0–9)**. *(See the comprehensive [App-of-Apps Topology & Sync Waves Architecture Diagram](#app-of-apps-topology-sync-waves) at the bottom of this page for the complete dependency flow).*
 
 ## ⚡ High-Availability Controller Architecture
 

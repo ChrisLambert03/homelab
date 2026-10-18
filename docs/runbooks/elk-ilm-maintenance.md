@@ -1,6 +1,6 @@
-# Runbook: ELK Stack & Single-Node Index Lifecycle Management (ILM)
+# Runbook: Elastic Stack & Single-Node Index Lifecycle Management (ILM)
 
-This runbook documents operational maintenance, health verification, Index Lifecycle Management (ILM) policies, and troubleshooting procedures for the **LambertLab** centralized ELK Stack (Elasticsearch, Logstash, Kibana) running on Kubernetes under the **ECK Operator (`v3.5.0`)** in the `observability` namespace.
+This runbook documents operational maintenance, health verification, Index Lifecycle Management (ILM) policies, and troubleshooting procedures for the **LambertLab** centralized Elastic Stack (ELK: Elasticsearch, Logstash, Kibana) running on Kubernetes under the **ECK Operator (`v3.5.0`)** in the `observability` namespace.
 
 ---
 
@@ -91,7 +91,7 @@ Healthy output should confirm active input on `0.0.0.0:12201` (GELF UDP/TCP) wit
 
 ---
 
-## 💾 Storage Hygiene & Data Pruning
+## 💾 Disk Space Management & Data Pruning
 
 * **Storage Path:** Dedicated workstation NVMe at `/home/chris/services/elasticsearch/data` bound via PersistentVolume `elasticsearch-data-pv`.
 * **Prohibition:** Never configure Elasticsearch data paths targeting 1Gbps network iSCSI or NFS shares.

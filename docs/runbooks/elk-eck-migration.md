@@ -242,7 +242,7 @@ Incoming logs are tagged with `received_at` and indexed directly into `logstash-
 ## 🛡️ Procedure 5: Fleet Server & Agent Ingress Architecture
 
 ### 5.1 The Kube-OVN HostNetwork Caveat
-Homelab host agents (`agent-pernode-elastic-agent`) run with `hostNetwork: true` to capture bare-metal network, system, and kernel metrics. Because Kube-OVN isolates the overlay network, host-networked pods cannot route across nodes to Kubernetes ClusterIPs (`10.43.x.x`). 
+Homelab host agents (`agent-pernode-elastic-agent`) run with `hostNetwork: true` to capture bare-metal network, system, and kernel metrics. Because Kube-OVN isolates the overlay network, host-networked pods cannot route across nodes to Kubernetes ClusterIPs (`10.96.0.0/12`). 
 
 **Resolution:** Agents route to Fleet Server and Elasticsearch via Traefik Ingress:
 * Fleet Endpoint: `https://fleet.lambertlab.us`

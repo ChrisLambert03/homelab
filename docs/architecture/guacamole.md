@@ -105,7 +105,7 @@ Setting `EXTENSION_PRIORITY: "*,openid"` enforces that the local database and LD
 
 ## 🌉 Software-Defined L2 VPC Attachment (Multus CNI & Kube-OVN)
 
-Standard Kubernetes pods route egress traffic through Flannel SNAT gateways, preventing direct Layer 2 connectivity to virtual machines and triggering firewall inspection delays.
+Standard Kubernetes pods route egress traffic through primary CNI (Cilium eBPF) SNAT gateways, preventing direct Layer 2 connectivity to virtual machines and triggering firewall inspection delays.
 
 Guacamole overcomes this by utilizing **Multus CNI** to attach directly into the Kube-OVN **`ovn-ad-vpc`** Software-Defined L2 VPC:
 
@@ -138,7 +138,7 @@ guacd:
 ```
 
 ### 2. Client IP Preservation
-To prevent proxy lockouts caused by internal flannel overlay IPs (`10.42.x.x` appearing as the client IP), Tomcat's `RemoteIpValve` is configured with a permissive internal regex:
+To prevent proxy lockouts caused by internal Cilium overlay IPs (`10.244.x.x` appearing as the client IP), Tomcat's `RemoteIpValve` is configured with a permissive internal regex:
 
 ```yaml
 proxy:

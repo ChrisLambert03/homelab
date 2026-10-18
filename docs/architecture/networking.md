@@ -12,10 +12,10 @@ graph TD
     CF --> TS["Tailscale Mesh Ingress<br/>Direct WireGuard Point-to-Point"]
     TS --> Traefik["Traefik Edge Ingress :443<br/>Wildcard TLSStore *.lambertlab.us"]
     
-    subgraph Flannel["Flannel Pod Overlay (10.42.0.0/16)"]
+    subgraph Cilium["Cilium eBPF Pod Overlay (10.244.0.0/16)"]
         Traefik --> GuacPod["Guacamole Web Pod :8080"]
         Traefik --> KibanaPod["Kibana Ingress Service :5601"]
-        CoreDNS["K3s CoreDNS Forwarder<br/>10.43.0.10:53"]
+        CoreDNS["CoreDNS Forwarder<br/>10.96.0.10:53"]
     end
     
     subgraph OVN["Software-Defined L2 VPC (ovn-ad-vpc / 10.10.0.0/24)"]
@@ -69,7 +69,7 @@ graph TD
     end
 
     subgraph TraefikMiddlewares["Traefik Edge Routing Middlewares"]
-        AdminACL["admin-only-access<br/>(ipAllowList: Admin Tailscale IPs + Cluster Pod CIDR 10.42.0.0/16)"]
+        AdminACL["admin-only-access<br/>(ipAllowList: Admin Tailscale IPs + Cluster Pod CIDR 10.244.0.0/16)"]
         MediaACL["media-user-access<br/>(ipAllowList: Admin IPs + Media User IPs + Cluster CIDR)"]
     end
 
@@ -95,7 +95,7 @@ graph TD
 * **Source Allowlist:**
   * Dedicated physical node endpoints (`lenovo`, `optiplex`, `opti74`, `workstation`).
   * Primary administrative portable devices (laptops and administrative mobile clients).
-  * In-cluster CNI pod network (`10.42.0.0/16`) to preserve internal service-to-service hairpinned routing.
+  * In-cluster CNI pod network (`10.244.0.0/16`) to preserve internal service-to-service hairpinned routing.
   * Localhost loopback (`127.0.0.1/32`).
 * **Result:** Even if an ingress endpoint URL is known or discovered, unauthorized requests receive an immediate HTTP 403 Forbidden at the Traefik proxy edge.
 
@@ -125,7 +125,7 @@ Previously, the cluster relied on a multicast VXLAN overlay (`br-lab0`) managed 
 While NMState is great for declarative host networking, it heavily manipulates host `iptables` and binds virtual bridges directly to physical host interfaces. Kube-OVN is a much better implementation for Kubernetes because it utilizes a pure Software-Defined Geneve overlay that is completely decoupled from host routing rules and physical network quirks (like Wi-Fi access points aggressively dropping foreign MACs). Additionally, Kube-OVN provides native IP Address Management (IPAM) for seamless DHCP, eliminating the need to manually track static IPs across virtual bridges.
 
 ### Multus CNI Secondary Interface Attachment
-Standard Kubernetes pods receive a Flannel overlay IP (`10.42.x.x`). Using **Multus CNI**, select pods (like Apache Guacamole and CoreDNS) are provisioned with a secondary interface (`net1`) plugged directly into the Kube-OVN `ovn-ad-vpc` VPC.
+Standard Kubernetes pods receive a Cilium overlay IP (`10.244.x.x`). Using **Multus CNI**, select pods (like Apache Guacamole and CoreDNS) are provisioned with a secondary interface (`net1`) plugged directly into the Kube-OVN `ovn-ad-vpc` VPC.
 
 Because the Kube-OVN provider suffix ends in `.ovn`, Kube-OVN intercepts the Multus attachment and executes IPAM allocation.
 
@@ -191,7 +191,7 @@ Disabling TCP segmentation offload (TSO) and generic segmentation offload (GSO) 
 
 KubeVirt virtual machines (such as `dc01` and `win11`) reside on the `10.10.0.0/24` Kube-OVN Geneve VPC subnet and do not run Tailscale clients. When VMs need to query cluster services published over external Traefik URLs (e.g. `https://vault.lambertlab.us` or `https://guacamole.lambertlab.us`):
 
-* **Traffic Path:** OPNsense routes `100.64.0.0/10` LAN traffic to the Traefik Service ClusterIP (`10.43.204.125:443`).
+* **Traffic Path:** OPNsense routes `100.64.0.0/10` LAN traffic to the Traefik Ingress Service ClusterIP (port 443).
 * **Rule:** Always route internal VM traffic targeting cluster ingress to the Traefik Service ClusterIP, never to a physical node's local LAN IP.
 
 ---
@@ -204,8 +204,8 @@ To prevent lateral movement across the cluster in the event of a compromised con
 
 Each protected namespace enforces a strict Default-Deny Ingress policy that blocks all incoming traffic with standard exceptions:
 1. **Intra-Namespace Communication:** Pods within the same namespace are allowed to communicate freely (e.g., Guacamole frontend communicating with Guacamole PostgreSQL, or Radarr querying Sonarr).
-2. **Traefik Ingress Controller:** Traffic originating from the `kube-system` namespace (which houses Traefik and K3s LoadBalancers) is explicitly allowed. This ensures external traffic routed via Ingress or UDP LoadBalancer reaches the pods successfully.
-3. **Admission Webhooks (Targeted Ingress):** Workloads running Kubernetes admission webhooks (e.g., External Secrets Operator webhook on containerPort `10250` and ECK Elastic Operator webhook on containerPort `9443`) declare targeted NetworkPolicies matching their specific pod label and containerPort to permit control-plane API server validation requests. Because the K3s API server operates on host networking outside pod selectors, traffic is permitted by destination port, with Layer 7 authentication enforced by mutual TLS (mTLS) with the cluster CA.
+2. **Traefik Ingress Controller:** Traffic originating from the `kube-system` namespace (which houses Traefik and cluster LoadBalancers) is explicitly allowed. This ensures external traffic routed via Ingress or UDP LoadBalancer reaches the pods successfully.
+3. **Admission Webhooks (Targeted Ingress):** Workloads running Kubernetes admission webhooks (e.g., External Secrets Operator webhook on containerPort `10250` and ECK Elastic Operator webhook on containerPort `9443`) declare targeted NetworkPolicies matching their specific pod label and containerPort to permit control-plane API server validation requests. Because the Kubernetes control-plane API server operates on host networking outside pod selectors, traffic is permitted by destination port, with Layer 7 authentication enforced by mutual TLS (mTLS) with the cluster CA.
 
 This architecture entirely drops unauthorized cross-namespace requests at the kernel firewall level (enforced by Cilium eBPF network policies).
 

@@ -7,7 +7,7 @@ This directory contains the declarative state for the Homelab Kubernetes (kubead
 The cluster state is categorized into the following core domains:
 
 *   **`infrastructure/`**: Core cluster networking, storage providers, and fundamental controllers (e.g., Traefik, Longhorn, Multus, KubeVirt).
-*   **`observability/`**: The Elastic Agent DaemonSet, Prometheus stack, and logging pipelines (shipping to ELK).
+*   **`observability/`**: The Elastic Agent DaemonSet, Prometheus stack, and logging pipelines (shipping to the Elastic Stack).
 *   **`security/`**: Identity and access management, SSO proxies (OAuth2-Proxy), HashiCorp Vault, and External Secrets Operator.
 *   **`config/`**: Modular cluster-wide configurations decoupled into `base/`, `cilium/`, `coredns/`, `cert-manager/`, `traefik/`, and `external-secrets/`.
 *   **`vms/`**: Declarative KubeVirt VirtualMachines (e.g., `dc01-ad`, `win11`).

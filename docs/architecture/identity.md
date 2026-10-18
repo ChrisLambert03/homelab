@@ -43,7 +43,7 @@ graph TD
 | :--- | :--- | :--- |
 | **Active Directory Domain (FQDN)** | `ad.lambertlab.us` | Dedicated sub-domain isolating internal AD infrastructure from apex public DNS records. |
 | **NetBIOS Name** | `LAMBERTLAB` | Legacy compatibility for Windows 11 domain logins (`LAMBERTLAB\username`). |
-| **Primary Cloud Domain** | `lambertlab.us` | Custom domain verified via Cloudflare DNS TXT record (`MS=ms33191728`). |
+| **Primary Cloud Domain** | `lambertlab.us` | Custom domain verified via Cloudflare DNS TXT record. |
 | **Alternative UPN Suffix** | `lambertlab.us` | Configured on AD root domain so users log in seamlessly as `user@lambertlab.us`. |
 | **Domain Controller Hostname** | `dc01-ad.vms` | KubeVirt VM pinned to static IP `10.10.0.10` on software-defined `ovn-ad-vpc` (Kube-OVN). |
 | **Directory Functional Level** | Windows Server 2025 | Enables modern Kerberos cryptographic suites and enhanced gMSA policies. |
