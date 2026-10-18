@@ -1439,12 +1439,13 @@
 <li><strong>Namespace:</strong> <code>gaming</code></li>
 <li><strong>AppProject:</strong> <code>gaming</code></li>
 <li><strong>Sync Wave:</strong> <code>Wave 3</code></li>
-<li><strong>Network Port:</strong> Port 8211 UDP</li>
+<li><strong>Network Ports:</strong> Port 8211 UDP (Game), 25575 TCP (RCON), 8212 TCP (REST API)</li>
+<li><strong>LoadBalancer VIP:</strong> <code>10.0.0.205</code> announced exclusively by <code>opti74</code> via Cilium L2 announcement policy (<code>palworld-l2-policy</code>).</li>
 <li><strong>Architectural Role:</strong> Dedicated, high-performance multi-player game server.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Pod pinned deterministically to <code>opti74</code> via <code>nodeSelector: kubernetes.io/hostname: opti74</code> to isolate gaming memory consumption from core manager workloads.</li>
-<li>Backed by a retained Longhorn persistent volume claim (<code>palworld-data</code>) to guarantee player progression and world state survive cluster sync waves.</li>
-<li>Configured with memory limits (<code>limits.memory: 12Gi</code>) and auto-restart policies to manage game server memory leaks.</li>
+<li>Backed by a single-replica retained Longhorn persistent volume claim (<code>palworld-pvc</code> via <code>longhorn-1-replica</code>) to guarantee player progression survives cluster sync waves without multi-node replica storage overhead.</li>
+<li>Configured with memory limits (<code>limits.memory: 10Gi</code>) and auto-restart policies to manage game server memory leaks.</li>
 </ul>
 
 
