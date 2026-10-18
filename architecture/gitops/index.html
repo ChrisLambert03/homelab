@@ -1168,7 +1168,7 @@
   <span class="md-ellipsis">
     
   
-    ELK Stack & Index Lifecycle Management (ILM)
+    Elastic Stack & Index Lifecycle Management (ILM)
   
 
     
@@ -1449,6 +1449,7 @@
 <h1 id="gitops-engine-argocd-high-availability-architecture">GitOps Engine &amp; ArgoCD High-Availability Architecture</h1>
 <p>In <strong>LambertLab</strong>, Git is the absolute single source of truth for all Kubernetes cluster state. Cluster workloads, operators, Custom Resource Definitions (CRDs), and virtual machines are reconciled declaratively by <strong>ArgoCD High Availability (HA)</strong>.</p>
 <hr />
+<p>Root application orchestration follows the <strong>App-of-Apps</strong> pattern (<code>root-apps</code>), which recursively discovers and reconciles 40+ child applications across a graduated <strong>10-wave synchronization topology (Waves 0–9)</strong>. <em>(See the comprehensive <a href="#app-of-apps-topology-sync-waves">App-of-Apps Topology &amp; Sync Waves Architecture Diagram</a> at the bottom of this page for the complete dependency flow).</em></p>
 <h2 id="high-availability-controller-architecture">⚡ High-Availability Controller Architecture</h2>
 <p>ArgoCD is deployed in full <strong>High Availability (HA)</strong> mode across the 3-node control plane quorum (<code>lenovo</code>, <code>optiplex</code>, <code>opti74</code>):</p>
 <ol>

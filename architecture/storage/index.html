@@ -609,17 +609,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#storage-hygiene-strict-rules" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🚫 Storage Hygiene &amp; Strict Rules
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1101,7 +1090,7 @@
   <span class="md-ellipsis">
     
   
-    ELK Stack & Index Lifecycle Management (ILM)
+    Elastic Stack & Index Lifecycle Management (ILM)
   
 
     
@@ -1276,17 +1265,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#storage-hygiene-strict-rules" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🚫 Storage Hygiene &amp; Strict Rules
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1340,7 +1318,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
         VMs["KubeVirt VMs&lt;br/&gt;(DC01, Win11, OPNsense)"]
         StatefulPods["Stateful Pods&lt;br/&gt;(Vault, Guac DB, Ntfy, Palworld)"]
         MediaPods["Media Automation&lt;br/&gt;(Sonarr, Radarr, Prowlarr, Jellyfin)"]
-        SIEM["Docker ELK Stack &amp; Jellyfin Cache&lt;br/&gt;(Elasticsearch, Host Configs)"]
+        SIEM["Kubernetes Elastic Stack &amp; GPU Cache&lt;br/&gt;(Elasticsearch NVMe PV, Host Configs)"]
     end
 
     subgraph StorageTiers["Multi-Tier Storage Backends"]
@@ -1380,7 +1358,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <tr>
 <td style="text-align: left;"><strong>Tier 2: Distributed Block</strong></td>
 <td style="text-align: left;">Longhorn CSI</td>
-<td style="text-align: left;">Multi-Node K3s NVMe/SSDs</td>
+<td style="text-align: left;">Multi-Node Cluster NVMe/SSDs</td>
 <td style="text-align: left;">State-backed cluster pods (PostgreSQL, Vault, Ntfy, Palworld)</td>
 <td style="text-align: left;">Synchronous 2-3x cross-node replication, automated CSI volume snapshots, <code>longhorn-retain</code> policy</td>
 </tr>
@@ -1393,9 +1371,9 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Tier 4: Local NVMe</strong></td>
-<td style="text-align: left;">Direct Host Filesystem</td>
+<td style="text-align: left;">Direct Host Filesystem / Local PV</td>
 <td style="text-align: left;"><code>workstation</code> &amp; <code>lenovo</code> Host Disks</td>
-<td style="text-align: left;">Docker ELK Stack indices, Jellyfin config/transcode cache, Homarr appdata</td>
+<td style="text-align: left;">Kubernetes Elastic Stack indices (<code>elasticsearch-data-pv</code>), Jellyfin config/transcode cache, Homarr appdata</td>
 <td style="text-align: left;">Extreme write IOPs, zero network latency</td>
 </tr>
 </tbody>
@@ -1442,16 +1420,6 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="nt">numberOfReplicas</span><span class="p">:</span><span class="w"> </span><span class="s">"2"</span>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="nt">staleReplicaTimeout</span><span class="p">:</span><span class="w"> </span><span class="s">"2880"</span>
 </span></code></pre></div>
-<hr />
-<h2 id="storage-hygiene-strict-rules">🚫 Storage Hygiene &amp; Strict Rules</h2>
-<div class="admonition danger">
-<p class="admonition-title">Critical Safety &amp; Operational Rules</p>
-<ul>
-<li><strong>Prohibited Mounts:</strong> Under no circumstances should automated scripts or tools inspect, modify, or run commands against <code>/mnt/blue_drive/</code>, <code>/mnt/black_drive/</code>, or <code>/mnt/media_data/</code>.</li>
-<li><strong>Never Put Elasticsearch on Network Storage:</strong> Elasticsearch indices MUST reside on local <code>workstation</code> NVMe. Staging high-IOPS write indices on 1Gbps network iSCSI causes severe indexing queues and thread pool exhaustion.</li>
-<li><strong>Lenovo Root SSD Hygiene:</strong> Lenovo's primary root SSD (<code>/dev/sda2</code>) is ~116 GB. Never stage 25+ GB VM disk images or ISOs directly on the manager node's root filesystem. Always upload templates directly to the NAS (<code>/Volume3/isos</code>).</li>
-</ul>
-</div>
 
 
 

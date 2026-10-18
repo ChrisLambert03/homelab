@@ -717,15 +717,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#elk-stack-configuration-compute-realities" class="md-nav__link">
+  <a href="#elastic-stack-configuration-compute-realities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🔬 ELK Stack Configuration &amp; Compute Realities
+        🔬 Elastic Stack Configuration &amp; Compute Realities
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🔬 ELK Stack Configuration &amp; Compute Realities">
+    <nav class="md-nav" aria-label="🔬 Elastic Stack Configuration &amp; Compute Realities">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -751,10 +751,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-storage-hygiene-nvme-isolation-vs-network-iscsi" class="md-nav__link">
+  <a href="#3-storage-performance-nvme-isolation-vs-network-iscsi" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Storage Hygiene: NVMe Isolation vs Network iSCSI
+        3. Storage Performance: NVMe Isolation vs Network iSCSI
       
     </span>
   </a>
@@ -1179,7 +1179,7 @@
   <span class="md-ellipsis">
     
   
-    ELK Stack & Index Lifecycle Management (ILM)
+    Elastic Stack & Index Lifecycle Management (ILM)
   
 
     
@@ -1322,15 +1322,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#elk-stack-configuration-compute-realities" class="md-nav__link">
+  <a href="#elastic-stack-configuration-compute-realities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🔬 ELK Stack Configuration &amp; Compute Realities
+        🔬 Elastic Stack Configuration &amp; Compute Realities
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🔬 ELK Stack Configuration &amp; Compute Realities">
+    <nav class="md-nav" aria-label="🔬 Elastic Stack Configuration &amp; Compute Realities">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1356,10 +1356,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-storage-hygiene-nvme-isolation-vs-network-iscsi" class="md-nav__link">
+  <a href="#3-storage-performance-nvme-isolation-vs-network-iscsi" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Storage Hygiene: NVMe Isolation vs Network iSCSI
+        3. Storage Performance: NVMe Isolation vs Network iSCSI
       
     </span>
   </a>
@@ -1469,7 +1469,7 @@
 
 
 <h1 id="security-information-event-management-siem-and-telemetry-architecture">Security Information &amp; Event Management (SIEM) and Telemetry Architecture</h1>
-<p>Centralized log telemetry and security observability in <strong>LambertLab</strong> are powered by the <strong>ELK Stack</strong> (Elasticsearch, Logstash, Kibana) acting as the centralized <strong>Security Information and Event Management (SIEM)</strong> platform, running on dedicated bare-metal host compute with high-speed local NVMe storage.</p>
+<p>Centralized log telemetry and security observability in <strong>LambertLab</strong> are powered by the <strong>Elastic Stack</strong> (ELK: Elasticsearch, Logstash, Kibana) acting as the centralized <strong>Security Information and Event Management (SIEM)</strong> platform, running on dedicated bare-metal host compute with high-speed local NVMe storage.</p>
 <hr />
 <h2 id="centralized-log-analytics-siem-pipeline">📊 Centralized Log Analytics &amp; SIEM Pipeline</h2>
 <div class="panzoom-box" data-key="alt" id="panzoom0" oncontextmenu="return false;">
@@ -1525,7 +1525,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
     
 </div>
 <hr />
-<h2 id="elk-stack-configuration-compute-realities">🔬 ELK Stack Configuration &amp; Compute Realities</h2>
+<h2 id="elastic-stack-configuration-compute-realities">🔬 Elastic Stack Configuration &amp; Compute Realities</h2>
 <p>Elasticsearch, Logstash, and Kibana are deployed to Kubernetes under the <strong>ECK Operator</strong> (<code>v3.5.0</code>) in the <code>observability</code> namespace (<code>kubernetes/observability/</code>), scheduled onto <code>workstation</code> to leverage its 16-core / 32-thread Xeon CPU and high-speed local NVMe storage:</p>
 <h3 id="1-ingestion-protocol-docker-gelf-over-tailscale-port-12201-udptcp">1. Ingestion Protocol: Docker GELF over Tailscale (Port 12201 UDP/TCP)</h3>
 <p>Docker daemons across all cluster nodes stream container <code>stdout</code> and <code>stderr</code> directly to Logstash over the private Tailscale mesh network:
@@ -1555,17 +1555,23 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">}</span>
 </span></code></pre></div>
 <hr />
-<h3 id="3-storage-hygiene-nvme-isolation-vs-network-iscsi">3. Storage Hygiene: NVMe Isolation vs Network iSCSI</h3>
+<h3 id="3-storage-performance-nvme-isolation-vs-network-iscsi">3. Storage Performance: NVMe Isolation vs Network iSCSI</h3>
 <p>Elasticsearch index operations generate heavy, unbuffered random read/write I/O patterns:
-* <strong>Strict Rule:</strong> Elasticsearch index data (<code>/usr/share/elasticsearch/data</code>) <strong>must never</strong> reside on 1Gbps network iSCSI or NFS shares. Network storage latency introduces heavy write queuing, thread pool exhaustion (<code>write</code> queue rejection), and causes Kibana dashboards to time out.
-* <strong>Architecture:</strong> Dedicated bind mount targeting local workstation NVMe SSD storage (<code>var.elasticsearch_data_path</code>), delivering extreme random write IOPS with zero network jitter.</p>
+* <strong>Architecture Constraint:</strong> Elasticsearch index data (<code>/usr/share/elasticsearch/data</code>) <strong>must never</strong> reside on 1Gbps network iSCSI or NFS shares. Network storage latency introduces heavy write queuing, thread pool exhaustion (<code>write</code> queue rejection), and causes Kibana dashboards to time out.
+* <strong>Architecture:</strong> In-cluster PersistentVolume <code>elasticsearch-data-pv</code> binds directly to local workstation NVMe SSD storage (<code>/home/chris/services/elasticsearch/data</code>) with <code>nodeAffinity</code> targeting <code>workstation</code>, delivering extreme random write IOPS with zero network jitter.</p>
 <hr />
 <h3 id="4-kibana-memory-optimization">4. Kibana Memory Optimization</h3>
-<p>Kibana runs on Node.js. When executing deep time-range queries across millions of log entries, the default Node.js V8 heap limit (1.4 GB) can trigger Out-Of-Memory (OOM) fatal process crashes (<code>JavaScript heap out of memory</code>).</p>
-<p>In <code>docker/workstation/elk-stack.tf</code>, Kibana is provisioned with:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">NODE_OPTIONS</span><span class="o">=</span>--max-old-space-size<span class="o">=</span><span class="m">2048</span>
+<p>Kibana runs on Node.js. When executing deep time-range queries across millions of log entries, the default Node.js V8 heap limit can trigger Out-Of-Memory (OOM) fatal process crashes (<code>JavaScript heap out of memory</code>).</p>
+<p>In <code>kubernetes/observability/kibana/kibana.yaml</code>, Kibana is provisioned under the ECK Operator with dedicated resource requests and limits:
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">resources</span><span class="p">:</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">requests</span><span class="p">:</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5Gi</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3Gi</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 </span></code></pre></div>
-Increasing the heap ceiling to 2048 MB ensures smooth visual aggregation and uninterrupted log exploration.</p>
+Allocating a 3Gi memory limit ensures smooth visual aggregation and uninterrupted log exploration without container OOM kills.</p>
 <hr />
 <h3 id="5-centralized-fleet-server-elastic-agent-daemonset">5. Centralized Fleet Server &amp; Elastic Agent DaemonSet</h3>
 <p>To capture container logs (<code>/var/log/pods</code>), cluster-level health, and bare-metal host OS telemetry (<code>journald</code>, <code>auth.log</code>, <code>syslog</code>) across all 4 nodes (<code>lenovo</code>, <code>optiplex</code>, <code>opti74</code>, <code>workstation</code>), the cluster utilizes <strong>Elastic Fleet Server</strong> and the official <strong>Elastic Agent Helm Chart</strong>:</p>
@@ -1620,7 +1626,7 @@ Increasing the heap ceiling to 2048 MB ensures smooth visual aggregation and uni
 <td style="text-align: left;"><strong>Systemd Unit Failures</strong></td>
 <td style="text-align: left;"><code>message: ("Failed to start" or "Unit entered failed state" or "Failed with result")</code></td>
 <td style="text-align: left;"><code>host.hostname</code>, <code>process.name</code>, <code>message</code></td>
-<td style="text-align: left;">Identify host daemon crashes (<code>containerd</code>, <code>k3s</code>, <code>docker</code>, <code>tailscale</code>).</td>
+<td style="text-align: left;">Identify host daemon crashes (<code>containerd</code>, <code>kubelet</code>, <code>docker</code>, <code>tailscale</code>).</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Pod CrashLoopBackOff</strong></td>
@@ -1642,7 +1648,7 @@ Increasing the heap ceiling to 2048 MB ensures smooth visual aggregation and uni
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Traefik Ingress 5xx</strong></td>
-<td style="text-align: left;"><code>kubernetes.namespace: "traefik" and (message: (" 500 " or " 502 " or " 503 " or " 504 ") or log.level: "error")</code></td>
+<td style="text-align: left;"><code>kubernetes.namespace: "kube-system" and (message: (" 500 " or " 502 " or " 503 " or " 504 ") or log.level: "error")</code></td>
 <td style="text-align: left;"><code>kubernetes.pod.name</code>, <code>message</code></td>
 <td style="text-align: left;">Reverse proxy backend connection and gateway errors.</td>
 </tr>

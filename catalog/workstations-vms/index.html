@@ -1118,7 +1118,7 @@
   <span class="md-ellipsis">
     
   
-    ELK Stack & Index Lifecycle Management (ILM)
+    Elastic Stack & Index Lifecycle Management (ILM)
   
 
     
@@ -1395,7 +1395,7 @@
 <li><strong>Architectural Role:</strong> Virtualized edge perimeter router, NAT gateway, and security firewall.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Multi-NIC topology: primary Cilium interface for pod masquerade and secondary Multus interface on <code>ovn-ad-vpc</code> (<code>10.10.0.1</code>) serving as the default gateway.</li>
-<li>Internal hairpin routing directing <code>100.64.0.0/10</code> LAN queries to the Traefik Ingress Service ClusterIP (<code>10.43.204.125:443</code>).</li>
+<li>Internal hairpin routing directing <code>100.64.0.0/10</code> LAN queries to the Traefik Ingress Service ClusterIP (port 443).</li>
 <li>Traefik Ingress with custom backend HTTPS serverstransport.</li>
 </ul>
 <hr />

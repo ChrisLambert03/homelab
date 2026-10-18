@@ -424,17 +424,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#architecture-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ⚡ Architecture Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#core-architectural-highlights" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -492,6 +481,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ Architecture Topology
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1113,7 +1113,7 @@
   <span class="md-ellipsis">
     
   
-    ELK Stack & Index Lifecycle Management (ILM)
+    Elastic Stack & Index Lifecycle Management (ILM)
   
 
     
@@ -1245,17 +1245,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#architecture-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ⚡ Architecture Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#core-architectural-highlights" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1316,6 +1305,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#architecture-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ Architecture Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1344,6 +1344,87 @@
 <h1 id="lambertlab-infrastructure-documentation">LambertLab Infrastructure Documentation</h1>
 <p>Welcome to the central technical documentation and operational engineering knowledge base for the <strong>LambertLab</strong> hybrid cloud-native infrastructure.</p>
 <hr />
+<h2 id="core-architectural-highlights">🚀 Core Architectural Highlights</h2>
+<p><strong>LambertLab</strong> operates as a bare-metal, high-availability Kubernetes cluster running upstream vanilla <strong>Kubernetes v1.37.1</strong>. While initially bootstrapped as a lightweight K3s distribution during early platform iterations, the infrastructure was subsequently reconstructed into an enterprise-grade pure vanilla Kubernetes cluster initialized and joined via <strong><code>kubeadm</code></strong>.</p>
+<p>The cluster topology is engineered around clean, modular infrastructure layers:</p>
+<ul>
+<li><strong>Control Plane Quorum &amp; Virtual IP:</strong> Stacked <strong>etcd</strong> consensus distributed across a 3-node control plane quorum (<code>lenovo</code>, <code>optiplex</code>, <code>opti74</code>) with <strong><code>kube-vip</code></strong> providing virtual IP failover (<code>10.0.0.201:6443</code>).</li>
+<li><strong>Primary eBPF CNI &amp; Routing:</strong> <strong>Cilium</strong> running in pure eBPF mode, replacing <code>kube-proxy</code> for high-throughput pod routing, kernel-level network policies, and Layer 2 service IP announcement pools (<code>10.0.0.202-215</code>).</li>
+<li><strong>Edge Ingress Controller:</strong> <strong>Traefik</strong> deployed as a cluster-wide DaemonSet handling HTTP/HTTPS edge ingress with automated wildcard TLS (<code>*.lambertlab.us</code>) and two-tier zero-trust IP allowlisting middlewares.</li>
+<li><strong>Secondary Virtualization CNI:</strong> <strong>Kube-OVN</strong> operating via <strong>Multus</strong> meta-CNI as a dedicated secondary network, providing an isolated Software-Defined Layer 2 Geneve overlay VPC (<code>ovn-ad-vpc</code>, <code>10.10.0.0/24</code>) for KubeVirt virtual machines and dual-homed containers.</li>
+<li><strong>Multi-Tiered Storage Engine:</strong> Distributed block storage with synchronous replication via <strong>Longhorn</strong>, lightweight node storage via <strong>Local Path Provisioner</strong>, low-latency SAN block storage via <strong>TerraMaster iSCSI LUNs</strong>, and bulk media via <strong>NFS</strong>.</li>
+<li><strong>Cluster Diagnostics &amp; Acceleration:</strong> In-cluster <strong>Metrics Server</strong> enabling resource tracking and <code>kubectl top</code> CLI commands, hardware GPU pass-through via the <strong>NVIDIA GPU Operator</strong>, and centralized logging via the <strong>Elastic Stack</strong> with <strong>Elastic Agent</strong>.</li>
+</ul>
+<p><em>(For the complete visual layout of the control plane, storage, SDN VPC, and ingress data paths, see the <a href="#architecture-topology">Architecture Topology Diagram</a> at the bottom of this page).</em></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">GitOps &amp; Multi-Tier Storage</label><label for="__tabbed_1_2">Hybrid Identity &amp; Remote Access</label><label for="__tabbed_1_3">Software-Defined Networking</label><label for="__tabbed_1_4">Virtualization (KubeVirt)</label><label for="__tabbed_1_5">Security Information and Event Management (SIEM) &amp; Telemetry</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<ul>
+<li><strong>High-Availability GitOps:</strong> ArgoCD HA with Redis Sentinel, controller sharding, and dedicated AppProjects reconciling 40+ services across deterministic synchronization waves (0 to 9).</li>
+<li><strong>Multi-Tiered Storage Matrix:</strong> Dedicated TerraMaster SAN iSCSI block LUNs for low-latency VM disks, distributed Longhorn block storage with synchronous cross-node replication for databases, 14TB high-capacity NFS pools for bulk media, and dedicated local NVMe storage for real-time SIEM indexing.</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<ul>
+<li><strong>Dual Directory Model:</strong> Seamless identity federation combining on-premises Active Directory (<code>ad.lambertlab.us</code>, NetBIOS <code>LAMBERTLAB</code>) with Microsoft Entra ID.</li>
+<li><strong>Entra Cloud Sync:</strong> Zero-touch Password Hash Synchronization (PHS) running under an Active Directory Group Managed Service Account (<code>provAgentgMSA$</code>).</li>
+<li><strong>Clientless Remote Gateway:</strong> Apache Guacamole provides browser-based HTML5 RDP/SSH access with Entra ID OIDC SSO, on-premises LDAPS authentication with custom Root CA JVM truststore injection, and native Multus secondary pod networking directly into the Kube-OVN VPC.</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<ul>
+<li><strong>Kube-OVN Software-Defined L2 VPC (<code>ovn-ad-vpc</code>):</strong> Enterprise SDN overlay powered by Geneve UDP encapsulation, decoupling virtual machine Layer 2 broadcast domains from host network interfaces and physical Wi-Fi restrictions.</li>
+<li><strong>Direct Pod Bridging (Multus CNI):</strong> Apache Guacamole pod attaches a secondary interface (<code>net1</code>) directly into <code>ovn-ad-vpc</code> with dynamic DHCP allocation, communicating with domain controllers and desktops at wire speed with zero NAT overhead.</li>
+<li><strong>CoreDNS Direct VPC Integration:</strong> In-cluster CoreDNS attaches a secondary Multus interface (<code>vms/ovn-ad-vpc</code>) directly into the VPC, conditionally routing <code>*.ad.lambertlab.us</code> to DC01 (<code>10.10.0.10</code>) with automated health checks (<code>health_check 5s</code>, <code>max_fails 2</code>).</li>
+<li><strong>Subnet IPAM Quirk Mitigation:</strong> Subnet manifest declares a dummy gateway (<code>10.10.0.254</code>), preventing Kube-OVN's mutating webhook from reserving and excluding <code>10.10.0.1</code>, allowing the virtualized OPNsense firewall to claim the <code>.1</code> gateway IP.</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<ul>
+<li><strong>Bare-Metal Virtualization:</strong> High-performance Windows Server 2025 and Windows 11 Enterprise LTSC virtual machines managed natively alongside containerized microservices via KubeVirt v1.9.0.</li>
+<li><strong>Hardware-Enforced Security:</strong> OVMF UEFI Secure Boot paired with persistent virtual TPM 2.0 (<code>swtpm</code>) state volumes backed by Longhorn.</li>
+<li><strong>Direct Line-Rate iSCSI Flashing:</strong> Template images are converted directly from compressed QCOW2 into raw iSCSI block LUNs via <code>qemu-img convert</code> (<code>libiscsi</code>), completely bypassing HTTP ingress proxy idle timeouts and Longhorn 64GB scratch volume overhead.</li>
+<li><strong>Automated Sysprep Specialization:</strong> Dynamic <code>WIN-*</code> machine naming, zero-touch OOBE regional bypass, and least-privilege domain join automation via declarative <code>unattend.xml</code> answer files.</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<ul>
+<li><strong>Centralized Log Ingestion (Elastic Stack):</strong> Cross-node Docker container logs streamed directly to Logstash in the Elastic Stack (ELK: Elasticsearch, Logstash, Kibana) via Docker GELF drivers over Tailscale on port 12201.</li>
+<li><strong>Strict Index Lifecycle Management (ILM) Retention Rule:</strong> Single-node Elasticsearch configurations enforce <code>number_of_replicas: 0</code> across index templates to ensure green cluster health and prevent automated ILM rollover and pruning stalls.</li>
+<li><strong>Workstation Compute Isolation:</strong> Strict memory and CPU resource caps (<code>guacd</code> capped at 2 cores) preserve 30 Xeon threads and 20GB RTX compute for real-time Elasticsearch pipelines and machine learning workloads.</li>
+</ul>
+</div>
+</div>
+</div>
+<hr />
+<h2 id="complete-documentation-index">📖 Complete Documentation Index</h2>
+<h3 id="architecture-deep-dives">🏛️ Architecture Deep-Dives</h3>
+<ul>
+<li><a href="architecture/hardware/">Hardware Architecture &amp; Fleet Topology</a>: Node hardware specifications, 3-node etcd Raft quorum, and fleet topology.</li>
+<li><a href="architecture/networking/">Software-Defined L2 VPC &amp; CoreDNS Fabric</a>: Kube-OVN Geneve overlay, Multus pod attachment, and CoreDNS health-checked forwarders.</li>
+<li><a href="architecture/storage/">Storage Hierarchy &amp; SAN Architecture</a>: When and why to use SAN iSCSI vs Longhorn vs NFS vs local NVMe.</li>
+<li><a href="architecture/identity/">Hybrid Identity &amp; Entra ID Federation</a>: Dual-directory identity, Cloud Sync gMSA, PHS, and RBAC security groups.</li>
+<li><a href="architecture/guacamole/">Apache Guacamole Gateway</a>: Clientless remote desktop, LDAPS Root CA JVM truststore injection, and OIDC SSO.</li>
+<li><a href="architecture/virtualization/">KubeVirt &amp; Virtual Machine Lifecycle</a>: Bare-metal virtualization, Hyper-V enlightenments, Sysprep automation, and direct iSCSI flashing.</li>
+<li><a href="architecture/gitops/">GitOps Engine &amp; Synchronization Waves</a>: ArgoCD HA architecture, AppProjects, sync wave topology, and self-healing.</li>
+<li><a href="architecture/logging/">Security Information and Event Management (SIEM) &amp; Telemetry</a>: Centralized Elastic Stack (ELK: Elasticsearch, Logstash, Kibana), Docker GELF over Tailscale, local NVMe isolation, and single-node Index Lifecycle Management (ILM) policies.</li>
+</ul>
+<h3 id="application-service-catalog">📦 Application Service Catalog</h3>
+<ul>
+<li><a href="catalog/">Catalog Overview &amp; Master Matrix</a>: Complete directory, cluster namespaces, Docker contexts, and ingress endpoints.</li>
+<li><a href="catalog/infrastructure/">Core Infrastructure &amp; Networking</a>: ArgoCD, Traefik, Cert-Manager, Kube-OVN, Multus, CoreDNS, Tailscale, Longhorn, KubeVirt, and TerraMaster TOS.</li>
+<li><a href="catalog/workstations-vms/">Virtual Machines &amp; Identity</a>: DC01, Windows 11 Workstation, OPNsense Gateway, KubeVirt Manager, and Apache Guacamole.</li>
+<li><a href="catalog/media-automation/">Media &amp; Home Automation</a>: Jellyfin, Sonarr, Radarr, Prowlarr, Tdarr, and Palworld Dedicated Server.</li>
+<li><a href="catalog/security-tools/">Security &amp; Productivity Tools</a>: HashiCorp Vault, External Secrets, Elastic Stack (ELK: Elasticsearch, Logstash, Kibana), Homarr, Ntfy, Beszel, Pi-hole, Portainer, Firefox Sandbox, and developer tools.</li>
+</ul>
+<h3 id="operational-runbooks">🛠️ Operational Runbooks</h3>
+<ul>
+<li><a href="runbooks/bridge-watchdog/">Bridge Self-Healing Watchdog (Legacy)</a>: Background, diagnosis, and automated recovery for USB NIC boot latency on <code>br-lab0</code>.</li>
+<li><a href="runbooks/iscsi-flashing/">Direct iSCSI Line-Rate Flashing</a>: Step-by-step user-space <code>qemu-img convert</code> flashing guide bypassing CDI and ingress timeouts.</li>
+<li><a href="runbooks/elk-ilm-maintenance/">Elastic Stack &amp; Index Lifecycle Management (ILM) Maintenance</a>: Managing single-node index templates, troubleshooting unassigned replica shards, and testing GELF pipelines.</li>
+<li><a href="runbooks/disaster-recovery/">Disaster Recovery &amp; Cluster Quorum</a>: Host reboot sequence, etcd Raft recovery, KubeVirt VM restoration, and break-glass administrative procedures.</li>
+</ul>
+<hr />
 <h2 id="architecture-topology">⚡ Architecture Topology</h2>
 <div class="panzoom-box" data-key="alt" id="panzoom0" oncontextmenu="return false;">
     <div class="panzoom-info-box panzoom-info-box-top">
@@ -1369,7 +1450,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
     CF --&gt; TS["Tailscale Mesh Ingress&lt;br/&gt;WireGuard Point-to-Point"]
     TS --&gt; Traefik["Traefik Edge Ingress :443&lt;br/&gt;Wildcard TLSStore + Middlewares"]
 
-    subgraph K3sCluster["K3s Hybrid Cluster (ArgoCD GitOps HA)"]
+    subgraph K8sCluster["Kubernetes Hybrid Cluster (ArgoCD GitOps HA)"]
         Traefik --&gt; Guac["Apache Guacamole Gateway"]
         Traefik --&gt; KubeVirtMgr["KubeVirt Manager Web UI"]
         Traefik --&gt; Catalog["30+ App Workloads"]
@@ -1380,7 +1461,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
             Guac -.-&gt;|"Multus (Dynamic DHCP)"| OVNSwitch
             OVNSwitch --&gt; DC01["DC01 Active Directory&lt;br/&gt;Windows Server 2025: 10.10.0.10"]
             OVNSwitch --&gt; Win11["Win11 Admin Workstation&lt;br/&gt;Dynamic DHCP (Sysprep Specialized)"]
-            CoreDNS["K3s CoreDNS&lt;br/&gt;Multus net1: ovn-ad-vpc"] --&gt;|"Conditional Forward *.ad"| DC01
+            CoreDNS["CoreDNS&lt;br/&gt;Multus net1: ovn-ad-vpc"] --&gt;|"Conditional Forward *.ad"| DC01
         end
     end
 
@@ -1399,76 +1480,6 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
     end</code></pre> 
     
 </div>
-<hr />
-<h2 id="core-architectural-highlights">🚀 Core Architectural Highlights</h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Virtualization (KubeVirt)</label><label for="__tabbed_1_2">Hybrid Identity &amp; Remote Access</label><label for="__tabbed_1_3">Software-Defined Networking</label><label for="__tabbed_1_4">GitOps &amp; Multi-Tier Storage</label><label for="__tabbed_1_5">Security Information and Event Management (SIEM) &amp; Telemetry</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<ul>
-<li><strong>Bare-Metal Virtualization:</strong> High-performance Windows Server 2025 and Windows 11 Enterprise LTSC virtual machines managed natively alongside containerized microservices via KubeVirt v1.9.0.</li>
-<li><strong>Hardware-Enforced Security:</strong> OVMF UEFI Secure Boot paired with persistent virtual TPM 2.0 (<code>swtpm</code>) state volumes backed by Longhorn.</li>
-<li><strong>Direct Line-Rate iSCSI Flashing:</strong> Template images are converted directly from compressed QCOW2 into raw iSCSI block LUNs via <code>qemu-img convert</code> (<code>libiscsi</code>), completely bypassing HTTP ingress proxy idle timeouts and Longhorn 64GB scratch volume overhead.</li>
-<li><strong>Automated Sysprep Specialization:</strong> Dynamic <code>WIN-*</code> machine naming, zero-touch OOBE regional bypass, and least-privilege domain join automation via declarative <code>unattend.xml</code> answer files.</li>
-</ul>
-</div>
-<div class="tabbed-block">
-<ul>
-<li><strong>Dual Directory Model:</strong> Seamless identity federation combining on-premises Active Directory (<code>ad.lambertlab.us</code>, NetBIOS <code>LAMBERTLAB</code>) with Microsoft Entra ID.</li>
-<li><strong>Entra Cloud Sync:</strong> Zero-touch Password Hash Synchronization (PHS) running under an Active Directory Group Managed Service Account (<code>provAgentgMSA$</code>).</li>
-<li><strong>Clientless Remote Gateway:</strong> Apache Guacamole provides browser-based HTML5 RDP/SSH access with Entra ID OIDC SSO, on-premises LDAPS authentication with custom Root CA JVM truststore injection, and native Multus secondary pod networking directly into the Kube-OVN VPC.</li>
-</ul>
-</div>
-<div class="tabbed-block">
-<ul>
-<li><strong>Kube-OVN Software-Defined L2 VPC (<code>ovn-ad-vpc</code>):</strong> Enterprise SDN overlay powered by Geneve UDP encapsulation, decoupling virtual machine Layer 2 broadcast domains from host network interfaces and physical Wi-Fi restrictions.</li>
-<li><strong>Direct Pod Bridging (Multus CNI):</strong> Apache Guacamole pod attaches a secondary interface (<code>net1</code>) directly into <code>ovn-ad-vpc</code> with dynamic DHCP allocation, communicating with domain controllers and desktops at wire speed with zero NAT overhead.</li>
-<li><strong>CoreDNS Direct VPC Integration:</strong> In-cluster CoreDNS attaches a secondary Multus interface (<code>vms/ovn-ad-vpc</code>) directly into the VPC, conditionally routing <code>*.ad.lambertlab.us</code> to DC01 (<code>10.10.0.10</code>) with automated health checks (<code>health_check 5s</code>, <code>max_fails 2</code>).</li>
-<li><strong>Subnet IPAM Quirk Mitigation:</strong> Subnet manifest declares a dummy gateway (<code>10.10.0.254</code>), preventing Kube-OVN's mutating webhook from reserving and excluding <code>10.10.0.1</code>, allowing the virtualized OPNsense firewall to claim the <code>.1</code> gateway IP.</li>
-</ul>
-</div>
-<div class="tabbed-block">
-<ul>
-<li><strong>High-Availability GitOps:</strong> ArgoCD HA with Redis Sentinel, controller sharding, and 5 dedicated AppProjects reconciling 30+ services across deterministic synchronization waves (0 to 3).</li>
-<li><strong>Multi-Tiered Storage Matrix:</strong> Dedicated TerraMaster SAN iSCSI block LUNs for low-latency VM disks, distributed Longhorn block storage with synchronous cross-node replication for databases, 14TB high-capacity NFS pools for bulk media, and dedicated local NVMe storage for real-time SIEM indexing.</li>
-</ul>
-</div>
-<div class="tabbed-block">
-<ul>
-<li><strong>Centralized Log Ingestion (ELK Stack):</strong> Cross-node Docker container logs streamed directly to Logstash in the ELK Stack (Elasticsearch, Logstash, Kibana) via Docker GELF drivers over Tailscale on port 12201.</li>
-<li><strong>Strict Index Lifecycle Management (ILM) Retention Rule:</strong> Single-node Elasticsearch configurations enforce <code>number_of_replicas: 0</code> across index templates to ensure green cluster health and prevent automated ILM rollover and pruning stalls.</li>
-<li><strong>Workstation Compute Isolation:</strong> Strict memory and CPU resource caps (<code>guacd</code> capped at 2 cores) preserve 30 Xeon threads and 20GB RTX compute for real-time Elasticsearch pipelines and machine learning workloads.</li>
-</ul>
-</div>
-</div>
-</div>
-<hr />
-<h2 id="complete-documentation-index">📖 Complete Documentation Index</h2>
-<h3 id="architecture-deep-dives">🏛️ Architecture Deep-Dives</h3>
-<ul>
-<li><a href="architecture/hardware/">Hardware Architecture &amp; Fleet Topology</a>: Node hardware specifications, 3-node etcd Raft quorum, and fleet topology.</li>
-<li><a href="architecture/networking/">Software-Defined L2 VPC &amp; CoreDNS Fabric</a>: Kube-OVN Geneve overlay, Multus pod attachment, and CoreDNS health-checked forwarders.</li>
-<li><a href="architecture/storage/">Storage Hierarchy &amp; SAN Architecture</a>: When and why to use SAN iSCSI vs Longhorn vs NFS vs local NVMe.</li>
-<li><a href="architecture/identity/">Hybrid Identity &amp; Entra ID Federation</a>: Dual-directory identity, Cloud Sync gMSA, PHS, and RBAC security groups.</li>
-<li><a href="architecture/guacamole/">Apache Guacamole Gateway</a>: Clientless remote desktop, LDAPS Root CA JVM truststore injection, and OIDC SSO.</li>
-<li><a href="architecture/virtualization/">KubeVirt &amp; Virtual Machine Lifecycle</a>: Bare-metal virtualization, Hyper-V enlightenments, Sysprep automation, and direct iSCSI flashing.</li>
-<li><a href="architecture/gitops/">GitOps Engine &amp; Synchronization Waves</a>: ArgoCD HA architecture, AppProjects, sync wave topology, and self-healing.</li>
-<li><a href="architecture/logging/">Security Information and Event Management (SIEM) &amp; Telemetry</a>: Centralized ELK Stack (Elasticsearch, Logstash, Kibana), Docker GELF over Tailscale, local NVMe isolation, and single-node Index Lifecycle Management (ILM) policies.</li>
-</ul>
-<h3 id="application-service-catalog">📦 Application Service Catalog</h3>
-<ul>
-<li><a href="catalog/">Catalog Overview &amp; Master Matrix</a>: Complete directory, cluster namespaces, Docker contexts, and ingress endpoints.</li>
-<li><a href="catalog/infrastructure/">Core Infrastructure &amp; Networking</a>: ArgoCD, Traefik, Cert-Manager, Kube-OVN, Multus, CoreDNS, Tailscale, Longhorn, KubeVirt, and TerraMaster TOS.</li>
-<li><a href="catalog/workstations-vms/">Virtual Machines &amp; Identity</a>: DC01, Windows 11 Workstation, OPNsense Gateway, KubeVirt Manager, and Apache Guacamole.</li>
-<li><a href="catalog/media-automation/">Media &amp; Home Automation</a>: Jellyfin, Sonarr, Radarr, Prowlarr, Tdarr, and Palworld Dedicated Server.</li>
-<li><a href="catalog/security-tools/">Security &amp; Productivity Tools</a>: HashiCorp Vault, External Secrets, ELK Stack (Elasticsearch, Logstash, Kibana), Homarr, Ntfy, Beszel, Pi-hole, Portainer, Firefox Sandbox, and developer tools.</li>
-</ul>
-<h3 id="operational-runbooks">🛠️ Operational Runbooks</h3>
-<ul>
-<li><a href="runbooks/bridge-watchdog/">Bridge Self-Healing Watchdog (Legacy)</a>: Background, diagnosis, and automated recovery for USB NIC boot latency on <code>br-lab0</code>.</li>
-<li><a href="runbooks/iscsi-flashing/">Direct iSCSI Line-Rate Flashing</a>: Step-by-step user-space <code>qemu-img convert</code> flashing guide bypassing CDI and ingress timeouts.</li>
-<li><a href="runbooks/elk-ilm-maintenance/">ELK Stack &amp; Index Lifecycle Management (ILM) Maintenance</a>: Managing single-node index templates, troubleshooting unassigned replica shards, and testing GELF pipelines.</li>
-<li><a href="runbooks/disaster-recovery/">Disaster Recovery &amp; Cluster Quorum</a>: Host reboot sequence, etcd Raft recovery, KubeVirt VM restoration, and break-glass administrative procedures.</li>
-</ul>
 
 
 

@@ -1246,7 +1246,7 @@
   <span class="md-ellipsis">
     
   
-    ELK Stack & Index Lifecycle Management (ILM)
+    Elastic Stack & Index Lifecycle Management (ILM)
   
 
     
@@ -1630,10 +1630,10 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
     CF --&gt; TS["Tailscale Mesh Ingress&lt;br/&gt;Direct WireGuard Point-to-Point"]
     TS --&gt; Traefik["Traefik Edge Ingress :443&lt;br/&gt;Wildcard TLSStore *.lambertlab.us"]
 
-    subgraph Flannel["Flannel Pod Overlay (10.42.0.0/16)"]
+    subgraph Cilium["Cilium eBPF Pod Overlay (10.244.0.0/16)"]
         Traefik --&gt; GuacPod["Guacamole Web Pod :8080"]
         Traefik --&gt; KibanaPod["Kibana Ingress Service :5601"]
-        CoreDNS["K3s CoreDNS Forwarder&lt;br/&gt;10.43.0.10:53"]
+        CoreDNS["CoreDNS Forwarder&lt;br/&gt;10.96.0.10:53"]
     end
 
     subgraph OVN["Software-Defined L2 VPC (ovn-ad-vpc / 10.10.0.0/24)"]
@@ -1698,7 +1698,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
     end
 
     subgraph TraefikMiddlewares["Traefik Edge Routing Middlewares"]
-        AdminACL["admin-only-access&lt;br/&gt;(ipAllowList: Admin Tailscale IPs + Cluster Pod CIDR 10.42.0.0/16)"]
+        AdminACL["admin-only-access&lt;br/&gt;(ipAllowList: Admin Tailscale IPs + Cluster Pod CIDR 10.244.0.0/16)"]
         MediaACL["media-user-access&lt;br/&gt;(ipAllowList: Admin IPs + Media User IPs + Cluster CIDR)"]
     end
 
@@ -1725,7 +1725,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <li><strong>Source Allowlist:</strong></li>
 <li>Dedicated physical node endpoints (<code>lenovo</code>, <code>optiplex</code>, <code>opti74</code>, <code>workstation</code>).</li>
 <li>Primary administrative portable devices (laptops and administrative mobile clients).</li>
-<li>In-cluster CNI pod network (<code>10.42.0.0/16</code>) to preserve internal service-to-service hairpinned routing.</li>
+<li>In-cluster CNI pod network (<code>10.244.0.0/16</code>) to preserve internal service-to-service hairpinned routing.</li>
 <li>Localhost loopback (<code>127.0.0.1/32</code>).</li>
 <li><strong>Result:</strong> Even if an ingress endpoint URL is known or discovered, unauthorized requests receive an immediate HTTP 403 Forbidden at the Traefik proxy edge.</li>
 </ul>
@@ -1752,7 +1752,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <p>Previously, the cluster relied on a multicast VXLAN overlay (<code>br-lab0</code>) managed declaratively by NMState (NetworkManager State). 
 While NMState is great for declarative host networking, it heavily manipulates host <code>iptables</code> and binds virtual bridges directly to physical host interfaces. Kube-OVN is a much better implementation for Kubernetes because it utilizes a pure Software-Defined Geneve overlay that is completely decoupled from host routing rules and physical network quirks (like Wi-Fi access points aggressively dropping foreign MACs). Additionally, Kube-OVN provides native IP Address Management (IPAM) for seamless DHCP, eliminating the need to manually track static IPs across virtual bridges.</p>
 <h3 id="multus-cni-secondary-interface-attachment">Multus CNI Secondary Interface Attachment</h3>
-<p>Standard Kubernetes pods receive a Flannel overlay IP (<code>10.42.x.x</code>). Using <strong>Multus CNI</strong>, select pods (like Apache Guacamole and CoreDNS) are provisioned with a secondary interface (<code>net1</code>) plugged directly into the Kube-OVN <code>ovn-ad-vpc</code> VPC.</p>
+<p>Standard Kubernetes pods receive a Cilium overlay IP (<code>10.244.x.x</code>). Using <strong>Multus CNI</strong>, select pods (like Apache Guacamole and CoreDNS) are provisioned with a secondary interface (<code>net1</code>) plugged directly into the Kube-OVN <code>ovn-ad-vpc</code> VPC.</p>
 <p>Because the Kube-OVN provider suffix ends in <code>.ovn</code>, Kube-OVN intercepts the Multus attachment and executes IPAM allocation.</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Pod Annotation on Guacamole Deployment (Dynamic DHCP)</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">k8s.v1.cni.cncf.io/networks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vms/ovn-ad-vpc</span>
@@ -1794,7 +1794,7 @@ To enable the cluster to resolve Active Directory queries (<code>dc01.ad.lambert
 <h2 id="internal-vm-hairpin-routing">🔄 Internal VM Hairpin Routing</h2>
 <p>KubeVirt virtual machines (such as <code>dc01</code> and <code>win11</code>) reside on the <code>10.10.0.0/24</code> Kube-OVN Geneve VPC subnet and do not run Tailscale clients. When VMs need to query cluster services published over external Traefik URLs (e.g. <code>https://vault.lambertlab.us</code> or <code>https://guacamole.lambertlab.us</code>):</p>
 <ul>
-<li><strong>Traffic Path:</strong> OPNsense routes <code>100.64.0.0/10</code> LAN traffic to the Traefik Service ClusterIP (<code>10.43.204.125:443</code>).</li>
+<li><strong>Traffic Path:</strong> OPNsense routes <code>100.64.0.0/10</code> LAN traffic to the Traefik Ingress Service ClusterIP (port 443).</li>
 <li><strong>Rule:</strong> Always route internal VM traffic targeting cluster ingress to the Traefik Service ClusterIP, never to a physical node's local LAN IP.</li>
 </ul>
 <hr />
@@ -1803,8 +1803,8 @@ To enable the cluster to resolve Active Directory queries (<code>dc01.ad.lambert
 <h3 id="the-universal-default-deny-baseline">The Universal Default-Deny Baseline</h3>
 <p>Each protected namespace enforces a strict Default-Deny Ingress policy that blocks all incoming traffic with standard exceptions:
 1. <strong>Intra-Namespace Communication:</strong> Pods within the same namespace are allowed to communicate freely (e.g., Guacamole frontend communicating with Guacamole PostgreSQL, or Radarr querying Sonarr).
-2. <strong>Traefik Ingress Controller:</strong> Traffic originating from the <code>kube-system</code> namespace (which houses Traefik and K3s LoadBalancers) is explicitly allowed. This ensures external traffic routed via Ingress or UDP LoadBalancer reaches the pods successfully.
-3. <strong>Admission Webhooks (Targeted Ingress):</strong> Workloads running Kubernetes admission webhooks (e.g., External Secrets Operator webhook on containerPort <code>10250</code> and ECK Elastic Operator webhook on containerPort <code>9443</code>) declare targeted NetworkPolicies matching their specific pod label and containerPort to permit control-plane API server validation requests. Because the K3s API server operates on host networking outside pod selectors, traffic is permitted by destination port, with Layer 7 authentication enforced by mutual TLS (mTLS) with the cluster CA.</p>
+2. <strong>Traefik Ingress Controller:</strong> Traffic originating from the <code>kube-system</code> namespace (which houses Traefik and cluster LoadBalancers) is explicitly allowed. This ensures external traffic routed via Ingress or UDP LoadBalancer reaches the pods successfully.
+3. <strong>Admission Webhooks (Targeted Ingress):</strong> Workloads running Kubernetes admission webhooks (e.g., External Secrets Operator webhook on containerPort <code>10250</code> and ECK Elastic Operator webhook on containerPort <code>9443</code>) declare targeted NetworkPolicies matching their specific pod label and containerPort to permit control-plane API server validation requests. Because the Kubernetes control-plane API server operates on host networking outside pod selectors, traffic is permitted by destination port, with Layer 7 authentication enforced by mutual TLS (mTLS) with the cluster CA.</p>
 <p>This architecture entirely drops unauthorized cross-namespace requests at the kernel firewall level (enforced by Cilium eBPF network policies).</p>
 <h3 id="centralized-gitops-governance">Centralized GitOps Governance</h3>
 <p>All Network Policies are decoupled from their individual application Helm charts and are instead stored centrally in the <code>kubernetes/network-policies</code> directory. A dedicated ArgoCD Application (<code>network-policies.yaml</code>) pinned to <strong>Sync Wave 1</strong> enforces these firewalls across the cluster globally before any application workloads are deployed in later sync waves (Waves 6–8).</p>

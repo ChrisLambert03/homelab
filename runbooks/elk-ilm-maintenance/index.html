@@ -29,7 +29,7 @@
     
     
       
-        <title>ELK Stack & Index Lifecycle Management (ILM) - LambertLab Infrastructure Docs</title>
+        <title>Elastic Stack & Index Lifecycle Management (ILM) - LambertLab Infrastructure Docs</title>
       
     
     
@@ -85,7 +85,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#runbook-elk-stack-single-node-index-lifecycle-management-ilm" class="md-skip">
+        <a href="#runbook-elastic-stack-single-node-index-lifecycle-management-ilm" class="md-skip">
           Skip to content
         </a>
       
@@ -121,7 +121,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ELK Stack & Index Lifecycle Management (ILM)
+              Elastic Stack & Index Lifecycle Management (ILM)
             
           </span>
         </div>
@@ -1008,7 +1008,7 @@
   <span class="md-ellipsis">
     
   
-    ELK Stack & Index Lifecycle Management (ILM)
+    Elastic Stack & Index Lifecycle Management (ILM)
   
 
     
@@ -1026,7 +1026,7 @@
   <span class="md-ellipsis">
     
   
-    ELK Stack & Index Lifecycle Management (ILM)
+    Elastic Stack & Index Lifecycle Management (ILM)
   
 
     
@@ -1169,10 +1169,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#storage-hygiene-data-pruning" class="md-nav__link">
+  <a href="#disk-space-management-data-pruning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        💾 Storage Hygiene &amp; Data Pruning
+        💾 Disk Space Management &amp; Data Pruning
       
     </span>
   </a>
@@ -1423,10 +1423,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#storage-hygiene-data-pruning" class="md-nav__link">
+  <a href="#disk-space-management-data-pruning" class="md-nav__link">
     <span class="md-ellipsis">
       
-        💾 Storage Hygiene &amp; Data Pruning
+        💾 Disk Space Management &amp; Data Pruning
       
     </span>
   </a>
@@ -1458,8 +1458,8 @@
   
 
 
-<h1 id="runbook-elk-stack-single-node-index-lifecycle-management-ilm">Runbook: ELK Stack &amp; Single-Node Index Lifecycle Management (ILM)</h1>
-<p>This runbook documents operational maintenance, health verification, Index Lifecycle Management (ILM) policies, and troubleshooting procedures for the <strong>LambertLab</strong> centralized ELK Stack (Elasticsearch, Logstash, Kibana) running on Kubernetes under the <strong>ECK Operator (<code>v3.5.0</code>)</strong> in the <code>observability</code> namespace.</p>
+<h1 id="runbook-elastic-stack-single-node-index-lifecycle-management-ilm">Runbook: Elastic Stack &amp; Single-Node Index Lifecycle Management (ILM)</h1>
+<p>This runbook documents operational maintenance, health verification, Index Lifecycle Management (ILM) policies, and troubleshooting procedures for the <strong>LambertLab</strong> centralized Elastic Stack (ELK: Elasticsearch, Logstash, Kibana) running on Kubernetes under the <strong>ECK Operator (<code>v3.5.0</code>)</strong> in the <code>observability</code> namespace.</p>
 <hr />
 <h2 id="the-problem-single-node-elasticsearch-cluster-health-yellow">⚠️ The Problem: Single-Node Elasticsearch Cluster Health (<code>YELLOW</code>)</h2>
 <h3 id="symptoms">Symptoms</h3>
@@ -1522,7 +1522,7 @@
 </span></code></pre></div>
 Healthy output should confirm active input on <code>0.0.0.0:12201</code> (GELF UDP/TCP) with zero pipeline worker exceptions.</p>
 <hr />
-<h2 id="storage-hygiene-data-pruning">💾 Storage Hygiene &amp; Data Pruning</h2>
+<h2 id="disk-space-management-data-pruning">💾 Disk Space Management &amp; Data Pruning</h2>
 <ul>
 <li><strong>Storage Path:</strong> Dedicated workstation NVMe at <code>/home/chris/services/elasticsearch/data</code> bound via PersistentVolume <code>elasticsearch-data-pv</code>.</li>
 <li><strong>Prohibition:</strong> Never configure Elasticsearch data paths targeting 1Gbps network iSCSI or NFS shares.</li>

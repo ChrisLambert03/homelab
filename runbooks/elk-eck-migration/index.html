@@ -999,7 +999,7 @@
   <span class="md-ellipsis">
     
   
-    ELK Stack & Index Lifecycle Management (ILM)
+    Elastic Stack & Index Lifecycle Management (ILM)
   
 
     
@@ -1956,7 +1956,7 @@ Incoming logs are tagged with <code>received_at</code> and indexed directly into
 <hr />
 <h2 id="procedure-5-fleet-server-agent-ingress-architecture">🛡️ Procedure 5: Fleet Server &amp; Agent Ingress Architecture</h2>
 <h3 id="51-the-kube-ovn-hostnetwork-caveat">5.1 The Kube-OVN HostNetwork Caveat</h3>
-<p>Homelab host agents (<code>agent-pernode-elastic-agent</code>) run with <code>hostNetwork: true</code> to capture bare-metal network, system, and kernel metrics. Because Kube-OVN isolates the overlay network, host-networked pods cannot route across nodes to Kubernetes ClusterIPs (<code>10.43.x.x</code>). </p>
+<p>Homelab host agents (<code>agent-pernode-elastic-agent</code>) run with <code>hostNetwork: true</code> to capture bare-metal network, system, and kernel metrics. Because Kube-OVN isolates the overlay network, host-networked pods cannot route across nodes to Kubernetes ClusterIPs (<code>10.96.0.0/12</code>). </p>
 <p><strong>Resolution:</strong> Agents route to Fleet Server and Elasticsearch via Traefik Ingress:
 * Fleet Endpoint: <code>https://fleet.lambertlab.us</code>
 * Elasticsearch Endpoint: <code>https://es.lambertlab.us</code></p>

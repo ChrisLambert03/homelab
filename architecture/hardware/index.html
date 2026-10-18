@@ -521,15 +521,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#k3s-high-availability-quorum" class="md-nav__link">
+  <a href="#control-plane-high-availability-stacked-etcd-quorum" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ⚖️ K3s High Availability &amp; Quorum
+        ⚖️ Control Plane High Availability &amp; Stacked etcd Quorum
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="⚖️ K3s High Availability &amp; Quorum">
+    <nav class="md-nav" aria-label="⚖️ Control Plane High Availability &amp; Stacked etcd Quorum">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1107,7 +1107,7 @@
   <span class="md-ellipsis">
     
   
-    ELK Stack & Index Lifecycle Management (ILM)
+    Elastic Stack & Index Lifecycle Management (ILM)
   
 
     
@@ -1250,15 +1250,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#k3s-high-availability-quorum" class="md-nav__link">
+  <a href="#control-plane-high-availability-stacked-etcd-quorum" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ⚖️ K3s High Availability &amp; Quorum
+        ⚖️ Control Plane High Availability &amp; Stacked etcd Quorum
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="⚖️ K3s High Availability &amp; Quorum">
+    <nav class="md-nav" aria-label="⚖️ Control Plane High Availability &amp; Stacked etcd Quorum">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1346,7 +1346,7 @@
 <td style="text-align: left;">Intel Core i7-6700T (4c/8t @ 3.6 GHz)</td>
 <td style="text-align: left;">32 GB DDR4</td>
 <td style="text-align: left;">128 GB SSD</td>
-<td style="text-align: left;">Primary manager, etcd quorum member #1, local Traefik ingress, K3s control loop</td>
+<td style="text-align: left;">Primary manager, etcd quorum member #1, local Traefik ingress, kubeadm control plane (kube-apiserver, kube-controller-manager, kube-scheduler, kube-vip)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong><code>optiplex</code></strong></td>
@@ -1370,7 +1370,7 @@
 <td style="text-align: left;">Dual Intel Xeon E5-2667 v4 (16c/32t @ 3.6 GHz)</td>
 <td style="text-align: left;">128 GB ECC</td>
 <td style="text-align: left;">256 GB NVMe + 500 GB SSD + 250 GB SSD</td>
-<td style="text-align: left;">NVIDIA RTX A4500 (20GB VRAM), Docker ELK Stack (Elasticsearch, Logstash, Kibana), heavy worker compute</td>
+<td style="text-align: left;">NVIDIA RTX A4500 (20GB VRAM), Kubernetes Elastic Stack (ECK: Elasticsearch, Logstash, Kibana), Docker GPU media compute</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>TerraMaster NAS</strong></td>
@@ -1383,8 +1383,8 @@
 </tbody>
 </table>
 <hr />
-<h2 id="k3s-high-availability-quorum">⚖️ K3s High Availability &amp; Quorum</h2>
-<p>The Kubernetes cluster runs <strong>K3s v1.36</strong> utilizing an embedded <strong><code>etcd</code> Raft consensus engine</strong> distributed across the 3 control plane nodes:</p>
+<h2 id="control-plane-high-availability-stacked-etcd-quorum">⚖️ Control Plane High Availability &amp; Stacked etcd Quorum</h2>
+<p>The Kubernetes cluster runs <strong>upstream Kubernetes v1.37.1</strong> bootstrapped with <strong>kubeadm</strong>, utilizing a stacked <strong><code>etcd</code> Raft consensus engine</strong> and <strong><code>kube-vip</code></strong> control plane HA (virtual IP <code>10.0.0.201:6443</code>) distributed across the 3 control plane nodes:</p>
 <div class="panzoom-box" data-key="alt" id="panzoom0" oncontextmenu="return false;">
     <div class="panzoom-info-box panzoom-info-box-top">
 Hold "Alt" / "Option" to enable pan &amp; zoom
@@ -1427,11 +1427,11 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <h3 id="fault-tolerance-master-failover">Fault Tolerance &amp; Master Failover</h3>
 <ul>
 <li><strong>Quorum Calculation:</strong> A 3-node etcd cluster tolerates N = floor((3 - 1) / 2) = 1 node failure. If any single control plane node reboots, cluster state synchronization and API server operations remain uninterrupted.</li>
-<li><strong>Embedded Simplicity:</strong> Embedded etcd eliminates external database maintenance (e.g. external PostgreSQL/MySQL), using Raft state machines directly inside the K3s supervisor binary.</li>
+<li><strong>Stacked Simplicity:</strong> Stacked etcd runs dedicated etcd pods directly on the 3 control plane nodes co-located with kube-apiserver, maintaining Raft consensus without external database overhead.</li>
 </ul>
 <hr />
 <h2 id="workstation-dual-role">⚡ Workstation Dual Role</h2>
-<p><code>workstation</code> serves a dual purpose: it acts as a Kubernetes worker node scheduling GPU-accelerated workloads (Jellyfin transcoding, Tdarr pipelines) while simultaneously serving as a bare-metal Docker host running the centralized <strong>ELK Stack (Elasticsearch, Logstash, Kibana)</strong> for Security Information and Event Management (SIEM).</p>
+<p><code>workstation</code> serves a dual purpose: it acts as a heavy Kubernetes worker node hosting the cluster's in-cluster <strong>Elastic Stack</strong> (Elasticsearch, Logstash, Fleet Server under the ECK Operator) bound to dedicated NVMe storage, while simultaneously hosting standalone GPU-accelerated Docker containers (Jellyfin transcoding, Tdarr pipelines) via its 20GB RTX A4500 GPU.</p>
 <hr />
 <h2 id="remote-access-node-management">🔌 Remote Access &amp; Node Management</h2>
 <p>Nodes are accessible via SSH and managed via Docker contexts:</p>
@@ -1445,7 +1445,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>docker<span class="w"> </span>--context<span class="w"> </span>default<span class="w"> </span>ps<span class="w">             </span><span class="c1"># Local lenovo node</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>docker<span class="w"> </span>--context<span class="w"> </span>optiplex<span class="w"> </span>ps<span class="w">            </span><span class="c1"># Optiplex 9020</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>docker<span class="w"> </span>--context<span class="w"> </span>opti74<span class="w"> </span>ps<span class="w">              </span><span class="c1"># Optiplex 7040</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>docker<span class="w"> </span>--context<span class="w"> </span>workstation-engine<span class="w"> </span>ps<span class="w">  </span><span class="c1"># Workstation (ELK stack)</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>docker<span class="w"> </span>--context<span class="w"> </span>workstation-engine<span class="w"> </span>ps<span class="w">  </span><span class="c1"># Workstation (GPU media containers)</span>
 </span></code></pre></div>
 
 

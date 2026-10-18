@@ -1185,7 +1185,7 @@
   <span class="md-ellipsis">
     
   
-    ELK Stack & Index Lifecycle Management (ILM)
+    Elastic Stack & Index Lifecycle Management (ILM)
   
 
     
@@ -1583,7 +1583,7 @@ With CoreDNS conditional forwarding (<code>ad.lambertlab.us</code> -&gt; <code>1
 <p>Setting <code>EXTENSION_PRIORITY: "*,openid"</code> enforces that the local database and LDAP extensions execute <em>before</em> the OpenID Connect redirect kicks in. This ensures that the built-in <code>guacadmin</code> emergency account can always log in directly via the web form if internet connectivity or Entra ID is degraded.</p>
 <hr />
 <h2 id="software-defined-l2-vpc-attachment-multus-cni-kube-ovn">🌉 Software-Defined L2 VPC Attachment (Multus CNI &amp; Kube-OVN)</h2>
-<p>Standard Kubernetes pods route egress traffic through Flannel SNAT gateways, preventing direct Layer 2 connectivity to virtual machines and triggering firewall inspection delays.</p>
+<p>Standard Kubernetes pods route egress traffic through primary CNI (Cilium eBPF) SNAT gateways, preventing direct Layer 2 connectivity to virtual machines and triggering firewall inspection delays.</p>
 <p>Guacamole overcomes this by utilizing <strong>Multus CNI</strong> to attach directly into the Kube-OVN <strong><code>ovn-ad-vpc</code></strong> Software-Defined L2 VPC:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># kubernetes/infrastructure/guacamole/values.yaml</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">podAnnotations</span><span class="p">:</span>
@@ -1608,7 +1608,7 @@ With CoreDNS conditional forwarding (<code>ad.lambertlab.us</code> -&gt; <code>1
 </span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">"1024Mi"</span>
 </span></code></pre></div>
 <h3 id="2-client-ip-preservation">2. Client IP Preservation</h3>
-<p>To prevent proxy lockouts caused by internal flannel overlay IPs (<code>10.42.x.x</code> appearing as the client IP), Tomcat's <code>RemoteIpValve</code> is configured with a permissive internal regex:</p>
+<p>To prevent proxy lockouts caused by internal Cilium overlay IPs (<code>10.244.x.x</code> appearing as the client IP), Tomcat's <code>RemoteIpValve</code> is configured with a permissive internal regex:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">proxy</span><span class="p">:</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">allowedIpsRegex</span><span class="p">:</span><span class="w"> </span><span class="s">".*"</span>
