@@ -1446,6 +1446,7 @@
 <li>Pod pinned deterministically to <code>opti74</code> via <code>nodeSelector: kubernetes.io/hostname: opti74</code> to isolate gaming memory consumption from core manager workloads.</li>
 <li>Backed by a single-replica retained Longhorn persistent volume claim (<code>palworld-pvc</code> via <code>longhorn-1-replica</code>) to guarantee player progression survives cluster sync waves without multi-node replica storage overhead.</li>
 <li>Configured with memory limits (<code>limits.memory: 10Gi</code>) and auto-restart policies to manage game server memory leaks.</li>
+<li>Network Isolation: Secured under <code>gaming-default-deny</code> NetworkPolicy, explicitly permitting UDP 8211, TCP 25575, and TCP 8212 from <code>0.0.0.0/0</code> directly to the LoadBalancer VIP while keeping pod-to-pod ingress strictly bounded.</li>
 </ul>
 
 

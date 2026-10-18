@@ -1006,6 +1006,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#8-zero-trust-network-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Zero-Trust Network Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1382,6 +1393,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#8-zero-trust-network-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Zero-Trust Network Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1553,6 +1575,18 @@
 </tr>
 </tbody>
 </table>
+<hr />
+<h3 id="8-zero-trust-network-policies">8. Zero-Trust Network Policies</h3>
+<ul>
+<li><strong>Namespace:</strong> Cluster-wide (<code>kubernetes/network-policies</code>)</li>
+<li><strong>AppProject:</strong> <code>security</code></li>
+<li><strong>Sync Wave:</strong> <code>Wave 1</code></li>
+<li><strong>Architectural Role:</strong> Declarative namespace-level network isolation rules enforcing default-deny ingress semantics across security, media, observability, and gaming namespaces.</li>
+<li><strong>Key Configuration:</strong></li>
+<li>Enforces <code>policyTypes: [Ingress]</code> across target namespaces to restrict unauthorized lateral pod-to-pod movement while preserving outbound egress and DNS functionality.</li>
+<li>Allows cross-namespace ingress exclusively from <code>traefik</code> and CoreDNS (<code>kube-system</code>).</li>
+<li>Dedicated gaming policy (<code>gaming-default-deny</code>) allows incoming player traffic on ports 8211/UDP, 25575/TCP, and 8212/TCP from <code>0.0.0.0/0</code> directly to the Palworld LoadBalancer VIP (<code>10.0.0.205</code>).</li>
+</ul>
 
 
 
