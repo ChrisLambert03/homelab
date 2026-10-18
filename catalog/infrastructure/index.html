@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1653,7 +1653,7 @@
 <li><strong>Namespace:</strong> <code>external</code> (Managed via <code>kubernetes/apps/external-services.yaml</code>)</li>
 <li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://nas.lambertlab.us</code></li>
-<li><strong>Backend Target:</strong> Port 8181 on <code>san.lambertlab.us</code> via Kubernetes Service &amp; EndpointSlice</li>
+<li><strong>Backend Target:</strong> Port 8181 on <code>nas.lan</code> via Kubernetes <code>type: ExternalName</code> Service</li>
 <li><strong>Architectural Role:</strong> Centralized storage appliance operating system web management console.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Traefik Ingress with automatic wildcard TLS termination (<code>*.lambertlab.us</code>).</li>

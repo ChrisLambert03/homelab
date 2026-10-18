@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -996,10 +996,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#7-external-services-suite-endpointslice-integrations" class="md-nav__link">
+  <a href="#7-external-services-suite-externalname-integrations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7. External Services Suite (EndpointSlice Integrations)
+        7. External Services Suite (ExternalName Integrations)
       
     </span>
   </a>
@@ -1383,10 +1383,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#7-external-services-suite-endpointslice-integrations" class="md-nav__link">
+  <a href="#7-external-services-suite-externalname-integrations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7. External Services Suite (EndpointSlice Integrations)
+        7. External Services Suite (ExternalName Integrations)
       
     </span>
   </a>
@@ -1531,8 +1531,8 @@
 <li>Distributed <code>beszel-agent</code> containers mount <code>/var/run/docker.sock</code> and <code>/dev/dri</code> to report CPU, memory, per-container metrics, disk I/O, and GPU utilization without the resource footprint of Prometheus exporters.</li>
 </ul>
 <hr />
-<h3 id="7-external-services-suite-endpointslice-integrations">7. External Services Suite (EndpointSlice Integrations)</h3>
-<p>A collection of standalone node services, containers, and network appliances mapped into Kubernetes via ArgoCD (<code>kubernetes/apps/external-services.yaml</code>):</p>
+<h3 id="7-external-services-suite-externalname-integrations">7. External Services Suite (ExternalName Integrations)</h3>
+<p>A collection of standalone node services, containers, and network appliances mapped into Kubernetes via <code>type: ExternalName</code> Services backed by CoreDNS static LAN host resolution (<code>*.lan</code>), managed via ArgoCD (<code>kubernetes/apps/external-services.yaml</code>):</p>
 <table>
 <thead>
 <tr>
@@ -1545,31 +1545,31 @@
 <tbody>
 <tr>
 <td style="text-align: left;"><strong>Pi-hole</strong></td>
-<td style="text-align: left;">Docker / Host</td>
+<td style="text-align: left;"><code>pihole.lan:80</code> (<code>100.124.184.120</code>)</td>
 <td style="text-align: left;"><code>https://pihole.lambertlab.us</code></td>
-<td style="text-align: left;">Network-wide DNS sinkhole, local domain resolution, and tracking ad-blocker.</td>
+<td style="text-align: left;">Network-wide DNS sinkhole, local domain resolution, and tracking ad-blocker running in Tailscale network container.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Portainer</strong></td>
-<td style="text-align: left;"><code>optiplex</code></td>
+<td style="text-align: left;"><code>optiplex.lan:9000</code></td>
 <td style="text-align: left;"><code>https://portainer.lambertlab.us</code></td>
 <td style="text-align: left;">Graphical management web interface for standalone Docker hosts and containers.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Cockpit</strong></td>
-<td style="text-align: left;"><code>workstation</code></td>
+<td style="text-align: left;"><code>workstation.lan:9090</code></td>
 <td style="text-align: left;"><code>https://cockpit.lambertlab.us</code></td>
 <td style="text-align: left;">Web-based Linux system administration, storage controller monitoring, and terminal access.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Code-Server</strong></td>
-<td style="text-align: left;"><code>lenovo</code></td>
+<td style="text-align: left;"><code>lenovo.lan:9882</code></td>
 <td style="text-align: left;"><code>https://code.lambertlab.us</code></td>
 <td style="text-align: left;">Browser-based Visual Studio Code IDE environment running directly on the cluster manager.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Firefox Web</strong></td>
-<td style="text-align: left;"><code>opti74</code></td>
+<td style="text-align: left;"><code>opti74.lan:4000</code></td>
 <td style="text-align: left;"><code>https://firefox.lambertlab.us</code></td>
 <td style="text-align: left;">Isolated browser sandbox running on port 4000 for secure, disposable web browsing and testing.</td>
 </tr>
