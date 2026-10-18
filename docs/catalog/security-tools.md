@@ -9,7 +9,7 @@ This section documents secrets orchestration, centralized Security Information a
 ### 1. HashiCorp Vault
 * **Namespace:** `security`
 * **AppProject:** `security`
-* **Sync Wave:** `Wave 2`
+* **Sync Wave:** `Wave 5`
 * **Ingress Endpoint:** `https://vault.lambertlab.us`
 * **Architectural Role:** Centralized cryptographic secrets engine and identity broker.
 * **Storage Backend:** 1 GiB distributed Longhorn block storage with `longhorn-retain` StorageClass.
@@ -23,18 +23,18 @@ This section documents secrets orchestration, centralized Security Information a
 ### 2. External Secrets Operator (ESO)
 * **Namespace:** `external-secrets`
 * **Version:** Helm `v2.12.0`
-* **Sync Wave:** `Wave 2`
+* **Sync Waves:** `Wave 5` (Operator & Webhooks), `Wave 6` (`ClusterSecretStore` & `ExternalSecret` manifests)
 * **Architectural Role:** Kubernetes operator dynamically synchronizing external secret backends into native Kubernetes Secret objects.
 * **Key Configuration:**
   * Configures `ClusterSecretStore` named `vault-backend` pointing directly to in-cluster HashiCorp Vault (`http://vault.security.svc:8200`).
   * Authenticates using a scoped Vault token via `tokenSecretRef` stored in `external-secrets/vault-token`.
-  * Eliminates plaintext secrets from Git repositories while allowing workloads across all namespaces to consume standard Kubernetes secrets declaratively via `ExternalSecret` manifests (such as `kibana-secure-settings` in `observability` and `argocd-oidc-secret` in `argocd`).
+  * Eliminates plaintext secrets from Git repositories while allowing workloads across all namespaces to consume standard Kubernetes secrets declaratively via `ExternalSecret` manifests (such as `kibana-secure-settings` in `observability`, `oauth2-proxy-auth` in `security`, and `argocd-oidc-secret` in `argocd`).
 
 ---
 
 ### 3. OAuth2-Proxy & Traefik ForwardAuth
 * **Namespace:** `security`
-* **Sync Wave:** `Wave 2`
+* **Sync Wave:** `Wave 6`
 * **Ingress Endpoint:** `https://auth.lambertlab.us`
 * **Architectural Role:** Zero-Trust authentication gateway leveraging Microsoft Entra ID (OIDC) to protect internal applications via Traefik `ForwardAuth` middlewares.
 * **Key Configuration:**
@@ -45,8 +45,9 @@ This section documents secrets orchestration, centralized Security Information a
 
 ---
 
-### 3. Centralized ELK Stack & Elastic Agent
+### 4. Centralized ELK Stack & Elastic Agent
 * **Host Environment:** Kubernetes `observability` (ECK Operator-managed Elasticsearch, Logstash, Kibana on `workstation`) & `kube-system` (Elastic Agent DaemonSet)
+* **Sync Waves:** `Wave 5` (ECK Operator), `Wave 6` (Elasticsearch Cluster), `Wave 7` (Kibana, Logstash, Fleet Server), `Wave 9` (Elastic Agent DaemonSet)
 * **Ingress Endpoints:** `https://kibana.lambertlab.us`, `https://fleet.lambertlab.us`, `https://es.lambertlab.us` (Logstash on `:12201` GELF)
 * **Architectural Role:** Production-level Security Information and Event Management (SIEM) and log analytics pipeline.
 * **Storage Backend:** Dedicated local NVMe storage (`/home/chris/services/elasticsearch/data`) on `workstation`.
@@ -61,10 +62,10 @@ This section documents secrets orchestration, centralized Security Information a
 
 ---
 
-### 4. Homarr Dashboard
+### 5. Homarr Dashboard
 * **Namespace:** `observability`
 * **AppProject:** `observability`
-* **Sync Wave:** `Wave 3`
+* **Sync Wave:** `Wave 8`
 * **Ingress Endpoint:** `https://homarr.lambertlab.us`
 * **Architectural Role:** Customizable homelab landing portal and application launcher.
 * **Storage Backend:** Local host storage on `lenovo` (`/home/chris/services/homarr/homarr/appdata` via `hostPath`).
@@ -75,10 +76,10 @@ This section documents secrets orchestration, centralized Security Information a
 
 ---
 
-### 5. Ntfy Push Notification Service
+### 6. Ntfy Push Notification Service
 * **Namespace:** `observability`
 * **AppProject:** `observability`
-* **Sync Wave:** `Wave 3`
+* **Sync Wave:** `Wave 8`
 * **Ingress Endpoint:** `https://ntfy.lambertlab.us`
 * **Architectural Role:** Lightweight, HTTP-based publish-subscribe push notification service.
 * **Storage Backend:** Persistent volume backed by Longhorn with `longhorn-retain` policy.
@@ -88,7 +89,7 @@ This section documents secrets orchestration, centralized Security Information a
 
 ---
 
-### 6. Beszel Hub & Distributed Agents
+### 7. Beszel Hub & Distributed Agents
 * **Host Environments:** Beszel Hub on `lenovo` (Docker), Beszel Agents on `lenovo`, `optiplex`, and `workstation` (Docker)
 * **Management Engine:** Terraform Docker provider (`docker/lenovo/app-beszel.tf`, `app-beszel-agent.tf`)
 * **Ingress Endpoint:** `https://beszel.lambertlab.us`
@@ -99,8 +100,10 @@ This section documents secrets orchestration, centralized Security Information a
 
 ---
 
-### 7. External Services Suite (ExternalName Integrations)
-A collection of standalone node services, containers, and network appliances mapped into Kubernetes via `type: ExternalName` Services backed by CoreDNS static LAN host resolution (`*.lan`), managed via ArgoCD (`kubernetes/apps/external-services.yaml`):
+### 8. External Services Suite (ExternalName Integrations)
+* **Namespace:** `external` (Managed via `kubernetes/apps/external-services.yaml`)
+* **Sync Wave:** `Wave 7`
+* **Architectural Role:** Standalone node services, containers, and network appliances mapped into Kubernetes via `type: ExternalName` Services backed by CoreDNS static LAN host resolution (`*.lan`):
 
 | Service | Host / Address | Ingress Endpoint | Description |
 | :--- | :--- | :--- | :--- |
@@ -112,7 +115,7 @@ A collection of standalone node services, containers, and network appliances map
 
 ---
 
-### 8. Zero-Trust Network Policies
+### 9. Zero-Trust Network Policies
 * **Namespace:** Cluster-wide (`kubernetes/network-policies`)
 * **AppProject:** `security`
 * **Sync Wave:** `Wave 1`

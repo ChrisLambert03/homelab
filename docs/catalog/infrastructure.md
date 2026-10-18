@@ -8,7 +8,7 @@ This section details the foundational control plane components, software-defined
 
 ### 1. ArgoCD High Availability (HA)
 * **Namespace:** `argocd`
-* **Sync Wave:** `Wave 2` (AppProjects in `Wave 0`)
+* **Sync Wave:** `Wave 7` (AppProjects in `Wave 0`)
 * **Ingress Endpoint:** `https://argocd.lambertlab.us`
 * **Architectural Role:** GitOps continuous delivery engine. Reconciles cluster state against `origin/main` across deterministic synchronization waves.
 * **Key Configuration:**
@@ -21,11 +21,12 @@ This section details the foundational control plane components, software-defined
 
 ### 2. Traefik Edge Ingress Controller
 * **Namespace:** `kube-system`
-* **Management:** Native K3s Ingress Controller
+* **Version:** Helm `42.0.0`
+* **Sync Waves:** `Wave 5` (DaemonSet Controller), `Wave 6` (Middlewares & TLSStore)
 * **Endpoints:** Ports 80 (HTTP redirect), 443 (HTTPS termination)
 * **Architectural Role:** Cluster edge reverse proxy terminating external client TLS and enforcing security middlewares.
 * **Key Configuration:**
-  * Wildcard TLSStore configured in `kube-system` referencing `wildcard-lambertlab-us-tls`.
+  * Wildcard TLSStore configured in `kube-system` referencing `lambertlab-wildcard-tls`.
   * Security middlewares: `default-https-redirect` and `default-admin-only-access` restricting administrative dashboards.
   * Direct Tailscale multi-A round-robin ingress preserving remote client source IPs without intermediate SNAT.
 
@@ -34,7 +35,7 @@ This section details the foundational control plane components, software-defined
 ### 3. Cert-Manager
 * **Namespace:** `cert-manager`
 * **Version:** Helm `v1.21.2`
-* **Sync Wave:** `Wave 1`
+* **Sync Waves:** `Wave 5` (Operator & Webhooks), `Wave 6` (ExternalSecret, ClusterIssuer, Wildcard Certificate)
 * **Architectural Role:** Automated TLS x509 certificate management.
 * **Key Configuration:**
   * `ClusterIssuer` utilizing Let's Encrypt ACME with Cloudflare DNS-01 API challenges.
@@ -46,7 +47,7 @@ This section details the foundational control plane components, software-defined
 ### 4. Kube-OVN Software-Defined L2 VPC (`ovn-ad-vpc`)
 * **Namespace:** `kube-system` (Engine) & `vms` (Networks)
 * **Version:** Helm `v1.16.12` (Secondary CNI)
-* **Sync Waves:** Operator & Engine in `Wave 1`, Subnets & NADs in `Wave 2`
+* **Sync Waves:** `Wave 3` (Operator & Engine), `Wave 4` (Subnets & NADs)
 * **Architectural Role:** Software-Defined Networking (SDN) overlay providing isolated Layer 2 VPCs, embedded IPAM, and Geneve UDP encapsulation.
 * **Key Configuration:**
   * Replaces legacy NMState Linux host bridge (`br-lab0`) with Geneve UDP encapsulation, bypassing Wi-Fi multicast restrictions and host iptables `FORWARD` drops.
@@ -60,7 +61,7 @@ This section details the foundational control plane components, software-defined
 ### 5. Multus CNI (Thick CNI DaemonSet)
 * **Namespace:** `kube-system`
 * **Version:** Helm `v4.3.104` (Thick CNI DaemonSet)
-* **Sync Wave:** `Wave 1`
+* **Sync Wave:** `Wave 2`
 * **Architectural Role:** Multi-network interface plugin enabling pods and VMs to attach directly to multiple network fabrics.
 * **Key Configuration:**
   * `NetworkAttachmentDefinition` named `ovn-ad-vpc` mapped to provider `ovn-ad-vpc.vms.ovn`.
@@ -71,18 +72,19 @@ This section details the foundational control plane components, software-defined
 
 ### 6. CoreDNS Active Directory Conditional Forwarder
 * **Namespace:** `kube-system`
-* **Sync Wave:** `Wave 2`
+* **Sync Wave:** `Wave 4`
 * **Architectural Role:** In-cluster DNS resolver providing transparent Active Directory hostname resolution.
 * **Key Configuration:**
-  * Configured via `kubernetes/config/coredns.yaml`.
+  * Configured via `kubernetes/config/coredns/coredns.yaml` and `coredns-patch.yaml`.
   * Conditional zone forwarder for `ad.lambertlab.us:53` pointing to DC01 (`10.10.0.10`).
   * Enforces active health checking: `health_check 5s` and `max_fails 2`, failing fast when DC01 reboots to eliminate 30+ second application UDP lookup timeouts.
+  * Dual-homed pod attachment via Multus annotation `k8s.v1.cni.cncf.io/networks: vms/ovn-ad-vpc`.
 
 ---
 
 ### 7. Tailscale Operator & Mesh Gateway
 * **Namespace:** `tailscale`
-* **Sync Wave:** `Wave 1`
+* **Sync Wave:** Inactive / Commented Out
 * **Architectural Role:** Zero-trust WireGuard mesh overlay networking.
 * **Key Configuration:**
   * Enables remote access without open public firewall ports.
@@ -93,7 +95,7 @@ This section details the foundational control plane components, software-defined
 
 ### 8. NVIDIA GPU Operator
 * **Namespace:** `gpu-operator`
-* **Sync Wave:** `Wave 1`
+* **Sync Wave:** `Wave 5`
 * **Architectural Role:** Automates management of NVIDIA software components on GPU worker nodes (`workstation`).
 * **Key Configuration:**
   * Probes and provisions NVIDIA drivers, Container Toolkit, and Kubernetes device plugins for the host **RTX A4500 (20 GB VRAM)**.
@@ -103,7 +105,7 @@ This section details the foundational control plane components, software-defined
 
 ### 9. Longhorn Distributed Block Storage
 * **Namespace:** `longhorn-system`
-* **Sync Wave:** `Wave 1`
+* **Sync Wave:** `Wave 3`
 * **Ingress Endpoint:** `https://longhorn.lambertlab.us`
 * **Architectural Role:** Highly available, distributed cloud-native block storage.
 * **Key Configuration:**
@@ -117,11 +119,11 @@ This section details the foundational control plane components, software-defined
 ### 10. KubeVirt Operator & Containerized Data Importer (CDI)
 * **Namespaces:** `kubevirt`, `cdi`
 * **Versions:** KubeVirt `v1.9.0`, CDI `v1.66.1`
-* **Sync Wave:** Decoupled into `Wave 1` (Operators & CRDs) and `Wave 2` (Runtime Config & Ingress)
+* **Sync Wave:** Decoupled into `Wave 5` (Operators & CRDs) and `Wave 6` (Runtime Config & Ingress)
 * **Ingress Endpoint:** `https://cdi.lambertlab.us` (CDI uploadproxy)
 * **Architectural Role:** Bare-metal virtualization management and virtual disk ingestion engine.
 * **Key Configuration:**
-  * Decoupled GitOps architecture (`kubevirt` / `cdi` in Wave 1 and `kubevirt-config` / `cdi-config` in Wave 2) eliminating cold-start webhook race conditions.
+  * Decoupled GitOps architecture (`kubevirt` / `cdi` in Wave 5 and `kubevirt-config` / `cdi-config` in Wave 6) eliminating cold-start webhook race conditions.
   * Native virtualization running on Linux KVM/QEMU hypervisor.
   * Facilitates live VM lifecycle operations (`virtctl`).
   * Traefik custom `ServersTransport` proxying `cdi-uploadproxy` with certificate validation bypass.
@@ -130,7 +132,7 @@ This section details the foundational control plane components, software-defined
 
 ### 11. TerraMaster TOS Web Portal
 * **Namespace:** `external` (Managed via `kubernetes/apps/external-services.yaml`)
-* **Sync Wave:** `Wave 2`
+* **Sync Wave:** `Wave 7`
 * **Ingress Endpoint:** `https://nas.lambertlab.us`
 * **Backend Target:** Port 8181 on `nas.lan` via Kubernetes `type: ExternalName` Service
 * **Architectural Role:** Centralized storage appliance operating system web management console.
@@ -144,7 +146,7 @@ This section details the foundational control plane components, software-defined
 ### 12. Elastic Cloud on Kubernetes (ECK) Operator
 * **Namespace:** `observability`
 * **Version:** Helm `3.5.0`
-* **Sync Wave:** `Wave 1`
+* **Sync Wave:** `Wave 5`
 * **Architectural Role:** Kubernetes operator automating the provisioning, orchestration, and lifecycle management of the Elastic Stack (Elasticsearch, Kibana, Logstash, Beats, and Elastic Agent).
 * **Key Configuration:**
   * Deployed via official Elastic Helm repository (`https://helm.elastic.co`, chart: `eck-operator`).
@@ -156,9 +158,20 @@ This section details the foundational control plane components, software-defined
 ### 13. Kubernetes Metrics Server
 * **Namespace:** `kube-system`
 * **Version:** Helm `3.12.2` (upstream `kubernetes-sigs/metrics-server`)
-* **Sync Wave:** `Wave 1`
+* **Sync Wave:** `Wave 2`
 * **Architectural Role:** Core metrics aggregator exposing the `metrics.k8s.io` API for `kubectl top node`, `kubectl top pod`, and autoscaling pipelines.
 * **Key Configuration:**
   * Configured with `--kubelet-insecure-tls` to scrape Kubelet Summary APIs over HTTPS across nodes without rejecting self-signed Kubelet serving certificates.
   * Registers `v1beta1.metrics.k8s.io` directly with the Kubernetes API aggregation layer.
+
+---
+
+### 14. Cilium eBPF CNI & L2 Announcement
+* **Namespace:** `kube-system`
+* **Sync Waves:** `Wave 1` (eBPF CNI & IPAM), `Wave 2` (`cilium-config` L2 pools & announcement policies)
+* **Architectural Role:** Primary cluster CNI providing eBPF kube-proxy replacement, pod IPAM, network policies, and Layer 2 service load balancing.
+* **Key Configuration:**
+  * eBPF routing replacing iptables kube-proxy.
+  * `CiliumLoadBalancerIPPool` (`lan-pool`, 10.0.0.202–215) providing bare-metal LoadBalancer IPs.
+  * Node-targeted L2 announcement policies (e.g., pinning Palworld VIPs to `opti74`).
 

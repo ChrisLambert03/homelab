@@ -8,7 +8,7 @@ This section documents the automated media indexing, hardware-accelerated transc
 
 ### 1. Jellyfin Media Server
 * **Namespace:** `media`
-* **Sync Wave:** `Wave 3`
+* **Sync Wave:** `Wave 8`
 * **Ingress Endpoint:** `https://jellyfin.lambertlab.us`
 * **Architectural Role:** Privacy-focused, high-performance open-source media streaming server.
 * **Storage Backend:** Persistent application configuration and transcode cache on host NVMe (`/home/chris/services/k3s-jellyfin/config` on `workstation`, 15Gi `hostPath`); media libraries mounted via ReadWriteMany (RWX) NFS shares directly from the TerraMaster NAS 14TB pool (`/Volume1/data`).
@@ -21,7 +21,7 @@ This section documents the automated media indexing, hardware-accelerated transc
 
 ### 2. Sonarr
 * **Namespace:** `media`
-* **Sync Wave:** `Wave 3`
+* **Sync Wave:** `Wave 8`
 * **Ingress Endpoint:** `https://sonarr.lambertlab.us`
 * **Architectural Role:** Automated TV series collection manager and download scheduler.
 * **Storage Backend:** Dedicated 20 GB raw iSCSI block LUN (`iqn.2026-06.us.lambertlab:sonarr-config` on TerraMaster SAN) for application database and settings; ReadWriteMany NFS mount (`/Volume1/data`) for media library organization.
@@ -33,7 +33,7 @@ This section documents the automated media indexing, hardware-accelerated transc
 
 ### 3. Radarr
 * **Namespace:** `media`
-* **Sync Wave:** `Wave 3`
+* **Sync Wave:** `Wave 8`
 * **Ingress Endpoint:** `https://radarr.lambertlab.us`
 * **Architectural Role:** Automated movie collection manager and quality profile scheduler.
 * **Storage Backend:** Dedicated 20 GB raw iSCSI block LUN (`iqn.2026-06.us.lambertlab:radarr-config` on TerraMaster SAN) for movie database and configurations; ReadWriteMany NFS mount (`/Volume1/data`) for media library management.
@@ -46,7 +46,7 @@ This section documents the automated media indexing, hardware-accelerated transc
 
 ### 4. Prowlarr
 * **Namespace:** `media`
-* **Sync Wave:** `Wave 3`
+* **Sync Wave:** `Wave 8`
 * **Ingress Endpoint:** `https://prowlarr.lambertlab.us`
 * **Architectural Role:** Centralized indexer proxy integrating Usenet and BitTorrent feeds.
 * **Storage Backend:** Dedicated 2 GB raw iSCSI block LUN (`iqn.2026-06.us.lambertlab:prowlarr-config` on TerraMaster SAN) for indexer SQLite database and configurations.
@@ -71,7 +71,7 @@ This section documents the automated media indexing, hardware-accelerated transc
 ### 6. Palworld Dedicated Game Server
 * **Namespace:** `gaming`
 * **AppProject:** `gaming`
-* **Sync Wave:** `Wave 3`
+* **Sync Wave:** `Wave 8`
 * **Network Ports:** Port 8211 UDP (Game), 25575 TCP (RCON), 8212 TCP (REST API)
 * **LoadBalancer VIP:** `10.0.0.205` announced exclusively by `opti74` via Cilium L2 announcement policy (`palworld-l2-policy`).
 * **Architectural Role:** Dedicated, high-performance multi-player game server.

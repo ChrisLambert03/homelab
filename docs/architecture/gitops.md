@@ -10,60 +10,86 @@ In **LambertLab**, Git is the absolute single source of truth for all Kubernetes
 graph TD
     Root["root-apps Application<br/>(App-of-Apps Pattern)"]
 
-    Root --> Wave0
-    Root --> Wave1
-    Wave0 -.-> Wave1
-    Wave1 -.-> Wave2
-    Wave2 -.-> Wave3
-
-    subgraph Row1[" "]
-        subgraph W0["Sync Wave 0: AppProjects Scaffolding"]
-            Wave0["AppProjects"]
-            P1["infrastructure"]
-            P2["security"]
-            P3["media"]
-            P4["observability"]
-            P5["gaming"]
-        end
-
-        subgraph W1["Sync Wave 1: Foundation & Operators"]
-            Wave1["Foundations"]
-            Longhorn["Longhorn Storage"]
-            Multus["Multus Thick CNI"]
-            KubeOVN["Kube-OVN SDN"]
-            KubeVirtOp["KubeVirt & CDI"]
-            CertMgr["Cert-Manager v1.21.2"]
-            GPUOp["NVIDIA GPU Operator"]
-        end
+    subgraph W0["Sync Wave 0: Bootstrap Scaffolding & Credentials"]
+        Wave0["AppProjects & cluster-base"]
+        P["AppProjects Scaffolding"]
+        CB["cluster-base (Secrets & Admin RBAC)"]
     end
 
-    subgraph Row2[" "]
-        subgraph W2["Sync Wave 2: Security & Gateways"]
-            Wave2["Gateways & Config"]
-            Vault["HashiCorp Vault"]
-            ExtSecrets["External Secrets"]
-            ClusterCfg["CoreDNS & TLSStore"]
-            KubeOVNNet["ovn-ad-vpc VPC"]
-            Guac["Apache Guacamole"]
-            KVMgr["KubeVirt Manager"]
-            ExtSvc["External Services"]
-        end
-
-        subgraph W3["Sync Wave 3: Workloads & VMs"]
-            Wave3["Workloads & VMs"]
-            DC01VM["DC01 Active Directory"]
-            Win11VM["Win11 Workstation"]
-            OPNsenseVM["OPNsense Firewall"]
-            MediaStack["ARR Media Stack / Jellyfin"]
-            ObsStack["Homarr / Ntfy"]
-            GamingStack["Palworld Dedicated"]
-        end
-
-        subgraph W5["Sync Wave 5: SIEM Telemetry"]
-            Wave5["Observability"]
-            ElasticAgent["Elastic Agent DaemonSet"]
-        end
+    subgraph W1["Sync Wave 1: Primary CNI Fabric"]
+        Wave1["Cilium & Policies"]
+        Cilium["Cilium eBPF CNI"]
+        NetPol["Network Policies"]
     end
+
+    subgraph W2["Sync Wave 2: Secondary CNI & Metrics"]
+        Wave2["Multus & Metrics"]
+        Multus["Multus Meta-CNI"]
+        CiliumCfg["cilium-config (L2 Pools)"]
+        Metrics["Metrics Server"]
+    end
+
+    subgraph W3["Sync Wave 3: SDN Engine & Storage"]
+        Wave3["Overlay SDN & PVs"]
+        KubeOVN["Kube-OVN Engine"]
+        LocalPath["Local Path Provisioner"]
+        Longhorn["Longhorn Storage"]
+        MediaStorage["Media Storage PVs"]
+    end
+
+    subgraph W4["Sync Wave 4: SDN Networks & Dual-Homed DNS"]
+        Wave4["VPCs & CoreDNS"]
+        OVNNet["kube-ovn-networks (ovn-ad-vpc)"]
+        CoreDNS["coredns (AD Forwarder & Multus Patch)"]
+    end
+
+    subgraph W5["Sync Wave 5: Ingress & Compute Operators"]
+        Wave5["Foundational Operators"]
+        Traefik["Traefik Ingress DaemonSet"]
+        CertMgr["Cert-Manager Operator"]
+        ESO["External Secrets Operator"]
+        Vault["HashiCorp Vault"]
+        KubeVirt["KubeVirt & CDI Operators"]
+        GPU["NVIDIA GPU Operator"]
+        ECK["ECK Operator"]
+    end
+
+    subgraph W6["Sync Wave 6: Ingress Config, Certs & Runtimes"]
+        Wave6["Runtimes & Configs"]
+        TraefikCfg["traefik-config (Middlewares & TLSStore)"]
+        CertMgrCfg["cert-manager-config (Issuer & Wildcard)"]
+        ESOCfg["external-secrets-config (vault-backend)"]
+        KubeVirtCfg["KubeVirt & CDI Configs"]
+        ES["Elasticsearch Cluster"]
+        OAuth2Proxy["OAuth2-Proxy"]
+    end
+
+    subgraph W7["Sync Wave 7: Management Platforms & Observability"]
+        Wave7["Platform Gateways"]
+        ArgoHA["ArgoCD HA & Ingress"]
+        KVMgr["KubeVirt Manager"]
+        ExtSvc["External Services"]
+        Guac["Apache Guacamole (ovn-ad-vpc)"]
+        Kibana["Kibana & Logstash"]
+        Fleet["Fleet Server"]
+    end
+
+    subgraph W8["Sync Wave 8: Workloads, VMs & Consumer Apps"]
+        Wave8["Workloads & Guests"]
+        DC01VM["DC01 Active Directory"]
+        Win11VM["Win11 Workstation"]
+        OPNsenseVM["OPNsense Firewall"]
+        Workloads["Media Stack, Homarr, Ntfy, Palworld"]
+    end
+
+    subgraph W9["Sync Wave 9: Host Telemetry & Day-2 Operations"]
+        Wave9["Host Telemetry"]
+        ElasticAgent["Elastic Agent DaemonSet"]
+        AutoOps["AutoOps Maintenance Agents"]
+    end
+
+    Root --> W0
+    W0 --> W1 --> W2 --> W3 --> W4 --> W5 --> W6 --> W7 --> W8 --> W9
 ```
 
 ---
@@ -79,17 +105,22 @@ ArgoCD is deployed in full **High Availability (HA)** mode across the 3-node con
 
 ---
 
-## 🌊 Deterministic Synchronization Waves
+## 🌊 Deterministic Synchronization Waves (Waves 0–9)
 
 ArgoCD assigns resources to discrete, sequential **Sync Waves** (evaluated in ascending numeric order). Wave $N+1$ does not initiate until Wave $N$ reaches a healthy, synchronized state:
 
 | Sync Wave | Category | Primary Resources & Applications | Architectural Purpose |
 | :---: | :--- | :--- | :--- |
-| **`0`** | **AppProjects Scaffolding** | `infrastructure`, `security`, `media`, `observability`, `gaming` | Establishes project RBAC boundaries, source repo constraints, and allowed cluster destinations. |
-| **`1`** | **Foundation & Storage** | `longhorn`, `multus`, `kube-ovn`, `kubevirt`, `cdi`, `cert-manager`, `nvidia-gpu-operator`, `eck-operator` | Installs core storage drivers, CNI plugins & SDN overlay engine (Kube-OVN), hypervisor operators, foundational CRDs, and the Elastic Cloud on Kubernetes operator. |
-| **`2`** | **Security & Core Gateways** | `vault`, `external-secrets`, `cluster-config`, `kube-ovn-networks`, `guacamole`, `kubevirt-manager`, `external-services`, `argocd` | Configures Kube-OVN VPC overlay (`ovn-ad-vpc`), secrets engines, custom DNS forwarders, and clientless gateways. *(NMState operator & policies archived/pruned).* |
-| **`3`** | **Consumer Workloads & VMs** | `dc01`, `win11`, `opnsense`, `jellyfin`, `sonarr`, `radarr`, `prowlarr`, `homarr`, `ntfy`, `palworld` | Deploys active virtual machines, database consumers, media applications, and game servers. |
-| **`5`** | **SIEM Host Telemetry** | `elastic-agent` | Deploys cluster-wide Elastic Agent DaemonSet with memory caps, streaming infrastructure logs to ELK. |
+| **`0`** | **Bootstrap Scaffolding** | `projects`, `cluster-base` | Creates ArgoCD `AppProject` RBAC boundaries and injects base static secrets (`vault-token`, `argocd-secret`, `vault-secrets`, `win11-unattend-secret`) and `entra-admin-rbac`. **Zero CRD dependencies.** |
+| **`1`** | **Primary CNI Fabric** | `cilium`, `network-policies` | Primary eBPF CNI, pod IPAM, and kube-proxy replacement. Baseline network policies. Pods can now schedule and communicate across nodes. |
+| **`2`** | **Secondary CNI & Metrics** | `multus`, `cilium-config`, `metrics-server` | Multus registers `NetworkAttachmentDefinition` CRD. `cilium-config` creates `CiliumLoadBalancerIPPool` (10.0.0.202-215) and L2 announcement policies. Metrics server enables `metrics.k8s.io`. |
+| **`3`** | **SDN Engine & Storage** | `kube-ovn`, `local-path-provisioner`, `longhorn`, `media-storage` | Kube-OVN runs as secondary CNI (`nonPrimaryCNI: true`) through Multus. Local path and Longhorn distributed storage classes become available for stateful pods. |
+| **`4`** | **SDN Networks & Dual-Homed DNS** | `kube-ovn-networks`, `coredns` | Creates `ovn-ad-vpc` NetworkAttachmentDefinition and Subnet (`10.10.0.0/24`). CoreDNS ConfigMap (`ad.lambertlab.us -> 10.10.0.10`) and Multus network patch. Safe because Multus and Kube-OVN are fully initialized. |
+| **`5`** | **Core Operators** | `traefik`, `cert-manager`, `external-secrets`, `vault`, `cdi`, `kubevirt`, `nvidia-gpu-operator`, `eck-operator` | Deploys Traefik DaemonSet (host ports 80/443, IngressClass `traefik`) and all foundational operators. Registers Traefik, cert-manager, ESO, KubeVirt, and ECK CRDs. |
+| **`6`** | **Runtimes & Configs** | `traefik-config`, `cert-manager-config`, `external-secrets-config`, `cdi-config`, `kubevirt-config`, `elasticsearch`, `oauth2-proxy` | Deploys Traefik middlewares, `ClusterSecretStore` (`vault-backend`), `ExternalSecret` for Cloudflare token, `ClusterIssuer`, wildcard certificate (`lambertlab-wildcard-tls`), and Traefik default `TLSStore`. |
+| **`7`** | **Management Platforms** | `argocd`, `kubevirt-manager`, `external-services`, `guacamole`, `kibana`, `logstash`, `fleet-server` | ArgoCD edge ingress, KubeVirt UI, external service proxies (Cockpit, Portainer, Pi-hole), Guacamole (dual-homed onto `ovn-ad-vpc`), Kibana, Logstash, and Fleet Server. |
+| **`8`** | **Workloads & VMs** | `dc01`, `win11`, `opnsense`, `homarr`, `ntfy`, `jellyfin`, `prowlarr`, `radarr`, `sonarr`, `palworld` | KubeVirt VMs attached to `ovn-ad-vpc` with static IP reservations (`10.10.0.10` DC01, `10.10.0.1` OPNsense), user-facing dashboards, ARR media stack, and Palworld game server. |
+| **`9`** | **Telemetry & Day-2** | `elastic-agent`, `autoops` | Elastic Agent DaemonSet streaming host syslog, container logs, and API server audit logs to Fleet/Elasticsearch. AutoOps cluster automation. |
 
 ---
 

@@ -9,7 +9,7 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 ### 1. DC01: Active Directory Domain Controller
 * **Namespace:** `vms` (KubeVirt `VirtualMachine`)
 * **Operating System:** Windows Server 2025 Standard
-* **Sync Wave:** `Wave 3`
+* **Sync Wave:** `Wave 8`
 * **Internal IP:** `10.10.0.10` (Static on `ovn-ad-vpc` via Kube-OVN IPAM)
 * **FQDN:** `dc01.ad.lambertlab.us`
 * **Hardware Profile:** 4 vCPU, 8 GiB RAM, host-passthrough CPU topology.
@@ -26,7 +26,7 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 ### 2. Windows 11 Enterprise Workstation (`win11`)
 * **Namespace:** `vms` (KubeVirt `VirtualMachine`)
 * **Operating System:** Windows 11 Enterprise LTSC
-* **Sync Wave:** `Wave 3`
+* **Sync Wave:** `Wave 8`
 * **Internal IP:** Dynamic DHCP via Kube-OVN IPAM (e.g. active lease `10.10.0.11`)
 * **FQDN:** `win11.ad.lambertlab.us`
 * **Hardware Profile:** 4 vCPU, 8 GiB RAM, host-passthrough CPU topology.
@@ -43,13 +43,13 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 ### 3. OPNsense Firewall & Routing Gateway
 * **Namespace:** `vms` (KubeVirt `VirtualMachine`)
 * **Operating System:** FreeBSD 14 / OPNsense
-* **Sync Wave:** `Wave 3`
+* **Sync Wave:** `Wave 8`
 * **Ingress Endpoint:** `https://opnsense.lambertlab.us`
 * **Hardware Profile:** 4 vCPU, 4 GiB RAM.
 * **Storage Backend:** Dedicated 40 GB raw iSCSI block LUN (`iqn.2026-09.us.lambertlab:opnsense-boot`) on TerraMaster SAN; NFS installer mount (`/Volume3/isos/opnsense`).
 * **Architectural Role:** Virtualized edge perimeter router, NAT gateway, and security firewall.
 * **Key Configuration:**
-  * Multi-NIC topology: primary Flannel interface for pod masquerade and secondary Multus interface on `ovn-ad-vpc` (`10.10.0.1`) serving as the default gateway.
+  * Multi-NIC topology: primary Cilium interface for pod masquerade and secondary Multus interface on `ovn-ad-vpc` (`10.10.0.1`) serving as the default gateway.
   * Internal hairpin routing directing `100.64.0.0/10` LAN queries to the Traefik Ingress Service ClusterIP (`10.43.204.125:443`).
   * Traefik Ingress with custom backend HTTPS serverstransport.
 
@@ -57,7 +57,7 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 
 ### 4. KubeVirt Manager Web UI
 * **Namespace:** `kubevirt-manager`
-* **Sync Wave:** `Wave 2`
+* **Sync Wave:** `Wave 7`
 * **Ingress Endpoint:** `https://kubevirt-manager.lambertlab.us`
 * **Architectural Role:** Intuitive, web-based management graphical interface for KubeVirt virtual machines, disks, and network attachments.
 * **Key Configuration:**
@@ -68,7 +68,7 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 
 ### 5. Apache Guacamole Gateway
 * **Namespace:** `guacamole`
-* **Sync Wave:** `Wave 2`
+* **Sync Wave:** `Wave 7`
 * **Ingress Endpoint:** `https://guacamole.lambertlab.us`
 * **Architectural Role:** Clientless HTML5 remote desktop gateway providing browser-based RDP and SSH access.
 * **Key Configuration:**
@@ -76,4 +76,4 @@ This section documents the virtual machines, edge routing firewalls, and remote 
   * InitContainer automated injection of internal Active Directory Root CA into Java truststore (`cacerts`).
   * Dual authentication chaining via `EXTENSION_PRIORITY: "*,openid"`, supporting Microsoft Entra ID OIDC SSO while preserving local `guacadmin` emergency recovery.
   * Backend PostgreSQL database running on Longhorn distributed storage with `longhorn-retain` policy.
-  * `guacd` resource limit guardrail (`cpu: 2000m`) preventing thread pool exhaustion on 32-thread Xeon compute nodes.
+  * `guacd` resource limit (`cpu: 2000m`) preventing thread pool exhaustion on 32-thread Xeon compute nodes.
