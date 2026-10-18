@@ -5,7 +5,7 @@ metadata:
   name: guacamole
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "7"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -39,7 +39,6 @@ spec:
       - CreateNamespace=true
       - ServerSideApply=true
       - ApplyOutOfSyncOnly=true
-
   ignoreDifferences:
     - group: apps
       kind: StatefulSet

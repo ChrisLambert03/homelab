@@ -5,7 +5,7 @@ metadata:
   name: ntfy
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "8"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -25,7 +25,6 @@ spec:
       - CreateNamespace=true
       - ServerSideApply=true
       - ApplyOutOfSyncOnly=true
-
   ignoreDifferences:
     - group: apps
       kind: StatefulSet
