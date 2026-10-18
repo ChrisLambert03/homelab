@@ -549,21 +549,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workstation-dual-role-compute-guardrails" class="md-nav__link">
+  <a href="#workstation-dual-role" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ⚡ Workstation Dual Role &amp; Compute Guardrails
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#host-storage-hygiene-operational-rules" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🧹 Host Storage Hygiene &amp; Operational Rules
+        ⚡ Workstation Dual Role
       
     </span>
   </a>
@@ -1289,21 +1278,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#workstation-dual-role-compute-guardrails" class="md-nav__link">
+  <a href="#workstation-dual-role" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ⚡ Workstation Dual Role &amp; Compute Guardrails
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#host-storage-hygiene-operational-rules" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🧹 Host Storage Hygiene &amp; Operational Rules
+        ⚡ Workstation Dual Role
       
     </span>
   </a>
@@ -1452,48 +1430,22 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <li><strong>Embedded Simplicity:</strong> Embedded etcd eliminates external database maintenance (e.g. external PostgreSQL/MySQL), using Raft state machines directly inside the K3s supervisor binary.</li>
 </ul>
 <hr />
-<h2 id="workstation-dual-role-compute-guardrails">⚡ Workstation Dual Role &amp; Compute Guardrails</h2>
+<h2 id="workstation-dual-role">⚡ Workstation Dual Role</h2>
 <p><code>workstation</code> serves a dual purpose: it acts as a Kubernetes worker node scheduling GPU-accelerated workloads (Jellyfin transcoding, Tdarr pipelines) while simultaneously serving as a bare-metal Docker host running the centralized <strong>ELK Stack (Elasticsearch, Logstash, Kibana)</strong> for Security Information and Event Management (SIEM).</p>
-<div class="admonition warning">
-<p class="admonition-title">Crucial Compute Guardrail: Guacamole / <code>guacd</code> Thread Capping</p>
-<p>Because <code>workstation</code> has a 16-core / 32-thread Xeon CPU, services that dynamically probe host hardware (such as Apache Guacamole's <code>guacd</code> proxy) will automatically probe <code>sysconf</code> and spawn <strong>32 concurrent worker threads</strong> if uncapped.</p>
-<p>To ensure that the host RTX A4500 GPU compute and Elasticsearch indexing pipelines remain completely unthrottled:</p>
-<p><div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># kubernetes/infrastructure/guacamole/values.yaml</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">guacd</span><span class="p">:</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">requests</span><span class="p">:</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">"100m"</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">"128Mi"</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">limits</span><span class="p">:</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">"2000m"</span><span class="w">      </span><span class="c1"># Hard-capped at 2 cores</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">"1024Mi"</span>
-</span></code></pre></div>
-Capping <code>guacd</code> at <code>2000m</code> leaves 30 CPU threads completely free for Elasticsearch indexing, Machine Learning models, and media transcoding pipelines.</p>
-</div>
-<hr />
-<h2 id="host-storage-hygiene-operational-rules">🧹 Host Storage Hygiene &amp; Operational Rules</h2>
-<div class="admonition danger">
-<p class="admonition-title">Node Storage Guardrails</p>
-<ul>
-<li><strong>Lenovo Manager SSD:</strong> Lenovo's primary root NVMe drive (<code>/dev/sda2</code>) is approximately 116 GB. Retain snap packages at 2 (<code>sudo snap set system refresh.retain=2</code>) and periodically purge system journal logs (<code>journalctl --vacuum-time=3d</code>) or runner cache.</li>
-<li><strong>No VM Disk Staging on Lenovo:</strong> Under no circumstances should 25+ GB virtual machine disk images, ISO files, or CDI scratch volumes be staged on Lenovo's local root disk. All ISOs must be placed on the TerraMaster NAS (<code>/Volume3/isos</code>).</li>
-<li><strong>Strict Mount Prohibitions:</strong> Tools, automated scripts, and agents must never inspect, list, read, or execute against <code>/mnt/blue_drive/</code>, <code>/mnt/black_drive/</code>, or <code>/mnt/media_data/</code> on any node.</li>
-</ul>
-</div>
 <hr />
 <h2 id="remote-access-node-management">🔌 Remote Access &amp; Node Management</h2>
 <p>Nodes are accessible via SSH and managed via Docker contexts:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Direct SSH by hostname over LAN or Tailscale</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>lenovo
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ssh<span class="w"> </span>optiplex
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>ssh<span class="w"> </span>opti74
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ssh<span class="w"> </span>workstation
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Multi-Node Docker Contexts (Managed from Lenovo)</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>docker<span class="w"> </span>--context<span class="w"> </span>default<span class="w"> </span>ps<span class="w">             </span><span class="c1"># Local lenovo node</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>docker<span class="w"> </span>--context<span class="w"> </span>optiplex<span class="w"> </span>ps<span class="w">            </span><span class="c1"># Optiplex 9020</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>docker<span class="w"> </span>--context<span class="w"> </span>opti74<span class="w"> </span>ps<span class="w">              </span><span class="c1"># Optiplex 7040</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>docker<span class="w"> </span>--context<span class="w"> </span>workstation-engine<span class="w"> </span>ps<span class="w">  </span><span class="c1"># Workstation (ELK stack)</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Direct SSH by hostname over LAN or Tailscale</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>lenovo
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ssh<span class="w"> </span>optiplex
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ssh<span class="w"> </span>opti74
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh<span class="w"> </span>workstation
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Multi-Node Docker Contexts (Managed from Lenovo)</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>docker<span class="w"> </span>--context<span class="w"> </span>default<span class="w"> </span>ps<span class="w">             </span><span class="c1"># Local lenovo node</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>docker<span class="w"> </span>--context<span class="w"> </span>optiplex<span class="w"> </span>ps<span class="w">            </span><span class="c1"># Optiplex 9020</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>docker<span class="w"> </span>--context<span class="w"> </span>opti74<span class="w"> </span>ps<span class="w">              </span><span class="c1"># Optiplex 7040</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>docker<span class="w"> </span>--context<span class="w"> </span>workstation-engine<span class="w"> </span>ps<span class="w">  </span><span class="c1"># Workstation (ELK stack)</span>
 </span></code></pre></div>
 
 
