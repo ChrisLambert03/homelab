@@ -53,6 +53,8 @@ spec:
       labels:
         app.kubernetes.io/name: logstash
     spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       nodeSelector:
         kubernetes.io/hostname: workstation
       containers:
@@ -60,11 +62,9 @@ spec:
           ports:
             - name: gelf-udp
               containerPort: 12201
-              hostPort: 12201
               protocol: UDP
             - name: gelf-tcp
               containerPort: 12201
-              hostPort: 12201
               protocol: TCP
           env:
             - name: LS_JAVA_OPTS

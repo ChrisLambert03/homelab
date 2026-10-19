@@ -49,6 +49,7 @@ Elasticsearch, Logstash, and Kibana are deployed to Kubernetes under the **ECK O
 ### 1. Ingestion Protocol: Docker GELF over Tailscale (Port 12201 UDP/TCP)
 Docker daemons across all cluster nodes stream container `stdout` and `stderr` directly to Logstash over the private Tailscale mesh network:
 * **Zero Local Disk Wear:** Container logs stream over network buffers directly into Logstash, eliminating local disk log rotation wear across manager and worker nodes.
+* **HostNetwork Binding:** Deployed with `hostNetwork: true` and `dnsPolicy: ClusterFirstWithHostNet` on `workstation`, allowing the GELF input to bind across all interfaces (specifically `tailscale0` at `100.106.96.18:12201`) without relying on hostPort routing.
 * **Unified Pipeline:** Logstash tags incoming events with a `received_at` timestamp and indexes them directly into daily indices:
   ```ruby
   filter {

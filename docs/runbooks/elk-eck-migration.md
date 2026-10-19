@@ -19,7 +19,7 @@ flowchart TD
     subgraph Target["Target ECK GitOps Architecture"]
         K8S_ES[("ECK Elasticsearch 9.3.2\n16GB Heap / Local NVMe PV\nallow_mmap: false")]
         K8S_KB["ECK Kibana 9.3.2\nkibana.lambertlab.us"]
-        K8S_LS["ECK Logstash 9.3.2\nhostPort 12201 GELF UDP/TCP"]
+        K8S_LS["ECK Logstash 9.3.2\nhostNetwork 12201 GELF UDP/TCP"]
         K8S_FS["ECK Fleet Server 9.3.2\nfleet.lambertlab.us"]
         K8S_AG["Per-Node Elastic Agents\n4 Hosts (Lenovo, Workstation, Optiplex, Opti74)"]
         K8S_AO["AutoOps Monitoring Agent\nautoops-agents namespace\nwolfi otel-collector"]
@@ -222,20 +222,26 @@ spec:
 ```
 The operator automatically provisions service accounts and mutual TLS certificates between Kibana and Elasticsearch.
 
-### 4.2 Logstash Ingestion via HostPort 12201 (`logstash.yaml`)
-To ingest container logs from all Docker daemons over the Tailscale network without modifying Docker daemon logging configs, Logstash is bound directly to the workstation host port:
+### 4.2 Logstash Ingestion via HostNetwork 12201 (`logstash.yaml`)
+To ingest container logs from all Docker daemons over the Tailscale network without modifying Docker daemon logging configs, Logstash runs directly on the workstation host network with `hostNetwork: true`:
 ```yaml
-ports:
-  - name: gelf-udp
-    containerPort: 12201
-    hostPort: 12201
-    protocol: UDP
-  - name: gelf-tcp
-    containerPort: 12201
-    hostPort: 12201
-    protocol: TCP
+podTemplate:
+  spec:
+    hostNetwork: true
+    dnsPolicy: ClusterFirstWithHostNet
+    nodeSelector:
+      kubernetes.io/hostname: workstation
+    containers:
+      - name: logstash
+        ports:
+          - name: gelf-udp
+            containerPort: 12201
+            protocol: UDP
+          - name: gelf-tcp
+            containerPort: 12201
+            protocol: TCP
 ```
-Incoming logs are tagged with `received_at` and indexed directly into `logstash-%{+YYYY.MM.dd}` with `number_of_replicas: 0`.
+By utilizing `hostNetwork: true`, Logstash binds to all physical and virtual interfaces (including `tailscale0` at `100.106.96.18:12201`), while `dnsPolicy: ClusterFirstWithHostNet` preserves in-cluster DNS resolution for CoreDNS and Kubernetes services (`elasticsearch-es-http.observability.svc`). Incoming logs are tagged with `received_at` and indexed directly into `logstash-%{+YYYY.MM.dd}` with `number_of_replicas: 0`.
 
 ---
 
