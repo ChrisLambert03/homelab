@@ -1225,10 +1225,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#42-logstash-ingestion-via-hostport-12201-logstashyaml" class="md-nav__link">
+  <a href="#42-logstash-ingestion-via-hostnetwork-12201-logstashyaml" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.2 Logstash Ingestion via HostPort 12201 (logstash.yaml)
+        4.2 Logstash Ingestion via HostNetwork 12201 (logstash.yaml)
       
     </span>
   </a>
@@ -1584,10 +1584,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#42-logstash-ingestion-via-hostport-12201-logstashyaml" class="md-nav__link">
+  <a href="#42-logstash-ingestion-via-hostnetwork-12201-logstashyaml" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.2 Logstash Ingestion via HostPort 12201 (logstash.yaml)
+        4.2 Logstash Ingestion via HostNetwork 12201 (logstash.yaml)
       
     </span>
   </a>
@@ -1758,7 +1758,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
     subgraph Target["Target ECK GitOps Architecture"]
         K8S_ES[("ECK Elasticsearch 9.3.2\n16GB Heap / Local NVMe PV\nallow_mmap: false")]
         K8S_KB["ECK Kibana 9.3.2\nkibana.lambertlab.us"]
-        K8S_LS["ECK Logstash 9.3.2\nhostPort 12201 GELF UDP/TCP"]
+        K8S_LS["ECK Logstash 9.3.2\nhostNetwork 12201 GELF UDP/TCP"]
         K8S_FS["ECK Fleet Server 9.3.2\nfleet.lambertlab.us"]
         K8S_AG["Per-Node Elastic Agents\n4 Hosts (Lenovo, Workstation, Optiplex, Opti74)"]
         K8S_AO["AutoOps Monitoring Agent\nautoops-agents namespace\nwolfi otel-collector"]
@@ -1940,19 +1940,25 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 </span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="nt">logging.root.level</span><span class="p">:</span><span class="w"> </span><span class="s">"warn"</span>
 </span></code></pre></div>
 The operator automatically provisions service accounts and mutual TLS certificates between Kibana and Elasticsearch.</p>
-<h3 id="42-logstash-ingestion-via-hostport-12201-logstashyaml">4.2 Logstash Ingestion via HostPort 12201 (<code>logstash.yaml</code>)</h3>
-<p>To ingest container logs from all Docker daemons over the Tailscale network without modifying Docker daemon logging configs, Logstash is bound directly to the workstation host port:
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nt">ports</span><span class="p">:</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gelf-udp</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12201</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="nt">hostPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12201</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UDP</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gelf-tcp</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12201</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span><span class="nt">hostPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12201</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">    </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<h3 id="42-logstash-ingestion-via-hostnetwork-12201-logstashyaml">4.2 Logstash Ingestion via HostNetwork 12201 (<code>logstash.yaml</code>)</h3>
+<p>To ingest container logs from all Docker daemons over the Tailscale network without modifying Docker daemon logging configs, Logstash runs directly on the workstation host network with <code>hostNetwork: true</code>:
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nt">podTemplate</span><span class="p">:</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nt">spec</span><span class="p">:</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="nt">hostNetwork</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="nt">dnsPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterFirstWithHostNet</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="nt">nodeSelector</span><span class="p">:</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">      </span><span class="nt">kubernetes.io/hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">workstation</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span><span class="nt">containers</span><span class="p">:</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logstash</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gelf-udp</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">            </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12201</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">            </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UDP</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gelf-tcp</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">            </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12201</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">            </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
 </span></code></pre></div>
-Incoming logs are tagged with <code>received_at</code> and indexed directly into <code>logstash-%{+YYYY.MM.dd}</code> with <code>number_of_replicas: 0</code>.</p>
+By utilizing <code>hostNetwork: true</code>, Logstash binds to all physical and virtual interfaces (including <code>tailscale0</code> at <code>100.106.96.18:12201</code>), while <code>dnsPolicy: ClusterFirstWithHostNet</code> preserves in-cluster DNS resolution for CoreDNS and Kubernetes services (<code>elasticsearch-es-http.observability.svc</code>). Incoming logs are tagged with <code>received_at</code> and indexed directly into <code>logstash-%{+YYYY.MM.dd}</code> with <code>number_of_replicas: 0</code>.</p>
 <hr />
 <h2 id="procedure-5-fleet-server-agent-ingress-architecture">🛡️ Procedure 5: Fleet Server &amp; Agent Ingress Architecture</h2>
 <h3 id="51-the-kube-ovn-hostnetwork-caveat">5.1 The Kube-OVN HostNetwork Caveat</h3>

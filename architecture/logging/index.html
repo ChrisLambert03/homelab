@@ -1530,6 +1530,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <h3 id="1-ingestion-protocol-docker-gelf-over-tailscale-port-12201-udptcp">1. Ingestion Protocol: Docker GELF over Tailscale (Port 12201 UDP/TCP)</h3>
 <p>Docker daemons across all cluster nodes stream container <code>stdout</code> and <code>stderr</code> directly to Logstash over the private Tailscale mesh network:
 * <strong>Zero Local Disk Wear:</strong> Container logs stream over network buffers directly into Logstash, eliminating local disk log rotation wear across manager and worker nodes.
+* <strong>HostNetwork Binding:</strong> Deployed with <code>hostNetwork: true</code> and <code>dnsPolicy: ClusterFirstWithHostNet</code> on <code>workstation</code>, allowing the GELF input to bind across all interfaces (specifically <code>tailscale0</code> at <code>100.106.96.18:12201</code>) without relying on hostPort routing.
 * <strong>Unified Pipeline:</strong> Logstash tags incoming events with a <code>received_at</code> timestamp and indexes them directly into daily indices:
   <div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="n">mutate</span><span class="w"> </span><span class="p">{</span>
