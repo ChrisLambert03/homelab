@@ -67,6 +67,7 @@ This section details the foundational control plane components, software-defined
   * `NetworkAttachmentDefinition` named `ovn-ad-vpc` mapped to provider `ovn-ad-vpc.vms.ovn`.
   * Intercepts secondary interface attachments for Apache Guacamole (dynamic DHCP) and CoreDNS forwarders.
   * Pairs with KubeVirt's `managedTap` network binding plugin to provide KVM virtual machines with direct Layer 2 connectivity without DHCP lease interception.
+  * Resource tuning: Operates burstable QoS (`requests: 100m, 100Mi` with no hard limits) to absorb concurrent CNI creation bursts during node reboots without kernel OOM-kills.
 
 ---
 

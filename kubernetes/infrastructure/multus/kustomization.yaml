@@ -3,3 +3,15 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/master/deployments/multus-daemonset-thick.yml
+patches:
+  - target:
+      kind: DaemonSet
+      name: kube-multus-ds
+    patch: |-
+      - op: remove
+        path: /spec/template/spec/containers/0/resources/limits
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/requests
+        value:
+          cpu: 100m
+          memory: 100Mi
