@@ -21,3 +21,4 @@ cni:
   # Tell Kube-OVN to run exclusively as a secondary network (Multus).
   # This prevents it from hijacking Cilium, which runs your default Kubernetes pods.
   nonPrimaryCNI: true
+  configPriority: "10"

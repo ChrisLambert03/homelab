@@ -125,9 +125,9 @@ Previously, the cluster relied on a multicast VXLAN overlay (`br-lab0`) managed 
 While NMState is great for declarative host networking, it heavily manipulates host `iptables` and binds virtual bridges directly to physical host interfaces. Kube-OVN is a much better implementation for Kubernetes because it utilizes a pure Software-Defined Geneve overlay that is completely decoupled from host routing rules and physical network quirks (like Wi-Fi access points aggressively dropping foreign MACs). Additionally, Kube-OVN provides native IP Address Management (IPAM) for seamless DHCP, eliminating the need to manually track static IPs across virtual bridges.
 
 ### Multus CNI Secondary Interface Attachment
-Standard Kubernetes pods receive a Cilium overlay IP (`10.244.x.x`). Using **Multus CNI**, select pods (like Apache Guacamole and CoreDNS) are provisioned with a secondary interface (`net1`) plugged directly into the Kube-OVN `ovn-ad-vpc` VPC.
+Standard Kubernetes pods receive a Cilium overlay IP (`10.244.x.x`). Kube-OVN runs exclusively as a secondary CNI (`nonPrimaryCNI: true`) with configuration priority set to `10` (`configPriority: "10"` in `kubernetes/infrastructure/network/kube-ovn/values.yaml`). This ensures that Multus CNI auto-discovery always prioritizes Cilium's `05-cilium.conflist` over Kube-OVN's `10-kube-ovn.conflist` for the default `eth0` network interface.
 
-Because the Kube-OVN provider suffix ends in `.ovn`, Kube-OVN intercepts the Multus attachment and executes IPAM allocation.
+Using **Multus CNI**, select pods (like Apache Guacamole and CoreDNS) are provisioned with a secondary interface (`net1`) plugged directly into the Kube-OVN `ovn-ad-vpc` VPC. Because the Kube-OVN provider suffix ends in `.ovn`, Kube-OVN intercepts the Multus attachment and executes IPAM allocation.
 
 ```yaml
 # Pod Annotation on Guacamole Deployment (Dynamic DHCP)
