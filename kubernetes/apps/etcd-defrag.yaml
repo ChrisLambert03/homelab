@@ -1,0 +1,39 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: etcd-defrag
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: infrastructure
+  sources:
+    # 1. Local Homelab Git Repo (defines $homelab alias for values referencing)
+    - repoURL: git@github.com:ChrisLambert03/homelab.git
+      targetRevision: main
+      ref: homelab
+
+    # 2. Christian Huth Upstream Helm Repository
+    - repoURL: https://charts.christianhuth.de
+      chart: etcd-defrag
+      targetRevision: 1.7.0
+      helm:
+        releaseName: etcd-defrag
+        valueFiles:
+          - $homelab/kubernetes/infrastructure/etcd-defrag/values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true
+      - ApplyOutOfSyncOnly=true

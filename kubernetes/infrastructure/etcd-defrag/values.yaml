@@ -1,0 +1,44 @@
+---
+# values.yaml for christianhuth/etcd-defrag
+# Automated weekly sequential defragmentation of control-plane etcd members
+
+# Use host network to connect directly to 127.0.0.1:2379 and bypass pod CNI
+hostNetwork: true
+
+# Run as root to allow reading the 0600-permission host certificates
+podSecurityContext:
+  runAsUser: 0
+  runAsGroup: 0
+  fsGroup: 0
+
+# Schedule exclusively on control plane nodes
+nodeSelector:
+  node-role.kubernetes.io/control-plane: ""
+
+tolerations:
+  - key: node-role.kubernetes.io/control-plane
+    operator: Exists
+    effect: NoSchedule
+
+defrag:
+  enabled: true
+  config:
+    # Discover all members (lenovo, optiplex, opti74) and defrag them sequentially
+    clusterWide: true
+    endpoints:
+      - https://127.0.0.1:2379
+    insecureTransport: false
+    insecureSkipTlsVerify: false
+    pki:
+      hostAccess:
+        enabled: true
+        caFilePath: /etc/kubernetes/pki/etcd/ca.crt
+        certFilePath: /etc/kubernetes/pki/etcd/server.crt
+        keyFilePath: /etc/kubernetes/pki/etcd/server.key
+    writeOut: table
+  cronjob:
+    concurrencyPolicy: Forbid
+    # Run once a week on Sunday at 3:00 AM (keeps database file permanently under ~35 MB)
+    schedule: "0 3 * * 0"
+    successfulJobsHistoryLimit: "3"
+    failedJobsHistoryLimit: "1"

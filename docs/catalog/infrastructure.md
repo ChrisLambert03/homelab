@@ -176,3 +176,16 @@ This section details the foundational control plane components, software-defined
   * `CiliumLoadBalancerIPPool` (`lan-pool`, 10.0.0.202–215) providing bare-metal LoadBalancer IPs.
   * Node-targeted L2 announcement policies (e.g., pinning Palworld VIPs to `opti74`).
 
+---
+
+### 15. etcd Automated Defragmentation (`etcd-defrag`)
+* **Namespace:** `kube-system`
+* **Version:** Helm `1.7.0` (upstream `christianhuth/etcd-defrag`)
+* **Sync Wave:** `Wave 2`
+* **Architectural Role:** Weekly scheduled database hygiene job to prevent bbolt freelist bloat and eliminate control-plane peer snapshot storms.
+* **Key Configuration:**
+  * Deployed as a `CronJob` scheduled weekly on Sunday at 3:00 AM (`0 3 * * 0`).
+  * Uses `hostNetwork: true` with `hostAccess` mounting `/etc/kubernetes/pki/etcd/` certificates directly from control-plane nodes.
+  * Runs `etcdctl defrag --cluster` to discover all cluster endpoints (`lenovo`, `optiplex`, `opti74`) and sequentially defragment each member without impacting Raft consensus or write availability.
+
+
