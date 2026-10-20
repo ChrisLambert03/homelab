@@ -1610,6 +1610,7 @@
 <li><code>NetworkAttachmentDefinition</code> named <code>ovn-ad-vpc</code> mapped to provider <code>ovn-ad-vpc.vms.ovn</code>.</li>
 <li>Intercepts secondary interface attachments for Apache Guacamole (dynamic DHCP) and CoreDNS forwarders.</li>
 <li>Pairs with KubeVirt's <code>managedTap</code> network binding plugin to provide KVM virtual machines with direct Layer 2 connectivity without DHCP lease interception.</li>
+<li>Resource tuning: Operates burstable QoS (<code>requests: 100m, 100Mi</code> with no hard limits) to absorb concurrent CNI creation bursts during node reboots without kernel OOM-kills.</li>
 </ul>
 <hr />
 <h3 id="6-coredns-active-directory-conditional-forwarder">6. CoreDNS Active Directory Conditional Forwarder</h3>
