@@ -988,6 +988,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#15-etcd-automated-defragmentation-etcd-defrag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. etcd Automated Defragmentation (etcd-defrag)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1514,6 +1525,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#15-etcd-automated-defragmentation-etcd-defrag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. etcd Automated Defragmentation (etcd-defrag)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1718,6 +1740,18 @@
 <li>eBPF routing replacing iptables kube-proxy.</li>
 <li><code>CiliumLoadBalancerIPPool</code> (<code>lan-pool</code>, 10.0.0.202–215) providing bare-metal LoadBalancer IPs.</li>
 <li>Node-targeted L2 announcement policies (e.g., pinning Palworld VIPs to <code>opti74</code>).</li>
+</ul>
+<hr />
+<h3 id="15-etcd-automated-defragmentation-etcd-defrag">15. etcd Automated Defragmentation (<code>etcd-defrag</code>)</h3>
+<ul>
+<li><strong>Namespace:</strong> <code>kube-system</code></li>
+<li><strong>Version:</strong> Helm <code>1.7.0</code> (upstream <code>christianhuth/etcd-defrag</code>)</li>
+<li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
+<li><strong>Architectural Role:</strong> Weekly scheduled database hygiene job to prevent bbolt freelist bloat and eliminate control-plane peer snapshot storms.</li>
+<li><strong>Key Configuration:</strong></li>
+<li>Deployed as a <code>CronJob</code> scheduled weekly on Sunday at 3:00 AM (<code>0 3 * * 0</code>).</li>
+<li>Uses <code>hostNetwork: true</code> with <code>hostAccess</code> mounting <code>/etc/kubernetes/pki/etcd/</code> certificates directly from control-plane nodes.</li>
+<li>Runs <code>etcdctl defrag --cluster</code> to discover all cluster endpoints (<code>lenovo</code>, <code>optiplex</code>, <code>opti74</code>) and sequentially defragment each member without impacting Raft consensus or write availability.</li>
 </ul>
 
 
