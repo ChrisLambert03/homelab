@@ -16,8 +16,8 @@ spec:
       targetRevision: main
       ref: homelab
 
-    # 2. Upstream Kube-OVN v2 Helm chart
-    - repoURL: https://kubeovn.github.io/kube-ovn
+    # 2. Upstream Kube-OVN v2 Helm chart (OCI Registry)
+    - repoURL: ghcr.io/kubeovn/charts
       chart: kube-ovn-v2
       targetRevision: v1.16.12
       helm:
