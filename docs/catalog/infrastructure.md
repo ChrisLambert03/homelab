@@ -182,9 +182,9 @@ This section details the foundational control plane components, software-defined
 * **Namespace:** `kube-system`
 * **Version:** Helm `1.7.0` (upstream `christianhuth/etcd-defrag`)
 * **Sync Wave:** `Wave 2`
-* **Architectural Role:** Weekly scheduled database hygiene job to prevent bbolt freelist bloat and eliminate control-plane peer snapshot storms.
+* **Architectural Role:** Twice-daily scheduled database hygiene job to prevent bbolt freelist bloat and eliminate control-plane peer snapshot storms over the powerline link.
 * **Key Configuration:**
-  * Deployed as a `CronJob` scheduled weekly on Sunday at 3:00 AM (`0 3 * * 0`).
+  * Deployed as a `CronJob` scheduled every 12 hours (`0 */12 * * *`).
   * Uses `hostNetwork: true` with `hostAccess` mounting `/etc/kubernetes/pki/etcd/` certificates directly from control-plane nodes.
   * Runs `etcdctl defrag --cluster` to discover all cluster endpoints (`lenovo`, `optiplex`, `opti74`) and sequentially defragment each member without impacting Raft consensus or write availability.
 

@@ -1,6 +1,6 @@
 ---
 # values.yaml for christianhuth/etcd-defrag
-# Automated weekly sequential defragmentation of control-plane etcd members
+# Automated 12-hour sequential defragmentation of control-plane etcd members
 
 # Use host network to connect directly to 127.0.0.1:2379 and bypass pod CNI
 hostNetwork: true
@@ -38,7 +38,7 @@ defrag:
     writeOut: table
   cronjob:
     concurrencyPolicy: Forbid
-    # Run once a week on Sunday at 3:00 AM (keeps database file permanently under ~35 MB)
-    schedule: "0 3 * * 0"
+    # Run every 12 hours at 00:00 and 12:00 (prevents bbolt freelist from growing past ~70 MB between runs)
+    schedule: "0 */12 * * *"
     successfulJobsHistoryLimit: "3"
     failedJobsHistoryLimit: "1"
