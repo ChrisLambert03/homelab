@@ -250,18 +250,23 @@ helm repo update
 
 helm install cilium cilium/cilium --version 1.20.3 \
   --namespace kube-system \
+  --set cni.exclusive=false \
   --set kubeProxyReplacement=true \
   --set k8sServiceHost="10.0.0.201" \
   --set k8sServicePort="6443" \
   --set ipam.mode=kubernetes \
+  --set k8s.requireIPv4PodCIDR=true \
+  --set l2announcements.enabled=true \
   --set hubble.relay.enabled=true \
   --set hubble.ui.enabled=true
 ```
 
 ### Architectural Decisions & Parameter Breakdown:
+* **`cni.exclusive=false` (Critical for Multus & Kube-OVN):** By default, Cilium runs in exclusive mode (`cni.exclusive=true`) and renames or deletes any non-Cilium files in `/etc/cni/net.d/` (such as `00-multus.conf` and `10-kube-ovn.conflist`). Setting `cni.exclusive=false` prevents Cilium from overwriting Multus CNI configurations so KubeVirt VMs and dual-homed pods can attach secondary Kube-OVN interfaces.
 * **`kubeProxyReplacement=true`:** Directs Cilium eBPF programs to attach to socket layer and cgroups to manage `ClusterIP`, `NodePort`, and `LoadBalancer` routing without iptables.
 * **`k8sServiceHost="10.0.0.201"` & `k8sServicePort="6443"`:** Points Cilium agents directly to the `kube-vip` endpoint so agents can reach the API server prior to in-cluster service discovery availability.
-* **`ipam.mode=kubernetes` (Critical):** Cilium's default `cluster-pool` IPAM assigns `10.0.0.0/8`, which conflicts with the physical `10.0.0.0/24` home LAN. Setting `ipam.mode=kubernetes` instructs Cilium to inherit the `podSubnet: 10.244.0.0/16` delegated by Kubernetes (`10.244.0.0/24` for lenovo, `10.244.1.0/24` for optiplex, etc.).
+* **`ipam.mode=kubernetes` & `k8s.requireIPv4PodCIDR=true` (Critical):** Cilium's default `cluster-pool` IPAM assigns `10.0.0.0/8`, which conflicts with the physical `10.0.0.0/24` home LAN. Setting `ipam.mode=kubernetes` instructs Cilium to inherit the `podSubnet: 10.244.0.0/16` delegated by Kubernetes (`10.244.0.0/24` for lenovo, `10.244.1.0/24` for optiplex, etc.).
+* **`l2announcements.enabled=true`:** Enables Cilium Layer 2 ARP announcements for `LoadBalancer` services on the physical LAN (`10.0.0.202`–`10.0.0.254`).
 * **`hubble.relay.enabled=true` & `hubble.ui.enabled=true`:** Deploys flow aggregation and web visualization.
 
 ---
