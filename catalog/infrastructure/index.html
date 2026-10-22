@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1747,9 +1747,9 @@
 <li><strong>Namespace:</strong> <code>kube-system</code></li>
 <li><strong>Version:</strong> Helm <code>1.7.0</code> (upstream <code>christianhuth/etcd-defrag</code>)</li>
 <li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
-<li><strong>Architectural Role:</strong> Weekly scheduled database hygiene job to prevent bbolt freelist bloat and eliminate control-plane peer snapshot storms.</li>
+<li><strong>Architectural Role:</strong> Twice-daily scheduled database hygiene job to prevent bbolt freelist bloat and eliminate control-plane peer snapshot storms over the powerline link.</li>
 <li><strong>Key Configuration:</strong></li>
-<li>Deployed as a <code>CronJob</code> scheduled weekly on Sunday at 3:00 AM (<code>0 3 * * 0</code>).</li>
+<li>Deployed as a <code>CronJob</code> scheduled every 12 hours (<code>0 */12 * * *</code>).</li>
 <li>Uses <code>hostNetwork: true</code> with <code>hostAccess</code> mounting <code>/etc/kubernetes/pki/etcd/</code> certificates directly from control-plane nodes.</li>
 <li>Runs <code>etcdctl defrag --cluster</code> to discover all cluster endpoints (<code>lenovo</code>, <code>optiplex</code>, <code>opti74</code>) and sequentially defragment each member without impacting Raft consensus or write availability.</li>
 </ul>

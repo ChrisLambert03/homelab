@@ -64,7 +64,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -2114,18 +2114,23 @@ In Kubernetes v1.29+ / v1.37, during the raw <code>kubeadm init</code> bootstrap
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
 </span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>helm<span class="w"> </span>install<span class="w"> </span>cilium<span class="w"> </span>cilium/cilium<span class="w"> </span>--version<span class="w"> </span><span class="m">1</span>.20.3<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span>--namespace<span class="w"> </span>kube-system<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span>--set<span class="w"> </span><span class="nv">kubeProxyReplacement</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span>--set<span class="w"> </span><span class="nv">k8sServiceHost</span><span class="o">=</span><span class="s2">"10.0.0.201"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span>--set<span class="w"> </span><span class="nv">k8sServicePort</span><span class="o">=</span><span class="s2">"6443"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span>--set<span class="w"> </span>ipam.mode<span class="o">=</span>kubernetes<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span>--set<span class="w"> </span>hubble.relay.enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span>--set<span class="w"> </span>hubble.ui.enabled<span class="o">=</span><span class="nb">true</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span>--set<span class="w"> </span>cni.exclusive<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span>--set<span class="w"> </span><span class="nv">kubeProxyReplacement</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span>--set<span class="w"> </span><span class="nv">k8sServiceHost</span><span class="o">=</span><span class="s2">"10.0.0.201"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span>--set<span class="w"> </span><span class="nv">k8sServicePort</span><span class="o">=</span><span class="s2">"6443"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span>--set<span class="w"> </span>ipam.mode<span class="o">=</span>kubernetes<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span>--set<span class="w"> </span>k8s.requireIPv4PodCIDR<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">  </span>--set<span class="w"> </span>l2announcements.enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">  </span>--set<span class="w"> </span>hubble.relay.enabled<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">  </span>--set<span class="w"> </span>hubble.ui.enabled<span class="o">=</span><span class="nb">true</span>
 </span></code></pre></div>
 <h3 id="architectural-decisions-parameter-breakdown">Architectural Decisions &amp; Parameter Breakdown:</h3>
 <ul>
+<li><strong><code>cni.exclusive=false</code> (Critical for Multus &amp; Kube-OVN):</strong> By default, Cilium runs in exclusive mode (<code>cni.exclusive=true</code>) and renames or deletes any non-Cilium files in <code>/etc/cni/net.d/</code> (such as <code>00-multus.conf</code> and <code>10-kube-ovn.conflist</code>). Setting <code>cni.exclusive=false</code> prevents Cilium from overwriting Multus CNI configurations so KubeVirt VMs and dual-homed pods can attach secondary Kube-OVN interfaces.</li>
 <li><strong><code>kubeProxyReplacement=true</code>:</strong> Directs Cilium eBPF programs to attach to socket layer and cgroups to manage <code>ClusterIP</code>, <code>NodePort</code>, and <code>LoadBalancer</code> routing without iptables.</li>
 <li><strong><code>k8sServiceHost="10.0.0.201"</code> &amp; <code>k8sServicePort="6443"</code>:</strong> Points Cilium agents directly to the <code>kube-vip</code> endpoint so agents can reach the API server prior to in-cluster service discovery availability.</li>
-<li><strong><code>ipam.mode=kubernetes</code> (Critical):</strong> Cilium's default <code>cluster-pool</code> IPAM assigns <code>10.0.0.0/8</code>, which conflicts with the physical <code>10.0.0.0/24</code> home LAN. Setting <code>ipam.mode=kubernetes</code> instructs Cilium to inherit the <code>podSubnet: 10.244.0.0/16</code> delegated by Kubernetes (<code>10.244.0.0/24</code> for lenovo, <code>10.244.1.0/24</code> for optiplex, etc.).</li>
+<li><strong><code>ipam.mode=kubernetes</code> &amp; <code>k8s.requireIPv4PodCIDR=true</code> (Critical):</strong> Cilium's default <code>cluster-pool</code> IPAM assigns <code>10.0.0.0/8</code>, which conflicts with the physical <code>10.0.0.0/24</code> home LAN. Setting <code>ipam.mode=kubernetes</code> instructs Cilium to inherit the <code>podSubnet: 10.244.0.0/16</code> delegated by Kubernetes (<code>10.244.0.0/24</code> for lenovo, <code>10.244.1.0/24</code> for optiplex, etc.).</li>
+<li><strong><code>l2announcements.enabled=true</code>:</strong> Enables Cilium Layer 2 ARP announcements for <code>LoadBalancer</code> services on the physical LAN (<code>10.0.0.202</code>–<code>10.0.0.254</code>).</li>
 <li><strong><code>hubble.relay.enabled=true</code> &amp; <code>hubble.ui.enabled=true</code>:</strong> Deploys flow aggregation and web visualization.</li>
 </ul>
 <hr />
