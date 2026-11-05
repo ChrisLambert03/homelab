@@ -22,7 +22,7 @@ spec:
     # 2. Upstream Jellyfin Helm Chart using $homelab values.yaml
     - repoURL: https://jellyfin.github.io/jellyfin-helm
       chart: jellyfin
-      targetRevision: 3.2.0
+      targetRevision: 3.7.0
       helm:
         releaseName: jellyfin
         valueFiles:

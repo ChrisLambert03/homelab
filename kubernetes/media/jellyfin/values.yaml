@@ -47,3 +47,4 @@ persistence:
   media:
     enabled: true
     existingClaim: nas-media-pvc   # same NFS-backed PVC shared with Sonarr/Radarr, mounted at /media
+    readOnly: false                # preserve RWX write access (chart 3.7.0 defaults media.readOnly to true)
