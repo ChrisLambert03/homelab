@@ -158,7 +158,7 @@ This section details the foundational control plane components, software-defined
 
 ### 13. Kubernetes Metrics Server
 * **Namespace:** `kube-system`
-* **Version:** Helm `3.12.2` (upstream `kubernetes-sigs/metrics-server`)
+* **Version:** Helm `3.14.0` (upstream `kubernetes-sigs/metrics-server`)
 * **Sync Wave:** `Wave 2`
 * **Architectural Role:** Core metrics aggregator exposing the `metrics.k8s.io` API for `kubectl top node`, `kubectl top pod`, and autoscaling pipelines.
 * **Key Configuration:**
