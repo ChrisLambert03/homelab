@@ -115,7 +115,7 @@ To capture container logs (`/var/log/pods`), cluster-level health, and bare-meta
 * **Fleet Server (ECK Operator):**
   Deployed via ArgoCD (`kubernetes/apps/fleet-server.yaml`) as an ECK Agent CR (`kubernetes/observability/fleet-server/fleet-server.yaml`) in `mode: fleet` with native cluster scheduling. It connects directly to Elasticsearch and Kibana via internal cluster references and exposes its endpoint externally via Traefik Ingress at `https://fleet.lambertlab.us` with `default-insecure-transport`.
 * **Fleet-Managed DaemonSet (`elastic-agent`):**
-  Deployed via ArgoCD (`kubernetes/apps/elastic-agent.yaml`) utilizing the upstream Elastic Helm chart (`https://helm.elastic.co`, chart: `elastic-agent:9.5.4`).
+  Deployed via ArgoCD (`kubernetes/apps/elastic-agent.yaml`) utilizing the upstream Elastic Helm chart (`https://helm.elastic.co`, chart: `elastic-agent:9.5.6`).
   * **Pinned Image Tag:** Pinned to `9.3.2` to strictly adhere to Elastic's architectural requirement: $V_{\text{Agent}} \le V_{\text{Fleet Server}}$.
   * **System & Kubernetes Integrations:** With `system.enabled: true` and `preset: perNode`, exactly one agent pod runs on every cluster node, mounting `/var/log`, `/proc`, and `/sys` to monitor host OS telemetry and container logs simultaneously with zero duplication.
   * **Secret Decoupling:** Uses `tokenFromSecret` referencing Kubernetes secret `elastic-agent-token` in `kube-system`, synced from HashiCorp Vault via External Secrets Operator. Plaintext enrollment tokens are never committed to Git.
