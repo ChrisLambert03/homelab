@@ -180,7 +180,7 @@ This section details the foundational control plane components, software-defined
 
 ### 15. etcd Automated Defragmentation (`etcd-defrag`)
 * **Namespace:** `kube-system`
-* **Version:** Helm `1.7.0` (upstream `christianhuth/etcd-defrag`)
+* **Version:** Helm `1.7.2` (upstream `christianhuth/etcd-defrag`)
 * **Sync Wave:** `Wave 2`
 * **Architectural Role:** Twice-daily scheduled database hygiene job to prevent bbolt freelist bloat and eliminate control-plane peer snapshot storms over the powerline link.
 * **Key Configuration:**
