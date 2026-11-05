@@ -22,7 +22,7 @@ This section documents secrets orchestration, centralized Security Information a
 
 ### 2. External Secrets Operator (ESO)
 * **Namespace:** `external-secrets`
-* **Version:** Helm `v2.12.0`
+* **Version:** Helm `v2.14.0`
 * **Sync Waves:** `Wave 5` (Operator & Webhooks), `Wave 6` (`ClusterSecretStore` & `ExternalSecret` manifests)
 * **Architectural Role:** Kubernetes operator dynamically synchronizing external secret backends into native Kubernetes Secret objects.
 * **Key Configuration:**
