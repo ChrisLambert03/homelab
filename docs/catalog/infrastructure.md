@@ -21,7 +21,7 @@ This section details the foundational control plane components, software-defined
 
 ### 2. Traefik Edge Ingress Controller
 * **Namespace:** `kube-system`
-* **Version:** Helm `42.0.0`
+* **Version:** Helm `42.3.0`
 * **Sync Waves:** `Wave 5` (DaemonSet Controller), `Wave 6` (Middlewares & TLSStore)
 * **Endpoints:** Ports 80 (HTTP redirect), 443 (HTTPS termination)
 * **Architectural Role:** Cluster edge reverse proxy terminating external client TLS and enforcing security middlewares.
