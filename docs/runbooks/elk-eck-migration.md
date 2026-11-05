@@ -323,9 +323,33 @@ namespace: autoops-agents
 resources:
   - https://raw.githubusercontent.com/elastic/autoops-install/main/k8s/autoops_agent_deployment.yaml
   - external-secrets.yaml
+patches:
+  - target:
+      kind: Deployment
+      name: autoops-elastic-agent
+    patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: autoops-elastic-agent
+      spec:
+        template:
+          spec:
+            containers:
+              - name: autoops-elastic-agent
+                livenessProbe:
+                  exec:
+                    command:
+                      - /bin/sh
+                      - -c
+                      - curl -sf http://127.0.0.1:8888/metrics | grep -qE '^libbeat_pipeline_clients\{.*\} [1-9]'
+                  initialDelaySeconds: 15
+                  periodSeconds: 30
+                  failureThreshold: 3
 ```
 
-* **Image:** `docker.elastic.co/elastic-agent/elastic-otel-collector-wolfi:9.4.3` (OpenTelemetry Collector with built-in `otel_samples/autoops_es.yml`).
+* **Image:** `docker.elastic.co/elastic-agent/elastic-otel-collector-wolfi` (OpenTelemetry Collector with built-in `otel_samples/autoops_es.yml`).
+* **Self-Healing Liveness Probe (`libbeat_pipeline_clients`):** Under `otel_samples/autoops_es.yml`, the embedded `metricbeatreceiver` launches **9 `autoops_es` metricset input streams** (`cat_shards`, `node_stats`, `tasks_management` every 10s; `cluster_health`, `cluster_settings` every 1m; `cat_template`, `component_template`, `index_template`, `license` every 24h), which report `libbeat_pipeline_clients{receiver="metricbeatreceiver"} 9` on internal telemetry endpoint `http://127.0.0.1:8888/metrics`. If the pod starts while Elasticsearch is unreachable (`503`), `metricbeatreceiver` fails its initial Cloud Connected registration handshake and exits (`libbeat_pipeline_clients` drops to `0`) while the parent `elastic-otel-collector` process stays alive. The Kustomize `livenessProbe` checks for `[1-9]` active pipeline clients and automatically restarts the container if the scraper streams drop to `0`.
 * **Vault Integration:** Sensitive cloud tokens (`autoops_token`, `elastic_cloud_connected_mode_api_key`, `temp-resource-id`, `es_password`) are stored in Vault under `secret/data/autoops` and mapped into `autoops-secret` via `ExternalSecret` with `creationPolicy: Owner`.
 * **Telemetry Route:** Scrapes diagnostics locally from `https://es.lambertlab.us` and exports OTLP metrics over HTTPS to Elastic Cloud (`https://otel-auto-ops.us-east-2.aws.svc.elastic.cloud`).
 

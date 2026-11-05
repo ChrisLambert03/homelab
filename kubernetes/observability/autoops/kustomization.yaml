@@ -5,3 +5,37 @@ namespace: autoops-agents
 resources:
   - https://raw.githubusercontent.com/elastic/autoops-install/main/k8s/autoops_agent_deployment.yaml
   - external-secrets.yaml
+patches:
+  # Self-healing livenessProbe for the embedded Metricbeat receiver inside elastic-otel-collector:
+  # - Built-in config `otel_samples/autoops_es.yml` spawns 9 `autoops_es` metricset input streams:
+  #     * 10s interval (3): cat_shards, node_stats, tasks_management
+  #     * 1m  interval (2): cluster_health, cluster_settings
+  #     * 24h interval (4): cat_template, component_template, index_template, license
+  # - When healthy, these 9 input streams register in the internal libbeat pipeline as:
+  #     `libbeat_pipeline_clients{receiver="metricbeatreceiver"} 9` on http://127.0.0.1:8888/metrics
+  # - If the pod boots while Elasticsearch is restarting/503, `metricbeatreceiver` fails its one-time
+  #   Cloud Connected cluster registration and exits (dropping `libbeat_pipeline_clients` to `0`) while
+  #   the outer `elastic-otel-collector` process remains alive. Matching `[1-9]` ensures the 9 input
+  #   streams (non-zero client count) are active and restarts the container if they drop to `0`.
+  - target:
+      kind: Deployment
+      name: autoops-elastic-agent
+    patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: autoops-elastic-agent
+      spec:
+        template:
+          spec:
+            containers:
+              - name: autoops-elastic-agent
+                livenessProbe:
+                  exec:
+                    command:
+                      - /bin/sh
+                      - -c
+                      - curl -sf http://127.0.0.1:8888/metrics | grep -qE '^libbeat_pipeline_clients\{.*\} [1-9]'
+                  initialDelaySeconds: 15
+                  periodSeconds: 30
+                  failureThreshold: 3

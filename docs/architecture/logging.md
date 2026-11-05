@@ -128,6 +128,7 @@ To capture container logs (`/var/log/pods`), cluster-level health, and bare-meta
 
 To monitor cluster performance, shard allocation, and operational health against Elastic best practices, the cluster connects to **Elastic AutoOps Cloud**:
 * **Deployment Model:** Deployed via ArgoCD (`kubernetes/apps/autoops.yaml`) utilizing Kustomize (`kubernetes/observability/autoops/kustomization.yaml`) which references Elastic's upstream deployment directly from `elastic/autoops-install` (`autoops_agent_deployment.yaml`) alongside an `ExternalSecret` managing `autoops-secret` from Vault.
+* **Self-Healing Liveness Probe:** Applies a Kustomize patch adding a `livenessProbe` against `http://127.0.0.1:8888/metrics` (`libbeat_pipeline_clients{receiver="metricbeatreceiver"} [1-9]`) to verify the 9 embedded `autoops_es` Metricbeat input streams (`cat_shards`, `node_stats`, `tasks_management`, `cluster_health`, `cluster_settings`, `cat_template`, `component_template`, `index_template`, `license`) remain active and automatically restart the container if startup registration fails while Elasticsearch is restarting.
 
 ---
 
