@@ -169,6 +169,7 @@ This section details the foundational control plane components, software-defined
 
 ### 14. Cilium eBPF CNI & L2 Announcement
 * **Namespace:** `kube-system`
+* **Version:** Helm `1.20.4`
 * **Sync Waves:** `Wave 1` (eBPF CNI & IPAM), `Wave 2` (`cilium-config` L2 pools & announcement policies)
 * **Architectural Role:** Primary cluster CNI providing eBPF kube-proxy replacement, pod IPAM, network policies, and Layer 2 service load balancing.
 * **Key Configuration:**

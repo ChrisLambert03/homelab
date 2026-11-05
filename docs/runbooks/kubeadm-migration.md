@@ -248,7 +248,7 @@ Deploy Cilium via Helm using the official **"Kubernetes Without kube-proxy"** qu
 helm repo add cilium https://helm.cilium.io/
 helm repo update
 
-helm install cilium cilium/cilium --version 1.20.3 \
+helm install cilium cilium/cilium --version 1.20.4 \
   --namespace kube-system \
   --set cni.exclusive=false \
   --set kubeProxyReplacement=true \
