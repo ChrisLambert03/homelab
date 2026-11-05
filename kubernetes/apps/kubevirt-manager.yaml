@@ -16,7 +16,7 @@ spec:
       path: kubernetes/infrastructure/kubevirt-manager
     - repoURL: https://charts.christianhuth.de
       chart: kubevirt-manager
-      targetRevision: 0.7.0
+      targetRevision: 0.8.1
       helm:
         releaseName: kubevirt-manager
   destination:
