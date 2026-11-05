@@ -46,7 +46,7 @@ This section details the foundational control plane components, software-defined
 
 ### 4. Kube-OVN Software-Defined L2 VPC (`ovn-ad-vpc`)
 * **Namespace:** `kube-system` (Engine) & `vms` (Networks)
-* **Version:** Helm `v1.16.12` (Secondary CNI)
+* **Version:** Helm `v1.16.17` (Secondary CNI)
 * **Sync Waves:** `Wave 3` (Operator & Engine), `Wave 4` (Subnets & NADs)
 * **Architectural Role:** Software-Defined Networking (SDN) overlay providing isolated Layer 2 VPCs, embedded IPAM, and Geneve UDP encapsulation.
 * **Key Configuration:**

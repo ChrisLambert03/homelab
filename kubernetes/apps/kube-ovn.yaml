@@ -19,7 +19,7 @@ spec:
     # 2. Upstream Kube-OVN v2 Helm chart (OCI Registry)
     - repoURL: ghcr.io/kubeovn/charts
       chart: kube-ovn-v2
-      targetRevision: v1.16.12
+      targetRevision: v1.16.17
       helm:
         releaseName: kube-ovn
         valueFiles:
