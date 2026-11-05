@@ -34,7 +34,7 @@ This section details the foundational control plane components, software-defined
 
 ### 3. Cert-Manager
 * **Namespace:** `cert-manager`
-* **Version:** Helm `v1.21.2`
+* **Version:** Helm `v1.21.3`
 * **Sync Waves:** `Wave 5` (Operator & Webhooks), `Wave 6` (ExternalSecret, ClusterIssuer, Wildcard Certificate)
 * **Architectural Role:** Automated TLS x509 certificate management.
 * **Key Configuration:**
