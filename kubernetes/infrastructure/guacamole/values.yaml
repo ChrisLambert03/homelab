@@ -175,3 +175,7 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
+
+# Disable chart-bundled NetworkPolicy (managed centrally via kubernetes/network-policies/guacamole-default-deny.yaml)
+networkPolicy:
+  enabled: false

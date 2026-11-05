@@ -22,7 +22,7 @@ spec:
     # 2. Upstream HelmForge Guacamole Chart
     - repoURL: https://repo.helmforge.dev
       chart: guacamole
-      targetRevision: 1.5.3
+      targetRevision: 1.7.1
       helm:
         releaseName: guacamole
         valueFiles:
