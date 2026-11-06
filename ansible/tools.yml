@@ -9,7 +9,7 @@
           - powerstat  # Wattage/Power
           - htop  # Standard monitor
           - lm-sensors  # Temps
-          - neofetch  # System Info
+          - fastfetch  # System Info
           - nload  # Network bandwidth graph
           - fzf  # Fuzzy search for history/files
           - usbutils  # lsusb
@@ -19,5 +19,6 @@
           - btop  # Better htop
           - ncdu  # Disk Usage analyzer
           - unzip  # For extracting zip files
+          - cri-tools  # crictl for Kubernetes/containerd debugging & image pruning
         state: present
         update_cache: true
