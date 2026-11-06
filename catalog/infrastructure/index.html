@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -296,7 +296,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../runbooks/bridge-watchdog/" class="md-tabs__link">
+        <a href="../../runbooks/kubeadm-control-plane-upgrade/" class="md-tabs__link">
           
   
   
@@ -1165,6 +1165,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../runbooks/kubeadm-control-plane-upgrade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes HA Control Plane & Node Upgrade SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../runbooks/bridge-watchdog/" class="md-nav__link">
         
   
@@ -1586,7 +1614,7 @@
 <h3 id="2-traefik-edge-ingress-controller">2. Traefik Edge Ingress Controller</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>kube-system</code></li>
-<li><strong>Version:</strong> Helm <code>42.0.0</code></li>
+<li><strong>Version:</strong> Helm <code>42.3.0</code></li>
 <li><strong>Sync Waves:</strong> <code>Wave 5</code> (DaemonSet Controller), <code>Wave 6</code> (Middlewares &amp; TLSStore)</li>
 <li><strong>Endpoints:</strong> Ports 80 (HTTP redirect), 443 (HTTPS termination)</li>
 <li><strong>Architectural Role:</strong> Cluster edge reverse proxy terminating external client TLS and enforcing security middlewares.</li>
@@ -1599,7 +1627,7 @@
 <h3 id="3-cert-manager">3. Cert-Manager</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>cert-manager</code></li>
-<li><strong>Version:</strong> Helm <code>v1.21.2</code></li>
+<li><strong>Version:</strong> Helm <code>v1.21.3</code></li>
 <li><strong>Sync Waves:</strong> <code>Wave 5</code> (Operator &amp; Webhooks), <code>Wave 6</code> (ExternalSecret, ClusterIssuer, Wildcard Certificate)</li>
 <li><strong>Architectural Role:</strong> Automated TLS x509 certificate management.</li>
 <li><strong>Key Configuration:</strong></li>
@@ -1611,7 +1639,7 @@
 <h3 id="4-kube-ovn-software-defined-l2-vpc-ovn-ad-vpc">4. Kube-OVN Software-Defined L2 VPC (<code>ovn-ad-vpc</code>)</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>kube-system</code> (Engine) &amp; <code>vms</code> (Networks)</li>
-<li><strong>Version:</strong> Helm <code>v1.16.12</code> (Secondary CNI)</li>
+<li><strong>Version:</strong> Helm <code>v1.16.17</code> (Secondary CNI)</li>
 <li><strong>Sync Waves:</strong> <code>Wave 3</code> (Operator &amp; Engine), <code>Wave 4</code> (Subnets &amp; NADs)</li>
 <li><strong>Architectural Role:</strong> Software-Defined Networking (SDN) overlay providing isolated Layer 2 VPCs, embedded IPAM, and Geneve UDP encapsulation.</li>
 <li><strong>Key Configuration:</strong></li>
@@ -1723,7 +1751,7 @@
 <h3 id="13-kubernetes-metrics-server">13. Kubernetes Metrics Server</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>kube-system</code></li>
-<li><strong>Version:</strong> Helm <code>3.12.2</code> (upstream <code>kubernetes-sigs/metrics-server</code>)</li>
+<li><strong>Version:</strong> Helm <code>3.14.0</code> (upstream <code>kubernetes-sigs/metrics-server</code>)</li>
 <li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
 <li><strong>Architectural Role:</strong> Core metrics aggregator exposing the <code>metrics.k8s.io</code> API for <code>kubectl top node</code>, <code>kubectl top pod</code>, and autoscaling pipelines.</li>
 <li><strong>Key Configuration:</strong></li>
@@ -1734,6 +1762,7 @@
 <h3 id="14-cilium-ebpf-cni-l2-announcement">14. Cilium eBPF CNI &amp; L2 Announcement</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>kube-system</code></li>
+<li><strong>Version:</strong> Helm <code>1.20.4</code></li>
 <li><strong>Sync Waves:</strong> <code>Wave 1</code> (eBPF CNI &amp; IPAM), <code>Wave 2</code> (<code>cilium-config</code> L2 pools &amp; announcement policies)</li>
 <li><strong>Architectural Role:</strong> Primary cluster CNI providing eBPF kube-proxy replacement, pod IPAM, network policies, and Layer 2 service load balancing.</li>
 <li><strong>Key Configuration:</strong></li>
@@ -1745,9 +1774,9 @@
 <h3 id="15-etcd-automated-defragmentation-etcd-defrag">15. etcd Automated Defragmentation (<code>etcd-defrag</code>)</h3>
 <ul>
 <li><strong>Namespace:</strong> <code>kube-system</code></li>
-<li><strong>Version:</strong> Helm <code>1.7.0</code> (upstream <code>christianhuth/etcd-defrag</code>)</li>
+<li><strong>Version:</strong> Helm <code>1.7.2</code> (upstream <code>christianhuth/etcd-defrag</code>)</li>
 <li><strong>Sync Wave:</strong> <code>Wave 2</code></li>
-<li><strong>Architectural Role:</strong> Twice-daily scheduled database hygiene job to prevent bbolt freelist bloat and eliminate control-plane peer snapshot storms over the powerline link.</li>
+<li><strong>Architectural Role:</strong> Twice-daily scheduled database hygiene job to prevent bbolt freelist bloat and eliminate control-plane peer snapshot storms across control-plane nodes.</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Deployed as a <code>CronJob</code> scheduled every 12 hours (<code>0 */12 * * *</code>).</li>
 <li>Uses <code>hostNetwork: true</code> with <code>hostAccess</code> mounting <code>/etc/kubernetes/pki/etcd/</code> certificates directly from control-plane nodes.</li>
@@ -1808,10 +1837,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.instant", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.instant", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../assets/javascripts/panzoom.min.js"></script>
       

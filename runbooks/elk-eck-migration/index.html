@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -296,7 +296,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../bridge-watchdog/" class="md-tabs__link">
+        <a href="../kubeadm-control-plane-upgrade/" class="md-tabs__link">
           
   
   
@@ -928,6 +928,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubeadm-control-plane-upgrade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes HA Control Plane & Node Upgrade SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -2025,9 +2053,33 @@ Secondary services (<code>fleet-server-agent-http-service</code> and <code>elast
 </span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nt">resources</span><span class="p">:</span>
 </span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://raw.githubusercontent.com/elastic/autoops-install/main/k8s/autoops_agent_deployment.yaml</span>
 </span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external-secrets.yaml</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="nt">patches</span><span class="p">:</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">target</span><span class="p">:</span>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">autoops-elastic-agent</span>
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="w">    </span><span class="nt">patch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="w">      </span><span class="no">apiVersion: apps/v1</span>
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="w">      </span><span class="no">kind: Deployment</span>
+</span><span id="__span-17-15"><a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="w">      </span><span class="no">metadata:</span>
+</span><span id="__span-17-16"><a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="w">        </span><span class="no">name: autoops-elastic-agent</span>
+</span><span id="__span-17-17"><a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="w">      </span><span class="no">spec:</span>
+</span><span id="__span-17-18"><a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="w">        </span><span class="no">template:</span>
+</span><span id="__span-17-19"><a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="w">          </span><span class="no">spec:</span>
+</span><span id="__span-17-20"><a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="w">            </span><span class="no">containers:</span>
+</span><span id="__span-17-21"><a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="w">              </span><span class="no">- name: autoops-elastic-agent</span>
+</span><span id="__span-17-22"><a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a><span class="w">                </span><span class="no">livenessProbe:</span>
+</span><span id="__span-17-23"><a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a><span class="w">                  </span><span class="no">exec:</span>
+</span><span id="__span-17-24"><a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a><span class="w">                    </span><span class="no">command:</span>
+</span><span id="__span-17-25"><a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a><span class="w">                      </span><span class="no">- /bin/sh</span>
+</span><span id="__span-17-26"><a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a><span class="w">                      </span><span class="no">- -c</span>
+</span><span id="__span-17-27"><a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a><span class="w">                      </span><span class="no">- curl -sf http://127.0.0.1:8888/metrics | grep -qE '^libbeat_pipeline_clients\{.*\} [1-9]'</span>
+</span><span id="__span-17-28"><a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a><span class="w">                  </span><span class="no">initialDelaySeconds: 15</span>
+</span><span id="__span-17-29"><a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a><span class="w">                  </span><span class="no">periodSeconds: 30</span>
+</span><span id="__span-17-30"><a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a><span class="w">                  </span><span class="no">failureThreshold: 3</span>
 </span></code></pre></div>
 <ul>
-<li><strong>Image:</strong> <code>docker.elastic.co/elastic-agent/elastic-otel-collector-wolfi:9.4.3</code> (OpenTelemetry Collector with built-in <code>otel_samples/autoops_es.yml</code>).</li>
+<li><strong>Image:</strong> <code>docker.elastic.co/elastic-agent/elastic-otel-collector-wolfi</code> (OpenTelemetry Collector with built-in <code>otel_samples/autoops_es.yml</code>).</li>
+<li><strong>Self-Healing Liveness Probe (<code>libbeat_pipeline_clients</code>):</strong> Under <code>otel_samples/autoops_es.yml</code>, the embedded <code>metricbeatreceiver</code> launches <strong>9 <code>autoops_es</code> metricset input streams</strong> (<code>cat_shards</code>, <code>node_stats</code>, <code>tasks_management</code> every 10s; <code>cluster_health</code>, <code>cluster_settings</code> every 1m; <code>cat_template</code>, <code>component_template</code>, <code>index_template</code>, <code>license</code> every 24h), which report <code>libbeat_pipeline_clients{receiver="metricbeatreceiver"} 9</code> on internal telemetry endpoint <code>http://127.0.0.1:8888/metrics</code>. If the pod starts while Elasticsearch is unreachable (<code>503</code>), <code>metricbeatreceiver</code> fails its initial Cloud Connected registration handshake and exits (<code>libbeat_pipeline_clients</code> drops to <code>0</code>) while the parent <code>elastic-otel-collector</code> process stays alive. The Kustomize <code>livenessProbe</code> checks for <code>[1-9]</code> active pipeline clients and automatically restarts the container if the scraper streams drop to <code>0</code>.</li>
 <li><strong>Vault Integration:</strong> Sensitive cloud tokens (<code>autoops_token</code>, <code>elastic_cloud_connected_mode_api_key</code>, <code>temp-resource-id</code>, <code>es_password</code>) are stored in Vault under <code>secret/data/autoops</code> and mapped into <code>autoops-secret</code> via <code>ExternalSecret</code> with <code>creationPolicy: Owner</code>.</li>
 <li><strong>Telemetry Route:</strong> Scrapes diagnostics locally from <code>https://es.lambertlab.us</code> and exports OTLP metrics over HTTPS to Elastic Cloud (<code>https://otel-auto-ops.us-east-2.aws.svc.elastic.cloud</code>).</li>
 </ul>
@@ -2097,10 +2149,10 @@ Access the resulting insights directly on <strong><a href="https://cloud.elastic
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.instant", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.instant", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../assets/javascripts/panzoom.min.js"></script>
       

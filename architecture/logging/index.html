@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -296,7 +296,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../runbooks/bridge-watchdog/" class="md-tabs__link">
+        <a href="../../runbooks/kubeadm-control-plane-upgrade/" class="md-tabs__link">
           
   
   
@@ -1116,6 +1116,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../runbooks/kubeadm-control-plane-upgrade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes HA Control Plane & Node Upgrade SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../runbooks/bridge-watchdog/" class="md-nav__link">
         
   
@@ -1580,7 +1608,7 @@ Allocating a 3Gi memory limit ensures smooth visual aggregation and uninterrupte
 <li><strong>Fleet Server (ECK Operator):</strong>
   Deployed via ArgoCD (<code>kubernetes/apps/fleet-server.yaml</code>) as an ECK Agent CR (<code>kubernetes/observability/fleet-server/fleet-server.yaml</code>) in <code>mode: fleet</code> with native cluster scheduling. It connects directly to Elasticsearch and Kibana via internal cluster references and exposes its endpoint externally via Traefik Ingress at <code>https://fleet.lambertlab.us</code> with <code>default-insecure-transport</code>.</li>
 <li><strong>Fleet-Managed DaemonSet (<code>elastic-agent</code>):</strong>
-  Deployed via ArgoCD (<code>kubernetes/apps/elastic-agent.yaml</code>) utilizing the upstream Elastic Helm chart (<code>https://helm.elastic.co</code>, chart: <code>elastic-agent:9.5.4</code>).</li>
+  Deployed via ArgoCD (<code>kubernetes/apps/elastic-agent.yaml</code>) utilizing the upstream Elastic Helm chart (<code>https://helm.elastic.co</code>, chart: <code>elastic-agent:9.5.6</code>).</li>
 <li><strong>Pinned Image Tag:</strong> Pinned to <code>9.3.2</code> to strictly adhere to Elastic's architectural requirement: $V_{\text{Agent}} \le V_{\text{Fleet Server}}$.</li>
 <li><strong>System &amp; Kubernetes Integrations:</strong> With <code>system.enabled: true</code> and <code>preset: perNode</code>, exactly one agent pod runs on every cluster node, mounting <code>/var/log</code>, <code>/proc</code>, and <code>/sys</code> to monitor host OS telemetry and container logs simultaneously with zero duplication.</li>
 <li><strong>Secret Decoupling:</strong> Uses <code>tokenFromSecret</code> referencing Kubernetes secret <code>elastic-agent-token</code> in <code>kube-system</code>, synced from HashiCorp Vault via External Secrets Operator. Plaintext enrollment tokens are never committed to Git.</li>
@@ -1590,7 +1618,8 @@ Allocating a 3Gi memory limit ensures smooth visual aggregation and uninterrupte
 <hr />
 <h3 id="6-elastic-autoops-cloud-connect-automated-cluster-monitoring">6. Elastic AutoOps Cloud Connect (Automated Cluster Monitoring)</h3>
 <p>To monitor cluster performance, shard allocation, and operational health against Elastic best practices, the cluster connects to <strong>Elastic AutoOps Cloud</strong>:
-* <strong>Deployment Model:</strong> Deployed via ArgoCD (<code>kubernetes/apps/autoops.yaml</code>) utilizing Kustomize (<code>kubernetes/observability/autoops/kustomization.yaml</code>) which references Elastic's upstream deployment directly from <code>elastic/autoops-install</code> (<code>autoops_agent_deployment.yaml</code>) alongside an <code>ExternalSecret</code> managing <code>autoops-secret</code> from Vault.</p>
+* <strong>Deployment Model:</strong> Deployed via ArgoCD (<code>kubernetes/apps/autoops.yaml</code>) utilizing Kustomize (<code>kubernetes/observability/autoops/kustomization.yaml</code>) which references Elastic's upstream deployment directly from <code>elastic/autoops-install</code> (<code>autoops_agent_deployment.yaml</code>) alongside an <code>ExternalSecret</code> managing <code>autoops-secret</code> from Vault.
+* <strong>Self-Healing Liveness Probe:</strong> Applies a Kustomize patch adding a <code>livenessProbe</code> against <code>http://127.0.0.1:8888/metrics</code> (<code>libbeat_pipeline_clients{receiver="metricbeatreceiver"} [1-9]</code>) to verify the 9 embedded <code>autoops_es</code> Metricbeat input streams (<code>cat_shards</code>, <code>node_stats</code>, <code>tasks_management</code>, <code>cluster_health</code>, <code>cluster_settings</code>, <code>cat_template</code>, <code>component_template</code>, <code>index_template</code>, <code>license</code>) remain active and automatically restart the container if startup registration fails while Elasticsearch is restarting.</p>
 <hr />
 <h3 id="7-planned-dashboards-discover-views-target-roadmap">7. Planned Dashboards &amp; Discover Views (Target Roadmap)</h3>
 <p>Homelab telemetry streams into the <code>logs-*</code> and <code>metrics-*</code> data views in Kibana (<code>https://kibana.lambertlab.us</code>). The following curated searches and operational dashboards represent the target implementation roadmap:</p>
@@ -1731,10 +1760,10 @@ Allocating a 3Gi memory limit ensures smooth visual aggregation and uninterrupte
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.instant", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "navigation.instant", "search.highlight", "search.share", "search.suggest", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
         <script src="../../assets/javascripts/panzoom.min.js"></script>
       
