@@ -183,7 +183,7 @@ This section details the foundational control plane components, software-defined
 * **Namespace:** `kube-system`
 * **Version:** Helm `1.7.2` (upstream `christianhuth/etcd-defrag`)
 * **Sync Wave:** `Wave 2`
-* **Architectural Role:** Twice-daily scheduled database hygiene job to prevent bbolt freelist bloat and eliminate control-plane peer snapshot storms over the powerline link.
+* **Architectural Role:** Twice-daily scheduled database hygiene job to prevent bbolt freelist bloat and eliminate control-plane peer snapshot storms across control-plane nodes.
 * **Key Configuration:**
   * Deployed as a `CronJob` scheduled every 12 hours (`0 */12 * * *`).
   * Uses `hostNetwork: true` with `hostAccess` mounting `/etc/kubernetes/pki/etcd/` certificates directly from control-plane nodes.
