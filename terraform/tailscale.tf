@@ -10,7 +10,7 @@ data "tailscale_device" "optiplex" {
   name = "optiplex.${var.tailscale_tailnet}"
 }
 
-data "tailscale_device" "lenovo" {
-  name = "lenovo.${var.tailscale_tailnet}"
+data "tailscale_device" "opti76" {
+  name = "opti76.${var.tailscale_tailnet}"
 }
 

@@ -36,14 +36,14 @@ resource "cloudflare_dns_record" "wildcard_optiplex" {
   comment = "k3s optiplex - Managed by Terraform"
 }
 
-resource "cloudflare_dns_record" "wildcard_lenovo" {
+resource "cloudflare_dns_record" "wildcard_opti76" {
   zone_id = data.cloudflare_zone.main.id
   name    = "*"
-  content = data.tailscale_device.lenovo.addresses[0]
+  content = data.tailscale_device.opti76.addresses[0]
   type    = "A"
   ttl     = 300
   proxied = false
-  comment = "k3s lenovo - Managed by Terraform"
+  comment = "k8s opti76 - Managed by Terraform"
 }
 
 # Microsoft Entra ID Domain Verification for lambertlab.us
