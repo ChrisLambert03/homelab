@@ -8,6 +8,7 @@
 - name: Generate TLS Certs for Docker Hosts
   hosts: localhost
   gather_facts: false
+  become: true
 
   vars:
     # Directory where all certificates and keys will be stored locally
@@ -22,6 +23,7 @@
       - lenovo
       - opti74
       - optiplex
+      - opti76
 
   tasks:
     # ─── Preparation ──────────────────────────────────────────────────────────
@@ -31,15 +33,28 @@
         path: "{{ ca_dir }}"
         state: directory
         mode: "0700"
+        owner: ansible
+        group: ansible
+
+    - name: Check if CA certificate already exists
+      ansible.builtin.stat:
+        path: "{{ ca_dir }}/ca.pem"
+      register: ca_stat
+
+    - name: Check if client certificate already exists
+      ansible.builtin.stat:
+        path: "{{ ca_dir }}/client-cert.pem"
+      register: client_stat
 
     # ─── Certificate Authority (CA) Creation ──────────────────────────────────
-    # These tasks establish the root of trust for the homelab.
+    # Only runs if CA does not exist on disk
 
     - name: Generate CA private key
       community.crypto.openssl_privatekey:
         path: "{{ ca_dir }}/ca-key.pem"
         mode: "0600"
-        force: true
+        force: false
+      when: not ca_stat.stat.exists
 
     - name: Generate CA CSR
       community.crypto.openssl_csr:
@@ -50,7 +65,8 @@
         basic_constraints_critical: true
         key_usage: [keyCertSign, cRLSign]
         key_usage_critical: true
-        force: true
+        force: false
+      when: not ca_stat.stat.exists
 
     - name: Generate CA certificate
       community.crypto.x509_certificate:
@@ -59,18 +75,28 @@
         privatekey_path: "{{ ca_dir }}/ca-key.pem"
         provider: selfsigned
         selfsigned_not_after: "{{ ca_expiry }}"
-        force: true
+        force: false
+      when: not ca_stat.stat.exists
 
     # ─── Server Certificate Generation ────────────────────────────────────────
-    # Loops through 'hosts_to_cert' to create unique certificates for each Docker host.
+    # Loops through 'hosts_to_cert' and only creates certificates for nodes that lack one.
+
+    - name: Check which server certificates exist
+      ansible.builtin.stat:
+        path: "{{ ca_dir }}/{{ item }}-server-cert.pem"
+      loop: "{{ hosts_to_cert }}"
+      register: server_cert_stats
+
+    - name: Build list of missing server cert hosts
+      ansible.builtin.set_fact:
+        missing_cert_hosts: "{{ server_cert_stats.results | selectattr('stat.exists', 'equalto', false) | map(attribute='item') | list }}"
 
     - name: Generate server private key
       community.crypto.openssl_privatekey:
         path: "{{ ca_dir }}/{{ item }}-server-key.pem"
         mode: "0600"
-        force: true
-
-      loop: "{{ hosts_to_cert }}"
+        force: false
+      loop: "{{ missing_cert_hosts }}"
 
     - name: Generate server CSR
       community.crypto.openssl_csr:
@@ -84,8 +110,8 @@
           - "DNS:localhost"
           - "IP:127.0.0.1"
           - "IP:{{ hostvars[item]['ansible_host'] | default('127.0.0.1') }}"
-        force: true
-      loop: "{{ hosts_to_cert }}"
+        force: false
+      loop: "{{ missing_cert_hosts }}"
 
     - name: Sign server cert with CA
       community.crypto.x509_certificate:
@@ -95,17 +121,18 @@
         ownca_privatekey_path: "{{ ca_dir }}/ca-key.pem"
         provider: ownca
         ownca_not_after: "{{ cert_expiry }}"
-        force: true
-      loop: "{{ hosts_to_cert }}"
+        force: false
+      loop: "{{ missing_cert_hosts }}"
 
     # ─── Client Certificate Generation ────────────────────────────────────────
-    # Generates a single client certificate used for administrative access to the Docker daemons.
+    # Generates client certificate only if missing
 
     - name: Generate client private key
       community.crypto.openssl_privatekey:
         path: "{{ ca_dir }}/client-key.pem"
         mode: "0600"
-        force: true
+        force: false
+      when: not client_stat.stat.exists
 
     - name: Generate client CSR
       community.crypto.openssl_csr:
@@ -114,7 +141,8 @@
         common_name: "docker-client"
         key_usage: [digitalSignature]
         extended_key_usage: [clientAuth]
-        force: true
+        force: false
+      when: not client_stat.stat.exists
 
     - name: Sign client cert with CA
       community.crypto.x509_certificate:
@@ -124,7 +152,8 @@
         ownca_privatekey_path: "{{ ca_dir }}/ca-key.pem"
         provider: ownca
         ownca_not_after: "{{ cert_expiry }}"
-        force: true
+        force: false
+      when: not client_stat.stat.exists
 
     # ─── Final Permissions ────────────────────────────────────────────────────
 

@@ -1,6 +1,7 @@
 ---
 - name: Homelab Monitoring & Diagnostics
   hosts: all
+  become: true
   tasks:
     - name: Install all the things
       ansible.builtin.apt:
@@ -9,7 +10,6 @@
           - powerstat  # Wattage/Power
           - htop  # Standard monitor
           - lm-sensors  # Temps
-          - fastfetch  # System Info
           - nload  # Network bandwidth graph
           - fzf  # Fuzzy search for history/files
           - usbutils  # lsusb
@@ -20,5 +20,12 @@
           - ncdu  # Disk Usage analyzer
           - unzip  # For extracting zip files
           - cri-tools  # crictl for Kubernetes/containerd debugging & image pruning
+          - etcd-client  # etcdctl CLI for etcd cluster management
         state: present
         update_cache: true
+
+    - name: Install fastfetch on modern releases
+      ansible.builtin.apt:
+        name: fastfetch
+        state: present
+      when: ansible_facts['distribution_release'] != 'noble'
