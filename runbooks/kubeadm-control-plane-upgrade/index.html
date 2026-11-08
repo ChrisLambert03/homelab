@@ -18,7 +18,7 @@
         <link rel="prev" href="../../catalog/security-tools/">
       
       
-        <link rel="next" href="../bridge-watchdog/">
+        <link rel="next" href="../control-plane-node-retirement/">
       
       
         
@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1058,15 +1058,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#stage-1-upgrade-the-primary-control-plane-lenovo" class="md-nav__link">
+  <a href="#stage-1-upgrade-the-first-control-plane-node" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stage 1: Upgrade the Primary Control Plane (lenovo)
+        Stage 1: Upgrade the First Control Plane Node
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Stage 1: Upgrade the Primary Control Plane (lenovo)">
+    <nav class="md-nav" aria-label="Stage 1: Upgrade the First Control Plane Node">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1103,10 +1103,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-drain-workloads-from-lenovo" class="md-nav__link">
+  <a href="#4-drain-workloads-from-the-node" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Drain Workloads from lenovo
+        4. Drain Workloads from the Node
       
     </span>
   </a>
@@ -1125,10 +1125,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-uncordon-lenovo" class="md-nav__link">
+  <a href="#6-uncordon-the-first-control-plane-node" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Uncordon lenovo
+        6. Uncordon the First Control Plane Node
       
     </span>
   </a>
@@ -1141,15 +1141,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stage-2-upgrade-secondary-control-planes-optiplex-then-opti74" class="md-nav__link">
+  <a href="#stage-2-upgrade-subsequent-control-planes-opti74-then-opti76" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stage 2: Upgrade Secondary Control Planes (optiplex then opti74)
+        Stage 2: Upgrade Subsequent Control Planes (opti74, then opti76)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Stage 2: Upgrade Secondary Control Planes (optiplex then opti74)">
+    <nav class="md-nav" aria-label="Stage 2: Upgrade Subsequent Control Planes (opti74, then opti76)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1225,10 +1225,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-drain-the-worker-node" class="md-nav__link">
+  <a href="#method-a-zero-downtime-cordon-upgrade-recommended-for-nodes-with-vms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Drain the Worker Node
+        Method A: Zero-Downtime Cordon Upgrade (Recommended for Nodes with VMs)
       
     </span>
   </a>
@@ -1236,32 +1236,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-upgrade-kubeadm-and-node-configuration" class="md-nav__link">
+  <a href="#method-b-eviction-drain-standard-stateless-worker-upgrade" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Upgrade kubeadm and Node Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-upgrade-kubelet-and-kubectl" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Upgrade kubelet and kubectl
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-uncordon-the-worker-node" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Uncordon the Worker Node
+        Method B: Eviction Drain (Standard Stateless Worker Upgrade)
       
     </span>
   </a>
@@ -1279,41 +1257,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#day-2-verification-incident-recovery" class="md-nav__link">
+  <a href="#post-upgrade-verification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🔍 Day-2 Verification &amp; Incident Recovery
+        🔍 Post-Upgrade Verification
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="🔍 Day-2 Verification &amp; Incident Recovery">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-post-upgrade-health-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Post-Upgrade Health Checks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-resolving-stalled-etcd-peer-snapshot-synchronization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Resolving Stalled etcd Peer Snapshot Synchronization
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1321,6 +1271,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../control-plane-node-retirement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Plane Node Decommissioning & Retirement SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1590,15 +1568,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#stage-1-upgrade-the-primary-control-plane-lenovo" class="md-nav__link">
+  <a href="#stage-1-upgrade-the-first-control-plane-node" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stage 1: Upgrade the Primary Control Plane (lenovo)
+        Stage 1: Upgrade the First Control Plane Node
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Stage 1: Upgrade the Primary Control Plane (lenovo)">
+    <nav class="md-nav" aria-label="Stage 1: Upgrade the First Control Plane Node">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1635,10 +1613,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-drain-workloads-from-lenovo" class="md-nav__link">
+  <a href="#4-drain-workloads-from-the-node" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Drain Workloads from lenovo
+        4. Drain Workloads from the Node
       
     </span>
   </a>
@@ -1657,10 +1635,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-uncordon-lenovo" class="md-nav__link">
+  <a href="#6-uncordon-the-first-control-plane-node" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Uncordon lenovo
+        6. Uncordon the First Control Plane Node
       
     </span>
   </a>
@@ -1673,15 +1651,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stage-2-upgrade-secondary-control-planes-optiplex-then-opti74" class="md-nav__link">
+  <a href="#stage-2-upgrade-subsequent-control-planes-opti74-then-opti76" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stage 2: Upgrade Secondary Control Planes (optiplex then opti74)
+        Stage 2: Upgrade Subsequent Control Planes (opti74, then opti76)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Stage 2: Upgrade Secondary Control Planes (optiplex then opti74)">
+    <nav class="md-nav" aria-label="Stage 2: Upgrade Subsequent Control Planes (opti74, then opti76)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1757,10 +1735,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-drain-the-worker-node" class="md-nav__link">
+  <a href="#method-a-zero-downtime-cordon-upgrade-recommended-for-nodes-with-vms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Drain the Worker Node
+        Method A: Zero-Downtime Cordon Upgrade (Recommended for Nodes with VMs)
       
     </span>
   </a>
@@ -1768,32 +1746,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-upgrade-kubeadm-and-node-configuration" class="md-nav__link">
+  <a href="#method-b-eviction-drain-standard-stateless-worker-upgrade" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Upgrade kubeadm and Node Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-upgrade-kubelet-and-kubectl" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Upgrade kubelet and kubectl
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-uncordon-the-worker-node" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Uncordon the Worker Node
+        Method B: Eviction Drain (Standard Stateless Worker Upgrade)
       
     </span>
   </a>
@@ -1811,41 +1767,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#day-2-verification-incident-recovery" class="md-nav__link">
+  <a href="#post-upgrade-verification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🔍 Day-2 Verification &amp; Incident Recovery
+        🔍 Post-Upgrade Verification
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="🔍 Day-2 Verification &amp; Incident Recovery">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-post-upgrade-health-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Post-Upgrade Health Checks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-resolving-stalled-etcd-peer-snapshot-synchronization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Resolving Stalled etcd Peer Snapshot Synchronization
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1902,18 +1830,18 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
         VIP["kube-vip Virtual IP (10.0.0.201:6443)"]
 
         subgraph CP["3-Node Stacked Control Plane (Quorum = 2)"]
-            Lenovo["lenovo (10.0.0.11)&lt;br/&gt;Primary Control Plane&lt;br/&gt;Target: v1.37.2"]
-            Optiplex["optiplex (10.0.0.12)&lt;br/&gt;Secondary Control Plane&lt;br/&gt;Target: v1.37.2"]
-            Opti74["opti74 (10.0.0.13)&lt;br/&gt;Secondary Control Plane&lt;br/&gt;Target: v1.37.2"]
+            Optiplex["optiplex (10.0.0.12)&lt;br/&gt;Control Plane Node&lt;br/&gt;Target: v1.37.2"]
+            Opti74["opti74 (10.0.0.13)&lt;br/&gt;Control Plane Node&lt;br/&gt;Target: v1.37.2"]
+            Opti76["opti76 (10.0.0.15)&lt;br/&gt;Control Plane Node&lt;br/&gt;Target: v1.37.2"]
         end
 
         subgraph Worker["Dedicated Worker Node"]
             Workstation["workstation (10.0.0.14)&lt;br/&gt;Worker / GPU Compute&lt;br/&gt;Target: v1.37.2"]
         end
 
-        VIP --- Lenovo
         VIP --- Optiplex
         VIP --- Opti74
+        VIP --- Opti76
         Workstation --&gt;|API Traffic| VIP
     end</code></pre> 
     
@@ -1924,12 +1852,12 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 * <strong>The Workflow:</strong> During planned maintenance, packages are explicitly unheld, updated to the exact pinned version (<code>&lt;version&gt;-1.1</code>), and immediately placed back on <code>hold</code>.</p>
 <h3 id="2-upgrade-command-invariant-primary-vs-secondary-nodes">2. Upgrade Command Invariant: Primary vs. Secondary Nodes</h3>
 <ul>
-<li><strong>Primary Control Plane (<code>lenovo</code>):</strong>
+<li><strong>First Control Plane Node:</strong>
   Uses <strong><code>sudo kubeadm upgrade apply v1.X.Y</code></strong>. This command updates the cluster configuration in the <code>kube-system/kubeadm-config</code> ConfigMap, renews control-plane leaf certificates, updates static pod manifests (<code>kube-apiserver</code>, <code>kube-controller-manager</code>, <code>kube-scheduler</code>, <code>etcd</code>), and handles addon RBAC.</li>
-<li><strong>Secondary Control Planes (<code>optiplex</code>, <code>opti74</code>):</strong>
+<li><strong>Subsequent Control Planes:</strong>
   Uses <strong><code>sudo kubeadm upgrade node</code></strong>. <strong>NEVER run <code>upgrade apply</code> on secondary control planes.</strong> <code>upgrade node</code> fetches the updated cluster configuration directly from the cluster ConfigMap and regenerates local static manifests.</li>
-<li><strong>Worker Nodes (<code>workstation</code>):</strong>
-  Uses <strong><code>sudo kubeadm upgrade node</code></strong>. Updates the local kubelet configuration.</li>
+<li><strong>Worker Nodes:</strong>
+  Uses <strong><code>sudo kubeadm upgrade node</code></strong>. Updates the local kubelet configuration. Draining is optional on worker nodes hosting long-running stateful services (such as VMs) because <code>containerd</code> continues running all active pods and workloads uninterrupted during a local <code>kubelet</code> restart.</li>
 </ul>
 <hr />
 <h2 id="pre-flight-considerations-etcd-health-checks">⚠️ Pre-Flight Considerations &amp; etcd Health Checks</h2>
@@ -1949,8 +1877,8 @@ Before initiating control-plane node upgrades, verify etcd cluster health and en
 </blockquote>
 <hr />
 <h2 id="step-by-step-upgrade-workflow">🛠️ Step-by-Step Upgrade Workflow</h2>
-<h3 id="stage-1-upgrade-the-primary-control-plane-lenovo">Stage 1: Upgrade the Primary Control Plane (<code>lenovo</code>)</h3>
-<p>Execute all commands locally on <code>lenovo</code>:</p>
+<h3 id="stage-1-upgrade-the-first-control-plane-node">Stage 1: Upgrade the First Control Plane Node</h3>
+<p>Execute on the designated first control-plane node (e.g. <code>optiplex</code>):</p>
 <h4 id="1-unhold-and-upgrade-kubeadm">1. Unhold and Upgrade <code>kubeadm</code></h4>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>apt-mark<span class="w"> </span>unhold<span class="w"> </span>kubeadm
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="nv">kubeadm</span><span class="o">=</span><span class="m">1</span>.37.2-1.1
@@ -1971,8 +1899,8 @@ If using Cilium in pure eBPF mode (<code>kubeProxyReplacement=true</code>), <cod
 <code>Warning: No kubeproxy.config.k8s.io/v1alpha1 config is loaded. Continuing without it: configmaps "kube-proxy" not found</code>
 This warning is completely normal and expected.</p>
 </blockquote>
-<h4 id="4-drain-workloads-from-lenovo">4. Drain Workloads from <code>lenovo</code></h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>drain<span class="w"> </span>lenovo<span class="w"> </span>--ignore-daemonsets<span class="w"> </span>--delete-emptydir-data
+<h4 id="4-drain-workloads-from-the-node">4. Drain Workloads from the Node</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>drain<span class="w"> </span>&lt;first-control-plane&gt;<span class="w"> </span>--ignore-daemonsets<span class="w"> </span>--delete-emptydir-data<span class="w"> </span>--pod-selector<span class="o">=</span><span class="s1">'longhorn.io/component!=instance-manager'</span>
 </span></code></pre></div>
 <h4 id="5-upgrade-kubelet-and-kubectl">5. Upgrade <code>kubelet</code> and <code>kubectl</code></h4>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>apt-mark<span class="w"> </span>unhold<span class="w"> </span>kubelet<span class="w"> </span>kubectl
@@ -1982,13 +1910,13 @@ This warning is completely normal and expected.</p>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>kubelet
 </span></code></pre></div>
-<h4 id="6-uncordon-lenovo">6. Uncordon <code>lenovo</code></h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>uncordon<span class="w"> </span>lenovo
+<h4 id="6-uncordon-the-first-control-plane-node">6. Uncordon the First Control Plane Node</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span>uncordon<span class="w"> </span>&lt;first-control-plane&gt;
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
 </span></code></pre></div>
 <hr />
-<h3 id="stage-2-upgrade-secondary-control-planes-optiplex-then-opti74">Stage 2: Upgrade Secondary Control Planes (<code>optiplex</code> then <code>opti74</code>)</h3>
-<p>Execute sequentially on <strong><code>optiplex</code></strong>, and once verified healthy, repeat on <strong><code>opti74</code></strong>:</p>
+<h3 id="stage-2-upgrade-subsequent-control-planes-opti74-then-opti76">Stage 2: Upgrade Subsequent Control Planes (<code>opti74</code>, then <code>opti76</code>)</h3>
+<p>Execute sequentially on each remaining control plane node, one at a time:</p>
 <h4 id="1-unhold-and-upgrade-kubeadm_1">1. Unhold and Upgrade <code>kubeadm</code></h4>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>sudo<span class="w"> </span>apt-mark<span class="w"> </span>unhold<span class="w"> </span>kubeadm
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="nv">kubeadm</span><span class="o">=</span><span class="m">1</span>.37.2-1.1
@@ -1999,7 +1927,7 @@ This warning is completely normal and expected.</p>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>sudo<span class="w"> </span>kubeadm<span class="w"> </span>upgrade<span class="w"> </span>node
 </span></code></pre></div>
 <h4 id="3-drain-workloads">3. Drain Workloads</h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>drain<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span>--ignore-daemonsets<span class="w"> </span>--delete-emptydir-data
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>drain<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span>--ignore-daemonsets<span class="w"> </span>--delete-emptydir-data<span class="w"> </span>--pod-selector<span class="o">=</span><span class="s1">'longhorn.io/component!=instance-manager'</span>
 </span></code></pre></div>
 <h4 id="4-upgrade-kubelet-and-kubectl">4. Upgrade <code>kubelet</code> and <code>kubectl</code></h4>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>sudo<span class="w"> </span>apt-mark<span class="w"> </span>unhold<span class="w"> </span>kubelet<span class="w"> </span>kubectl
@@ -2015,67 +1943,38 @@ This warning is completely normal and expected.</p>
 </span></code></pre></div>
 <hr />
 <h3 id="stage-3-upgrade-worker-nodes-workstation">Stage 3: Upgrade Worker Nodes (<code>workstation</code>)</h3>
-<p>Execute on <code>workstation</code>:</p>
-<h4 id="1-drain-the-worker-node">1. Drain the Worker Node</h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kubectl<span class="w"> </span>drain<span class="w"> </span>workstation<span class="w"> </span>--ignore-daemonsets<span class="w"> </span>--delete-emptydir-data
+<p>Because <code>containerd</code> continues running all active pods and virtual machines uninterrupted during a local <code>kubelet</code> restart, worker nodes hosting long-running stateful services (such as KubeVirt VMs or single-node databases) can be upgraded with zero downtime without a full eviction drain.</p>
+<h4 id="method-a-zero-downtime-cordon-upgrade-recommended-for-nodes-with-vms">Method A: Zero-Downtime Cordon Upgrade (Recommended for Nodes with VMs)</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Cordon the worker node to prevent new pod scheduling</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>kubectl<span class="w"> </span>cordon<span class="w"> </span>&lt;worker-node&gt;
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># 2. Upgrade kubeadm and local kubelet configuration</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>ssh<span class="w"> </span>&lt;worker-node&gt;<span class="w"> </span><span class="s2">"sudo apt-mark unhold kubeadm &amp;&amp; sudo apt-get update &amp;&amp; sudo apt-get install -y kubeadm=1.37.2-1.1 &amp;&amp; sudo apt-mark hold kubeadm"</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>ssh<span class="w"> </span>&lt;worker-node&gt;<span class="w"> </span><span class="s2">"sudo kubeadm upgrade node"</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># 3. Upgrade kubelet and kubectl packages</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>ssh<span class="w"> </span>&lt;worker-node&gt;<span class="w"> </span><span class="s2">"sudo apt-mark unhold kubelet kubectl &amp;&amp; sudo apt-get install -y kubelet=1.37.2-1.1 kubectl=1.37.2-1.1 &amp;&amp; sudo apt-mark hold kubelet kubectl"</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># 4. Restart kubelet service (containerd keeps all containers and VMs running)</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>ssh<span class="w"> </span>&lt;worker-node&gt;<span class="w"> </span><span class="s2">"sudo systemctl daemon-reload &amp;&amp; sudo systemctl restart kubelet"</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># 5. Uncordon the worker node</span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>kubectl<span class="w"> </span>uncordon<span class="w"> </span>&lt;worker-node&gt;
 </span></code></pre></div>
-<h4 id="2-upgrade-kubeadm-and-node-configuration">2. Upgrade <code>kubeadm</code> and Node Configuration</h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>sudo<span class="w"> </span>apt-mark<span class="w"> </span>unhold<span class="w"> </span>kubeadm
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="nv">kubeadm</span><span class="o">=</span><span class="m">1</span>.37.2-1.1
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>sudo<span class="w"> </span>apt-mark<span class="w"> </span>hold<span class="w"> </span>kubeadm
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>sudo<span class="w"> </span>kubeadm<span class="w"> </span>upgrade<span class="w"> </span>node
-</span></code></pre></div>
-<h4 id="3-upgrade-kubelet-and-kubectl">3. Upgrade <code>kubelet</code> and <code>kubectl</code></h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>sudo<span class="w"> </span>apt-mark<span class="w"> </span>unhold<span class="w"> </span>kubelet<span class="w"> </span>kubectl
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="nv">kubelet</span><span class="o">=</span><span class="m">1</span>.37.2-1.1<span class="w"> </span><span class="nv">kubectl</span><span class="o">=</span><span class="m">1</span>.37.2-1.1
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>sudo<span class="w"> </span>apt-mark<span class="w"> </span>hold<span class="w"> </span>kubelet<span class="w"> </span>kubectl
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>kubelet
-</span></code></pre></div>
-<h4 id="4-uncordon-the-worker-node">4. Uncordon the Worker Node</h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span>uncordon<span class="w"> </span>workstation
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
-</span></code></pre></div>
-<hr />
-<h2 id="day-2-verification-incident-recovery">🔍 Day-2 Verification &amp; Incident Recovery</h2>
-<h3 id="1-post-upgrade-health-checks">1. Post-Upgrade Health Checks</h3>
-<p>Verify that all control-plane and worker nodes report <code>Ready</code>, and ensure all workloads across system and user namespaces are running cleanly:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--field-selector<span class="o">=</span>status.phase!<span class="o">=</span>Running,status.phase!<span class="o">=</span>Succeeded
+<h4 id="method-b-eviction-drain-standard-stateless-worker-upgrade">Method B: Eviction Drain (Standard Stateless Worker Upgrade)</h4>
+<p>If you prefer to evict all workloads before upgrading:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>kubectl<span class="w"> </span>drain<span class="w"> </span>&lt;worker-node&gt;<span class="w"> </span>--ignore-daemonsets<span class="w"> </span>--delete-emptydir-data<span class="w"> </span>--pod-selector<span class="o">=</span><span class="s1">'longhorn.io/component!=instance-manager'</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Then follow package upgrade steps 2-5 above.</span>
 </span></code></pre></div></p>
-<h3 id="2-resolving-stalled-etcd-peer-snapshot-synchronization">2. Resolving Stalled etcd Peer Snapshot Synchronization</h3>
-<p>If a node was offline long enough to exceed <code>--snapshot-count=10000</code> transactions and the database on the leader has accumulated fragmented bbolt freelist space:
-1. <strong>Temporarily halt local static container to stop sync loops:</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/etc/kubernetes/manifests/etcd.yaml<span class="w"> </span>/etc/kubernetes/etcd.yaml.bak
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>sudo<span class="w"> </span>pkill<span class="w"> </span>-9<span class="w"> </span>etcd
+<hr />
+<h2 id="post-upgrade-verification">🔍 Post-Upgrade Verification</h2>
+<p>Verify that all control-plane and worker nodes report <code>Ready</code>, and ensure all workloads across system and user namespaces are running cleanly:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Verify all nodes are updated to target version and Ready</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Verify all cluster pods are Running or Completed</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A<span class="w"> </span>--field-selector<span class="o">=</span>status.phase!<span class="o">=</span>Running,status.phase!<span class="o">=</span>Succeeded
 </span></code></pre></div>
-2. <strong>Compact historical revisions on an active healthy peer:</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nv">CURRENT_REV</span><span class="o">=</span><span class="k">$(</span>sudo<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{}'</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span>--cacert<span class="w"> </span>/etc/kubernetes/pki/etcd/ca.crt<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>--cert<span class="w"> </span>/etc/kubernetes/pki/etcd/server.crt<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>--key<span class="w"> </span>/etc/kubernetes/pki/etcd/server.key<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">  </span>https://127.0.0.1:2379/v3/maintenance/status<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span>.header.revision<span class="k">)</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>sudo<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-d<span class="w"> </span><span class="s2">"{\"revision\": \"</span><span class="nv">$CURRENT_REV</span><span class="s2">\"}"</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="w">  </span>--cacert<span class="w"> </span>/etc/kubernetes/pki/etcd/ca.crt<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="w">  </span>--cert<span class="w"> </span>/etc/kubernetes/pki/etcd/server.crt<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="w">  </span>--key<span class="w"> </span>/etc/kubernetes/pki/etcd/server.key<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="w">  </span>https://127.0.0.1:2379/v3/kv/compaction
-</span></code></pre></div>
-3. <strong>Defragment remaining members:</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>sudo<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-d<span class="w"> </span><span class="s1">'{}'</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span>--cacert<span class="w"> </span>/etc/kubernetes/pki/etcd/ca.crt<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span>--cert<span class="w"> </span>/etc/kubernetes/pki/etcd/server.crt<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>--key<span class="w"> </span>/etc/kubernetes/pki/etcd/server.key<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">  </span>https://127.0.0.1:2379/v3/maintenance/defragment
-</span></code></pre></div>
-4. <strong>Purge partial temp snapshots on the reconnecting node and restore manifest:</strong>
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>sudo<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>/var/lib/etcd/member/snap/tmp*
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/etc/kubernetes/etcd.yaml.bak<span class="w"> </span>/etc/kubernetes/manifests/etcd.yaml
-</span></code></pre></div>
-   The compact database snapshot transfers in seconds, bringing the node back into quorum.</p>
 
 
 

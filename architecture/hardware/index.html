@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1072,6 +1072,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../runbooks/control-plane-node-retirement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Plane Node Decommissioning & Retirement SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../runbooks/bridge-watchdog/" class="md-nav__link">
         
   
@@ -1369,20 +1397,12 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong><code>lenovo</code></strong></td>
-<td style="text-align: left;">Lenovo ThinkCentre M700</td>
-<td style="text-align: left;">Intel Core i7-6700T (4c/8t @ 3.6 GHz)</td>
-<td style="text-align: left;">32 GB DDR4</td>
-<td style="text-align: left;">128 GB SSD</td>
-<td style="text-align: left;">Primary manager, etcd quorum member #1, local Traefik ingress, kubeadm control plane (kube-apiserver, kube-controller-manager, kube-scheduler, kube-vip)</td>
-</tr>
-<tr>
 <td style="text-align: left;"><strong><code>optiplex</code></strong></td>
 <td style="text-align: left;">Dell OptiPlex 9020</td>
 <td style="text-align: left;">Intel Core i7-4770 (4c/8t @ 3.9 GHz)</td>
 <td style="text-align: left;">16 GB DDR3</td>
 <td style="text-align: left;">250 GB SSD</td>
-<td style="text-align: left;">etcd quorum member #2, Tailscale subnet router (Physical LAN &amp; Overlay <code>10.10.0.0/24</code>)</td>
+<td style="text-align: left;">Control plane node #1, etcd quorum member #1, Tailscale subnet router (Physical LAN &amp; Overlay <code>10.10.0.0/24</code>)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong><code>opti74</code></strong></td>
@@ -1390,7 +1410,15 @@
 <td style="text-align: left;">Intel Core i7-6700 (4c/8t @ 4.0 GHz)</td>
 <td style="text-align: left;">32 GB DDR4</td>
 <td style="text-align: left;">256 GB NVMe + 1 TB HDD</td>
-<td style="text-align: left;">etcd quorum member #3, worker workloads, dedicated Palworld game server</td>
+<td style="text-align: left;">Control plane node #2, etcd quorum member #2, worker workloads</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>opti76</code></strong></td>
+<td style="text-align: left;">Dell OptiPlex 7060</td>
+<td style="text-align: left;">Intel Core i7-8700 (6c/12t @ 4.6 GHz)</td>
+<td style="text-align: left;">32 GB DDR4</td>
+<td style="text-align: left;">240 GB SSD</td>
+<td style="text-align: left;">Control plane node #3, etcd quorum member #3, worker workloads</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong><code>workstation</code></strong></td>
@@ -1398,7 +1426,15 @@
 <td style="text-align: left;">Dual Intel Xeon E5-2667 v4 (16c/32t @ 3.6 GHz)</td>
 <td style="text-align: left;">128 GB ECC</td>
 <td style="text-align: left;">256 GB NVMe + 500 GB SSD + 250 GB SSD</td>
-<td style="text-align: left;">NVIDIA RTX A4500 (20GB VRAM), Kubernetes Elastic Stack (ECK: Elasticsearch, Logstash, Kibana), Docker GPU media compute</td>
+<td style="text-align: left;">Dedicated Worker, NVIDIA RTX A4500 (20GB VRAM), Kubernetes Elastic Stack (ECK: Elasticsearch, Logstash, Kibana), Docker GPU media compute</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>lenovo</code></strong></td>
+<td style="text-align: left;">Lenovo ThinkCentre M700</td>
+<td style="text-align: left;">Intel Core i7-6700T (4c/8t @ 3.6 GHz)</td>
+<td style="text-align: left;">32 GB DDR4</td>
+<td style="text-align: left;">128 GB SSD</td>
+<td style="text-align: left;">Dedicated Management &amp; Development Host, local Docker runtime, cluster administration</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>TerraMaster NAS</strong></td>
@@ -1412,7 +1448,7 @@
 </table>
 <hr />
 <h2 id="control-plane-high-availability-stacked-etcd-quorum">⚖️ Control Plane High Availability &amp; Stacked etcd Quorum</h2>
-<p>The Kubernetes cluster runs <strong>upstream Kubernetes v1.37.1</strong> bootstrapped with <strong>kubeadm</strong>, utilizing a stacked <strong><code>etcd</code> Raft consensus engine</strong> and <strong><code>kube-vip</code></strong> control plane HA (virtual IP <code>10.0.0.201:6443</code>) distributed across the 3 control plane nodes:</p>
+<p>The Kubernetes cluster runs <strong>upstream Kubernetes v1.37.2</strong> bootstrapped with <strong>kubeadm</strong>, utilizing a stacked <strong><code>etcd</code> Raft consensus engine</strong> and <strong><code>kube-vip</code></strong> control plane HA (virtual IP <code>10.0.0.201:6443</code>) distributed across the 3 control plane nodes:</p>
 <div class="panzoom-box" data-key="alt" id="panzoom0" oncontextmenu="return false;">
     <div class="panzoom-info-box panzoom-info-box-top">
 Hold "Alt" / "Option" to enable pan &amp; zoom
@@ -1434,22 +1470,26 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
     </nav>
     <pre class="mermaid"><code>graph LR
     subgraph ControlPlane["3-Node etcd Raft Quorum (HA Master)"]
-        L["lenovo (Control Plane / Manager)"] --- O1["optiplex (Control Plane / Worker)"]
-        O1 --- O2["opti74 (Control Plane / Worker)"]
-        O2 --- L
+        O1["optiplex (Control Plane / Worker)"] --- O2["opti74 (Control Plane / Worker)"]
+        O2 --- O3["opti76 (Control Plane / Worker)"]
+        O3 --- O1
     end
 
     subgraph ComputeCluster["Dedicated Heavy Compute"]
         W["workstation (Worker)&lt;br/&gt;Xeon 16c/32t + RTX A4500"]
     end
 
+    subgraph Management["Management Host"]
+        L["lenovo (Admin / Development Host)"]
+    end
+
     subgraph StorageSAN["Storage Appliance"]
         SAN["TerraMaster F4-425 Plus&lt;br/&gt;san.lambertlab.us (SAN / NAS)"]
     end
 
-    L --&gt;|"Kubelet Scheduling"| W
+    O1 --&gt;|"Kubelet Scheduling"| W
     W -.-&gt;|"iSCSI / NFS"| SAN
-    L -.-&gt;|"iSCSI / NFS"| SAN</code></pre> 
+    L --&gt;|"kubectl / Helm / ArgoCD"| ControlPlane</code></pre> 
     
 </div>
 <h3 id="fault-tolerance-master-failover">Fault Tolerance &amp; Master Failover</h3>
@@ -1467,13 +1507,15 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>lenovo
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>ssh<span class="w"> </span>optiplex
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>ssh<span class="w"> </span>opti74
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh<span class="w"> </span>workstation
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Multi-Node Docker Contexts (Managed from Lenovo)</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>docker<span class="w"> </span>--context<span class="w"> </span>default<span class="w"> </span>ps<span class="w">             </span><span class="c1"># Local lenovo node</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>docker<span class="w"> </span>--context<span class="w"> </span>optiplex<span class="w"> </span>ps<span class="w">            </span><span class="c1"># Optiplex 9020</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>docker<span class="w"> </span>--context<span class="w"> </span>opti74<span class="w"> </span>ps<span class="w">              </span><span class="c1"># Optiplex 7040</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>docker<span class="w"> </span>--context<span class="w"> </span>workstation-engine<span class="w"> </span>ps<span class="w">  </span><span class="c1"># Workstation (GPU media containers)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh<span class="w"> </span>opti76
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>ssh<span class="w"> </span>workstation
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Multi-Node Docker Contexts (Managed from Lenovo)</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>docker<span class="w"> </span>--context<span class="w"> </span>default<span class="w"> </span>ps<span class="w">             </span><span class="c1"># Local lenovo management node</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>docker<span class="w"> </span>--context<span class="w"> </span>optiplex<span class="w"> </span>ps<span class="w">            </span><span class="c1"># Optiplex 9020</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>docker<span class="w"> </span>--context<span class="w"> </span>opti74<span class="w"> </span>ps<span class="w">              </span><span class="c1"># Optiplex 7040</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>docker<span class="w"> </span>--context<span class="w"> </span>opti76<span class="w"> </span>ps<span class="w">              </span><span class="c1"># Optiplex 7060</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>docker<span class="w"> </span>--context<span class="w"> </span>workstation-engine<span class="w"> </span>ps<span class="w">  </span><span class="c1"># Workstation (GPU media containers)</span>
 </span></code></pre></div>
 
 
