@@ -12,18 +12,18 @@ flowchart TD
         VIP["kube-vip Virtual IP (10.0.0.201:6443)"]
         
         subgraph CP["3-Node Stacked Control Plane (Quorum = 2)"]
-            Lenovo["lenovo (10.0.0.11)<br/>Primary Control Plane<br/>Target: v1.37.2"]
-            Optiplex["optiplex (10.0.0.12)<br/>Secondary Control Plane<br/>Target: v1.37.2"]
-            Opti74["opti74 (10.0.0.13)<br/>Secondary Control Plane<br/>Target: v1.37.2"]
+            Optiplex["optiplex (10.0.0.12)<br/>Control Plane Node<br/>Target: v1.37.2"]
+            Opti74["opti74 (10.0.0.13)<br/>Control Plane Node<br/>Target: v1.37.2"]
+            Opti76["opti76 (10.0.0.15)<br/>Control Plane Node<br/>Target: v1.37.2"]
         end
 
         subgraph Worker["Dedicated Worker Node"]
             Workstation["workstation (10.0.0.14)<br/>Worker / GPU Compute<br/>Target: v1.37.2"]
         end
 
-        VIP --- Lenovo
         VIP --- Optiplex
         VIP --- Opti74
+        VIP --- Opti76
         Workstation -->|API Traffic| VIP
     end
 ```
@@ -34,12 +34,12 @@ In Debian/Ubuntu environments, automated package update daemons (such as `unatte
 * **The Workflow:** During planned maintenance, packages are explicitly unheld, updated to the exact pinned version (`<version>-1.1`), and immediately placed back on `hold`.
 
 ### 2. Upgrade Command Invariant: Primary vs. Secondary Nodes
-* **Primary Control Plane (`lenovo`):**
+* **First Control Plane Node:**
   Uses **`sudo kubeadm upgrade apply v1.X.Y`**. This command updates the cluster configuration in the `kube-system/kubeadm-config` ConfigMap, renews control-plane leaf certificates, updates static pod manifests (`kube-apiserver`, `kube-controller-manager`, `kube-scheduler`, `etcd`), and handles addon RBAC.
-* **Secondary Control Planes (`optiplex`, `opti74`):**
+* **Subsequent Control Planes:**
   Uses **`sudo kubeadm upgrade node`**. **NEVER run `upgrade apply` on secondary control planes.** `upgrade node` fetches the updated cluster configuration directly from the cluster ConfigMap and regenerates local static manifests.
-* **Worker Nodes (`workstation`):**
-  Uses **`sudo kubeadm upgrade node`**. Updates the local kubelet configuration.
+* **Worker Nodes:**
+  Uses **`sudo kubeadm upgrade node`**. Updates the local kubelet configuration. Draining is optional on worker nodes hosting long-running stateful services (such as VMs) because `containerd` continues running all active pods and workloads uninterrupted during a local `kubelet` restart.
 
 ---
 
@@ -65,9 +65,9 @@ In Debian/Ubuntu environments, automated package update daemons (such as `unatte
 
 ## 🛠️ Step-by-Step Upgrade Workflow
 
-### Stage 1: Upgrade the Primary Control Plane (`lenovo`)
+### Stage 1: Upgrade the First Control Plane Node
 
-Execute all commands locally on `lenovo`:
+Execute on the designated first control-plane node (e.g. `optiplex`):
 
 #### 1. Unhold and Upgrade `kubeadm`
 ```bash
@@ -93,9 +93,9 @@ sudo kubeadm upgrade apply v1.37.2
 > `Warning: No kubeproxy.config.k8s.io/v1alpha1 config is loaded. Continuing without it: configmaps "kube-proxy" not found`
 > This warning is completely normal and expected.
 
-#### 4. Drain Workloads from `lenovo`
+#### 4. Drain Workloads from the Node
 ```bash
-kubectl drain lenovo --ignore-daemonsets --delete-emptydir-data
+kubectl drain <first-control-plane> --ignore-daemonsets --delete-emptydir-data --pod-selector='longhorn.io/component!=instance-manager'
 ```
 
 #### 5. Upgrade `kubelet` and `kubectl`
@@ -108,17 +108,17 @@ sudo systemctl daemon-reload
 sudo systemctl restart kubelet
 ```
 
-#### 6. Uncordon `lenovo`
+#### 6. Uncordon the First Control Plane Node
 ```bash
-kubectl uncordon lenovo
+kubectl uncordon <first-control-plane>
 kubectl get nodes -o wide
 ```
 
 ---
 
-### Stage 2: Upgrade Secondary Control Planes (`optiplex` then `opti74`)
+### Stage 2: Upgrade Subsequent Control Planes (`opti74`, then `opti76`)
 
-Execute sequentially on **`optiplex`**, and once verified healthy, repeat on **`opti74`**:
+Execute sequentially on each remaining control plane node, one at a time:
 
 #### 1. Unhold and Upgrade `kubeadm`
 ```bash
@@ -135,7 +135,7 @@ sudo kubeadm upgrade node
 
 #### 3. Drain Workloads
 ```bash
-kubectl drain <node-name> --ignore-daemonsets --delete-emptydir-data
+kubectl drain <node-name> --ignore-daemonsets --delete-emptydir-data --pod-selector='longhorn.io/component!=instance-manager'
 ```
 
 #### 4. Upgrade `kubelet` and `kubectl`
@@ -158,81 +158,44 @@ kubectl get nodes -o wide
 
 ### Stage 3: Upgrade Worker Nodes (`workstation`)
 
-Execute on `workstation`:
+Because `containerd` continues running all active pods and virtual machines uninterrupted during a local `kubelet` restart, worker nodes hosting long-running stateful services (such as KubeVirt VMs or single-node databases) can be upgraded with zero downtime without a full eviction drain.
 
-#### 1. Drain the Worker Node
+#### Method A: Zero-Downtime Cordon Upgrade (Recommended for Nodes with VMs)
 ```bash
-kubectl drain workstation --ignore-daemonsets --delete-emptydir-data
+# 1. Cordon the worker node to prevent new pod scheduling
+kubectl cordon <worker-node>
+
+# 2. Upgrade kubeadm and local kubelet configuration
+ssh <worker-node> "sudo apt-mark unhold kubeadm && sudo apt-get update && sudo apt-get install -y kubeadm=1.37.2-1.1 && sudo apt-mark hold kubeadm"
+ssh <worker-node> "sudo kubeadm upgrade node"
+
+# 3. Upgrade kubelet and kubectl packages
+ssh <worker-node> "sudo apt-mark unhold kubelet kubectl && sudo apt-get install -y kubelet=1.37.2-1.1 kubectl=1.37.2-1.1 && sudo apt-mark hold kubelet kubectl"
+
+# 4. Restart kubelet service (containerd keeps all containers and VMs running)
+ssh <worker-node> "sudo systemctl daemon-reload && sudo systemctl restart kubelet"
+
+# 5. Uncordon the worker node
+kubectl uncordon <worker-node>
 ```
 
-#### 2. Upgrade `kubeadm` and Node Configuration
+#### Method B: Eviction Drain (Standard Stateless Worker Upgrade)
+If you prefer to evict all workloads before upgrading:
 ```bash
-sudo apt-mark unhold kubeadm
-sudo apt-get update && sudo apt-get install -y kubeadm=1.37.2-1.1
-sudo apt-mark hold kubeadm
-
-sudo kubeadm upgrade node
-```
-
-#### 3. Upgrade `kubelet` and `kubectl`
-```bash
-sudo apt-mark unhold kubelet kubectl
-sudo apt-get install -y kubelet=1.37.2-1.1 kubectl=1.37.2-1.1
-sudo apt-mark hold kubelet kubectl
-
-sudo systemctl daemon-reload
-sudo systemctl restart kubelet
-```
-
-#### 4. Uncordon the Worker Node
-```bash
-kubectl uncordon workstation
-kubectl get nodes -o wide
+kubectl drain <worker-node> --ignore-daemonsets --delete-emptydir-data --pod-selector='longhorn.io/component!=instance-manager'
+# Then follow package upgrade steps 2-5 above.
 ```
 
 ---
 
-## 🔍 Day-2 Verification & Incident Recovery
+## 🔍 Post-Upgrade Verification
 
-### 1. Post-Upgrade Health Checks
 Verify that all control-plane and worker nodes report `Ready`, and ensure all workloads across system and user namespaces are running cleanly:
+
 ```bash
+# Verify all nodes are updated to target version and Ready
 kubectl get nodes -o wide
+
+# Verify all cluster pods are Running or Completed
 kubectl get pods -A --field-selector=status.phase!=Running,status.phase!=Succeeded
 ```
-
-### 2. Resolving Stalled etcd Peer Snapshot Synchronization
-If a node was offline long enough to exceed `--snapshot-count=10000` transactions and the database on the leader has accumulated fragmented bbolt freelist space:
-1. **Temporarily halt local static container to stop sync loops:**
-   ```bash
-   sudo mv /etc/kubernetes/manifests/etcd.yaml /etc/kubernetes/etcd.yaml.bak
-   sudo pkill -9 etcd
-   ```
-2. **Compact historical revisions on an active healthy peer:**
-   ```bash
-   CURRENT_REV=$(sudo curl -s -k -X POST -d '{}' \
-     --cacert /etc/kubernetes/pki/etcd/ca.crt \
-     --cert /etc/kubernetes/pki/etcd/server.crt \
-     --key /etc/kubernetes/pki/etcd/server.key \
-     https://127.0.0.1:2379/v3/maintenance/status | jq -r .header.revision)
-
-   sudo curl -s -k -X POST -d "{\"revision\": \"$CURRENT_REV\"}" \
-     --cacert /etc/kubernetes/pki/etcd/ca.crt \
-     --cert /etc/kubernetes/pki/etcd/server.crt \
-     --key /etc/kubernetes/pki/etcd/server.key \
-     https://127.0.0.1:2379/v3/kv/compaction
-   ```
-3. **Defragment remaining members:**
-   ```bash
-   sudo curl -s -k -X POST -d '{}' \
-     --cacert /etc/kubernetes/pki/etcd/ca.crt \
-     --cert /etc/kubernetes/pki/etcd/server.crt \
-     --key /etc/kubernetes/pki/etcd/server.key \
-     https://127.0.0.1:2379/v3/maintenance/defragment
-   ```
-4. **Purge partial temp snapshots on the reconnecting node and restore manifest:**
-   ```bash
-   sudo rm -f /var/lib/etcd/member/snap/tmp*
-   sudo mv /etc/kubernetes/etcd.yaml.bak /etc/kubernetes/manifests/etcd.yaml
-   ```
-   The compact database snapshot transfers in seconds, bringing the node back into quorum.

@@ -88,6 +88,7 @@ nav:
       - Security & Productivity Tools: catalog/security-tools.md
   - Operational Runbooks:
       - Kubernetes HA Control Plane & Node Upgrade SOP: runbooks/kubeadm-control-plane-upgrade.md
+      - Control Plane Node Decommissioning & Retirement SOP: runbooks/control-plane-node-retirement.md
       - Bridge Self-Healing Watchdog (Legacy): runbooks/bridge-watchdog.md
       - Direct iSCSI Line-Rate Flashing: runbooks/iscsi-flashing.md
       - Elastic Stack & Index Lifecycle Management (ILM): runbooks/elk-ilm-maintenance.md
