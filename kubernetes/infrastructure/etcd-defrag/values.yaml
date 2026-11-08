@@ -23,7 +23,7 @@ tolerations:
 defrag:
   enabled: true
   config:
-    # Discover all members (lenovo, optiplex, opti74) and defrag them sequentially
+    # Discover all members (optiplex, opti74, opti76) and defrag them sequentially
     clusterWide: true
     endpoints:
       - https://127.0.0.1:2379

@@ -6,9 +6,9 @@ masterNodesLabels:
 
 # Explicit master node IPs for 3-node HA Raft clustering (required for ArgoCD client-side rendering)
 masterNodes:
-  - "10.0.0.11"
   - "10.0.0.12"
   - "10.0.0.13"
+  - "10.0.0.15"
 
 networking:
   # Move the internal Join Subnet away from 100.64.0.0/16

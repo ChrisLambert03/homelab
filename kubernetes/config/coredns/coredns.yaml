@@ -17,6 +17,7 @@ data:
             10.0.0.12 optiplex.lan optiplex
             10.0.0.13 opti74.lan opti74
             10.0.0.14 workstation.lan workstation
+            10.0.0.15 opti76.lan opti76
             10.0.0.60 nas.lan nas
             100.124.184.120 pihole.lan pihole.tailnet pihole-optiplex
             fallthrough
