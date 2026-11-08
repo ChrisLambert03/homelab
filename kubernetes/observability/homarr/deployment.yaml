@@ -16,8 +16,6 @@ spec:
       labels:
         app: homarr
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: lenovo
       containers:
         - name: homarr
           image: ghcr.io/homarr-labs/homarr:latest
@@ -54,9 +52,8 @@ spec:
               readOnly: true
       volumes:
         - name: appdata
-          hostPath:
-            path: "/home/chris/services/homarr/homarr/appdata"
-            type: DirectoryOrCreate
+          persistentVolumeClaim:
+            claimName: homarr-data
         - name: docker-sock
           hostPath:
             path: "/var/run/docker.sock"
