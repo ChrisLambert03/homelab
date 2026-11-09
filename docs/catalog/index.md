@@ -55,6 +55,7 @@ Workloads are logically grouped into four functional categories:
 | **Kibana** | SIEM / Logging | `observability` | ECK Operator (Wave 3) | `kibana.lambertlab.us` | Ephemeral (`workstation`) |
 | **Fleet Server** | SIEM / Logging | `observability` | ECK Operator (Wave 4) | `fleet-server-agent-http:8220` | Ephemeral (Cluster Scheduled) |
 | **Elastic Agent** | SIEM / Logging | `kube-system` | ArgoCD Helm (Wave 5) | In-Cluster Host DaemonSet | Ephemeral DaemonSet |
+| **Elastic Agent Syslog VIP** | SIEM / Logging | `kube-system` | ArgoCD Manifest (Wave 9) | `10.0.0.210:5514` (UDP/TCP) | Cilium LoadBalancer (`lan-pool`) |
 | **ECK Operator** | Infrastructure | `observability` | ArgoCD Helm (Wave 1) | In-Cluster Operator API | Ephemeral Controller |
 | **Homarr Dashboard** | Observability | `observability` | ArgoCD Manifest (Wave 3) | `homarr.lambertlab.us` | Local Host Storage (`lenovo`) |
 | **Ntfy Notifications** | Observability | `observability` | ArgoCD Manifest (Wave 3) | `ntfy.lambertlab.us` | Longhorn Retained Volume (1Gi) |

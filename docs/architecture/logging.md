@@ -121,6 +121,7 @@ To capture container logs (`/var/log/pods`), cluster-level health, and bare-meta
   * **Secret Decoupling:** Uses `tokenFromSecret` referencing Kubernetes secret `elastic-agent-token` in `kube-system`, synced from HashiCorp Vault via External Secrets Operator. Plaintext enrollment tokens are never committed to Git.
   * **Ingress Connectivity:** Configured with `url: "https://fleet.lambertlab.us"` so host-networked agents on all physical nodes route reliably through Traefik ingress without cross-node ClusterIP routing hurdles.
   * **Memory Sizing:** Resource limits configured with `memory: 2000Mi` in `kubernetes/observability/elastic-agent/values.yaml` to ensure agents do not encounter OOMKilled restarts during high-volume log bursts.
+  * **Network & Firewall Syslog Ingestion (`elastic-agent-syslog`):** Exposed via a dedicated Kubernetes `LoadBalancer` Service (`kubernetes/observability/elastic-agent/service.yaml`) claiming static IP `10.0.0.210` from Cilium's `lan-pool`. Binds UDP and TCP on port `5514` to route incoming RFC 5424 syslog streams from edge firewalls (OPNsense) directly to the Elastic Agent DaemonSet for parsing into dedicated data stream `logs-pfsense.log-default`.
 
 ---
 
