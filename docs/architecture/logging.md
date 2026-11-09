@@ -133,33 +133,47 @@ To monitor cluster performance, shard allocation, and operational health against
 
 ---
 
-### 7. Planned Dashboards & Discover Views (Target Roadmap)
+### 7. Integrated Dashboards & Discover Views
 
-Homelab telemetry streams into the `logs-*` and `metrics-*` data views in Kibana (`https://kibana.lambertlab.us`). The following curated searches and operational dashboards represent the target implementation roadmap:
+Homelab telemetry streams into the `logs-*` and `metrics-*` data views in Kibana (`https://kibana.lambertlab.us`). Client IP addresses are dynamically resolved into metadata-parseable hostnames via a Painless runtime field (`client.hostname`) on the `logs-*` Data View, attributing internal virtual machines (`10.10.0.10` ➔ `dc01`, `10.10.0.24` ➔ `win11`) with zero re-indexing or storage overhead.
 
-#### A. Target Discover Saved Searches
+The platform provides a comprehensive suite of pre-built and custom-integrated dashboards across perimeter security, cluster performance, host hygiene, and directory services:
 
-| View Name | Target Dataset / Filter | Recommended Columns | Purpose |
+#### A. Curated Discover Views & Saved Searches
+
+| View Name | Target Dataset / Filter | Primary Display Columns | Operational Purpose |
 |:---|:---|:---|:---|
-| **Host Sudo Audit** | `data_stream.dataset: "system.auth" and process.name: "sudo"` | `host.hostname`, `process.name`, `system.auth.sudo.command`, `message` | Complete audit trail of elevated privileged commands across all nodes. |
-| **Failed SSH Logins** | `data_stream.dataset: "system.auth" and process.name: "sshd" and (message: ("Failed" or "Invalid") or system.auth.ssh.event: "Failed")` | `host.hostname`, `user.name`, `source.ip`, `message` | Detect brute-force attempts and unauthorized user logins. |
+| **Firewall - ASN & Geo Egress Explorer** | `data_stream.dataset: "pfsense.log" and event.provider: "filterlog"` | `event.action`, `observer.ingress.interface.name`, `client.hostname`, `source.ip`, `destination.ip`, `destination.port`, `destination.as.organization.name`, `destination.geo.country_name` | Real-time SIEM inspection of outbound connections with automated ASN, Organization, and Geolocation resolution. |
+| **Host Sudo Audit** | `data_stream.dataset: "system.auth" and process.name: "sudo"` | `host.hostname`, `process.name`, `system.auth.sudo.command`, `message` | Complete audit trail of elevated privileged commands across all cluster nodes. |
+| **Failed SSH Logins** | `data_stream.dataset: "system.auth" and process.name: "sshd" and (message: ("Failed" or "Invalid") or system.auth.ssh.event: "Failed")` | `host.hostname`, `user.name`, `source.ip`, `message` | Detect brute-force attempts and unauthorized user logins with geographic mapping. |
 | **Kernel OOM Killer** | `message: (*oom* or "Out of memory" or "invoked oom-killer" or "Killed process") or process.name: "kernel"` | `host.hostname`, `process.name`, `message` | Track memory starvation events and kernel kills across nodes. |
 | **Systemd Unit Failures** | `message: ("Failed to start" or "Unit entered failed state" or "Failed with result")` | `host.hostname`, `process.name`, `message` | Identify host daemon crashes (`containerd`, `kubelet`, `docker`, `tailscale`). |
 | **Pod CrashLoopBackOff** | `data_stream.dataset: "kubernetes.container_logs" and (log.level: ("error" or "fatal") or message: ("CrashLoopBackOff" or "panic:"))` | `kubernetes.namespace`, `kubernetes.pod.name`, `kubernetes.container.name`, `message` | Instant detection of crashing or restarting cluster workloads. |
 | **Longhorn Storage Alerts** | `kubernetes.namespace: "longhorn-system" and (log.level: ("error" or "warning") or message: ("failed" or "degraded" or "timeout"))` | `kubernetes.pod.name`, `log.level`, `message` | Storage engine alerts, degraded replicas, and detachments. |
-| **ArgoCD GitOps Errors** | `kubernetes.namespace: "argocd" and (log.level: ("error" or "warning") or message: ("ComparisonError" or "failed to sync"))` | `kubernetes.pod.name`, `log.level`, `message` | Sync failures, repo connection timeouts, and manifest errors. |
 | **Traefik Ingress 5xx** | `kubernetes.namespace: "kube-system" and (message: (" 500 " or " 502 " or " 503 " or " 504 ") or log.level: "error")` | `kubernetes.pod.name`, `message` | Reverse proxy backend connection and gateway errors. |
-| **Cert-Manager TLS Renewal**| `kubernetes.namespace: "cert-manager" and (message: ("Renewing" or "Order" or "error" or "failed") or log.level: "error")` | `kubernetes.pod.name`, `log.level`, `message` | ACME challenge validation and Let's Encrypt certificate renewal tracking. |
-| **KubeVirt & VM Lifecycle** | `kubernetes.namespace: ("kubevirt" or "cdi" or "vms" or "gaming") and (log.level: ("error" or "warning") or message: ("VMI" or "error" or "failed"))` | `kubernetes.namespace`, `kubernetes.pod.name`, `message` | VM provisioning, virt-launcher pod errors, and disk import tracking. |
 
-#### B. Target Operational Dashboards
+#### B. Integrated Production Dashboards
 
-* **Homelab Security & Access Operations:**
-  * **Panels:** Failed SSH attempts table / geographic breakdown, Sudo execution timeline, active SSH session counter, elevated command audit table.
-* **Cluster Reliability & Pod Crash Center:**
-  * **Panels:** Restarts by namespace (bar chart), CrashLoopBackOff log stream, OOM killer event stream, unhandled pod exceptions.
-* **Storage & Edge Ingress Health:**
-  * **Panels:** Longhorn replica degradation events, Traefik HTTP status code distribution (2xx vs 4xx vs 5xx), Cert-Manager renewal certificate status timeline.
+* **Perimeter & Firewall Intelligence (`pfsense`):**
+  * `Firewall - Dashboard [pfSense]`: Real-time allow/block distributions, transport protocol splits (TCP/UDP/ICMP), and geographic source/destination heatmaps.
+  * `Unbound - Dashboard [pfSense]`: Recursive DNS resolver query latency, top requested domain names, query types (`A`, `AAAA`, `TXT`), and response codes.
+  * `DHCP - Dashboard [pfSense]`: Dynamic lease pools, client MAC addresses, and IP allocation timelines.
+* **Kubernetes Cluster & Storage Telemetry (`kube-state-metrics`):**
+  * `[Metrics Kubernetes] Cluster Overview`: Global cluster capacity, CPU/memory saturation, and node readiness states.
+  * `[Metrics Kubernetes] PV/PVC` & `[Metrics Kubernetes] Volumes`: Real-time storage consumption across Longhorn distributed volumes and local-path storage claims.
+  * `[Metrics Kubernetes] Nodes` & `Pods`: Deep per-node kubelet memory pressure, CPU throttling rates, and container restart counters.
+  * `[Metrics Kubernetes] API server` & `Controller Manager`: Control plane API request latency, queue depth, and admission webhook health.
+* **Physical Host OS & Hardware Performance (`metrics-system.*`):**
+  * `[Metrics System] Host overview`: Time-series metrics for physical nodes (`workstation`, `optiplex`, `opti74`, `opti76`, `lenovo`) tracking per-core CPU loads, memory buffer/cached ratios, network interface throughput (RX/TX), and disk IOPS.
+* **Host Security & Administrative Auditing (`logs-system.*`):**
+  * `[Logs System] Sudo commands`: Audit log tracking who executed `sudo`, the target binary, and execution exit codes.
+  * `[Logs System] SSH login attempts`: Global geographic map of incoming SSH attempts and failed brute-force usernames.
+  * `[Logs System] Syslog dashboard`: Aggregated systemd service crashes, kernel ring buffer events, and host reboot logs.
+* **Active Directory & Identity Monitoring (`logs-system.*` / Windows Security):**
+  * `[System Windows Security] User Logons`: Event ID 4624 logon monitoring, logon types (interactive vs network), and user session tracking.
+  * `[System Windows Security] Failed and Blocked Accounts`: Event ID 4625 brute-force detection and account lockout alerts.
+  * `[System Windows Security] User Management Events`: User account creation, modification, and deletion auditing (Event IDs 4720/4726/4738).
+  * `[System Windows Security] Group Management Events`: Security group membership additions and domain administrative privilege escalations.
 
 
 
