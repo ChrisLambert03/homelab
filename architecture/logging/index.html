@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1284,6 +1284,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../runbooks/opnsense-elk-siem-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OPNsense Firewall & Unbound DNS SIEM Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../runbooks/disaster-recovery/" class="md-nav__link">
         
   
@@ -1642,7 +1670,7 @@ Allocating a 3Gi memory limit ensures smooth visual aggregation and uninterrupte
 <li><strong>Secret Decoupling:</strong> Uses <code>tokenFromSecret</code> referencing Kubernetes secret <code>elastic-agent-token</code> in <code>kube-system</code>, synced from HashiCorp Vault via External Secrets Operator. Plaintext enrollment tokens are never committed to Git.</li>
 <li><strong>Ingress Connectivity:</strong> Configured with <code>url: "https://fleet.lambertlab.us"</code> so host-networked agents on all physical nodes route reliably through Traefik ingress without cross-node ClusterIP routing hurdles.</li>
 <li><strong>Memory Sizing:</strong> Resource limits configured with <code>memory: 2000Mi</code> in <code>kubernetes/observability/elastic-agent/values.yaml</code> to ensure agents do not encounter OOMKilled restarts during high-volume log bursts.</li>
-<li><strong>Network &amp; Firewall Syslog Ingestion (<code>elastic-agent-syslog</code>):</strong> Exposed via a dedicated Kubernetes <code>LoadBalancer</code> Service (<code>kubernetes/observability/elastic-agent/service.yaml</code>) claiming static IP <code>10.0.0.210</code> from Cilium's <code>lan-pool</code>. Binds UDP and TCP on port <code>5514</code> to route incoming RFC 5424 syslog streams from edge firewalls (OPNsense) directly to the Elastic Agent DaemonSet for parsing into dedicated data stream <code>logs-pfsense.log-default</code>.</li>
+<li><strong>Network &amp; Firewall Syslog Ingestion (<code>elastic-agent-syslog</code>):</strong> Exposed via a dedicated Kubernetes <code>LoadBalancer</code> Service (<code>kubernetes/observability/elastic-agent/service.yaml</code>) claiming static IP <code>10.0.0.210</code> from Cilium's <code>lan-pool</code>. Binds UDP and TCP on port <code>5514</code> to route incoming RFC 5424 syslog streams from edge firewalls (OPNsense) directly to the Elastic Agent DaemonSet for parsing into dedicated data stream <code>logs-pfsense.log-default</code>. See the comprehensive <a href="../../runbooks/opnsense-elk-siem-integration/">OPNsense Firewall &amp; Unbound DNS SIEM Integration Runbook</a> for full setup instructions, NAT duplicate logging prevention, and Unbound DNS logging parameters.</li>
 </ul>
 <hr />
 <h3 id="6-elastic-autoops-cloud-connect-automated-cluster-monitoring">6. Elastic AutoOps Cloud Connect (Automated Cluster Monitoring)</h3>
