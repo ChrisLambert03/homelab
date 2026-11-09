@@ -111,6 +111,13 @@ DC=ad,DC=lambertlab,DC=us
 * **`svc_terraform`:** Scoped service account utilized by the Terraform AD provider to manage directory objects with least privilege.
 * **`svc_guacamole`:** Dedicated read-only LDAP service account bound to `CN=svc_guacamole,OU=Service Accounts,...` for Guacamole user queries over LDAPS (Port 636).
 * **`svc_domainjoin`:** Restricted service account granted delegated rights specifically to join new computer objects under `OU=Desktops` (enforced in `win11` declarative `unattend.xml`).
+* **`svc_elastic`:** Dedicated read-only LDAP bind service account for Elastic Fleet's Active Directory Entity Analytics integration.
+
+### Service Account Creation & Password Complexity Standard
+All service accounts are declared via Terraform in `terraform/active_directory/service_accounts.tf` and backed by HashiCorp Vault (`secret/data/homelab` with key `ad_svc_<name>_password`):
+* **Complexity Requirements:** Active Directory enforces default domain password complexity rules (`passfilt.dll`). Passwords must be at least 20–24 characters and satisfy all 4 character pools (Uppercase, Lowercase, Numbers, and Symbols like `#`, `!`, `*`, `%`).
+* **WinRM Shell Safety:** Passwords must strictly avoid shell-evaluating characters (`$`, `"`, and backticks) to prevent WinRM interpolation corruption during remote PowerShell execution.
+* **Minimum Password Age Consideration:** If an account creation fails midway, Active Directory's Minimum Password Age may prevent subsequent `Set-ADUser` modifications on the same calendar day. Always destroy the incomplete object and recreate it cleanly in a single pass with `New-ADUser`.
 
 ---
 

@@ -15,3 +15,9 @@ variable "ad_svc_domainjoin_password" {
   type        = string
   sensitive   = true
 }
+
+variable "ad_svc_elastic_password" {
+  description = "Password for svc_elastic service account"
+  type        = string
+  sensitive   = true
+}

@@ -49,3 +49,19 @@ resource "ad_user" "svc_domainjoin" {
     ignore_changes = [initial_password, cannot_change_password]
   }
 }
+
+# Elastic Active Directory Integration Service Account
+resource "ad_user" "svc_elastic" {
+  display_name           = "Elastic Active Directory Service Account"
+  principal_name         = "svc_elastic@lambertlab.us"
+  sam_account_name       = "svc_elastic"
+  container              = ad_ou.service_accounts.dn
+  initial_password       = var.ad_svc_elastic_password
+  enabled                = true
+  password_never_expires = true
+  description            = "Read-only LDAP bind account for Elastic Active Directory integration"
+
+  lifecycle {
+    ignore_changes = [initial_password, cannot_change_password]
+  }
+}

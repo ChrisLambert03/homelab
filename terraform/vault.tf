@@ -26,6 +26,7 @@ locals {
   ad_svc_terraform_password  = tostring(data.vault_kv_secret_v2.homelab_secrets.data["ad_svc_terraform_password"])
   ad_svc_guacamole_password  = tostring(data.vault_kv_secret_v2.homelab_secrets.data["ad_svc_guacamole_password"])
   ad_svc_domainjoin_password = tostring(data.vault_kv_secret_v2.homelab_secrets.data["ad_svc_domainjoin_password"])
+  ad_svc_elastic_password    = tostring(data.vault_kv_secret_v2.homelab_secrets.data["ad_svc_elastic_password"])
 
   # Configuration
   homlab_domain = tostring(data.vault_kv_secret_v2.homelab_secrets.data["homlab_domain"])
