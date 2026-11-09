@@ -150,3 +150,6 @@ proxy:
 
 ### 3. Virtual Drive Sharing Permissions
 When enabling RDP virtual drive redirection (allowing users to upload/download files to VMs through the browser), the drive path must be set to `/tmp` (not `/var/lib/guacamole`). Because `guacd` runs as an unprivileged container user, using `/tmp` ensures proper Linux write permissions for drag-and-drop file transfers.
+
+### 4. FreeRDP NLA Handshake & Filesystem Writability
+Upstream Helm chart releases (v1.7.0+) enforce `readOnlyRootFilesystem: true` on the `guacd` container by default. However, FreeRDP requires write permissions to its home directory (`/home/guacd/.config/freerdp/`) during RDP Network Level Authentication (NLA) negotiation to store ephemeral TLS certificates and `known_hosts` fingerprints. Because the upstream chart does not expose a volume mount block for `guacd`, `guacd.securityContext.readOnlyRootFilesystem` is explicitly set to `false` in `values.yaml` to prevent NLA security negotiation failures.

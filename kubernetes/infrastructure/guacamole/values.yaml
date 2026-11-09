@@ -117,6 +117,8 @@ resources:
     memory: 1024Mi
 
 guacd:
+  securityContext:
+    readOnlyRootFilesystem: false
   resources:
     requests:
       cpu: 100m
