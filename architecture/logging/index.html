@@ -795,22 +795,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#7-planned-dashboards-discover-views-target-roadmap" class="md-nav__link">
+  <a href="#7-integrated-dashboards-discover-views" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7. Planned Dashboards &amp; Discover Views (Target Roadmap)
+        7. Integrated Dashboards &amp; Discover Views
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7. Planned Dashboards &amp; Discover Views (Target Roadmap)">
+    <nav class="md-nav" aria-label="7. Integrated Dashboards &amp; Discover Views">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#a-target-discover-saved-searches" class="md-nav__link">
+  <a href="#a-curated-discover-views-saved-searches" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A. Target Discover Saved Searches
+        A. Curated Discover Views &amp; Saved Searches
       
     </span>
   </a>
@@ -818,10 +818,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#b-target-operational-dashboards" class="md-nav__link">
+  <a href="#b-integrated-production-dashboards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        B. Target Operational Dashboards
+        B. Integrated Production Dashboards
       
     </span>
   </a>
@@ -1456,22 +1456,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#7-planned-dashboards-discover-views-target-roadmap" class="md-nav__link">
+  <a href="#7-integrated-dashboards-discover-views" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7. Planned Dashboards &amp; Discover Views (Target Roadmap)
+        7. Integrated Dashboards &amp; Discover Views
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7. Planned Dashboards &amp; Discover Views (Target Roadmap)">
+    <nav class="md-nav" aria-label="7. Integrated Dashboards &amp; Discover Views">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#a-target-discover-saved-searches" class="md-nav__link">
+  <a href="#a-curated-discover-views-saved-searches" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A. Target Discover Saved Searches
+        A. Curated Discover Views &amp; Saved Searches
       
     </span>
   </a>
@@ -1479,10 +1479,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#b-target-operational-dashboards" class="md-nav__link">
+  <a href="#b-integrated-production-dashboards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        B. Target Operational Dashboards
+        B. Integrated Production Dashboards
       
     </span>
   </a>
@@ -1650,30 +1650,37 @@ Allocating a 3Gi memory limit ensures smooth visual aggregation and uninterrupte
 * <strong>Deployment Model:</strong> Deployed via ArgoCD (<code>kubernetes/apps/autoops.yaml</code>) utilizing Kustomize (<code>kubernetes/observability/autoops/kustomization.yaml</code>) which references Elastic's upstream deployment directly from <code>elastic/autoops-install</code> (<code>autoops_agent_deployment.yaml</code>) alongside an <code>ExternalSecret</code> managing <code>autoops-secret</code> from Vault.
 * <strong>Self-Healing Liveness Probe:</strong> Applies a Kustomize patch adding a <code>livenessProbe</code> against <code>http://127.0.0.1:8888/metrics</code> (<code>libbeat_pipeline_clients{receiver="metricbeatreceiver"} [1-9]</code>) to verify the 9 embedded <code>autoops_es</code> Metricbeat input streams (<code>cat_shards</code>, <code>node_stats</code>, <code>tasks_management</code>, <code>cluster_health</code>, <code>cluster_settings</code>, <code>cat_template</code>, <code>component_template</code>, <code>index_template</code>, <code>license</code>) remain active and automatically restart the container if startup registration fails while Elasticsearch is restarting.</p>
 <hr />
-<h3 id="7-planned-dashboards-discover-views-target-roadmap">7. Planned Dashboards &amp; Discover Views (Target Roadmap)</h3>
-<p>Homelab telemetry streams into the <code>logs-*</code> and <code>metrics-*</code> data views in Kibana (<code>https://kibana.lambertlab.us</code>). The following curated searches and operational dashboards represent the target implementation roadmap:</p>
-<h4 id="a-target-discover-saved-searches">A. Target Discover Saved Searches</h4>
+<h3 id="7-integrated-dashboards-discover-views">7. Integrated Dashboards &amp; Discover Views</h3>
+<p>Homelab telemetry streams into the <code>logs-*</code> and <code>metrics-*</code> data views in Kibana (<code>https://kibana.lambertlab.us</code>). Client IP addresses are dynamically resolved into metadata-parseable hostnames via a Painless runtime field (<code>client.hostname</code>) on the <code>logs-*</code> Data View, attributing internal virtual machines (<code>10.10.0.10</code> ➔ <code>dc01</code>, <code>10.10.0.24</code> ➔ <code>win11</code>) with zero re-indexing or storage overhead.</p>
+<p>The platform provides a comprehensive suite of pre-built and custom-integrated dashboards across perimeter security, cluster performance, host hygiene, and directory services:</p>
+<h4 id="a-curated-discover-views-saved-searches">A. Curated Discover Views &amp; Saved Searches</h4>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">View Name</th>
 <th style="text-align: left;">Target Dataset / Filter</th>
-<th style="text-align: left;">Recommended Columns</th>
-<th style="text-align: left;">Purpose</th>
+<th style="text-align: left;">Primary Display Columns</th>
+<th style="text-align: left;">Operational Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td style="text-align: left;"><strong>Firewall - ASN &amp; Geo Egress Explorer</strong></td>
+<td style="text-align: left;"><code>data_stream.dataset: "pfsense.log" and event.provider: "filterlog"</code></td>
+<td style="text-align: left;"><code>event.action</code>, <code>observer.ingress.interface.name</code>, <code>client.hostname</code>, <code>source.ip</code>, <code>destination.ip</code>, <code>destination.port</code>, <code>destination.as.organization.name</code>, <code>destination.geo.country_name</code></td>
+<td style="text-align: left;">Real-time SIEM inspection of outbound connections with automated ASN, Organization, and Geolocation resolution.</td>
+</tr>
+<tr>
 <td style="text-align: left;"><strong>Host Sudo Audit</strong></td>
 <td style="text-align: left;"><code>data_stream.dataset: "system.auth" and process.name: "sudo"</code></td>
 <td style="text-align: left;"><code>host.hostname</code>, <code>process.name</code>, <code>system.auth.sudo.command</code>, <code>message</code></td>
-<td style="text-align: left;">Complete audit trail of elevated privileged commands across all nodes.</td>
+<td style="text-align: left;">Complete audit trail of elevated privileged commands across all cluster nodes.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Failed SSH Logins</strong></td>
 <td style="text-align: left;"><code>data_stream.dataset: "system.auth" and process.name: "sshd" and (message: ("Failed" or "Invalid") or system.auth.ssh.event: "Failed")</code></td>
 <td style="text-align: left;"><code>host.hostname</code>, <code>user.name</code>, <code>source.ip</code>, <code>message</code></td>
-<td style="text-align: left;">Detect brute-force attempts and unauthorized user logins.</td>
+<td style="text-align: left;">Detect brute-force attempts and unauthorized user logins with geographic mapping.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Kernel OOM Killer</strong></td>
@@ -1700,39 +1707,35 @@ Allocating a 3Gi memory limit ensures smooth visual aggregation and uninterrupte
 <td style="text-align: left;">Storage engine alerts, degraded replicas, and detachments.</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>ArgoCD GitOps Errors</strong></td>
-<td style="text-align: left;"><code>kubernetes.namespace: "argocd" and (log.level: ("error" or "warning") or message: ("ComparisonError" or "failed to sync"))</code></td>
-<td style="text-align: left;"><code>kubernetes.pod.name</code>, <code>log.level</code>, <code>message</code></td>
-<td style="text-align: left;">Sync failures, repo connection timeouts, and manifest errors.</td>
-</tr>
-<tr>
 <td style="text-align: left;"><strong>Traefik Ingress 5xx</strong></td>
 <td style="text-align: left;"><code>kubernetes.namespace: "kube-system" and (message: (" 500 " or " 502 " or " 503 " or " 504 ") or log.level: "error")</code></td>
 <td style="text-align: left;"><code>kubernetes.pod.name</code>, <code>message</code></td>
 <td style="text-align: left;">Reverse proxy backend connection and gateway errors.</td>
 </tr>
-<tr>
-<td style="text-align: left;"><strong>Cert-Manager TLS Renewal</strong></td>
-<td style="text-align: left;"><code>kubernetes.namespace: "cert-manager" and (message: ("Renewing" or "Order" or "error" or "failed") or log.level: "error")</code></td>
-<td style="text-align: left;"><code>kubernetes.pod.name</code>, <code>log.level</code>, <code>message</code></td>
-<td style="text-align: left;">ACME challenge validation and Let's Encrypt certificate renewal tracking.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>KubeVirt &amp; VM Lifecycle</strong></td>
-<td style="text-align: left;"><code>kubernetes.namespace: ("kubevirt" or "cdi" or "vms" or "gaming") and (log.level: ("error" or "warning") or message: ("VMI" or "error" or "failed"))</code></td>
-<td style="text-align: left;"><code>kubernetes.namespace</code>, <code>kubernetes.pod.name</code>, <code>message</code></td>
-<td style="text-align: left;">VM provisioning, virt-launcher pod errors, and disk import tracking.</td>
-</tr>
 </tbody>
 </table>
-<h4 id="b-target-operational-dashboards">B. Target Operational Dashboards</h4>
+<h4 id="b-integrated-production-dashboards">B. Integrated Production Dashboards</h4>
 <ul>
-<li><strong>Homelab Security &amp; Access Operations:</strong></li>
-<li><strong>Panels:</strong> Failed SSH attempts table / geographic breakdown, Sudo execution timeline, active SSH session counter, elevated command audit table.</li>
-<li><strong>Cluster Reliability &amp; Pod Crash Center:</strong></li>
-<li><strong>Panels:</strong> Restarts by namespace (bar chart), CrashLoopBackOff log stream, OOM killer event stream, unhandled pod exceptions.</li>
-<li><strong>Storage &amp; Edge Ingress Health:</strong></li>
-<li><strong>Panels:</strong> Longhorn replica degradation events, Traefik HTTP status code distribution (2xx vs 4xx vs 5xx), Cert-Manager renewal certificate status timeline.</li>
+<li><strong>Perimeter &amp; Firewall Intelligence (<code>pfsense</code>):</strong></li>
+<li><code>Firewall - Dashboard [pfSense]</code>: Real-time allow/block distributions, transport protocol splits (TCP/UDP/ICMP), and geographic source/destination heatmaps.</li>
+<li><code>Unbound - Dashboard [pfSense]</code>: Recursive DNS resolver query latency, top requested domain names, query types (<code>A</code>, <code>AAAA</code>, <code>TXT</code>), and response codes.</li>
+<li><code>DHCP - Dashboard [pfSense]</code>: Dynamic lease pools, client MAC addresses, and IP allocation timelines.</li>
+<li><strong>Kubernetes Cluster &amp; Storage Telemetry (<code>kube-state-metrics</code>):</strong></li>
+<li><code>[Metrics Kubernetes] Cluster Overview</code>: Global cluster capacity, CPU/memory saturation, and node readiness states.</li>
+<li><code>[Metrics Kubernetes] PV/PVC</code> &amp; <code>[Metrics Kubernetes] Volumes</code>: Real-time storage consumption across Longhorn distributed volumes and local-path storage claims.</li>
+<li><code>[Metrics Kubernetes] Nodes</code> &amp; <code>Pods</code>: Deep per-node kubelet memory pressure, CPU throttling rates, and container restart counters.</li>
+<li><code>[Metrics Kubernetes] API server</code> &amp; <code>Controller Manager</code>: Control plane API request latency, queue depth, and admission webhook health.</li>
+<li><strong>Physical Host OS &amp; Hardware Performance (<code>metrics-system.*</code>):</strong></li>
+<li><code>[Metrics System] Host overview</code>: Time-series metrics for physical nodes (<code>workstation</code>, <code>optiplex</code>, <code>opti74</code>, <code>opti76</code>, <code>lenovo</code>) tracking per-core CPU loads, memory buffer/cached ratios, network interface throughput (RX/TX), and disk IOPS.</li>
+<li><strong>Host Security &amp; Administrative Auditing (<code>logs-system.*</code>):</strong></li>
+<li><code>[Logs System] Sudo commands</code>: Audit log tracking who executed <code>sudo</code>, the target binary, and execution exit codes.</li>
+<li><code>[Logs System] SSH login attempts</code>: Global geographic map of incoming SSH attempts and failed brute-force usernames.</li>
+<li><code>[Logs System] Syslog dashboard</code>: Aggregated systemd service crashes, kernel ring buffer events, and host reboot logs.</li>
+<li><strong>Active Directory &amp; Identity Monitoring (<code>logs-system.*</code> / Windows Security):</strong></li>
+<li><code>[System Windows Security] User Logons</code>: Event ID 4624 logon monitoring, logon types (interactive vs network), and user session tracking.</li>
+<li><code>[System Windows Security] Failed and Blocked Accounts</code>: Event ID 4625 brute-force detection and account lockout alerts.</li>
+<li><code>[System Windows Security] User Management Events</code>: User account creation, modification, and deletion auditing (Event IDs 4720/4726/4738).</li>
+<li><code>[System Windows Security] Group Management Events</code>: Security group membership additions and domain administrative privilege escalations.</li>
 </ul>
 
 
