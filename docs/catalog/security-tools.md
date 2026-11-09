@@ -45,20 +45,21 @@ This section documents secrets orchestration, centralized Security Information a
 
 ---
 
-### 4. Centralized Elastic Stack & Elastic Agent
+### 4. Centralized Elastic Stack & Elastic Agent (Enterprise SIEM)
 * **Host Environment:** Kubernetes `observability` (ECK Operator-managed Elasticsearch, Logstash, Kibana on `workstation`) & `kube-system` (Elastic Agent DaemonSet)
 * **Sync Waves:** `Wave 5` (ECK Operator), `Wave 6` (Elasticsearch Cluster), `Wave 7` (Kibana, Logstash, Fleet Server), `Wave 9` (Elastic Agent DaemonSet)
 * **Ingress Endpoints:** `https://kibana.lambertlab.us`, `https://fleet.lambertlab.us`, `https://es.lambertlab.us` (Logstash on `:12201` GELF)
-* **Architectural Role:** Production-level Security Information and Event Management (SIEM) and log analytics pipeline.
+* **Architectural Role:** Production-level Security Information and Event Management (SIEM), identity entity analytics, and distributed telemetry pipeline.
 * **Storage Backend:** Dedicated local NVMe storage (`/home/chris/services/elasticsearch/data`) on `workstation`.
 * **Key Configuration:**
-  * Single-node cluster enforcing `number_of_replicas: 0` across templates to maintain solid green health and prevent Index Lifecycle Management (ILM) stalls.
-  * Docker GELF input on port 12201 (UDP/TCP) streaming container logs over Tailscale from all physical nodes.
-  * Elastic Agent DaemonSet deployed in `kube-system` streaming Kubernetes node, container, and pod telemetry.
-  * Logstash mutate filter recording exact receipt timestamps (`received_at => "%{@timestamp}"`).
-  * Kibana deployed via Elastic Cloud on Kubernetes (ECK) operator in `observability`, pulling secure settings (`elasticsearch.password`, encryption keys) from HashiCorp Vault via External Secrets Operator.
-  * Kibana tuned with `NODE_OPTIONS=--max-old-space-size=2048` to prevent V8 JavaScript heap exhaustion during complex visual log queries.
-  * Traefik Ingress with `default-admin-only-access` security middleware.
+  * **Single-Node ILM Invariant:** Single-node cluster enforcing `number_of_replicas: 0` (`shards [1]/[0]`) via `logs@custom` and `metrics@custom` to preserve solid `GREEN` cluster health and prevent Index Lifecycle Management (ILM) stalls.
+  * **Perimeter Firewall & DNS Telemetry:** Dedicated Cilium L4 LoadBalancer VIP `10.0.0.210:5514` (UDP/TCP) in `kubernetes/observability/elastic-agent/service.yaml` ingesting RFC 5424 structured syslog from OPNsense (`filterlog` and `unbound`), enriched with automated MaxMind GeoIP and ASN mappings.
+  * **Active Directory & Identity Ingestion (`dc01`):** Native Windows Service Elastic Agent running on Windows Server 2025 Datacenter (`10.10.0.10`), ingesting kernel security events (`4624`, `4625`, `4672`, `4634`, `4720`, `4728`) and synchronizing domain users/devices via LDAPS (Port 636) with service account `svc_elastic`.
+  * **Docker Container Telemetry:** Logstash GELF input on port 12201 (UDP/TCP) streaming container logs over Tailscale from standalone hosts (`lenovo`).
+  * **Cluster DaemonSet:** Elastic Agent DaemonSet deployed in `kube-system` streaming Kubernetes node, container pod logs, and `kube-state-metrics`.
+  * **Curated SIEM Dashboards:** Pre-staged official and custom dashboards including `Firewall - Dashboard [pfSense]`, `Unbound - Dashboard [pfSense]`, `[System Windows Security] User Logons`, `Failed and Blocked Accounts`, `User & Group Management Events`, and `[Metrics System] Host overview`.
+  * **Kibana Memory Optimization:** Tuned with `NODE_OPTIONS=--max-old-space-size=2048` and resource limits to prevent V8 JavaScript heap exhaustion during complex visual log queries.
+  * **Traefik Ingress:** Secured with `default-admin-only-access` security middleware.
 
 ---
 

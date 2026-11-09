@@ -53,9 +53,10 @@ Workloads are logically grouped into four functional categories:
 | **Elasticsearch** | SIEM / Logging | `observability` | ECK Operator (Wave 2) | Port 9200 (Internal) | Dedicated Local NVMe (`workstation`) |
 | **Logstash** | SIEM / Logging | `observability` | ECK Operator (Wave 3) | Port 12201 (GELF UDP/TCP) | Ephemeral Pipeline (`workstation`) |
 | **Kibana** | SIEM / Logging | `observability` | ECK Operator (Wave 3) | `kibana.lambertlab.us` | Ephemeral (`workstation`) |
-| **Fleet Server** | SIEM / Logging | `observability` | ECK Operator (Wave 4) | `fleet-server-agent-http:8220` | Ephemeral (Cluster Scheduled) |
-| **Elastic Agent** | SIEM / Logging | `kube-system` | ArgoCD Helm (Wave 5) | In-Cluster Host DaemonSet | Ephemeral DaemonSet |
-| **Elastic Agent Syslog VIP** | SIEM / Logging | `kube-system` | ArgoCD Manifest (Wave 9) | `10.0.0.210:5514` (UDP/TCP) | Cilium LoadBalancer (`lan-pool`) |
+| **Fleet Server** | SIEM / Logging | `observability` | ECK Operator (Wave 4) | `fleet.lambertlab.us` | Ephemeral (Cluster Scheduled) |
+| **Elastic Agent (Cluster DaemonSet)** | SIEM / Logging | `observability` | ArgoCD Helm (Wave 5) | In-Cluster Host DaemonSet | Ephemeral DaemonSet |
+| **Elastic Agent (Windows DC01)** | SIEM / Identity | `vms` (`dc01`) | Native Windows Service | `10.10.0.10` (LDAPS :636) | Windows Host Service |
+| **Elastic Agent Syslog VIP** | SIEM / Logging | `observability` | ArgoCD Manifest (Wave 9) | `10.0.0.210:5514` (UDP/TCP) | Cilium LoadBalancer (`lan-pool`) |
 | **ECK Operator** | Infrastructure | `observability` | ArgoCD Helm (Wave 1) | In-Cluster Operator API | Ephemeral Controller |
 | **Homarr Dashboard** | Observability | `observability` | ArgoCD Manifest (Wave 3) | `homarr.lambertlab.us` | Local Host Storage (`lenovo`) |
 | **Ntfy Notifications** | Observability | `observability` | ArgoCD Manifest (Wave 3) | `ntfy.lambertlab.us` | Longhorn Retained Volume (1Gi) |
