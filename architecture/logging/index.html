@@ -1651,8 +1651,7 @@ Allocating a 3Gi memory limit ensures smooth visual aggregation and uninterrupte
 * <strong>Self-Healing Liveness Probe:</strong> Applies a Kustomize patch adding a <code>livenessProbe</code> against <code>http://127.0.0.1:8888/metrics</code> (<code>libbeat_pipeline_clients{receiver="metricbeatreceiver"} [1-9]</code>) to verify the 9 embedded <code>autoops_es</code> Metricbeat input streams (<code>cat_shards</code>, <code>node_stats</code>, <code>tasks_management</code>, <code>cluster_health</code>, <code>cluster_settings</code>, <code>cat_template</code>, <code>component_template</code>, <code>index_template</code>, <code>license</code>) remain active and automatically restart the container if startup registration fails while Elasticsearch is restarting.</p>
 <hr />
 <h3 id="7-integrated-dashboards-discover-views">7. Integrated Dashboards &amp; Discover Views</h3>
-<p>Homelab telemetry streams into the <code>logs-*</code> and <code>metrics-*</code> data views in Kibana (<code>https://kibana.lambertlab.us</code>). Client IP addresses are dynamically resolved into metadata-parseable hostnames via a Painless runtime field (<code>client.hostname</code>) on the <code>logs-*</code> Data View, attributing internal virtual machines (<code>10.10.0.10</code> ➔ <code>dc01</code>, <code>10.10.0.24</code> ➔ <code>win11</code>) with zero re-indexing or storage overhead.</p>
-<p>The platform provides a comprehensive suite of pre-built and custom-integrated dashboards across perimeter security, cluster performance, host hygiene, and directory services:</p>
+<p>Homelab telemetry streams into the <code>logs-*</code> and <code>metrics-*</code> data views in Kibana (<code>https://kibana.lambertlab.us</code>). The platform provides a comprehensive suite of pre-built and custom-integrated dashboards across perimeter security, cluster performance, host hygiene, and directory services:</p>
 <h4 id="a-curated-discover-views-saved-searches">A. Curated Discover Views &amp; Saved Searches</h4>
 <table>
 <thead>
@@ -1667,7 +1666,7 @@ Allocating a 3Gi memory limit ensures smooth visual aggregation and uninterrupte
 <tr>
 <td style="text-align: left;"><strong>Firewall - ASN &amp; Geo Egress Explorer</strong></td>
 <td style="text-align: left;"><code>data_stream.dataset: "pfsense.log" and event.provider: "filterlog"</code></td>
-<td style="text-align: left;"><code>event.action</code>, <code>observer.ingress.interface.name</code>, <code>client.hostname</code>, <code>source.ip</code>, <code>destination.ip</code>, <code>destination.port</code>, <code>destination.as.organization.name</code>, <code>destination.geo.country_name</code></td>
+<td style="text-align: left;"><code>event.action</code>, <code>observer.ingress.interface.name</code>, <code>source.ip</code>, <code>destination.ip</code>, <code>destination.port</code>, <code>destination.as.organization.name</code>, <code>destination.geo.country_name</code></td>
 <td style="text-align: left;">Real-time SIEM inspection of outbound connections with automated ASN, Organization, and Geolocation resolution.</td>
 </tr>
 <tr>
