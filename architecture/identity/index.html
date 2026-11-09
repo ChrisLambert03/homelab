@@ -699,6 +699,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#service-account-creation-password-complexity-standard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Account Creation &amp; Password Complexity Standard
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1517,6 +1528,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#service-account-creation-password-complexity-standard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Account Creation &amp; Password Complexity Standard
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1732,7 +1754,13 @@ Both the <code>Users</code> OU and <code>Security Groups</code> OU must be inclu
 <li><strong><code>svc_terraform</code>:</strong> Scoped service account utilized by the Terraform AD provider to manage directory objects with least privilege.</li>
 <li><strong><code>svc_guacamole</code>:</strong> Dedicated read-only LDAP service account bound to <code>CN=svc_guacamole,OU=Service Accounts,...</code> for Guacamole user queries over LDAPS (Port 636).</li>
 <li><strong><code>svc_domainjoin</code>:</strong> Restricted service account granted delegated rights specifically to join new computer objects under <code>OU=Desktops</code> (enforced in <code>win11</code> declarative <code>unattend.xml</code>).</li>
+<li><strong><code>svc_elastic</code>:</strong> Dedicated read-only LDAP bind service account for Elastic Fleet's Active Directory Entity Analytics integration.</li>
 </ul>
+<h3 id="service-account-creation-password-complexity-standard">Service Account Creation &amp; Password Complexity Standard</h3>
+<p>All service accounts are declared via Terraform in <code>terraform/active_directory/service_accounts.tf</code> and backed by HashiCorp Vault (<code>secret/data/homelab</code> with key <code>ad_svc_&lt;name&gt;_password</code>):
+* <strong>Complexity Requirements:</strong> Active Directory enforces default domain password complexity rules (<code>passfilt.dll</code>). Passwords must be at least 20–24 characters and satisfy all 4 character pools (Uppercase, Lowercase, Numbers, and Symbols like <code>#</code>, <code>!</code>, <code>*</code>, <code>%</code>).
+* <strong>WinRM Shell Safety:</strong> Passwords must strictly avoid shell-evaluating characters (<code>$</code>, <code>"</code>, and backticks) to prevent WinRM interpolation corruption during remote PowerShell execution.
+* <strong>Minimum Password Age Consideration:</strong> If an account creation fails midway, Active Directory's Minimum Password Age may prevent subsequent <code>Set-ADUser</code> modifications on the same calendar day. Always destroy the incomplete object and recreate it cleanly in a single pass with <code>New-ADUser</code>.</p>
 <hr />
 <h2 id="kubernetes-api-native-entra-id-rbac">🔐 Kubernetes API Native Entra ID RBAC</h2>
 <p>Beyond application-level OIDC SSO (ArgoCD, Guacamole), the cluster control plane itself is tied directly into Microsoft Entra ID Role-Based Access Control (<code>kubernetes/config/entra-admin-rbac.yaml</code>).</p>
