@@ -135,15 +135,13 @@ To monitor cluster performance, shard allocation, and operational health against
 
 ### 7. Integrated Dashboards & Discover Views
 
-Homelab telemetry streams into the `logs-*` and `metrics-*` data views in Kibana (`https://kibana.lambertlab.us`). Client IP addresses are dynamically resolved into metadata-parseable hostnames via a Painless runtime field (`client.hostname`) on the `logs-*` Data View, attributing internal virtual machines (`10.10.0.10` ➔ `dc01`, `10.10.0.24` ➔ `win11`) with zero re-indexing or storage overhead.
-
-The platform provides a comprehensive suite of pre-built and custom-integrated dashboards across perimeter security, cluster performance, host hygiene, and directory services:
+Homelab telemetry streams into the `logs-*` and `metrics-*` data views in Kibana (`https://kibana.lambertlab.us`). The platform provides a comprehensive suite of pre-built and custom-integrated dashboards across perimeter security, cluster performance, host hygiene, and directory services:
 
 #### A. Curated Discover Views & Saved Searches
 
 | View Name | Target Dataset / Filter | Primary Display Columns | Operational Purpose |
 |:---|:---|:---|:---|
-| **Firewall - ASN & Geo Egress Explorer** | `data_stream.dataset: "pfsense.log" and event.provider: "filterlog"` | `event.action`, `observer.ingress.interface.name`, `client.hostname`, `source.ip`, `destination.ip`, `destination.port`, `destination.as.organization.name`, `destination.geo.country_name` | Real-time SIEM inspection of outbound connections with automated ASN, Organization, and Geolocation resolution. |
+| **Firewall - ASN & Geo Egress Explorer** | `data_stream.dataset: "pfsense.log" and event.provider: "filterlog"` | `event.action`, `observer.ingress.interface.name`, `source.ip`, `destination.ip`, `destination.port`, `destination.as.organization.name`, `destination.geo.country_name` | Real-time SIEM inspection of outbound connections with automated ASN, Organization, and Geolocation resolution. |
 | **Host Sudo Audit** | `data_stream.dataset: "system.auth" and process.name: "sudo"` | `host.hostname`, `process.name`, `system.auth.sudo.command`, `message` | Complete audit trail of elevated privileged commands across all cluster nodes. |
 | **Failed SSH Logins** | `data_stream.dataset: "system.auth" and process.name: "sshd" and (message: ("Failed" or "Invalid") or system.auth.ssh.event: "Failed")` | `host.hostname`, `user.name`, `source.ip`, `message` | Detect brute-force attempts and unauthorized user logins with geographic mapping. |
 | **Kernel OOM Killer** | `message: (*oom* or "Out of memory" or "invoked oom-killer" or "Killed process") or process.name: "kernel"` | `host.hostname`, `process.name`, `message` | Track memory starvation events and kernel kills across nodes. |
