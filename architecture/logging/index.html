@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -706,10 +706,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#centralized-log-analytics-siem-pipeline" class="md-nav__link">
+  <a href="#global-siem-telemetry-analytics-fabric" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📊 Centralized Log Analytics &amp; SIEM Pipeline
+        📊 Global SIEM Telemetry &amp; Analytics Fabric
       
     </span>
   </a>
@@ -717,22 +717,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#elastic-stack-configuration-compute-realities" class="md-nav__link">
+  <a href="#multi-tier-telemetry-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🔬 Elastic Stack Configuration &amp; Compute Realities
+        🔬 Multi-Tier Telemetry Architecture
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🔬 Elastic Stack Configuration &amp; Compute Realities">
+    <nav class="md-nav" aria-label="🔬 Multi-Tier Telemetry Architecture">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-ingestion-protocol-docker-gelf-over-tailscale-port-12201-udptcp" class="md-nav__link">
+  <a href="#tier-1-perimeter-firewall-dns-telemetry-opnsense" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Ingestion Protocol: Docker GELF over Tailscale (Port 12201 UDP/TCP)
+        Tier 1: Perimeter Firewall &amp; DNS Telemetry (OPNsense)
       
     </span>
   </a>
@@ -740,10 +740,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-the-single-node-index-lifecycle-management-ilm-rule-number_of_replicas-0" class="md-nav__link">
+  <a href="#tier-2-enterprise-identity-active-directory-auditing-dc01" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. The Single-Node Index Lifecycle Management (ILM) Rule (number_of_replicas: 0)
+        Tier 2: Enterprise Identity &amp; Active Directory Auditing (dc01)
       
     </span>
   </a>
@@ -751,10 +751,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-storage-performance-nvme-isolation-vs-network-iscsi" class="md-nav__link">
+  <a href="#tier-3-kubernetes-control-plane-node-telemetry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Storage Performance: NVMe Isolation vs Network iSCSI
+        Tier 3: Kubernetes Control Plane &amp; Node Telemetry
       
     </span>
   </a>
@@ -762,66 +762,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-kibana-memory-optimization" class="md-nav__link">
+  <a href="#tier-4-management-host-legacy-ingestion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Kibana Memory Optimization
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-centralized-fleet-server-elastic-agent-daemonset" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Centralized Fleet Server &amp; Elastic Agent DaemonSet
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-elastic-autoops-cloud-connect-automated-cluster-monitoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Elastic AutoOps Cloud Connect (Automated Cluster Monitoring)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-integrated-dashboards-discover-views" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Integrated Dashboards &amp; Discover Views
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="7. Integrated Dashboards &amp; Discover Views">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-curated-discover-views-saved-searches" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A. Curated Discover Views &amp; Saved Searches
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-integrated-production-dashboards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        B. Integrated Production Dashboards
+        Tier 4: Management Host &amp; Legacy Ingestion
       
     </span>
   </a>
@@ -830,6 +774,79 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#centralized-fleet-policy-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏛️ Centralized Fleet Policy Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-lifecycle-engineering-the-single-node-ilm-invariant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💾 Storage &amp; Lifecycle Engineering: The Single-Node ILM Invariant
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💾 Storage &amp; Lifecycle Engineering: The Single-Node ILM Invariant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automated-data-stream-ilm-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Data Stream ILM Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integrated-siem-dashboards-discover-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📈 Integrated SIEM Dashboards &amp; Discover Views
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📈 Integrated SIEM Dashboards &amp; Discover Views">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-curated-discover-views-saved-searches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Curated Discover Views &amp; Saved Searches
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-integrated-production-dashboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Integrated Production Dashboards
+      
+    </span>
+  </a>
   
 </li>
         
@@ -1312,6 +1329,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../runbooks/active-directory-siem-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory & Windows SIEM Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../runbooks/disaster-recovery/" class="md-nav__link">
         
   
@@ -1395,10 +1440,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#centralized-log-analytics-siem-pipeline" class="md-nav__link">
+  <a href="#global-siem-telemetry-analytics-fabric" class="md-nav__link">
     <span class="md-ellipsis">
       
-        📊 Centralized Log Analytics &amp; SIEM Pipeline
+        📊 Global SIEM Telemetry &amp; Analytics Fabric
       
     </span>
   </a>
@@ -1406,22 +1451,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#elastic-stack-configuration-compute-realities" class="md-nav__link">
+  <a href="#multi-tier-telemetry-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        🔬 Elastic Stack Configuration &amp; Compute Realities
+        🔬 Multi-Tier Telemetry Architecture
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="🔬 Elastic Stack Configuration &amp; Compute Realities">
+    <nav class="md-nav" aria-label="🔬 Multi-Tier Telemetry Architecture">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-ingestion-protocol-docker-gelf-over-tailscale-port-12201-udptcp" class="md-nav__link">
+  <a href="#tier-1-perimeter-firewall-dns-telemetry-opnsense" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Ingestion Protocol: Docker GELF over Tailscale (Port 12201 UDP/TCP)
+        Tier 1: Perimeter Firewall &amp; DNS Telemetry (OPNsense)
       
     </span>
   </a>
@@ -1429,10 +1474,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-the-single-node-index-lifecycle-management-ilm-rule-number_of_replicas-0" class="md-nav__link">
+  <a href="#tier-2-enterprise-identity-active-directory-auditing-dc01" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. The Single-Node Index Lifecycle Management (ILM) Rule (number_of_replicas: 0)
+        Tier 2: Enterprise Identity &amp; Active Directory Auditing (dc01)
       
     </span>
   </a>
@@ -1440,10 +1485,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-storage-performance-nvme-isolation-vs-network-iscsi" class="md-nav__link">
+  <a href="#tier-3-kubernetes-control-plane-node-telemetry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Storage Performance: NVMe Isolation vs Network iSCSI
+        Tier 3: Kubernetes Control Plane &amp; Node Telemetry
       
     </span>
   </a>
@@ -1451,66 +1496,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-kibana-memory-optimization" class="md-nav__link">
+  <a href="#tier-4-management-host-legacy-ingestion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Kibana Memory Optimization
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-centralized-fleet-server-elastic-agent-daemonset" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Centralized Fleet Server &amp; Elastic Agent DaemonSet
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-elastic-autoops-cloud-connect-automated-cluster-monitoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Elastic AutoOps Cloud Connect (Automated Cluster Monitoring)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-integrated-dashboards-discover-views" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Integrated Dashboards &amp; Discover Views
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="7. Integrated Dashboards &amp; Discover Views">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-curated-discover-views-saved-searches" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A. Curated Discover Views &amp; Saved Searches
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-integrated-production-dashboards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        B. Integrated Production Dashboards
+        Tier 4: Management Host &amp; Legacy Ingestion
       
     </span>
   </a>
@@ -1519,6 +1508,79 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#centralized-fleet-policy-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏛️ Centralized Fleet Policy Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-lifecycle-engineering-the-single-node-ilm-invariant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💾 Storage &amp; Lifecycle Engineering: The Single-Node ILM Invariant
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💾 Storage &amp; Lifecycle Engineering: The Single-Node ILM Invariant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automated-data-stream-ilm-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Data Stream ILM Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integrated-siem-dashboards-discover-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📈 Integrated SIEM Dashboards &amp; Discover Views
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📈 Integrated SIEM Dashboards &amp; Discover Views">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-curated-discover-views-saved-searches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Curated Discover Views &amp; Saved Searches
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-integrated-production-dashboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Integrated Production Dashboards
+      
+    </span>
+  </a>
   
 </li>
         
@@ -1553,9 +1615,10 @@
 
 
 <h1 id="security-information-event-management-siem-and-telemetry-architecture">Security Information &amp; Event Management (SIEM) and Telemetry Architecture</h1>
-<p>Centralized log telemetry and security observability in <strong>LambertLab</strong> are powered by the <strong>Elastic Stack</strong> (ELK: Elasticsearch, Logstash, Kibana) acting as the centralized <strong>Security Information and Event Management (SIEM)</strong> platform, running on dedicated bare-metal host compute with high-speed local NVMe storage.</p>
+<p>Centralized security intelligence, log telemetry, and cluster observability in <strong>LambertLab</strong> are powered by the <strong>Elastic Stack</strong> (Elasticsearch, Kibana, Logstash, and Elastic Fleet) deployed on dedicated bare-metal compute under the <strong>ECK Operator (<code>v3.5.0</code>)</strong> with local high-speed NVMe storage on <code>workstation</code>.</p>
+<p>The platform functions as a full-spectrum <strong>Security Information and Event Management (SIEM)</strong> fabric, correlating Layer 3/4 edge firewall flows and recursive DNS queries from OPNsense with enterprise Active Directory identity events from Windows Server 2025, Kubernetes container logs, and bare-metal host health.</p>
 <hr />
-<h2 id="centralized-log-analytics-siem-pipeline">📊 Centralized Log Analytics &amp; SIEM Pipeline</h2>
+<h2 id="global-siem-telemetry-analytics-fabric">📊 Global SIEM Telemetry &amp; Analytics Fabric</h2>
 <div class="panzoom-box" data-key="alt" id="panzoom0" oncontextmenu="return false;">
     <div class="panzoom-info-box panzoom-info-box-top">
 Hold "Alt" / "Option" to enable pan &amp; zoom
@@ -1575,112 +1638,305 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
     </svg>
 </button>
     </nav>
-    <pre class="mermaid"><code>graph TD
-    subgraph Shippers["Distributed Container Log Sources"]
-        LenovoDocker["lenovo Node Containers"]
-        OptiplexDocker["optiplex Node Containers"]
-        Opti74Docker["opti74 Node Containers"]
-        WorkstationDocker["workstation Node Containers"]
+    <pre class="mermaid"><code>flowchart TD
+    subgraph EdgePerimeter["1. Edge Network &amp; Perimeter Security"]
+        OPN["OPNsense Edge Firewall&lt;br/&gt;(10.0.0.15)"]
+        PF["Packet Filter (filterlog)&lt;br/&gt;Stateful Allow/Block Telemetry"]
+        UB["Unbound DNS Resolver&lt;br/&gt;Queries, Replies, SERVFAIL"]
+        OPN --&gt; PF
+        OPN --&gt; UB
     end
 
-    subgraph LogstashPipeline["Logstash Processing Engine (:12201)"]
-        GELFIn["GELF Input :12201 UDP/TCP&lt;br/&gt;Tailscale Overlay"]
-        MutateFilter["Mutate Filter&lt;br/&gt;add_field: received_at =&gt; %{@timestamp}"]
+    subgraph IdentityCompute["2. Enterprise Identity &amp; Host Infrastructure"]
+        DC["dc01 (Windows Server 2025 - 10.10.0.10)&lt;br/&gt;Active Directory Domain Controller"]
+        SecLog["Security Event Log (EvtSubscribe)&lt;br/&gt;Events 4624, 4625, 4672, 4634, 4720, 4728"]
+        NTDS["Active Directory (NTDS)&lt;br/&gt;LDAPS Port 636 (svc_elastic Bind)"]
+        DC --&gt; SecLog
+        DC --&gt; NTDS
+
+        K8sNodes["4-Node Kubernetes Cluster&lt;br/&gt;optiplex, opti74, opti76, workstation"]
+        K8sHostSys["Host Telemetry &amp; Auth&lt;br/&gt;/var/log, /proc, /sys, journald"]
+        K8sNodes --&gt; K8sHostSys
+
+        MgmtHost["Lenovo Management Host&lt;br/&gt;Admin Workstation &amp; Docker Runtime"]
+        MgmtDocker["Standalone Docker Containers&lt;br/&gt;stdout/stderr"]
+        MgmtHost --&gt; MgmtDocker
     end
 
-    subgraph ElasticCluster["Elasticsearch 8.x (Workstation NVMe)"]
-        ESNode[("Single-Node Elasticsearch&lt;br/&gt;discovery.type=single-node&lt;br/&gt;number_of_replicas=0")]
+    subgraph IngestionFabric["3. Ingestion &amp; Load Balancing Fabric"]
+        CiliumLB["Cilium L4 LoadBalancer VIP&lt;br/&gt;10.0.0.210:5514 (UDP/TCP)&lt;br/&gt;Pool: lan-pool"]
+        LogstashGELF["Logstash GELF Engine (:12201)&lt;br/&gt;Tailscale Overlay (100.106.96.18)"]
+        TraefikIngress["Traefik HTTPS Ingress&lt;br/&gt;https://fleet.lambertlab.us"]
+        PF --&gt;|"RFC 5424 UDP"| CiliumLB
+        UB --&gt;|"RFC 5424 UDP"| CiliumLB
+        MgmtDocker --&gt;|"GELF over Tailscale"| LogstashGELF
     end
 
-    subgraph Visualization["Kibana Dashboard (:5601)"]
-        KibanaUI["Kibana Analytics UI&lt;br/&gt;NODE_OPTIONS=--max-old-space-size=2048"]
-        TraefikIngress["Traefik HTTPS Reverse Proxy&lt;br/&gt;kibana.lambertlab.us + Admin Middleware"]
+    subgraph ElasticFleet["4. Elastic Fleet &amp; Telemetry Shippers"]
+        K8sAgent["Per-Node Elastic Agent DaemonSet&lt;br/&gt;Policy: Elastic Agent on ECK Policy"]
+        WinAgent["Windows Elastic Agent Service&lt;br/&gt;Policy: Windows Domain Controller"]
+        FleetServer["Fleet Server Pod&lt;br/&gt;(fleet.lambertlab.us)"]
+
+        CiliumLB --&gt; K8sAgent
+        K8sHostSys --&gt; K8sAgent
+        SecLog --&gt; WinAgent
+        NTDS --&gt;|"LDAPS Query (Port 636)"| WinAgent
+
+        WinAgent -.-&gt;|"Check-in &amp; Policy Sync :443"| FleetServer
+        K8sAgent -.-&gt;|"Check-in &amp; Policy Sync :443"| FleetServer
+        TraefikIngress --&gt; FleetServer
     end
 
-    LenovoDocker --&gt;|"GELF over Tailscale"| GELFIn
-    OptiplexDocker --&gt;|"GELF over Tailscale"| GELFIn
-    Opti74Docker --&gt;|"GELF over Tailscale"| GELFIn
-    WorkstationDocker --&gt;|"GELF over Tailscale"| GELFIn
+    subgraph ElasticsearchCore["5. Single-Node Elasticsearch (Workstation NVMe)"]
+        Pipelines["Ingest Processing Engine&lt;br/&gt;GeoIP, ASN, ECS Normalization"]
 
-    GELFIn --&gt; MutateFilter
-    MutateFilter --&gt;|"Bulk Daily Indices homelab-logs-YYYY.MM.dd"| ESNode
-    ESNode --&gt; KibanaUI
-    TraefikIngress --&gt; KibanaUI</code></pre> 
+        StreamPFS[("logs-pfsense.log-default&lt;br/&gt;Firewall &amp; DNS Logs")]
+        StreamWIN[("logs-system.security-*&lt;br/&gt;logs-windows.* (AD Security)")]
+        StreamENT[("logs-entityanalytics_ad.*&lt;br/&gt;User &amp; Computer Directory")]
+        StreamSYS[("logs-system.* / metrics-system.*&lt;br/&gt;Bare-Metal Host Health")]
+        StreamDOCK[("homelab-logs-* / logstash-*&lt;br/&gt;Container Logs")]
+
+        K8sAgent --&gt;|"Bulk Ingest via mTLS :443"| Pipelines
+        WinAgent --&gt;|"Bulk Ingest via HTTPS :443"| Pipelines
+        LogstashGELF --&gt;|"Bulk Indexing"| Pipelines
+
+        Pipelines --&gt; StreamPFS
+        Pipelines --&gt; StreamWIN
+        Pipelines --&gt; StreamENT
+        Pipelines --&gt; StreamSYS
+        Pipelines --&gt; StreamDOCK
+
+        ILM["Single-Node ILM Engine&lt;br/&gt;logs@custom / metrics@custom&lt;br/&gt;shards [1]/[0] (GREEN)"]
+        ILM -.-&gt; StreamPFS
+        ILM -.-&gt; StreamWIN
+        ILM -.-&gt; StreamENT
+        ILM -.-&gt; StreamSYS
+        ILM -.-&gt; StreamDOCK
+    end
+
+    subgraph KibanaAnalytics["6. Kibana SIEM &amp; Operations UI"]
+        DashNet["Perimeter &amp; Firewall Intelligence&lt;br/&gt;• Firewall - Dashboard [pfSense]&lt;br/&gt;• Unbound - Dashboard [pfSense]&lt;br/&gt;• Firewall ASN/Geo Egress Explorer"]
+        DashSec["Active Directory &amp; Identity Auditing&lt;br/&gt;• [System Windows Security] User Logons&lt;br/&gt;• Failed &amp; Blocked Accounts&lt;br/&gt;• User &amp; Group Management Events"]
+        DashHost["Host &amp; Storage Performance&lt;br/&gt;• [Metrics System] Host Overview&lt;br/&gt;• [Metrics Kubernetes] Cluster &amp; PV/PVC"]
+        EntityStore["Elastic Security Entity Store&lt;br/&gt;Correlated User &amp; Host Profiles"]
+
+        StreamPFS --&gt; DashNet
+        StreamWIN --&gt; DashSec
+        StreamENT --&gt; EntityStore
+        StreamSYS --&gt; DashHost
+        StreamWIN --&gt; EntityStore
+        StreamPFS --&gt; EntityStore
+    end</code></pre> 
     
 </div>
 <hr />
-<h2 id="elastic-stack-configuration-compute-realities">🔬 Elastic Stack Configuration &amp; Compute Realities</h2>
-<p>Elasticsearch, Logstash, and Kibana are deployed to Kubernetes under the <strong>ECK Operator</strong> (<code>v3.5.0</code>) in the <code>observability</code> namespace (<code>kubernetes/observability/</code>), scheduled onto <code>workstation</code> to leverage its 16-core / 32-thread Xeon CPU and high-speed local NVMe storage:</p>
-<h3 id="1-ingestion-protocol-docker-gelf-over-tailscale-port-12201-udptcp">1. Ingestion Protocol: Docker GELF over Tailscale (Port 12201 UDP/TCP)</h3>
-<p>Docker daemons across all cluster nodes stream container <code>stdout</code> and <code>stderr</code> directly to Logstash over the private Tailscale mesh network:
-* <strong>Zero Local Disk Wear:</strong> Container logs stream over network buffers directly into Logstash, eliminating local disk log rotation wear across manager and worker nodes.
-* <strong>HostNetwork Binding:</strong> Deployed with <code>hostNetwork: true</code> and <code>dnsPolicy: ClusterFirstWithHostNet</code> on <code>workstation</code>, allowing the GELF input to bind across all interfaces (specifically <code>tailscale0</code> at <code>100.106.96.18:12201</code>) without relying on hostPort routing.
-* <strong>Unified Pipeline:</strong> Logstash tags incoming events with a <code>received_at</code> timestamp and indexes them directly into daily indices:
-  <div class="language-ruby highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="n">mutate</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="n">add_field</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"received_at"</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s2">"%{@timestamp}"</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<hr />
-<h3 id="2-the-single-node-index-lifecycle-management-ilm-rule-number_of_replicas-0">2. The Single-Node Index Lifecycle Management (ILM) Rule (<code>number_of_replicas: 0</code>)</h3>
-<p>In a homelab environment where Elasticsearch operates as a high-performance single-node instance:</p>
-<div class="admonition danger">
-<p class="admonition-title">Crucial Elasticsearch Cluster Health Rule</p>
-<p>Elasticsearch defaults new indices to <code>number_of_replicas: 1</code>. In a single-node cluster (configured with <code>discovery.type=single-node</code>), there is only one node (<code>workstation</code>). Elasticsearch refuses to allocate a replica shard on the same physical node as the primary shard, leaving the replica permanently unassigned. Because the cluster cannot fulfill its replica policy, its health status degrades to <strong><code>YELLOW</code></strong>.</p>
-<p>When cluster status is Yellow, Elasticsearch <strong>Index Lifecycle Management (ILM)</strong> policies often pause or refuse to advance indices through Rollover, Warm, and Delete phases.</p>
-<p><strong>Requirement:</strong> All index templates and ILM policies MUST explicitly enforce <code>number_of_replicas: 0</code>. This guarantees cluster health remains solid <strong><code>GREEN</code></strong>, ensuring automated rollover and storage pruning continue smoothly without human intervention.</p>
+<h2 id="multi-tier-telemetry-architecture">🔬 Multi-Tier Telemetry Architecture</h2>
+<h3 id="tier-1-perimeter-firewall-dns-telemetry-opnsense">Tier 1: Perimeter Firewall &amp; DNS Telemetry (OPNsense)</h3>
+<p>Edge security telemetry is captured from <strong>OPNsense</strong> (<code>10.0.0.15</code>), streaming real-time network traffic and DNS query events without intermediate Logstash forwarders:</p>
+<div class="panzoom-box" data-key="alt" id="panzoom0" oncontextmenu="return false;">
+    <div class="panzoom-info-box panzoom-info-box-top">
+Hold "Alt" / "Option" to enable pan &amp; zoom
 </div>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">"index"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">"number_of_shards"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">"number_of_replicas"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">"refresh_interval"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5s"</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">}</span>
-</span></code></pre></div>
-<hr />
-<h3 id="3-storage-performance-nvme-isolation-vs-network-iscsi">3. Storage Performance: NVMe Isolation vs Network iSCSI</h3>
-<p>Elasticsearch index operations generate heavy, unbuffered random read/write I/O patterns:
-* <strong>Architecture Constraint:</strong> Elasticsearch index data (<code>/usr/share/elasticsearch/data</code>) <strong>must never</strong> reside on 1Gbps network iSCSI or NFS shares. Network storage latency introduces heavy write queuing, thread pool exhaustion (<code>write</code> queue rejection), and causes Kibana dashboards to time out.
-* <strong>Architecture:</strong> In-cluster PersistentVolume <code>elasticsearch-data-pv</code> binds directly to local workstation NVMe SSD storage (<code>/home/chris/services/elasticsearch/data</code>) with <code>nodeAffinity</code> targeting <code>workstation</code>, delivering extreme random write IOPS with zero network jitter.</p>
-<hr />
-<h3 id="4-kibana-memory-optimization">4. Kibana Memory Optimization</h3>
-<p>Kibana runs on Node.js. When executing deep time-range queries across millions of log entries, the default Node.js V8 heap limit can trigger Out-Of-Memory (OOM) fatal process crashes (<code>JavaScript heap out of memory</code>).</p>
-<p>In <code>kubernetes/observability/kibana/kibana.yaml</code>, Kibana is provisioned under the ECK Operator with dedicated resource requests and limits:
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">resources</span><span class="p">:</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">requests</span><span class="p">:</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5Gi</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500m</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3Gi</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-</span></code></pre></div>
-Allocating a 3Gi memory limit ensures smooth visual aggregation and uninterrupted log exploration without container OOM kills.</p>
-<hr />
-<h3 id="5-centralized-fleet-server-elastic-agent-daemonset">5. Centralized Fleet Server &amp; Elastic Agent DaemonSet</h3>
-<p>To capture container logs (<code>/var/log/pods</code>), cluster-level health, and bare-metal host OS telemetry (<code>journald</code>, <code>auth.log</code>, <code>syslog</code>) across all 4 nodes (<code>lenovo</code>, <code>optiplex</code>, <code>opti74</code>, <code>workstation</code>), the cluster utilizes <strong>Elastic Fleet Server</strong> and the official <strong>Elastic Agent Helm Chart</strong>:</p>
+    <nav class="panzoom-nav panzoom-top-nav panzoom-nav-infobox-top">
+    <button class="panzoom-reset panzoom-button">
+    <svg class="panzoom-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M125.7 160l50.3 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L48 224c-17.7 0-32-14.3-32-32L16 64c0-17.7 14.3-32 32-32s32 14.3 32 32l0 51.2L97.6 97.6c87.5-87.5 229.3-87.5 316.8 0s87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3s-163.8-62.5-226.3 0L125.7 160z"></path>
+    </svg>
+</button><button class="panzoom-max panzoom-button">
+    <svg class="panzoom-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 32C14.3 32 0 46.3 0 64l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96z"></path>
+    </svg>
+</button><button class="panzoom-min panzoom-button panzoom-hidden">
+    <svg class="panzoom-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M160 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96zM32 320c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM352 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 320c-17.7 0-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0z"></path>
+    </svg>
+</button>
+    </nav>
+    <pre class="mermaid"><code>sequenceDiagram
+    autonumber
+    participant Client as LAN Client (10.10.0.24 / win11)
+    participant OPN as OPNsense Firewall (10.0.0.15)
+    participant Cilium as Cilium LB VIP (10.0.0.210:5514)
+    participant Agent as Elastic Agent DaemonSet
+    participant ES as Elasticsearch (Workstation NVMe)
+    participant Kibana as Kibana Dashboards
+
+    Client-&gt;&gt;OPN: Outbound HTTPS Connection (e.g. 142.250.x.x:443)
+    Note over OPN: Ingress rule on vtnet1 (LAN) logs packet.&lt;br/&gt;WAN egress pass rule logging is DISABLED&lt;br/&gt;(prevents post-NAT duplicate logs).
+    OPN-&gt;&gt;Cilium: RFC 5424 Syslog Datagram (UDP 5514)
+    Cilium-&gt;&gt;Agent: L4 BPF LoadBalanced routing to agent pod
+    Agent-&gt;&gt;ES: Bulk index into logs-pfsense.log-default
+    Note over ES: Ingest pipeline executes:&lt;br/&gt;1. GeoIP resolution (Country, City, Lat/Long)&lt;br/&gt;2. ASN lookup (Autonomous System / Org)&lt;br/&gt;3. ECS normalization
+    ES--&gt;&gt;Kibana: Real-time update on Firewall &amp; Geo dashboards</code></pre> 
+    
+</div>
 <ul>
-<li><strong>Fleet Server (ECK Operator):</strong>
-  Deployed via ArgoCD (<code>kubernetes/apps/fleet-server.yaml</code>) as an ECK Agent CR (<code>kubernetes/observability/fleet-server/fleet-server.yaml</code>) in <code>mode: fleet</code> with native cluster scheduling. It connects directly to Elasticsearch and Kibana via internal cluster references and exposes its endpoint externally via Traefik Ingress at <code>https://fleet.lambertlab.us</code> with <code>default-insecure-transport</code>.</li>
-<li><strong>Fleet-Managed DaemonSet (<code>elastic-agent</code>):</strong>
-  Deployed via ArgoCD (<code>kubernetes/apps/elastic-agent.yaml</code>) utilizing the upstream Elastic Helm chart (<code>https://helm.elastic.co</code>, chart: <code>elastic-agent:9.5.6</code>).</li>
-<li><strong>Pinned Image Tag:</strong> Pinned to <code>9.3.2</code> to strictly adhere to Elastic's architectural requirement: $V_{\text{Agent}} \le V_{\text{Fleet Server}}$.</li>
-<li><strong>System &amp; Kubernetes Integrations:</strong> With <code>system.enabled: true</code> and <code>preset: perNode</code>, exactly one agent pod runs on every cluster node, mounting <code>/var/log</code>, <code>/proc</code>, and <code>/sys</code> to monitor host OS telemetry and container logs simultaneously with zero duplication.</li>
-<li><strong>Secret Decoupling:</strong> Uses <code>tokenFromSecret</code> referencing Kubernetes secret <code>elastic-agent-token</code> in <code>kube-system</code>, synced from HashiCorp Vault via External Secrets Operator. Plaintext enrollment tokens are never committed to Git.</li>
-<li><strong>Ingress Connectivity:</strong> Configured with <code>url: "https://fleet.lambertlab.us"</code> so host-networked agents on all physical nodes route reliably through Traefik ingress without cross-node ClusterIP routing hurdles.</li>
-<li><strong>Memory Sizing:</strong> Resource limits configured with <code>memory: 2000Mi</code> in <code>kubernetes/observability/elastic-agent/values.yaml</code> to ensure agents do not encounter OOMKilled restarts during high-volume log bursts.</li>
-<li><strong>Network &amp; Firewall Syslog Ingestion (<code>elastic-agent-syslog</code>):</strong> Exposed via a dedicated Kubernetes <code>LoadBalancer</code> Service (<code>kubernetes/observability/elastic-agent/service.yaml</code>) claiming static IP <code>10.0.0.210</code> from Cilium's <code>lan-pool</code>. Binds UDP and TCP on port <code>5514</code> to route incoming RFC 5424 syslog streams from edge firewalls (OPNsense) directly to the Elastic Agent DaemonSet for parsing into dedicated data stream <code>logs-pfsense.log-default</code>. See the comprehensive <a href="../../runbooks/opnsense-elk-siem-integration/">OPNsense Firewall &amp; Unbound DNS SIEM Integration Runbook</a> for full setup instructions, NAT duplicate logging prevention, and Unbound DNS logging parameters.</li>
+<li><strong>Cilium L4 LoadBalancer Ingress:</strong> Exposed via a dedicated Kubernetes Service (<code>kubernetes/observability/elastic-agent/service.yaml</code>) claiming static LAN VIP <code>10.0.0.210</code> from Cilium's <code>lan-pool</code> on UDP/TCP port <code>5514</code>.</li>
+<li><strong>Stateful Firewall Logging (<code>filterlog</code>):</strong> RFC 5424 structured syslog export capturing packet headers, ingress/egress interfaces (<code>vtnet0</code> WAN vs <code>vtnet1</code> LAN), source/destination IPs, transport protocols, and action decisions (Pass / Block).</li>
+<li><strong>NAT Duplicate Logging Prevention:</strong> Logging is enabled strictly on LAN/VLAN ingress rules to capture true internal origin IPs (<code>10.10.0.10</code>, <code>10.10.0.24</code>), while general WAN outbound pass rules have logging disabled to prevent redundant post-NAT (<code>10.0.2.2</code>) records.</li>
+<li><strong>Recursive DNS Query Auditing (<code>unbound</code>):</strong> Captures query and response telemetry (<code>Log Queries: ON</code>, <code>Log Replies: ON</code>, <code>Tag Queries: OFF</code>, <code>SERVFAIL: ON</code>) at Verbosity Level 1, extracting <code>dns.question.name</code>, <code>dns.question.type</code>, and return codes into Elastic Common Schema (ECS).</li>
+<li><strong>Detailed Runbook:</strong> See the <a href="../../runbooks/opnsense-elk-siem-integration/">OPNsense Firewall &amp; Unbound DNS SIEM Integration Runbook</a>.</li>
 </ul>
 <hr />
-<h3 id="6-elastic-autoops-cloud-connect-automated-cluster-monitoring">6. Elastic AutoOps Cloud Connect (Automated Cluster Monitoring)</h3>
-<p>To monitor cluster performance, shard allocation, and operational health against Elastic best practices, the cluster connects to <strong>Elastic AutoOps Cloud</strong>:
-* <strong>Deployment Model:</strong> Deployed via ArgoCD (<code>kubernetes/apps/autoops.yaml</code>) utilizing Kustomize (<code>kubernetes/observability/autoops/kustomization.yaml</code>) which references Elastic's upstream deployment directly from <code>elastic/autoops-install</code> (<code>autoops_agent_deployment.yaml</code>) alongside an <code>ExternalSecret</code> managing <code>autoops-secret</code> from Vault.
-* <strong>Self-Healing Liveness Probe:</strong> Applies a Kustomize patch adding a <code>livenessProbe</code> against <code>http://127.0.0.1:8888/metrics</code> (<code>libbeat_pipeline_clients{receiver="metricbeatreceiver"} [1-9]</code>) to verify the 9 embedded <code>autoops_es</code> Metricbeat input streams (<code>cat_shards</code>, <code>node_stats</code>, <code>tasks_management</code>, <code>cluster_health</code>, <code>cluster_settings</code>, <code>cat_template</code>, <code>component_template</code>, <code>index_template</code>, <code>license</code>) remain active and automatically restart the container if startup registration fails while Elasticsearch is restarting.</p>
+<h3 id="tier-2-enterprise-identity-active-directory-auditing-dc01">Tier 2: Enterprise Identity &amp; Active Directory Auditing (<code>dc01</code>)</h3>
+<p>Security auditing on the Primary Domain Controller (<code>dc01</code>, Windows Server 2025 Datacenter at <code>10.10.0.10</code>) is collected natively via Elastic Agent running as an automated Windows Service:</p>
+<div class="panzoom-box" data-key="alt" id="panzoom0" oncontextmenu="return false;">
+    <div class="panzoom-info-box panzoom-info-box-top">
+Hold "Alt" / "Option" to enable pan &amp; zoom
+</div>
+    <nav class="panzoom-nav panzoom-top-nav panzoom-nav-infobox-top">
+    <button class="panzoom-reset panzoom-button">
+    <svg class="panzoom-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M125.7 160l50.3 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L48 224c-17.7 0-32-14.3-32-32L16 64c0-17.7 14.3-32 32-32s32 14.3 32 32l0 51.2L97.6 97.6c87.5-87.5 229.3-87.5 316.8 0s87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3s-163.8-62.5-226.3 0L125.7 160z"></path>
+    </svg>
+</button><button class="panzoom-max panzoom-button">
+    <svg class="panzoom-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 32C14.3 32 0 46.3 0 64l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32 32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96z"></path>
+    </svg>
+</button><button class="panzoom-min panzoom-button panzoom-hidden">
+    <svg class="panzoom-icon" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+        <path d="M160 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c17.7 0 32-14.3 32-32l0-96zM32 320c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0 0 64c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32l-96 0zM352 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0 0-64zM320 320c-17.7 0-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-64 64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0z"></path>
+    </svg>
+</button>
+    </nav>
+    <pre class="mermaid"><code>sequenceDiagram
+    autonumber
+    participant User as Human User / Service
+    participant DC as dc01 (Windows Server 2025)
+    participant Agent as Elastic Agent (Windows Service)
+    participant Fleet as Fleet Server (fleet.lambertlab.us)
+    participant ES as Elasticsearch
+    participant SIEM as Elastic Security (Entity Store)
+
+    User-&gt;&gt;DC: Kerberos / NTLM Authentication Request
+    Note over DC: Windows Event Log records Event 4624 (Logon)&lt;br/&gt;or Event 4625 (Failed Logon).
+    Agent-&gt;&gt;DC: EvtSubscribe API pulls Security log real-time
+    Agent-&gt;&gt;DC: LDAPS query (Port 636) via svc_elastic every 15m
+    Note over DC: Queries users, computers, groups via LDAPS.&lt;br/&gt;Cleartext port 389 rejected per Win2025 security policy.
+    Agent-&gt;&gt;Fleet: Check-in &amp; sync policy updates (HTTPS 443)
+    Agent-&gt;&gt;ES: Bulk index into logs-system.security-* &amp; logs-entityanalytics_ad.*
+    ES-&gt;&gt;SIEM: Correlates user.name with internal client IP
+    SIEM--&gt;&gt;User: Visualized in User Logons &amp; Security Entity dashboards</code></pre> 
+    
+</div>
+<ul>
+<li><strong>Windows Event Log Ingestion (<code>EvtSubscribe</code>):</strong> Ingests security events directly from the Windows kernel without third-party log-scraping agents. Key Event IDs monitored include:</li>
+<li><strong>Event ID 4624:</strong> Successful Logon (captures <code>TargetUserName</code>, <code>LogonType</code>, <code>WorkstationName</code>, and client <code>IpAddress</code>).</li>
+<li><strong>Event ID 4625:</strong> Failed Authentication / Brute-Force Detection.</li>
+<li><strong>Event ID 4672:</strong> Administrative Privilege Assignment (Domain Admins / Special Logons).</li>
+<li><strong>Event ID 4634 / 4647:</strong> User Logoff and Session Destruction.</li>
+<li><strong>Event IDs 4720, 4726, 4738:</strong> User Account Management (Creation, Deletion, Attribute modification).</li>
+<li><strong>Event IDs 4728, 4732, 4756:</strong> Privileged Security Group Membership tampering.</li>
+<li><strong>Active Directory Entity Analytics over Secure LDAPS:</strong> Connects locally to <code>ldaps://dc01.ad.lambertlab.us:636</code> to index domain users, workstations, and security groups.</li>
+<li><em>Windows Server 2025 Hardening:</em> Enforces LDAPS on port 636; cleartext simple binds over port 389 are rejected by Windows Server 2025's hardened LDAP signing policies.</li>
+<li><em>Service Account:</em> Authenticates via dedicated read-only LDAP bind account <code>CN=svc_elastic,OU=Service Accounts,OU=LambertLab,DC=ad,DC=lambertlab,DC=us</code>, provisioned declaratively via Terraform and backed by HashiCorp Vault (<code>ad_svc_elastic_password</code>).</li>
+<li><strong>Detailed Runbook:</strong> See the <a href="../../runbooks/active-directory-siem-integration/">Active Directory &amp; Windows SIEM Integration Runbook</a>.</li>
+</ul>
 <hr />
-<h3 id="7-integrated-dashboards-discover-views">7. Integrated Dashboards &amp; Discover Views</h3>
-<p>Homelab telemetry streams into the <code>logs-*</code> and <code>metrics-*</code> data views in Kibana (<code>https://kibana.lambertlab.us</code>). The platform provides a comprehensive suite of pre-built and custom-integrated dashboards across perimeter security, cluster performance, host hygiene, and directory services:</p>
-<h4 id="a-curated-discover-views-saved-searches">A. Curated Discover Views &amp; Saved Searches</h4>
+<h3 id="tier-3-kubernetes-control-plane-node-telemetry">Tier 3: Kubernetes Control Plane &amp; Node Telemetry</h3>
+<ul>
+<li><strong>Per-Node Elastic Agent DaemonSet:</strong> Deployed via Helm chart <code>elastic-agent:9.5.6</code> (pinned image <code>9.3.2</code>) in <code>kubernetes/observability/elastic-agent/</code>.</li>
+<li><strong>Zero Container Log Duplication:</strong> Mounts <code>/var/log</code>, <code>/proc</code>, and <code>/sys</code> across all 4 cluster nodes (<code>optiplex</code>, <code>opti74</code>, <code>opti76</code>, <code>workstation</code>), simultaneously capturing host kernel events, systemd unit failures, and container pod logs.</li>
+<li><strong>Cluster Metrics:</strong> Embedded <code>kube-state-metrics</code> input monitors cluster CPU/memory allocation, Longhorn persistent volume capacity, API server request latencies, and pod restart loops.</li>
+</ul>
+<hr />
+<h3 id="tier-4-management-host-legacy-ingestion">Tier 4: Management Host &amp; Legacy Ingestion</h3>
+<ul>
+<li><strong>Docker GELF over Tailscale (Port 12201 UDP/TCP):</strong> The standalone management host (<code>lenovo</code>) runs administrative workloads and local Docker containers, streaming container <code>stdout</code>/<code>stderr</code> across the encrypted Tailscale mesh (<code>100.106.96.18:12201</code>) into ECK Logstash on <code>workstation</code>.</li>
+<li><strong>Zero Host Wear:</strong> Networked log streaming avoids local disk rotation thrashing on solid-state drives.</li>
+</ul>
+<hr />
+<h2 id="centralized-fleet-policy-matrix">🏛️ Centralized Fleet Policy Matrix</h2>
+<p>Elastic Agent configurations are managed centrally in Kibana via Fleet Agent Policies without editing configuration files on target hosts:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Policy Name</th>
+<th style="text-align: left;">Target Host / Workload</th>
+<th style="text-align: left;">Associated Integrations</th>
+<th style="text-align: left;">Output Destination</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong><code>Elastic Agent on ECK Policy</code></strong></td>
+<td style="text-align: left;">4-Node Kubernetes Cluster (<code>optiplex</code>, <code>opti74</code>, <code>opti76</code>, <code>workstation</code>)</td>
+<td style="text-align: left;">• <strong><code>pfsense</code></strong>: Port <code>5514</code> UDP syslog input<br>• <strong><code>system</code></strong>: Host OS logs (<code>auth</code>, <code>syslog</code>) &amp; metrics<br>• <strong><code>kubernetes</code></strong>: Pod container logs &amp; <code>kube-state-metrics</code></td>
+<td style="text-align: left;"><code>elasticsearch</code> (In-Cluster ECK mTLS)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>Windows - Active Directory Domain Controller Policy</code></strong></td>
+<td style="text-align: left;"><code>dc01</code> (Windows Server 2025 Datacenter - <code>10.10.0.10</code>)</td>
+<td style="text-align: left;">• <strong><code>windows</code></strong>: Event logs (<code>Security</code>, <code>System</code>, <code>Application</code>)<br>• <strong><code>system</code></strong>: Windows system performance metrics<br>• <strong><code>entityanalytics_ad</code></strong>: LDAPS entity sync via <code>svc_elastic</code></td>
+<td style="text-align: left;"><code>elasticsearch</code> (Traefik Ingress HTTPS)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="storage-lifecycle-engineering-the-single-node-ilm-invariant">💾 Storage &amp; Lifecycle Engineering: The Single-Node ILM Invariant</h2>
+<p>Elasticsearch runs as a dedicated single-node instance on <code>workstation</code> local NVMe storage (<code>/home/chris/services/elasticsearch/data</code> bound via PV <code>elasticsearch-data-pv</code>).</p>
+<div class="admonition danger">
+<p class="admonition-title">Crucial Single-Node Elasticsearch Cluster Health Rule</p>
+<p>In a single-node cluster (configured with <code>discovery.type=single-node</code>), Elasticsearch refuses to allocate replica shards on the same physical node as primary shards. If any index template specifies <code>number_of_replicas &gt;= 1</code>, replica shards remain permanently unassigned and cluster health degrades to <strong><code>YELLOW</code></strong>.</p>
+<p>When cluster status is Yellow, Elasticsearch <strong>Index Lifecycle Management (ILM)</strong> pauses or refuses to advance indices from Hot to Warm, Cold, or Delete phases, eventually exhausting physical NVMe storage.</p>
+<p><strong>Homelab Invariant:</strong> All data streams and index templates MUST explicitly enforce <code>number_of_replicas: 0</code> (<code>shards [1]/[0]</code>). This preserves solid <strong><code>GREEN</code></strong> cluster status and guarantees automated rollover, compression, and pruning operate without human intervention.</p>
+</div>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">"index"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">"number_of_shards"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">"number_of_replicas"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">"refresh_interval"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5s"</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="automated-data-stream-ilm-mapping">Automated Data Stream ILM Mapping</h3>
+<p>Every active data stream inherits <code>number_of_replicas: 0</code> and its assigned retention schedule through global <code>@custom</code> component templates:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Data Stream Family</th>
+<th style="text-align: left;">Matching Pattern</th>
+<th style="text-align: left;">Assigned ILM Policy</th>
+<th style="text-align: left;">Retention Schedule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Edge Firewall &amp; DNS</strong></td>
+<td style="text-align: left;"><code>logs-pfsense.*</code></td>
+<td style="text-align: left;"><code>System-Logs-Reteniton-Policy</code></td>
+<td style="text-align: left;">Hot (1 day / 5 GB) → Warm (2 days) → Delete (3 days post-rollover)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Active Directory Security</strong></td>
+<td style="text-align: left;"><code>logs-system.security-*</code>, <code>logs-windows.*</code></td>
+<td style="text-align: left;"><code>System-Logs-Reteniton-Policy</code></td>
+<td style="text-align: left;">Hot (1 day / 5 GB) → Warm (2 days) → Delete (3 days post-rollover)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Directory Entity State</strong></td>
+<td style="text-align: left;"><code>logs-entityanalytics_ad.*</code></td>
+<td style="text-align: left;"><code>System-Logs-Reteniton-Policy</code></td>
+<td style="text-align: left;">Hot (1 day / 5 GB) → Warm (2 days) → Delete (3 days post-rollover)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Host &amp; Windows Metrics</strong></td>
+<td style="text-align: left;"><code>metrics-system.*</code>, <code>metrics-windows.*</code></td>
+<td style="text-align: left;"><code>Metrics-Retention-Policy</code></td>
+<td style="text-align: left;">Hot (1 day / 5 GB) → Warm (2 days) → Delete (7 days post-rollover)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Cluster Container Logs</strong></td>
+<td style="text-align: left;"><code>logs-kubernetes.*</code>, <code>logstash-*</code></td>
+<td style="text-align: left;"><code>System-Logs-Reteniton-Policy</code></td>
+<td style="text-align: left;">Hot (1 day / 5 GB) → Warm (2 days) → Delete (3 days post-rollover)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="integrated-siem-dashboards-discover-views">📈 Integrated SIEM Dashboards &amp; Discover Views</h2>
+<p>Homelab telemetry streams into the <code>logs-*</code> and <code>metrics-*</code> data views in Kibana (<code>https://kibana.lambertlab.us</code>). The platform provides a curated suite of operational and security dashboards:</p>
+<h3 id="1-curated-discover-views-saved-searches">1. Curated Discover Views &amp; Saved Searches</h3>
 <table>
 <thead>
 <tr>
@@ -1727,42 +1983,27 @@ Allocating a 3Gi memory limit ensures smooth visual aggregation and uninterrupte
 <td style="text-align: left;"><code>kubernetes.namespace</code>, <code>kubernetes.pod.name</code>, <code>kubernetes.container.name</code>, <code>message</code></td>
 <td style="text-align: left;">Instant detection of crashing or restarting cluster workloads.</td>
 </tr>
-<tr>
-<td style="text-align: left;"><strong>Longhorn Storage Alerts</strong></td>
-<td style="text-align: left;"><code>kubernetes.namespace: "longhorn-system" and (log.level: ("error" or "warning") or message: ("failed" or "degraded" or "timeout"))</code></td>
-<td style="text-align: left;"><code>kubernetes.pod.name</code>, <code>log.level</code>, <code>message</code></td>
-<td style="text-align: left;">Storage engine alerts, degraded replicas, and detachments.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>Traefik Ingress 5xx</strong></td>
-<td style="text-align: left;"><code>kubernetes.namespace: "kube-system" and (message: (" 500 " or " 502 " or " 503 " or " 504 ") or log.level: "error")</code></td>
-<td style="text-align: left;"><code>kubernetes.pod.name</code>, <code>message</code></td>
-<td style="text-align: left;">Reverse proxy backend connection and gateway errors.</td>
-</tr>
 </tbody>
 </table>
-<h4 id="b-integrated-production-dashboards">B. Integrated Production Dashboards</h4>
+<hr />
+<h3 id="2-integrated-production-dashboards">2. Integrated Production Dashboards</h3>
 <ul>
-<li><strong>Perimeter &amp; Firewall Intelligence (<code>pfsense</code>):</strong></li>
+<li><strong>Perimeter &amp; Network Intelligence (<code>pfsense</code>):</strong></li>
 <li><code>Firewall - Dashboard [pfSense]</code>: Real-time allow/block distributions, transport protocol splits (TCP/UDP/ICMP), and geographic source/destination heatmaps.</li>
 <li><code>Unbound - Dashboard [pfSense]</code>: Recursive DNS resolver query latency, top requested domain names, query types (<code>A</code>, <code>AAAA</code>, <code>TXT</code>), and response codes.</li>
-<li><code>DHCP - Dashboard [pfSense]</code>: Dynamic lease pools, client MAC addresses, and IP allocation timelines.</li>
+<li><code>DHCP - Dashboard [pfSense]</code>: Dynamic lease allocations and hardware MAC address mapping.</li>
+<li><strong>Active Directory &amp; Identity Intelligence (Windows Server 2025):</strong></li>
+<li><code>[System Windows Security] User Logons</code>: Event ID 4624 logon monitoring, interactive vs network logon types, authenticating workstations, and user session timelines.</li>
+<li><code>[System Windows Security] Failed and Blocked Accounts</code>: Event ID 4625 brute-force detection, bad passwords, and account lockout alerts.</li>
+<li><code>[System Windows Security] User Management Events</code>: User account creation, modification, and deletion auditing (Event IDs 4720, 4726, 4738).</li>
+<li><code>[System Windows Security] Group Management Events</code>: Security group membership additions and domain administrative privilege escalations (Event IDs 4728, 4732).</li>
+<li><code>[Logs System Windows Security] Directory &amp; Account Monitoring</code>: Privileged logon tracking, Kerberos TGT/TGS ticket requests, and domain security changes.</li>
 <li><strong>Kubernetes Cluster &amp; Storage Telemetry (<code>kube-state-metrics</code>):</strong></li>
 <li><code>[Metrics Kubernetes] Cluster Overview</code>: Global cluster capacity, CPU/memory saturation, and node readiness states.</li>
 <li><code>[Metrics Kubernetes] PV/PVC</code> &amp; <code>[Metrics Kubernetes] Volumes</code>: Real-time storage consumption across Longhorn distributed volumes and local-path storage claims.</li>
 <li><code>[Metrics Kubernetes] Nodes</code> &amp; <code>Pods</code>: Deep per-node kubelet memory pressure, CPU throttling rates, and container restart counters.</li>
-<li><code>[Metrics Kubernetes] API server</code> &amp; <code>Controller Manager</code>: Control plane API request latency, queue depth, and admission webhook health.</li>
 <li><strong>Physical Host OS &amp; Hardware Performance (<code>metrics-system.*</code>):</strong></li>
-<li><code>[Metrics System] Host overview</code>: Time-series metrics for physical nodes (<code>workstation</code>, <code>optiplex</code>, <code>opti74</code>, <code>opti76</code>, <code>lenovo</code>) tracking per-core CPU loads, memory buffer/cached ratios, network interface throughput (RX/TX), and disk IOPS.</li>
-<li><strong>Host Security &amp; Administrative Auditing (<code>logs-system.*</code>):</strong></li>
-<li><code>[Logs System] Sudo commands</code>: Audit log tracking who executed <code>sudo</code>, the target binary, and execution exit codes.</li>
-<li><code>[Logs System] SSH login attempts</code>: Global geographic map of incoming SSH attempts and failed brute-force usernames.</li>
-<li><code>[Logs System] Syslog dashboard</code>: Aggregated systemd service crashes, kernel ring buffer events, and host reboot logs.</li>
-<li><strong>Active Directory &amp; Identity Monitoring (<code>logs-system.*</code> / Windows Security):</strong></li>
-<li><code>[System Windows Security] User Logons</code>: Event ID 4624 logon monitoring, logon types (interactive vs network), and user session tracking.</li>
-<li><code>[System Windows Security] Failed and Blocked Accounts</code>: Event ID 4625 brute-force detection and account lockout alerts.</li>
-<li><code>[System Windows Security] User Management Events</code>: User account creation, modification, and deletion auditing (Event IDs 4720/4726/4738).</li>
-<li><code>[System Windows Security] Group Management Events</code>: Security group membership additions and domain administrative privilege escalations.</li>
+<li><code>[Metrics System] Host overview</code>: Time-series metrics for physical nodes (<code>workstation</code>, <code>optiplex</code>, <code>opti74</code>, <code>opti76</code>, <code>dc01</code>) tracking CPU loads, memory buffer/cached ratios, network interface throughput (RX/TX), and disk IOPS.</li>
 </ul>
 
 

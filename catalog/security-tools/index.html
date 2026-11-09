@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -952,10 +952,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-centralized-elastic-stack-elastic-agent" class="md-nav__link">
+  <a href="#4-centralized-elastic-stack-elastic-agent-enterprise-siem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Centralized Elastic Stack &amp; Elastic Agent
+        4. Centralized Elastic Stack &amp; Elastic Agent (Enterprise SIEM)
       
     </span>
   </a>
@@ -1295,6 +1295,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../runbooks/active-directory-siem-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory & Windows SIEM Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../runbooks/disaster-recovery/" class="md-nav__link">
         
   
@@ -1423,10 +1451,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-centralized-elastic-stack-elastic-agent" class="md-nav__link">
+  <a href="#4-centralized-elastic-stack-elastic-agent-enterprise-siem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Centralized Elastic Stack &amp; Elastic Agent
+        4. Centralized Elastic Stack &amp; Elastic Agent (Enterprise SIEM)
       
     </span>
   </a>
@@ -1561,21 +1589,22 @@
 <li>Synchronizes Entra ID group claims into headers for downstream application RBAC.</li>
 </ul>
 <hr />
-<h3 id="4-centralized-elastic-stack-elastic-agent">4. Centralized Elastic Stack &amp; Elastic Agent</h3>
+<h3 id="4-centralized-elastic-stack-elastic-agent-enterprise-siem">4. Centralized Elastic Stack &amp; Elastic Agent (Enterprise SIEM)</h3>
 <ul>
 <li><strong>Host Environment:</strong> Kubernetes <code>observability</code> (ECK Operator-managed Elasticsearch, Logstash, Kibana on <code>workstation</code>) &amp; <code>kube-system</code> (Elastic Agent DaemonSet)</li>
 <li><strong>Sync Waves:</strong> <code>Wave 5</code> (ECK Operator), <code>Wave 6</code> (Elasticsearch Cluster), <code>Wave 7</code> (Kibana, Logstash, Fleet Server), <code>Wave 9</code> (Elastic Agent DaemonSet)</li>
 <li><strong>Ingress Endpoints:</strong> <code>https://kibana.lambertlab.us</code>, <code>https://fleet.lambertlab.us</code>, <code>https://es.lambertlab.us</code> (Logstash on <code>:12201</code> GELF)</li>
-<li><strong>Architectural Role:</strong> Production-level Security Information and Event Management (SIEM) and log analytics pipeline.</li>
+<li><strong>Architectural Role:</strong> Production-level Security Information and Event Management (SIEM), identity entity analytics, and distributed telemetry pipeline.</li>
 <li><strong>Storage Backend:</strong> Dedicated local NVMe storage (<code>/home/chris/services/elasticsearch/data</code>) on <code>workstation</code>.</li>
 <li><strong>Key Configuration:</strong></li>
-<li>Single-node cluster enforcing <code>number_of_replicas: 0</code> across templates to maintain solid green health and prevent Index Lifecycle Management (ILM) stalls.</li>
-<li>Docker GELF input on port 12201 (UDP/TCP) streaming container logs over Tailscale from all physical nodes.</li>
-<li>Elastic Agent DaemonSet deployed in <code>kube-system</code> streaming Kubernetes node, container, and pod telemetry.</li>
-<li>Logstash mutate filter recording exact receipt timestamps (<code>received_at =&gt; "%{@timestamp}"</code>).</li>
-<li>Kibana deployed via Elastic Cloud on Kubernetes (ECK) operator in <code>observability</code>, pulling secure settings (<code>elasticsearch.password</code>, encryption keys) from HashiCorp Vault via External Secrets Operator.</li>
-<li>Kibana tuned with <code>NODE_OPTIONS=--max-old-space-size=2048</code> to prevent V8 JavaScript heap exhaustion during complex visual log queries.</li>
-<li>Traefik Ingress with <code>default-admin-only-access</code> security middleware.</li>
+<li><strong>Single-Node ILM Invariant:</strong> Single-node cluster enforcing <code>number_of_replicas: 0</code> (<code>shards [1]/[0]</code>) via <code>logs@custom</code> and <code>metrics@custom</code> to preserve solid <code>GREEN</code> cluster health and prevent Index Lifecycle Management (ILM) stalls.</li>
+<li><strong>Perimeter Firewall &amp; DNS Telemetry:</strong> Dedicated Cilium L4 LoadBalancer VIP <code>10.0.0.210:5514</code> (UDP/TCP) in <code>kubernetes/observability/elastic-agent/service.yaml</code> ingesting RFC 5424 structured syslog from OPNsense (<code>filterlog</code> and <code>unbound</code>), enriched with automated MaxMind GeoIP and ASN mappings.</li>
+<li><strong>Active Directory &amp; Identity Ingestion (<code>dc01</code>):</strong> Native Windows Service Elastic Agent running on Windows Server 2025 Datacenter (<code>10.10.0.10</code>), ingesting kernel security events (<code>4624</code>, <code>4625</code>, <code>4672</code>, <code>4634</code>, <code>4720</code>, <code>4728</code>) and synchronizing domain users/devices via LDAPS (Port 636) with service account <code>svc_elastic</code>.</li>
+<li><strong>Docker Container Telemetry:</strong> Logstash GELF input on port 12201 (UDP/TCP) streaming container logs over Tailscale from standalone hosts (<code>lenovo</code>).</li>
+<li><strong>Cluster DaemonSet:</strong> Elastic Agent DaemonSet deployed in <code>kube-system</code> streaming Kubernetes node, container pod logs, and <code>kube-state-metrics</code>.</li>
+<li><strong>Curated SIEM Dashboards:</strong> Pre-staged official and custom dashboards including <code>Firewall - Dashboard [pfSense]</code>, <code>Unbound - Dashboard [pfSense]</code>, <code>[System Windows Security] User Logons</code>, <code>Failed and Blocked Accounts</code>, <code>User &amp; Group Management Events</code>, and <code>[Metrics System] Host overview</code>.</li>
+<li><strong>Kibana Memory Optimization:</strong> Tuned with <code>NODE_OPTIONS=--max-old-space-size=2048</code> and resource limits to prevent V8 JavaScript heap exhaustion during complex visual log queries.</li>
+<li><strong>Traefik Ingress:</strong> Secured with <code>default-admin-only-access</code> security middleware.</li>
 </ul>
 <hr />
 <h3 id="5-homarr-dashboard">5. Homarr Dashboard</h3>
