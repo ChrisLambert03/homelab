@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -749,6 +749,17 @@
     <span class="md-ellipsis">
       
         3. Virtual Drive Sharing Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-freerdp-nla-handshake-filesystem-writability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. FreeRDP NLA Handshake &amp; Filesystem Writability
       
     </span>
   </a>
@@ -1506,6 +1517,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#4-freerdp-nla-handshake-filesystem-writability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. FreeRDP NLA Handshake &amp; Filesystem Writability
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1673,6 +1695,8 @@ With CoreDNS conditional forwarding (<code>ad.lambertlab.us</code> -&gt; <code>1
 </span></code></pre></div>
 <h3 id="3-virtual-drive-sharing-permissions">3. Virtual Drive Sharing Permissions</h3>
 <p>When enabling RDP virtual drive redirection (allowing users to upload/download files to VMs through the browser), the drive path must be set to <code>/tmp</code> (not <code>/var/lib/guacamole</code>). Because <code>guacd</code> runs as an unprivileged container user, using <code>/tmp</code> ensures proper Linux write permissions for drag-and-drop file transfers.</p>
+<h3 id="4-freerdp-nla-handshake-filesystem-writability">4. FreeRDP NLA Handshake &amp; Filesystem Writability</h3>
+<p>Upstream Helm chart releases (v1.7.0+) enforce <code>readOnlyRootFilesystem: true</code> on the <code>guacd</code> container by default. However, FreeRDP requires write permissions to its home directory (<code>/home/guacd/.config/freerdp/</code>) during RDP Network Level Authentication (NLA) negotiation to store ephemeral TLS certificates and <code>known_hosts</code> fingerprints. Because the upstream chart does not expose a volume mount block for <code>guacd</code>, <code>guacd.securityContext.readOnlyRootFilesystem</code> is explicitly set to <code>false</code> in <code>values.yaml</code> to prevent NLA security negotiation failures.</p>
 
 
 
