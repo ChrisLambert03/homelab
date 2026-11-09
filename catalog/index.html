@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1614,6 +1614,14 @@
 <td style="text-align: left;">ArgoCD Helm (Wave 5)</td>
 <td style="text-align: left;">In-Cluster Host DaemonSet</td>
 <td style="text-align: left;">Ephemeral DaemonSet</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Elastic Agent Syslog VIP</strong></td>
+<td style="text-align: left;">SIEM / Logging</td>
+<td style="text-align: left;"><code>kube-system</code></td>
+<td style="text-align: left;">ArgoCD Manifest (Wave 9)</td>
+<td style="text-align: left;"><code>10.0.0.210:5514</code> (UDP/TCP)</td>
+<td style="text-align: left;">Cilium LoadBalancer (<code>lan-pool</code>)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>ECK Operator</strong></td>
