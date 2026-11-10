@@ -9,7 +9,7 @@ metadata:
     app: sonarr
 spec:
   # Single replica deployment
-  replicas: 0
+  replicas: 1
   revisionHistoryLimit: 3
   # Strategy MUST be Recreate because the configuration volume uses iSCSI (ReadWriteOnce).
   # A rolling update would hang because the new pod cannot mount the iSCSI target
