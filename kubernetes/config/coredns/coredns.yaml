@@ -28,6 +28,11 @@ data:
             ttl 30
         }
         prometheus :9153
+        template IN ANY lambertlab.us {
+            match "^(?P<host>[a-zA-Z0-9-_]+)\.lambertlab\.us\.$"
+            answer "{{ .Name }} 30 IN CNAME traefik.kube-system.svc.cluster.local."
+            fallthrough
+        }
         forward . /etc/resolv.conf {
             max_concurrent 1000
         }
