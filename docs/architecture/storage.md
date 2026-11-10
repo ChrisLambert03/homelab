@@ -38,7 +38,7 @@ graph TD
 | **Tier 1: SAN iSCSI** | iSCSI Block Targets | TerraMaster F4-425 Plus (`san.lambertlab.us`) | KubeVirt VM boot disks (`win11`, `dc01`, `opnsense`) & Media SQLite DBs (`sonarr`, `radarr`, `prowlarr`) | Lowest latency (< 2ms random I/O), direct block access, bypasses overlay filesystem overhead |
 | **Tier 2: Distributed Block** | Longhorn CSI | Multi-Node Cluster NVMe/SSDs | State-backed cluster pods (PostgreSQL, Vault, Ntfy, Palworld) | Synchronous 2-3x cross-node replication, automated CSI volume snapshots, `longhorn-retain` policy |
 | **Tier 3: Bulk Network File** | NFSv4 Pools | TerraMaster F4-425 Plus (`nas.lambertlab.us`) | Media libraries (`/Volume1/data`), ISO repositories (`/Volume3/isos`), VirtIO drivers | High-capacity bulk throughput, multi-client read/write sharing (ReadWriteMany) |
-| **Tier 4: Local NVMe** | Direct Host Filesystem / Local PV | `workstation` & `lenovo` Host Disks | Kubernetes Elastic Stack indices (`elasticsearch-data-pv`), Jellyfin config/transcode cache, Homarr appdata | Extreme write IOPs, zero network latency |
+| **Tier 4: Local NVMe** | Direct Host Filesystem / Local PV | `workstation` & `lenovo` Host Disks | Kubernetes Elastic Stack indices (`elasticsearch-data-pv`), Jellyfin transcode cache, local Docker runtimes | Extreme write IOPs, zero network latency |
 
 ---
 
@@ -55,7 +55,7 @@ Virtual machines and latency-sensitive media databases require dedicated, high-p
   * `iqn.2026-06.us.lambertlab:radarr-config` (LUN 0, 20 GiB) - Radarr movie database & configs
   * `iqn.2026-06.us.lambertlab:prowlarr-config` (LUN 0, 2 GiB) - Prowlarr indexer database & configs
 * **Direct Line-Rate Flashing:** By using `qemu-img convert` with native `libiscsi` user-space drivers, master OS templates are written directly into LUNs at full line rate without needing intermediate 64GB Longhorn scratch volumes or triggering HTTP ingress proxy timeouts.
-* **Initiator Resilience & Error Recovery (`open-iscsi`):** To prevent kernel I/O aborts, guest VM crashes, and ext4 `emergency_ro` journal locks during transient network blips or NAS reboots, all cluster nodes (`lenovo`, `optiplex`, `opti74`, `workstation`) configure hardened initiator timeouts via `ansible/configure-iscsi.yml`:
+* **Initiator Resilience & Error Recovery (`open-iscsi`):** To prevent kernel I/O aborts, guest VM crashes, and ext4 `emergency_ro` journal locks during transient network blips or NAS reboots, all cluster nodes (`opti74`, `opti76`, `optiplex`, `workstation`, and management host `lenovo`) configure hardened initiator timeouts via `ansible/configure-iscsi.yml`:
   * `node.session.timeo.replacement_timeout = 300`: Pauses I/O queues and permits up to 5 minutes of network reconnection grace time before declaring SCSI block devices offline.
   * `node.conn[0].timeo.noop_out_interval = 5`: Transmits NOP-Out pings every 5 seconds for rapid socket drop detection.
   * `node.conn[0].timeo.noop_out_timeout = 5`: Bounded 5-second socket timeout triggering proactive TCP session recovery.

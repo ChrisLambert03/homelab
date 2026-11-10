@@ -168,6 +168,7 @@ sequenceDiagram
 * **Active Directory Entity Analytics over Secure LDAPS:** Connects locally to `ldaps://dc01.ad.lambertlab.us:636` to index domain users, workstations, and security groups.
   * *Windows Server 2025 Hardening:* Enforces LDAPS on port 636; cleartext simple binds over port 389 are rejected by Windows Server 2025's hardened LDAP signing policies.
   * *Service Account:* Authenticates via dedicated read-only LDAP bind account `CN=svc_elastic,OU=Service Accounts,OU=LambertLab,DC=ad,DC=lambertlab,DC=us`, provisioned declaratively via Terraform and backed by HashiCorp Vault (`ad_svc_elastic_password`).
+* **Endpoint Protection & EDR (Elastic Defend on `win11-01`):** User endpoints run the Elastic Agent with **Elastic Defend** (`endpoint`) providing deep EDR visibility and malware prevention. It instruments kernel process execution (`endpoint.events.process`), DLL library injections (`endpoint.events.library`), filesystem events (`endpoint.events.file`), and socket-level network attribution (`endpoint.events.network`), feeding real-time telemetry into Kibana Security SIEM detection rules and interactive visual process trees.
 * **Detailed Runbook:** See the [Active Directory & Windows SIEM Integration Runbook](../runbooks/active-directory-siem-integration.md).
 
 ---
@@ -193,6 +194,7 @@ Elastic Agent configurations are managed centrally in Kibana via Fleet Agent Pol
 | :--- | :--- | :--- | :--- |
 | **`Elastic Agent on ECK Policy`** | 4-Node Kubernetes Cluster (`optiplex`, `opti74`, `opti76`, `workstation`) | • **`pfsense`**: Port `5514` UDP syslog input<br>• **`system`**: Host OS logs (`auth`, `syslog`) & metrics<br>• **`kubernetes`**: Pod container logs & `kube-state-metrics` | `elasticsearch` (In-Cluster ECK mTLS) |
 | **`Windows - Active Directory Domain Controller Policy`** | `dc01` (Windows Server 2025 Datacenter - `10.10.0.10`) | • **`windows`**: Event logs (`Security`, `System`, `Application`)<br>• **`system`**: Windows system performance metrics<br>• **`entityanalytics_ad`**: LDAPS entity sync via `svc_elastic` | `elasticsearch` (Traefik Ingress HTTPS) |
+| **`Windows - Workstation Policy`** | `win11-01` (Windows 11 Pro Desktop) | • **`endpoint` (Elastic Defend)**: Kernel EDR telemetry, malware prevention, SIEM process trees<br>• **`windows`**: Event logs (`Security`, `System`, `PowerShell Operational`, `Defender`, `AppLocker`)<br>• **`system`**: Host performance & resource metrics | `elasticsearch` (Traefik Ingress HTTPS) |
 
 ---
 

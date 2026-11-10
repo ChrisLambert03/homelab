@@ -87,6 +87,8 @@ nav:
       - Media & Home Automation: catalog/media-automation.md
       - Security & Productivity Tools: catalog/security-tools.md
   - Operational Runbooks:
+      - OPNsense KubeVirt ISO Bootstrap & State Recovery SOP: runbooks/opnsense-iso-bootstrap.md
+      - Windows 11 Workstation Provisioning & Sysprep Automation SOP: runbooks/windows-vm-provisioning.md
       - Kubernetes HA Control Plane & Node Upgrade SOP: runbooks/kubeadm-control-plane-upgrade.md
       - Control Plane Node Decommissioning & Retirement SOP: runbooks/control-plane-node-retirement.md
       - Bridge Self-Healing Watchdog (Legacy): runbooks/bridge-watchdog.md

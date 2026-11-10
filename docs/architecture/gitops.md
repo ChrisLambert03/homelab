@@ -8,7 +8,7 @@ Root application orchestration follows the **App-of-Apps** pattern (`root-apps`)
 
 ## ⚡ High-Availability Controller Architecture
 
-ArgoCD is deployed in full **High Availability (HA)** mode across the 3-node control plane quorum (`lenovo`, `optiplex`, `opti74`):
+ArgoCD is deployed in full **High Availability (HA)** mode across the 3-node control plane quorum (`opti74`, `opti76`, `optiplex`):
 
 1. **Redis Sentinel Clustering:** Multi-replica Redis state cache with automated master failover.
 2. **Controller Sharding:** Active-active application controller replicas distribute sync loops and health evaluation pipelines evenly across nodes.

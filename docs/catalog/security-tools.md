@@ -55,6 +55,7 @@ This section documents secrets orchestration, centralized Security Information a
   * **Single-Node ILM Invariant:** Single-node cluster enforcing `number_of_replicas: 0` (`shards [1]/[0]`) via `logs@custom` and `metrics@custom` to preserve solid `GREEN` cluster health and prevent Index Lifecycle Management (ILM) stalls.
   * **Perimeter Firewall & DNS Telemetry:** Dedicated Cilium L4 LoadBalancer VIP `10.0.0.210:5514` (UDP/TCP) in `kubernetes/observability/elastic-agent/service.yaml` ingesting RFC 5424 structured syslog from OPNsense (`filterlog` and `unbound`), enriched with automated MaxMind GeoIP and ASN mappings.
   * **Active Directory & Identity Ingestion (`dc01`):** Native Windows Service Elastic Agent running on Windows Server 2025 Datacenter (`10.10.0.10`), ingesting kernel security events (`4624`, `4625`, `4672`, `4634`, `4720`, `4728`) and synchronizing domain users/devices via LDAPS (Port 636) with service account `svc_elastic`.
+  * **Workstation Endpoint Security (EDR & Malware Prevention):** Native Elastic Agent and Elastic Defend (`endpoint-9.3.2`) running on Windows 11 (`win11-01`), streaming kernel process execution trees, DLL injection hooks, network socket attributions, and signatureless malware prevention into Kibana Security (`logs-endpoint.*`).
   * **Docker Container Telemetry:** Logstash GELF input on port 12201 (UDP/TCP) streaming container logs over Tailscale from standalone hosts (`lenovo`).
   * **Cluster DaemonSet:** Elastic Agent DaemonSet deployed in `kube-system` streaming Kubernetes node, container pod logs, and `kube-state-metrics`.
   * **Curated SIEM Dashboards:** Pre-staged official and custom dashboards including `Firewall - Dashboard [pfSense]`, `Unbound - Dashboard [pfSense]`, `[System Windows Security] User Logons`, `Failed and Blocked Accounts`, `User & Group Management Events`, and `[Metrics System] Host overview`.
@@ -69,7 +70,7 @@ This section documents secrets orchestration, centralized Security Information a
 * **Sync Wave:** `Wave 8`
 * **Ingress Endpoint:** `https://homarr.lambertlab.us`
 * **Architectural Role:** Customizable homelab landing portal and application launcher.
-* **Storage Backend:** Local host storage on `lenovo` (`/home/chris/services/homarr/homarr/appdata` via `hostPath`).
+* **Storage Backend:** Distributed Longhorn Block Storage (`homarr-data` PVC, 2 GiB).
 * **Key Configuration:**
   * Displays real-time operational status and ping health across all cluster services.
   * Secured via Traefik HTTPS termination using the cluster-wide default TLSStore.

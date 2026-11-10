@@ -58,7 +58,7 @@ Workloads are logically grouped into four functional categories:
 | **Elastic Agent (Windows DC01)** | SIEM / Identity | `vms` (`dc01`) | Native Windows Service | `10.10.0.10` (LDAPS :636) | Windows Host Service |
 | **Elastic Agent Syslog VIP** | SIEM / Logging | `observability` | ArgoCD Manifest (Wave 9) | `10.0.0.210:5514` (UDP/TCP) | Cilium LoadBalancer (`lan-pool`) |
 | **ECK Operator** | Infrastructure | `observability` | ArgoCD Helm (Wave 1) | In-Cluster Operator API | Ephemeral Controller |
-| **Homarr Dashboard** | Observability | `observability` | ArgoCD Manifest (Wave 3) | `homarr.lambertlab.us` | Local Host Storage (`lenovo`) |
+| **Homarr Dashboard** | Observability | `observability` | ArgoCD Manifest (Wave 8) | `homarr.lambertlab.us` | Longhorn Distributed Storage (2 GiB) |
 | **Ntfy Notifications** | Observability | `observability` | ArgoCD Manifest (Wave 3) | `ntfy.lambertlab.us` | Longhorn Retained Volume (1Gi) |
 | **Beszel Hub & Agents** | Observability | `lenovo` (Hub) / Nodes | Terraform Docker | `beszel.lambertlab.us` | Local Docker Volume |
 | **Pi-hole** | Security | `external` / Docker | ExternalName & Ingress | `pihole.lambertlab.us` | Local Docker Volume |

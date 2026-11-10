@@ -11,8 +11,8 @@ spec:
     namespace: media
     name: sonarr-iscsi-pvc
   capacity:
-    # Matches the exact 20 GB LUN created on the Terramaster NAS
-    storage: 20G
+    # Matches the 10 GB LUN created on the Terramaster NAS Volume 4
+    storage: 10G
   volumeMode: Filesystem
   # ReadWriteOnce is required because iSCSI targets can only be mounted by one node at a time
   accessModes:
@@ -38,6 +38,6 @@ spec:
   volumeName: sonarr-iscsi-pv
   resources:
     requests:
-      storage: 20G
+      storage: 10G
   # Empty string storageClassName disables dynamic provisioning and enforces static binding
   storageClassName: ""

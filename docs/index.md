@@ -6,11 +6,11 @@ Welcome to the central technical documentation and operational engineering knowl
 
 ## 🚀 Core Architectural Highlights
 
-**LambertLab** operates as a bare-metal, high-availability Kubernetes cluster running upstream vanilla **Kubernetes v1.37.1**. While initially bootstrapped as a lightweight K3s distribution during early platform iterations, the infrastructure was subsequently reconstructed into an enterprise-grade pure vanilla Kubernetes cluster initialized and joined via **`kubeadm`**.
+**LambertLab** operates as a bare-metal, high-availability Kubernetes cluster running upstream vanilla **Kubernetes v1.37.2**. While initially bootstrapped as a lightweight K3s distribution during early platform iterations, the infrastructure was subsequently reconstructed into an enterprise-grade pure vanilla Kubernetes cluster initialized and joined via **`kubeadm`**.
 
 The cluster topology is engineered around clean, modular infrastructure layers:
 
-- **Control Plane Quorum & Virtual IP:** Stacked **etcd** consensus distributed across a 3-node control plane quorum (`lenovo`, `optiplex`, `opti74`) with **`kube-vip`** providing virtual IP failover (`10.0.0.201:6443`).
+- **Control Plane Quorum & Virtual IP:** Stacked **etcd** consensus distributed across a 3-node control plane quorum (`opti74`, `opti76`, `optiplex`) with **`kube-vip`** providing virtual IP failover (`10.0.0.201:6443`).
 - **Primary eBPF CNI & Routing:** **Cilium** running in pure eBPF mode, replacing `kube-proxy` for high-throughput pod routing, kernel-level network policies, and Layer 2 service IP announcement pools (`10.0.0.202-215`).
 - **Edge Ingress Controller:** **Traefik** deployed as a cluster-wide DaemonSet handling HTTP/HTTPS edge ingress with automated wildcard TLS (`*.lambertlab.us`) and two-tier zero-trust IP allowlisting middlewares.
 - **Secondary Virtualization CNI:** **Kube-OVN** operating via **Multus** meta-CNI as a dedicated secondary network, providing an isolated Software-Defined Layer 2 Geneve overlay VPC (`ovn-ad-vpc`, `10.10.0.0/24`) for KubeVirt virtual machines and dual-homed containers.

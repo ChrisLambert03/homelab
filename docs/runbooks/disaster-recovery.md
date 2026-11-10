@@ -10,8 +10,8 @@ Following a whole-home power failure or physical infrastructure maintenance, nod
 
 ```mermaid
 graph TD
-    Step1["Step 1: Storage Appliance<br/>TerraMaster F4-425 Plus (san.lambertlab.us)<br/>Wait 2-3 mins for iSCSI/NFS ready"] --> Step2["Step 2: Primary Control Plane Manager<br/>lenovo (etcd quorum member #1)<br/>Initializes kubeadm API server & kube-vip"]
-    Step2 --> Step3["Step 3: Secondary Quorum Members<br/>optiplex & opti74 (etcd members #2 & #3)<br/>Restores Raft quorum & Cilium eBPF"]
+    Step1["Step 1: Storage Appliance<br/>TerraMaster F4-425 Plus (san.lambertlab.us)<br/>Wait 2-3 mins for iSCSI/NFS ready"] --> Step2["Step 2: Primary Control Plane Node<br/>opti74 (etcd quorum member #1)<br/>Initializes kubeadm API server & kube-vip"]
+    Step2 --> Step3["Step 3: Secondary Quorum Members<br/>opti76 & optiplex (etcd members #2 & #3)<br/>Restores Raft quorum & Cilium eBPF"]
     Step3 --> Step4["Step 4: Dedicated Compute Engine<br/>workstation (GPU & ECK Elastic Stack)<br/>Starts Elasticsearch NVMe engine"]
     Step4 --> Step5["Step 5: Virtual Machine Verification<br/>KubeVirt mounts SAN iSCSI LUNs<br/>DC01, Win11, OPNsense boot"]
 ```
@@ -22,8 +22,8 @@ Power on the NAS appliance first and wait until storage daemons initialize (~2â€
 * Verify NFS exports (`/Volume3/isos`, `/Volume1/data`) are accepting mount requests.
 * *Failure Risk:* Booting Kubernetes nodes before SAN targets are online causes KubeVirt PVC mounts to enter `FailedMount` or `CrashLoopBackOff`.
 
-### Stage 2: Manager Node (`lenovo`)
-Power on `lenovo`. The `kubelet` systemd service boots and automatically initializes the static control plane pods (`etcd`, `kube-apiserver`, `kube-controller-manager`, `kube-scheduler`, and `kube-vip`) from `/etc/kubernetes/manifests/`:
+### Stage 2: Primary Control Plane Node (`opti74`)
+Power on `opti74`. The `kubelet` systemd service boots and automatically initializes the static control plane pods (`etcd`, `kube-apiserver`, `kube-controller-manager`, `kube-scheduler`, and `kube-vip`) from `/etc/kubernetes/manifests/`:
 * Check kubelet service status:
   ```bash
   sudo systemctl status kubelet
@@ -33,8 +33,8 @@ Power on `lenovo`. The `kubelet` systemd service boots and automatically initial
   sudo crictl ps | grep -E "kube-apiserver|etcd|kube-vip"
   ```
 
-### Stage 3: Secondary Control Plane Members (`optiplex` & `opti74`)
-Power on `optiplex` and `opti74` simultaneously:
+### Stage 3: Secondary Control Plane Members (`opti76` & `optiplex`)
+Power on `opti76` and `optiplex` simultaneously:
 * Once a second node joins, etcd re-establishes a majority quorum ($2/3$ members), and the Kubernetes API server begins accepting workload requests.
 * Verify node cluster status:
   ```bash
@@ -58,9 +58,9 @@ Power on `workstation`:
 If two of the three control plane nodes suffer permanent hardware loss, etcd will lose Raft consensus and the API server will reject all write requests.
 
 ### Single Node Quorum Re-seeding (Disaster Recovery)
-If only `lenovo` survives catastrophic hardware loss on `optiplex` and `opti74`, re-bootstrap etcd as a single-node cluster:
+If only a single control plane node (e.g. `opti74`) survives catastrophic hardware loss on `optiplex` and `opti76`, re-bootstrap etcd as a single-node cluster:
 
-1. Edit the static pod manifest for etcd on `lenovo`:
+1. Edit the static pod manifest for etcd on the surviving control plane node (e.g. `opti74`):
    ```bash
    sudo nano /etc/kubernetes/manifests/etcd.yaml
    ```
