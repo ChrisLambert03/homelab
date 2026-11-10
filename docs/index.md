@@ -101,7 +101,7 @@ graph TD
     subgraph StorageSAN["Centralized Storage (TerraMaster F4-425 Plus)"]
         DC01 -->|"Raw Block 80GB iSCSI LUN"| iSCSITarget[("SAN iSCSI Target LUNs")]
         Win11 -->|"Raw Block 64GB iSCSI LUN"| iSCSITarget
-        Catalog -->|"Media & ISOs /Volume3/isos"| NFSPool[("14TB Bulk NFS Pool")]
+        Catalog -->|"Media & ISOs /Volume4/isos-store"| NFSPool[("14TB Bulk NFS Pool")]
     end
 
     subgraph Observability["Heavy Compute & Security Information and Event Management (SIEM)"]

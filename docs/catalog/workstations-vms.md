@@ -46,7 +46,7 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 * **Sync Wave:** `Wave 8`
 * **Ingress Endpoint:** `https://opnsense.lambertlab.us`
 * **Hardware Profile:** 4 vCPU, 4 GiB RAM.
-* **Storage Backend:** Dedicated 40 GB raw iSCSI block LUN (`iqn.2026-09.us.lambertlab:opnsense-boot`) on TerraMaster SAN; NFS installer mount (`/Volume3/isos/opnsense`).
+* **Storage Backend:** Dedicated 40 GB raw iSCSI block LUN (`iqn.2026-09.us.lambertlab:opnsense-boot`) on TerraMaster SAN; NFS installer mount (`/Volume4/isos-store/opnsense`).
 * **Architectural Role:** Virtualized edge perimeter router, NAT gateway, and security firewall.
 * **Key Configuration:**
   * Multi-NIC topology: primary Cilium interface for pod masquerade and secondary Multus interface on `ovn-ad-vpc` (`10.10.0.1`) serving as the default gateway.

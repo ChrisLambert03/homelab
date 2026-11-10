@@ -18,7 +18,7 @@ graph TD
     subgraph StorageTiers["Multi-Tier Storage Backends"]
         Tier1["Tier 1: SAN Raw iSCSI LUNs<br/>san.lambertlab.us:3260"]
         Tier2["Tier 2: Longhorn Distributed Block<br/>Synchronous 2x/3x NVMe Replication"]
-        Tier3["Tier 3: Bulk NFSv4 Pools<br/>/Volume3/isos & /Volume1/data"]
+        Tier3["Tier 3: Bulk NFSv4 Pools<br/>/Volume4/isos-store & /Volume1/data"]
         Tier4["Tier 4: Local NVMe Host Storage<br/>workstation SSD (/usr/share/elasticsearch)"]
     end
 
@@ -37,7 +37,7 @@ graph TD
 | :--- | :--- | :--- | :--- | :--- |
 | **Tier 1: SAN iSCSI** | iSCSI Block Targets | TerraMaster F4-425 Plus (`san.lambertlab.us`) | KubeVirt VM boot disks (`win11`, `dc01`, `opnsense`) & Media SQLite DBs (`sonarr`, `radarr`, `prowlarr`) | Lowest latency (< 2ms random I/O), direct block access, bypasses overlay filesystem overhead |
 | **Tier 2: Distributed Block** | Longhorn CSI | Multi-Node Cluster NVMe/SSDs | State-backed cluster pods (PostgreSQL, Vault, Ntfy, Palworld) | Synchronous 2-3x cross-node replication, automated CSI volume snapshots, `longhorn-retain` policy |
-| **Tier 3: Bulk Network File** | NFSv4 Pools | TerraMaster F4-425 Plus (`nas.lambertlab.us`) | Media libraries (`/Volume1/data`), ISO repositories (`/Volume3/isos`), VirtIO drivers | High-capacity bulk throughput, multi-client read/write sharing (ReadWriteMany) |
+| **Tier 3: Bulk Network File** | NFSv4 Pools | TerraMaster F4-425 Plus (`nas.lambertlab.us`) | Media libraries (`/Volume1/data`), ISO repositories (`/Volume4/isos-store`), VirtIO drivers | High-capacity bulk throughput, multi-client read/write sharing (ReadWriteMany) |
 | **Tier 4: Local NVMe** | Direct Host Filesystem / Local PV | `workstation` & `lenovo` Host Disks | Kubernetes Elastic Stack indices (`elasticsearch-data-pv`), Jellyfin transcode cache, local Docker runtimes | Extreme write IOPs, zero network latency |
 
 ---

@@ -11,7 +11,7 @@ The OPNsense virtual machine runs bare-metal virtualization on the `workstation`
 ```mermaid
 flowchart TD
     subgraph Storage["TerraMaster SAN & NFS (10.0.0.60)"]
-        ISO["NFS Share: /Volume3/isos/opnsense<br/>(OPNsense Installer ISO)"]
+        ISO["NFS Share: /Volume4/isos-store/opnsense<br/>(OPNsense Installer ISO)"]
         LUN["SAN iSCSI Target: 40 GiB LUN 0<br/>iqn.2026-09.us.lambertlab:opnsense-boot"]
     end
 

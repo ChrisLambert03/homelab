@@ -19,7 +19,7 @@ graph TD
 ### Stage 1: Storage Appliance (`TerraMaster F4-425 Plus`)
 Power on the NAS appliance first and wait until storage daemons initialize (~2–3 minutes):
 * Verify TCP port 3260 (iSCSI target daemon) is listening.
-* Verify NFS exports (`/Volume3/isos`, `/Volume1/data`) are accepting mount requests.
+* Verify NFS exports (`/Volume4/isos-store`, `/Volume1/data`) are accepting mount requests.
 * *Failure Risk:* Booting Kubernetes nodes before SAN targets are online causes KubeVirt PVC mounts to enter `FailedMount` or `CrashLoopBackOff`.
 
 ### Stage 2: Primary Control Plane Node (`opti74`)
