@@ -76,14 +76,7 @@ spec:
             - name: boot-disk
               disk:
                 bus: virtio
-              bootOrder: 2
-            - name: win-iso
-              cdrom:
-                bus: sata
               bootOrder: 1
-            - name: virtio-drivers
-              cdrom:
-                bus: sata
           interfaces:
             - name: lab-lan
               macAddress: 52:54:00:12:34:56
@@ -98,9 +91,3 @@ spec:
         - name: boot-disk
           persistentVolumeClaim:
             claimName: dc01-boot-pvc
-        - name: win-iso
-          persistentVolumeClaim:
-            claimName: nas-isos-win2025-pvc
-        - name: virtio-drivers
-          persistentVolumeClaim:
-            claimName: nas-isos-virtio-pvc
