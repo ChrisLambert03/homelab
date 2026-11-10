@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1626,7 +1626,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <h3 id="stage-1-storage-appliance-terramaster-f4-425-plus">Stage 1: Storage Appliance (<code>TerraMaster F4-425 Plus</code>)</h3>
 <p>Power on the NAS appliance first and wait until storage daemons initialize (~2–3 minutes):
 * Verify TCP port 3260 (iSCSI target daemon) is listening.
-* Verify NFS exports (<code>/Volume3/isos</code>, <code>/Volume1/data</code>) are accepting mount requests.
+* Verify NFS exports (<code>/Volume4/isos-store</code>, <code>/Volume1/data</code>) are accepting mount requests.
 * <em>Failure Risk:</em> Booting Kubernetes nodes before SAN targets are online causes KubeVirt PVC mounts to enter <code>FailedMount</code> or <code>CrashLoopBackOff</code>.</p>
 <h3 id="stage-2-primary-control-plane-node-opti74">Stage 2: Primary Control Plane Node (<code>opti74</code>)</h3>
 <p>Power on <code>opti74</code>. The <code>kubelet</code> systemd service boots and automatically initializes the static control plane pods (<code>etcd</code>, <code>kube-apiserver</code>, <code>kube-controller-manager</code>, <code>kube-scheduler</code>, and <code>kube-vip</code>) from <code>/etc/kubernetes/manifests/</code>:

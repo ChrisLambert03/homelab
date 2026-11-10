@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1492,7 +1492,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
     subgraph StorageTiers["Multi-Tier Storage Backends"]
         Tier1["Tier 1: SAN Raw iSCSI LUNs&lt;br/&gt;san.lambertlab.us:3260"]
         Tier2["Tier 2: Longhorn Distributed Block&lt;br/&gt;Synchronous 2x/3x NVMe Replication"]
-        Tier3["Tier 3: Bulk NFSv4 Pools&lt;br/&gt;/Volume3/isos &amp; /Volume1/data"]
+        Tier3["Tier 3: Bulk NFSv4 Pools&lt;br/&gt;/Volume4/isos-store &amp; /Volume1/data"]
         Tier4["Tier 4: Local NVMe Host Storage&lt;br/&gt;workstation SSD (/usr/share/elasticsearch)"]
     end
 
@@ -1534,7 +1534,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <td style="text-align: left;"><strong>Tier 3: Bulk Network File</strong></td>
 <td style="text-align: left;">NFSv4 Pools</td>
 <td style="text-align: left;">TerraMaster F4-425 Plus (<code>nas.lambertlab.us</code>)</td>
-<td style="text-align: left;">Media libraries (<code>/Volume1/data</code>), ISO repositories (<code>/Volume3/isos</code>), VirtIO drivers</td>
+<td style="text-align: left;">Media libraries (<code>/Volume1/data</code>), ISO repositories (<code>/Volume4/isos-store</code>), VirtIO drivers</td>
 <td style="text-align: left;">High-capacity bulk throughput, multi-client read/write sharing (ReadWriteMany)</td>
 </tr>
 <tr>
