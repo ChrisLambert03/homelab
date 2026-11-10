@@ -1,6 +1,6 @@
 ---
 # ==============================================================================
-# ISO INSTALLER (NFS - TerraMaster Volume3)
+# ISO INSTALLER (NFS - TerraMaster Volume4 isos-store)
 # ==============================================================================
 apiVersion: v1
 kind: PersistentVolume
