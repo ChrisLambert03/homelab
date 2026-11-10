@@ -294,7 +294,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="runbooks/kubeadm-control-plane-upgrade/" class="md-tabs__link">
+        <a href="runbooks/opnsense-iso-bootstrap/" class="md-tabs__link">
           
   
   
@@ -1050,6 +1050,62 @@
   
   
     <li class="md-nav__item">
+      <a href="runbooks/opnsense-iso-bootstrap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OPNsense KubeVirt ISO Bootstrap & State Recovery SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="runbooks/windows-vm-provisioning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows 11 Workstation Provisioning & Sysprep Automation SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="runbooks/kubeadm-control-plane-upgrade/" class="md-nav__link">
         
   
@@ -1457,10 +1513,10 @@
 <p>Welcome to the central technical documentation and operational engineering knowledge base for the <strong>LambertLab</strong> hybrid cloud-native infrastructure.</p>
 <hr />
 <h2 id="core-architectural-highlights">🚀 Core Architectural Highlights</h2>
-<p><strong>LambertLab</strong> operates as a bare-metal, high-availability Kubernetes cluster running upstream vanilla <strong>Kubernetes v1.37.1</strong>. While initially bootstrapped as a lightweight K3s distribution during early platform iterations, the infrastructure was subsequently reconstructed into an enterprise-grade pure vanilla Kubernetes cluster initialized and joined via <strong><code>kubeadm</code></strong>.</p>
+<p><strong>LambertLab</strong> operates as a bare-metal, high-availability Kubernetes cluster running upstream vanilla <strong>Kubernetes v1.37.2</strong>. While initially bootstrapped as a lightweight K3s distribution during early platform iterations, the infrastructure was subsequently reconstructed into an enterprise-grade pure vanilla Kubernetes cluster initialized and joined via <strong><code>kubeadm</code></strong>.</p>
 <p>The cluster topology is engineered around clean, modular infrastructure layers:</p>
 <ul>
-<li><strong>Control Plane Quorum &amp; Virtual IP:</strong> Stacked <strong>etcd</strong> consensus distributed across a 3-node control plane quorum (<code>lenovo</code>, <code>optiplex</code>, <code>opti74</code>) with <strong><code>kube-vip</code></strong> providing virtual IP failover (<code>10.0.0.201:6443</code>).</li>
+<li><strong>Control Plane Quorum &amp; Virtual IP:</strong> Stacked <strong>etcd</strong> consensus distributed across a 3-node control plane quorum (<code>opti74</code>, <code>opti76</code>, <code>optiplex</code>) with <strong><code>kube-vip</code></strong> providing virtual IP failover (<code>10.0.0.201:6443</code>).</li>
 <li><strong>Primary eBPF CNI &amp; Routing:</strong> <strong>Cilium</strong> running in pure eBPF mode, replacing <code>kube-proxy</code> for high-throughput pod routing, kernel-level network policies, and Layer 2 service IP announcement pools (<code>10.0.0.202-215</code>).</li>
 <li><strong>Edge Ingress Controller:</strong> <strong>Traefik</strong> deployed as a cluster-wide DaemonSet handling HTTP/HTTPS edge ingress with automated wildcard TLS (<code>*.lambertlab.us</code>) and two-tier zero-trust IP allowlisting middlewares.</li>
 <li><strong>Secondary Virtualization CNI:</strong> <strong>Kube-OVN</strong> operating via <strong>Multus</strong> meta-CNI as a dedicated secondary network, providing an isolated Software-Defined Layer 2 Geneve overlay VPC (<code>ovn-ad-vpc</code>, <code>10.10.0.0/24</code>) for KubeVirt virtual machines and dual-homed containers.</li>

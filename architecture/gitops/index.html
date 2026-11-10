@@ -296,7 +296,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../runbooks/kubeadm-control-plane-upgrade/" class="md-tabs__link">
+        <a href="../../runbooks/opnsense-iso-bootstrap/" class="md-tabs__link">
           
   
   
@@ -1105,6 +1105,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../runbooks/opnsense-iso-bootstrap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OPNsense KubeVirt ISO Bootstrap & State Recovery SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runbooks/windows-vm-provisioning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows 11 Workstation Provisioning & Sysprep Automation SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../runbooks/kubeadm-control-plane-upgrade/" class="md-nav__link">
         
   
@@ -1563,7 +1619,7 @@
 <hr />
 <p>Root application orchestration follows the <strong>App-of-Apps</strong> pattern (<code>root-apps</code>), which recursively discovers and reconciles 40+ child applications across a graduated <strong>10-wave synchronization topology (Waves 0–9)</strong>. <em>(See the comprehensive <a href="#app-of-apps-topology-sync-waves">App-of-Apps Topology &amp; Sync Waves Architecture Diagram</a> at the bottom of this page for the complete dependency flow).</em></p>
 <h2 id="high-availability-controller-architecture">⚡ High-Availability Controller Architecture</h2>
-<p>ArgoCD is deployed in full <strong>High Availability (HA)</strong> mode across the 3-node control plane quorum (<code>lenovo</code>, <code>optiplex</code>, <code>opti74</code>):</p>
+<p>ArgoCD is deployed in full <strong>High Availability (HA)</strong> mode across the 3-node control plane quorum (<code>opti74</code>, <code>opti76</code>, <code>optiplex</code>):</p>
 <ol>
 <li><strong>Redis Sentinel Clustering:</strong> Multi-replica Redis state cache with automated master failover.</li>
 <li><strong>Controller Sharding:</strong> Active-active application controller replicas distribute sync loops and health evaluation pipelines evenly across nodes.</li>

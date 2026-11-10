@@ -296,7 +296,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../runbooks/kubeadm-control-plane-upgrade/" class="md-tabs__link">
+        <a href="../../runbooks/opnsense-iso-bootstrap/" class="md-tabs__link">
           
   
   
@@ -1027,6 +1027,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../runbooks/opnsense-iso-bootstrap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OPNsense KubeVirt ISO Bootstrap & State Recovery SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runbooks/windows-vm-provisioning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows 11 Workstation Provisioning & Sysprep Automation SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../runbooks/kubeadm-control-plane-upgrade/" class="md-nav__link">
         
   
@@ -1485,7 +1541,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <td style="text-align: left;"><strong>Tier 4: Local NVMe</strong></td>
 <td style="text-align: left;">Direct Host Filesystem / Local PV</td>
 <td style="text-align: left;"><code>workstation</code> &amp; <code>lenovo</code> Host Disks</td>
-<td style="text-align: left;">Kubernetes Elastic Stack indices (<code>elasticsearch-data-pv</code>), Jellyfin config/transcode cache, Homarr appdata</td>
+<td style="text-align: left;">Kubernetes Elastic Stack indices (<code>elasticsearch-data-pv</code>), Jellyfin transcode cache, local Docker runtimes</td>
 <td style="text-align: left;">Extreme write IOPs, zero network latency</td>
 </tr>
 </tbody>
@@ -1503,7 +1559,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <li><code>iqn.2026-06.us.lambertlab:radarr-config</code> (LUN 0, 20 GiB) - Radarr movie database &amp; configs</li>
 <li><code>iqn.2026-06.us.lambertlab:prowlarr-config</code> (LUN 0, 2 GiB) - Prowlarr indexer database &amp; configs</li>
 <li><strong>Direct Line-Rate Flashing:</strong> By using <code>qemu-img convert</code> with native <code>libiscsi</code> user-space drivers, master OS templates are written directly into LUNs at full line rate without needing intermediate 64GB Longhorn scratch volumes or triggering HTTP ingress proxy timeouts.</li>
-<li><strong>Initiator Resilience &amp; Error Recovery (<code>open-iscsi</code>):</strong> To prevent kernel I/O aborts, guest VM crashes, and ext4 <code>emergency_ro</code> journal locks during transient network blips or NAS reboots, all cluster nodes (<code>lenovo</code>, <code>optiplex</code>, <code>opti74</code>, <code>workstation</code>) configure hardened initiator timeouts via <code>ansible/configure-iscsi.yml</code>:</li>
+<li><strong>Initiator Resilience &amp; Error Recovery (<code>open-iscsi</code>):</strong> To prevent kernel I/O aborts, guest VM crashes, and ext4 <code>emergency_ro</code> journal locks during transient network blips or NAS reboots, all cluster nodes (<code>opti74</code>, <code>opti76</code>, <code>optiplex</code>, <code>workstation</code>, and management host <code>lenovo</code>) configure hardened initiator timeouts via <code>ansible/configure-iscsi.yml</code>:</li>
 <li><code>node.session.timeo.replacement_timeout = 300</code>: Pauses I/O queues and permits up to 5 minutes of network reconnection grace time before declaring SCSI block devices offline.</li>
 <li><code>node.conn[0].timeo.noop_out_interval = 5</code>: Transmits NOP-Out pings every 5 seconds for rapid socket drop detection.</li>
 <li><code>node.conn[0].timeo.noop_out_timeout = 5</code>: Bounded 5-second socket timeout triggering proactive TCP session recovery.</li>

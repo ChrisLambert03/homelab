@@ -18,7 +18,7 @@
         <link rel="prev" href="../media-automation/">
       
       
-        <link rel="next" href="../../runbooks/kubeadm-control-plane-upgrade/">
+        <link rel="next" href="../../runbooks/opnsense-iso-bootstrap/">
       
       
         
@@ -296,7 +296,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../runbooks/kubeadm-control-plane-upgrade/" class="md-tabs__link">
+        <a href="../../runbooks/opnsense-iso-bootstrap/" class="md-tabs__link">
           
   
   
@@ -1099,6 +1099,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../runbooks/opnsense-iso-bootstrap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OPNsense KubeVirt ISO Bootstrap & State Recovery SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runbooks/windows-vm-provisioning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows 11 Workstation Provisioning & Sysprep Automation SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../runbooks/kubeadm-control-plane-upgrade/" class="md-nav__link">
         
   
@@ -1600,6 +1656,7 @@
 <li><strong>Single-Node ILM Invariant:</strong> Single-node cluster enforcing <code>number_of_replicas: 0</code> (<code>shards [1]/[0]</code>) via <code>logs@custom</code> and <code>metrics@custom</code> to preserve solid <code>GREEN</code> cluster health and prevent Index Lifecycle Management (ILM) stalls.</li>
 <li><strong>Perimeter Firewall &amp; DNS Telemetry:</strong> Dedicated Cilium L4 LoadBalancer VIP <code>10.0.0.210:5514</code> (UDP/TCP) in <code>kubernetes/observability/elastic-agent/service.yaml</code> ingesting RFC 5424 structured syslog from OPNsense (<code>filterlog</code> and <code>unbound</code>), enriched with automated MaxMind GeoIP and ASN mappings.</li>
 <li><strong>Active Directory &amp; Identity Ingestion (<code>dc01</code>):</strong> Native Windows Service Elastic Agent running on Windows Server 2025 Datacenter (<code>10.10.0.10</code>), ingesting kernel security events (<code>4624</code>, <code>4625</code>, <code>4672</code>, <code>4634</code>, <code>4720</code>, <code>4728</code>) and synchronizing domain users/devices via LDAPS (Port 636) with service account <code>svc_elastic</code>.</li>
+<li><strong>Workstation Endpoint Security (EDR &amp; Malware Prevention):</strong> Native Elastic Agent and Elastic Defend (<code>endpoint-9.3.2</code>) running on Windows 11 (<code>win11-01</code>), streaming kernel process execution trees, DLL injection hooks, network socket attributions, and signatureless malware prevention into Kibana Security (<code>logs-endpoint.*</code>).</li>
 <li><strong>Docker Container Telemetry:</strong> Logstash GELF input on port 12201 (UDP/TCP) streaming container logs over Tailscale from standalone hosts (<code>lenovo</code>).</li>
 <li><strong>Cluster DaemonSet:</strong> Elastic Agent DaemonSet deployed in <code>kube-system</code> streaming Kubernetes node, container pod logs, and <code>kube-state-metrics</code>.</li>
 <li><strong>Curated SIEM Dashboards:</strong> Pre-staged official and custom dashboards including <code>Firewall - Dashboard [pfSense]</code>, <code>Unbound - Dashboard [pfSense]</code>, <code>[System Windows Security] User Logons</code>, <code>Failed and Blocked Accounts</code>, <code>User &amp; Group Management Events</code>, and <code>[Metrics System] Host overview</code>.</li>
@@ -1614,7 +1671,7 @@
 <li><strong>Sync Wave:</strong> <code>Wave 8</code></li>
 <li><strong>Ingress Endpoint:</strong> <code>https://homarr.lambertlab.us</code></li>
 <li><strong>Architectural Role:</strong> Customizable homelab landing portal and application launcher.</li>
-<li><strong>Storage Backend:</strong> Local host storage on <code>lenovo</code> (<code>/home/chris/services/homarr/homarr/appdata</code> via <code>hostPath</code>).</li>
+<li><strong>Storage Backend:</strong> Distributed Longhorn Block Storage (<code>homarr-data</code> PVC, 2 GiB).</li>
 <li><strong>Key Configuration:</strong></li>
 <li>Displays real-time operational status and ping health across all cluster services.</li>
 <li>Secured via Traefik HTTPS termination using the cluster-wide default TLSStore.</li>

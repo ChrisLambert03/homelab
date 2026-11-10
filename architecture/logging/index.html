@@ -296,7 +296,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../runbooks/kubeadm-control-plane-upgrade/" class="md-tabs__link">
+        <a href="../../runbooks/opnsense-iso-bootstrap/" class="md-tabs__link">
           
   
   
@@ -1133,6 +1133,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../runbooks/opnsense-iso-bootstrap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OPNsense KubeVirt ISO Bootstrap & State Recovery SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runbooks/windows-vm-provisioning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows 11 Workstation Provisioning & Sysprep Automation SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../runbooks/kubeadm-control-plane-upgrade/" class="md-nav__link">
         
   
@@ -1830,6 +1886,7 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <li><strong>Active Directory Entity Analytics over Secure LDAPS:</strong> Connects locally to <code>ldaps://dc01.ad.lambertlab.us:636</code> to index domain users, workstations, and security groups.</li>
 <li><em>Windows Server 2025 Hardening:</em> Enforces LDAPS on port 636; cleartext simple binds over port 389 are rejected by Windows Server 2025's hardened LDAP signing policies.</li>
 <li><em>Service Account:</em> Authenticates via dedicated read-only LDAP bind account <code>CN=svc_elastic,OU=Service Accounts,OU=LambertLab,DC=ad,DC=lambertlab,DC=us</code>, provisioned declaratively via Terraform and backed by HashiCorp Vault (<code>ad_svc_elastic_password</code>).</li>
+<li><strong>Endpoint Protection &amp; EDR (Elastic Defend on <code>win11-01</code>):</strong> User endpoints run the Elastic Agent with <strong>Elastic Defend</strong> (<code>endpoint</code>) providing deep EDR visibility and malware prevention. It instruments kernel process execution (<code>endpoint.events.process</code>), DLL library injections (<code>endpoint.events.library</code>), filesystem events (<code>endpoint.events.file</code>), and socket-level network attribution (<code>endpoint.events.network</code>), feeding real-time telemetry into Kibana Security SIEM detection rules and interactive visual process trees.</li>
 <li><strong>Detailed Runbook:</strong> See the <a href="../../runbooks/active-directory-siem-integration/">Active Directory &amp; Windows SIEM Integration Runbook</a>.</li>
 </ul>
 <hr />
@@ -1868,6 +1925,12 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <td style="text-align: left;"><strong><code>Windows - Active Directory Domain Controller Policy</code></strong></td>
 <td style="text-align: left;"><code>dc01</code> (Windows Server 2025 Datacenter - <code>10.10.0.10</code>)</td>
 <td style="text-align: left;">• <strong><code>windows</code></strong>: Event logs (<code>Security</code>, <code>System</code>, <code>Application</code>)<br>• <strong><code>system</code></strong>: Windows system performance metrics<br>• <strong><code>entityanalytics_ad</code></strong>: LDAPS entity sync via <code>svc_elastic</code></td>
+<td style="text-align: left;"><code>elasticsearch</code> (Traefik Ingress HTTPS)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>Windows - Workstation Policy</code></strong></td>
+<td style="text-align: left;"><code>win11-01</code> (Windows 11 Pro Desktop)</td>
+<td style="text-align: left;">• <strong><code>endpoint</code> (Elastic Defend)</strong>: Kernel EDR telemetry, malware prevention, SIEM process trees<br>• <strong><code>windows</code></strong>: Event logs (<code>Security</code>, <code>System</code>, <code>PowerShell Operational</code>, <code>Defender</code>, <code>AppLocker</code>)<br>• <strong><code>system</code></strong>: Host performance &amp; resource metrics</td>
 <td style="text-align: left;"><code>elasticsearch</code> (Traefik Ingress HTTPS)</td>
 </tr>
 </tbody>

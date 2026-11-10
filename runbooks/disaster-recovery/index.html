@@ -296,7 +296,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../kubeadm-control-plane-upgrade/" class="md-tabs__link">
+        <a href="../opnsense-iso-bootstrap/" class="md-tabs__link">
           
   
   
@@ -936,6 +936,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../opnsense-iso-bootstrap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OPNsense KubeVirt ISO Bootstrap & State Recovery SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../windows-vm-provisioning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows 11 Workstation Provisioning & Sysprep Automation SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../kubeadm-control-plane-upgrade/" class="md-nav__link">
         
   
@@ -1243,10 +1299,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stage-2-manager-node-lenovo" class="md-nav__link">
+  <a href="#stage-2-primary-control-plane-node-opti74" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stage 2: Manager Node (lenovo)
+        Stage 2: Primary Control Plane Node (opti74)
       
     </span>
   </a>
@@ -1254,10 +1310,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stage-3-secondary-control-plane-members-optiplex-opti74" class="md-nav__link">
+  <a href="#stage-3-secondary-control-plane-members-opti76-optiplex" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stage 3: Secondary Control Plane Members (optiplex &amp; opti74)
+        Stage 3: Secondary Control Plane Members (opti76 &amp; optiplex)
       
     </span>
   </a>
@@ -1424,10 +1480,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stage-2-manager-node-lenovo" class="md-nav__link">
+  <a href="#stage-2-primary-control-plane-node-opti74" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stage 2: Manager Node (lenovo)
+        Stage 2: Primary Control Plane Node (opti74)
       
     </span>
   </a>
@@ -1435,10 +1491,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stage-3-secondary-control-plane-members-optiplex-opti74" class="md-nav__link">
+  <a href="#stage-3-secondary-control-plane-members-opti76-optiplex" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Stage 3: Secondary Control Plane Members (optiplex &amp; opti74)
+        Stage 3: Secondary Control Plane Members (opti76 &amp; optiplex)
       
     </span>
   </a>
@@ -1561,8 +1617,8 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 </button>
     </nav>
     <pre class="mermaid"><code>graph TD
-    Step1["Step 1: Storage Appliance&lt;br/&gt;TerraMaster F4-425 Plus (san.lambertlab.us)&lt;br/&gt;Wait 2-3 mins for iSCSI/NFS ready"] --&gt; Step2["Step 2: Primary Control Plane Manager&lt;br/&gt;lenovo (etcd quorum member #1)&lt;br/&gt;Initializes kubeadm API server &amp; kube-vip"]
-    Step2 --&gt; Step3["Step 3: Secondary Quorum Members&lt;br/&gt;optiplex &amp; opti74 (etcd members #2 &amp; #3)&lt;br/&gt;Restores Raft quorum &amp; Cilium eBPF"]
+    Step1["Step 1: Storage Appliance&lt;br/&gt;TerraMaster F4-425 Plus (san.lambertlab.us)&lt;br/&gt;Wait 2-3 mins for iSCSI/NFS ready"] --&gt; Step2["Step 2: Primary Control Plane Node&lt;br/&gt;opti74 (etcd quorum member #1)&lt;br/&gt;Initializes kubeadm API server &amp; kube-vip"]
+    Step2 --&gt; Step3["Step 3: Secondary Quorum Members&lt;br/&gt;opti76 &amp; optiplex (etcd members #2 &amp; #3)&lt;br/&gt;Restores Raft quorum &amp; Cilium eBPF"]
     Step3 --&gt; Step4["Step 4: Dedicated Compute Engine&lt;br/&gt;workstation (GPU &amp; ECK Elastic Stack)&lt;br/&gt;Starts Elasticsearch NVMe engine"]
     Step4 --&gt; Step5["Step 5: Virtual Machine Verification&lt;br/&gt;KubeVirt mounts SAN iSCSI LUNs&lt;br/&gt;DC01, Win11, OPNsense boot"]</code></pre> 
     
@@ -1572,16 +1628,16 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 * Verify TCP port 3260 (iSCSI target daemon) is listening.
 * Verify NFS exports (<code>/Volume3/isos</code>, <code>/Volume1/data</code>) are accepting mount requests.
 * <em>Failure Risk:</em> Booting Kubernetes nodes before SAN targets are online causes KubeVirt PVC mounts to enter <code>FailedMount</code> or <code>CrashLoopBackOff</code>.</p>
-<h3 id="stage-2-manager-node-lenovo">Stage 2: Manager Node (<code>lenovo</code>)</h3>
-<p>Power on <code>lenovo</code>. The <code>kubelet</code> systemd service boots and automatically initializes the static control plane pods (<code>etcd</code>, <code>kube-apiserver</code>, <code>kube-controller-manager</code>, <code>kube-scheduler</code>, and <code>kube-vip</code>) from <code>/etc/kubernetes/manifests/</code>:
+<h3 id="stage-2-primary-control-plane-node-opti74">Stage 2: Primary Control Plane Node (<code>opti74</code>)</h3>
+<p>Power on <code>opti74</code>. The <code>kubelet</code> systemd service boots and automatically initializes the static control plane pods (<code>etcd</code>, <code>kube-apiserver</code>, <code>kube-controller-manager</code>, <code>kube-scheduler</code>, and <code>kube-vip</code>) from <code>/etc/kubernetes/manifests/</code>:
 * Check kubelet service status:
   <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>kubelet
 </span></code></pre></div>
 * Verify control plane static pods are running:
   <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>crictl<span class="w"> </span>ps<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"kube-apiserver|etcd|kube-vip"</span>
 </span></code></pre></div></p>
-<h3 id="stage-3-secondary-control-plane-members-optiplex-opti74">Stage 3: Secondary Control Plane Members (<code>optiplex</code> &amp; <code>opti74</code>)</h3>
-<p>Power on <code>optiplex</code> and <code>opti74</code> simultaneously:
+<h3 id="stage-3-secondary-control-plane-members-opti76-optiplex">Stage 3: Secondary Control Plane Members (<code>opti76</code> &amp; <code>optiplex</code>)</h3>
+<p>Power on <code>opti76</code> and <code>optiplex</code> simultaneously:
 * Once a second node joins, etcd re-establishes a majority quorum ($2/3$ members), and the Kubernetes API server begins accepting workload requests.
 * Verify node cluster status:
   <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>wide
@@ -1598,9 +1654,9 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <h2 id="etcd-raft-quorum-loss-recovery">⚖️ etcd Raft Quorum Loss &amp; Recovery</h2>
 <p>If two of the three control plane nodes suffer permanent hardware loss, etcd will lose Raft consensus and the API server will reject all write requests.</p>
 <h3 id="single-node-quorum-re-seeding-disaster-recovery">Single Node Quorum Re-seeding (Disaster Recovery)</h3>
-<p>If only <code>lenovo</code> survives catastrophic hardware loss on <code>optiplex</code> and <code>opti74</code>, re-bootstrap etcd as a single-node cluster:</p>
+<p>If only a single control plane node (e.g. <code>opti74</code>) survives catastrophic hardware loss on <code>optiplex</code> and <code>opti76</code>, re-bootstrap etcd as a single-node cluster:</p>
 <ol>
-<li>Edit the static pod manifest for etcd on <code>lenovo</code>:
+<li>Edit the static pod manifest for etcd on the surviving control plane node (e.g. <code>opti74</code>):
    <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/kubernetes/manifests/etcd.yaml
 </span></code></pre></div></li>
 <li>Add the flag <code>--force-new-cluster</code> to the <code>etcd</code> command arguments in the manifest.</li>
