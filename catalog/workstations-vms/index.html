@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -917,6 +917,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#6-sql-server-2022-database-engine-sql01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. SQL Server 2022 Database Engine (sql01)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-power-bi-report-server-pbirs01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Power BI Report Server (pbirs01)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1484,6 +1506,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#6-sql-server-2022-database-engine-sql01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. SQL Server 2022 Database Engine (sql01)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-power-bi-report-server-pbirs01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Power BI Report Server (pbirs01)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1590,6 +1634,32 @@
 <li>Dual authentication chaining via <code>EXTENSION_PRIORITY: "*,openid"</code>, supporting Microsoft Entra ID OIDC SSO while preserving local <code>guacadmin</code> emergency recovery.</li>
 <li>Backend PostgreSQL database running on Longhorn distributed storage with <code>longhorn-retain</code> policy.</li>
 <li><code>guacd</code> resource limit (<code>cpu: 2000m</code>) preventing thread pool exhaustion on 32-thread Xeon compute nodes.</li>
+</ul>
+<hr />
+<h3 id="6-sql-server-2022-database-engine-sql01">6. SQL Server 2022 Database Engine (<code>sql01</code>)</h3>
+<ul>
+<li><strong>Namespace:</strong> <code>vms</code> (Kubernetes <code>StatefulSet</code>)</li>
+<li><strong>Container Image:</strong> <code>mcr.microsoft.com/mssql/server:2022-latest</code> (Developer Edition)</li>
+<li><strong>Sync Wave:</strong> <code>Wave 8</code></li>
+<li><strong>Internal IP:</strong> <code>10.10.0.19</code> (Static on <code>ovn-ad-vpc</code> via Multus <code>net1</code>)</li>
+<li><strong>Resource Profile:</strong> <code>500m</code>–<code>2</code> CPU, <code>2 GiB</code>–<code>4 GiB</code> RAM (<code>MSSQL_MEMORY_LIMIT_MB=3072</code>).</li>
+<li><strong>Storage Backend:</strong> Dedicated 50 GB iSCSI block LUN (<code>iqn.2026-11.us.lambertlab:sql01-data</code>) on TerraMaster SAN (<code>ext4</code>, <code>fsGroup: 10001</code>).</li>
+<li><strong>Architectural Role:</strong> On-premises SQL Server database engine on Linux hosting the Power BI Report Server catalog (<code>ReportServer</code>, <code>ReportServerTempDB</code>) and lab reporting datasets.</li>
+<li><strong>Key Configuration:</strong></li>
+<li>SQL Server Agent (<code>MSSQL_AGENT_ENABLED=true</code>) enabled for scheduled report refreshes and subscriptions.</li>
+<li><code>sa</code> credentials synced from HashiCorp Vault (<code>secret/data/homelab</code>) via External Secrets Operator (<code>sql01-auth</code>).</li>
+</ul>
+<hr />
+<h3 id="7-power-bi-report-server-pbirs01">7. Power BI Report Server (<code>pbirs01</code>)</h3>
+<ul>
+<li><strong>Namespace:</strong> <code>vms</code> (KubeVirt <code>VirtualMachine</code>)</li>
+<li><strong>Operating System:</strong> Windows Server 2025 Standard</li>
+<li><strong>Sync Wave:</strong> <code>Wave 8</code></li>
+<li><strong>Internal IP:</strong> <code>10.10.0.20</code> (Static on <code>ovn-ad-vpc</code> via Kube-OVN IPAM)</li>
+<li><strong>FQDN:</strong> <code>pbirs01.ad.lambertlab.us</code></li>
+<li><strong>Hardware Profile:</strong> 4 vCPU, 8 GiB RAM, host-passthrough CPU topology (<code>timezone: America/New_York</code>).</li>
+<li><strong>Storage Backend:</strong> Dedicated 80 GB iSCSI block LUN (<code>iqn.2026-11.us.lambertlab:pbirs01-boot</code>) on TerraMaster SAN; NFS installer mounts (<code>nas-isos-win2025-pvc</code>, <code>nas-isos-virtio-pvc</code>).</li>
+<li><strong>Architectural Role:</strong> Domain-joined on-premises reporting portal hosting interactive Power BI (<code>.pbix</code>) dashboards and paginated SSRS (<code>.rdl</code>) reports backed by <code>sql01</code>.</li>
 </ul>
 
 
