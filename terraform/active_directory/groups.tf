@@ -53,4 +53,13 @@ resource "ad_group_membership" "gpo_remote_desktop_users" {
   ]
 }
 
+resource "ad_group" "gpo_pbirs_servers" {
+  name             = "GPO-PBIRS-Servers"
+  sam_account_name = "GPO-PBIRS-Servers"
+  scope            = "global"
+  category         = "security"
+  container        = ad_ou.groups.dn
+  description      = "Security group for Power BI Report Server HTTP/HTTPS firewall GPO targeting"
+}
+
 
