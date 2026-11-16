@@ -57,7 +57,7 @@ spec:
             reset: {}
             runtime: {}
         clock:
-          utc: {}
+          timezone: "America/New_York"
           timer:
             hpet:
               present: false
