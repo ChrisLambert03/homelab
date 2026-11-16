@@ -77,10 +77,9 @@ spec:
               disk:
                 bus: virtio
               bootOrder: 1
-            - name: win2025-iso
+            - name: sysprep-disk
               cdrom:
                 bus: sata
-              bootOrder: 2
             - name: virtio-drivers
               cdrom:
                 bus: sata
@@ -98,9 +97,10 @@ spec:
         - name: boot-disk
           persistentVolumeClaim:
             claimName: pbirs01-boot-pvc
-        - name: win2025-iso
-          persistentVolumeClaim:
-            claimName: nas-isos-win2025-pvc
+        - name: sysprep-disk
+          sysprep:
+            secret:
+              name: win2025-unattend-secret
         - name: virtio-drivers
           persistentVolumeClaim:
             claimName: nas-isos-virtio-pvc
