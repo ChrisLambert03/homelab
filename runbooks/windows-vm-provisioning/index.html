@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1084,6 +1084,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#windows-server-2025-golden-image-ouservers-variant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🖥️ Windows Server 2025 Golden Image &amp; OU=Servers Variant
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🖥️ Windows Server 2025 Golden Image &amp; OU=Servers Variant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#capture-or-refresh-the-golden-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture or Refresh the Golden Image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flash-a-new-server-lun" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flash a New Server LUN
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1467,6 +1506,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#windows-server-2025-golden-image-ouservers-variant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🖥️ Windows Server 2025 Golden Image &amp; OU=Servers Variant
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🖥️ Windows Server 2025 Golden Image &amp; OU=Servers Variant">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#capture-or-refresh-the-golden-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture or Refresh the Golden Image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flash-a-new-server-lun" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flash a New Server LUN
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1668,6 +1746,32 @@ Hold "Alt" / "Option" to enable pan &amp; zoom
 <li><strong>LAPS:</strong> Verify local administrator account <code>lapsadmin</code> is active.</li>
 <li><strong>WinRM:</strong> Test remote PowerShell connectivity over port 5985/5986.</li>
 </ol>
+<hr />
+<h2 id="windows-server-2025-golden-image-ouservers-variant">🖥️ Windows Server 2025 Golden Image &amp; <code>OU=Servers</code> Variant</h2>
+<p>Server workloads (such as <code>pbirs01</code>) follow the same line-rate <code>libiscsi</code> + Sysprep pattern using a dedicated compressed Server 2025 template and server-scoped <code>unattend.xml</code> secret:</p>
+<ul>
+<li><strong>Golden Image (NFS):</strong> <code>10.0.0.60:/Volume4/isos-store/win2025-golden.qcow2</code> (Windows Server 2025 Standard with VirtIO drivers, QEMU Guest Agent, and baseline updates, generalized via <code>sysprep.exe /generalize /oobe /shutdown</code>).</li>
+<li><strong>Sysprep Secret (<code>vms</code>):</strong> <code>win2025-unattend-secret</code> (template at <code>kubernetes/vms/pbirs01/unattend.xml.example</code>), targeting <code>&lt;MachineObjectOU&gt;OU=Servers,OU=LambertLab,DC=ad,DC=lambertlab,DC=us&lt;/MachineObjectOU&gt;</code>.</li>
+</ul>
+<h3 id="capture-or-refresh-the-golden-image">Capture or Refresh the Golden Image</h3>
+<p>With the source VM <code>Stopped</code> after running <code>sysprep.exe /generalize /oobe /shutdown</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/tmp/nas-mount
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sudo<span class="w"> </span>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span><span class="m">10</span>.0.0.60:/Volume4/isos-store<span class="w"> </span>/tmp/nas-mount
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>qemu-img<span class="w"> </span>convert<span class="w"> </span>-p<span class="w"> </span>-f<span class="w"> </span>raw<span class="w"> </span>-O<span class="w"> </span>qcow2<span class="w"> </span>-c<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>iscsi://10.0.0.60/iqn.2026-11.us.lambertlab:pbirs01-boot/0<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>/tmp/nas-mount/win2025-golden.qcow2
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>sudo<span class="w"> </span>umount<span class="w"> </span>/tmp/nas-mount
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>rmdir<span class="w"> </span>/tmp/nas-mount
+</span></code></pre></div>
+<h3 id="flash-a-new-server-lun">Flash a New Server LUN</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/tmp/nas-mount
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sudo<span class="w"> </span>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span><span class="m">10</span>.0.0.60:/Volume4/isos-store<span class="w"> </span>/tmp/nas-mount
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>sudo<span class="w"> </span>qemu-img<span class="w"> </span>convert<span class="w"> </span>-p<span class="w"> </span>-f<span class="w"> </span>qcow2<span class="w"> </span>-O<span class="w"> </span>raw<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>/tmp/nas-mount/win2025-golden.qcow2<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>iscsi://10.0.0.60/iqn.2026-11.us.lambertlab:&lt;vm&gt;-boot/0
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>sudo<span class="w"> </span>umount<span class="w"> </span>/tmp/nas-mount
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>rmdir<span class="w"> </span>/tmp/nas-mount
+</span></code></pre></div>
 
 
 

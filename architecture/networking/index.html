@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -665,6 +665,17 @@
     <span class="md-ellipsis">
       
         Why Health-Checking is Essential
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#active-directory-forward-reverse-lookup-zones-dc01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory Forward &amp; Reverse Lookup Zones (DC01)
       
     </span>
   </a>
@@ -1735,6 +1746,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#active-directory-forward-reverse-lookup-zones-dc01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory Forward &amp; Reverse Lookup Zones (DC01)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2058,6 +2080,11 @@ To enable the cluster to resolve Active Directory queries (<code>dc01.ad.lambert
 </span></code></pre></div>
 <h3 id="why-health-checking-is-essential">Why Health-Checking is Essential</h3>
 <p>Without <code>health_check 5s</code> and <code>max_fails 2</code>, if DC01 reboots or a worker node faces transient network latency, CoreDNS pods hang waiting on UDP timeouts (30+ seconds), stalling applications across the cluster. With active health-checks, degraded upstream forwarders fail fast (&lt; 5s) and seamlessly route to healthy replicas.</p>
+<h3 id="active-directory-forward-reverse-lookup-zones-dc01">Active Directory Forward &amp; Reverse Lookup Zones (<code>DC01</code>)</h3>
+<ul>
+<li><strong>Forward Zone (<code>ad.lambertlab.us</code>):</strong> AD-joined Windows VMs (<code>pbirs01</code>, <code>win11</code>) dynamically register their A records via Secure Dynamic Updates. Non-AD Linux workloads attached to <code>ovn-ad-vpc</code> (such as <code>sql01</code> at <code>10.10.0.19</code>) require static A records on <code>DC01</code>.</li>
+<li><strong>Reverse Lookup Zone (<code>0.10.10.in-addr.arpa</code>):</strong> Primary AD-integrated reverse zone for <code>10.10.0.0/24</code> enabling PTR resolution across <code>ovn-ad-vpc</code>. Required by .NET/Windows tooling such as Power BI Report Server Configuration Manager (<code>IsLocalDbServer</code> reverse-DNS lookup on <code>sql01.ad.lambertlab.us</code> / <code>10.10.0.19</code>).</li>
+</ul>
 <hr />
 <h2 id="split-horizon-ingress-resolution-for-cluster-workloads-lambertlabus">🌐 Split-Horizon Ingress Resolution for Cluster Workloads (*.lambertlab.us)</h2>
 <p>When pods inside the Kubernetes cluster query internal services hosted under the homelab domain (such as <code>kibana.lambertlab.us</code>, <code>vault.lambertlab.us</code>, <code>fleet.lambertlab.us</code>, or <code>argocd.lambertlab.us</code>), standard public DNS resolution loops out to Cloudflare external nameservers and hairpins across Tailscale round-robin mesh addresses (<code>100.x.x.x</code>). </p>

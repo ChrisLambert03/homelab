@@ -66,7 +66,7 @@
     
     
   <meta name="panzoom-theme" content="material">
-<meta name="panzoom-data" content='{"selectors": [".d2", ".mermaid"], "initial_zoom_level": 1.0}'> </head>
+<meta name="panzoom-data" content='{"selectors": [".mermaid", ".d2"], "initial_zoom_level": 1.0}'> </head>
   
   
     
@@ -1642,6 +1642,7 @@
 <li><strong>Container Image:</strong> <code>mcr.microsoft.com/mssql/server:2022-latest</code> (Developer Edition)</li>
 <li><strong>Sync Wave:</strong> <code>Wave 8</code></li>
 <li><strong>Internal IP:</strong> <code>10.10.0.19</code> (Static on <code>ovn-ad-vpc</code> via Multus <code>net1</code>)</li>
+<li><strong>FQDN:</strong> <code>sql01.ad.lambertlab.us</code> (Static A + PTR record on <code>DC01</code> in <code>ad.lambertlab.us</code> and <code>0.10.10.in-addr.arpa</code>)</li>
 <li><strong>Resource Profile:</strong> <code>500m</code>–<code>2</code> CPU, <code>2 GiB</code>–<code>4 GiB</code> RAM (<code>MSSQL_MEMORY_LIMIT_MB=3072</code>).</li>
 <li><strong>Storage Backend:</strong> Dedicated 50 GB iSCSI block LUN (<code>iqn.2026-11.us.lambertlab:sql01-data</code>) on TerraMaster SAN (<code>ext4</code>, <code>fsGroup: 10001</code>).</li>
 <li><strong>Architectural Role:</strong> On-premises SQL Server database engine on Linux hosting the Power BI Report Server catalog (<code>ReportServer</code>, <code>ReportServerTempDB</code>) and lab reporting datasets.</li>
@@ -1658,8 +1659,8 @@
 <li><strong>Internal IP:</strong> <code>10.10.0.20</code> (Static on <code>ovn-ad-vpc</code> via Kube-OVN IPAM)</li>
 <li><strong>FQDN:</strong> <code>pbirs01.ad.lambertlab.us</code></li>
 <li><strong>Hardware Profile:</strong> 4 vCPU, 8 GiB RAM, host-passthrough CPU topology (<code>timezone: America/New_York</code>).</li>
-<li><strong>Storage Backend:</strong> Dedicated 80 GB iSCSI block LUN (<code>iqn.2026-11.us.lambertlab:pbirs01-boot</code>) on TerraMaster SAN; NFS installer mounts (<code>nas-isos-win2025-pvc</code>, <code>nas-isos-virtio-pvc</code>).</li>
-<li><strong>Architectural Role:</strong> Domain-joined on-premises reporting portal hosting interactive Power BI (<code>.pbix</code>) dashboards and paginated SSRS (<code>.rdl</code>) reports backed by <code>sql01</code>.</li>
+<li><strong>Storage Backend:</strong> Dedicated 80 GB iSCSI block LUN (<code>iqn.2026-11.us.lambertlab:pbirs01-boot</code>) on TerraMaster SAN; zero-touch <code>sysprep-disk</code> (<code>win2025-unattend-secret</code>) and <code>nas-isos-virtio-pvc</code>.</li>
+<li><strong>Architectural Role:</strong> Domain-joined on-premises reporting portal (<code>OU=Servers</code>) hosting interactive Power BI (<code>.pbix</code>) dashboards and paginated SSRS (<code>.rdl</code>) reports backed by <code>sql01</code>. Baseline generalized image captured to <code>/Volume4/isos-store/win2025-golden.qcow2</code>.</li>
 </ul>
 
 
