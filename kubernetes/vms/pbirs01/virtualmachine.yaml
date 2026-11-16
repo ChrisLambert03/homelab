@@ -1,0 +1,106 @@
+---
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: pbirs01
+  namespace: vms
+  labels:
+    app: pbirs
+spec:
+  runStrategy: RerunOnFailure
+  template:
+    metadata:
+      labels:
+        kubevirt.io/vm: pbirs01
+        app: pbirs
+      annotations:
+        ovn-ad-vpc.vms.ovn.kubernetes.io/ip_address: 10.10.0.20
+        ovn-ad-vpc.vms.ovn.kubernetes.io/mac_address: 52:54:00:12:34:57
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: workstation
+      tolerations:
+        - key: "node.kubernetes.io/unreachable"
+          operator: "Exists"
+          effect: "NoExecute"
+          tolerationSeconds: 1800
+        - key: "node.kubernetes.io/not-ready"
+          operator: "Exists"
+          effect: "NoExecute"
+          tolerationSeconds: 1800
+      terminationGracePeriodSeconds: 60
+      domain:
+        machine:
+          type: q35
+        cpu:
+          sockets: 1
+          cores: 4
+          threads: 1
+          model: host-passthrough
+        resources:
+          requests:
+            cpu: "2"
+            memory: 8Gi
+          limits:
+            cpu: "4"
+            memory: 8Gi
+        features:
+          acpi: {}
+          apic: {}
+          hyperv:
+            relaxed: {}
+            vapic: {}
+            spinlocks:
+              spinlocks: 8191
+            synic: {}
+            synictimer: {}
+            reset: {}
+            runtime: {}
+        clock:
+          timezone: "America/New_York"
+          timer:
+            hpet:
+              present: false
+            pit:
+              tickPolicy: delay
+            rtc:
+              tickPolicy: catchup
+            hyperv: {}
+        devices:
+          blockMultiQueue: true
+          inputs:
+            - type: tablet
+              bus: usb
+              name: tablet
+          disks:
+            - name: boot-disk
+              disk:
+                bus: virtio
+              bootOrder: 1
+            - name: win2025-iso
+              cdrom:
+                bus: sata
+              bootOrder: 2
+            - name: virtio-drivers
+              cdrom:
+                bus: sata
+          interfaces:
+            - name: lab-lan
+              macAddress: 52:54:00:12:34:57
+              binding:
+                name: managedtap
+          rng: {}
+      networks:
+        - name: lab-lan
+          multus:
+            networkName: ovn-ad-vpc
+      volumes:
+        - name: boot-disk
+          persistentVolumeClaim:
+            claimName: pbirs01-boot-pvc
+        - name: win2025-iso
+          persistentVolumeClaim:
+            claimName: nas-isos-win2025-pvc
+        - name: virtio-drivers
+          persistentVolumeClaim:
+            claimName: nas-isos-virtio-pvc

@@ -1,0 +1,35 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pbirs01-iscsi-pv
+spec:
+  claimRef:
+    namespace: vms
+    name: pbirs01-boot-pvc
+  capacity:
+    storage: 80G
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  iscsi:
+    targetPortal: 10.0.0.60:3260
+    iqn: iqn.2026-11.us.lambertlab:pbirs01-boot
+    lun: 0
+    fsType: ext4
+    readOnly: false
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pbirs01-boot-pvc
+  namespace: vms
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeName: pbirs01-iscsi-pv
+  resources:
+    requests:
+      storage: 80G
+  storageClassName: ""

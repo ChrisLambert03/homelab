@@ -77,3 +77,29 @@ This section documents the virtual machines, edge routing firewalls, and remote 
   * Dual authentication chaining via `EXTENSION_PRIORITY: "*,openid"`, supporting Microsoft Entra ID OIDC SSO while preserving local `guacadmin` emergency recovery.
   * Backend PostgreSQL database running on Longhorn distributed storage with `longhorn-retain` policy.
   * `guacd` resource limit (`cpu: 2000m`) preventing thread pool exhaustion on 32-thread Xeon compute nodes.
+
+---
+
+### 6. SQL Server 2022 Database Engine (`sql01`)
+* **Namespace:** `vms` (Kubernetes `StatefulSet`)
+* **Container Image:** `mcr.microsoft.com/mssql/server:2022-latest` (Developer Edition)
+* **Sync Wave:** `Wave 8`
+* **Internal IP:** `10.10.0.19` (Static on `ovn-ad-vpc` via Multus `net1`)
+* **Resource Profile:** `500m`–`2` CPU, `2 GiB`–`4 GiB` RAM (`MSSQL_MEMORY_LIMIT_MB=3072`).
+* **Storage Backend:** Dedicated 50 GB iSCSI block LUN (`iqn.2026-11.us.lambertlab:sql01-data`) on TerraMaster SAN (`ext4`, `fsGroup: 10001`).
+* **Architectural Role:** On-premises SQL Server database engine on Linux hosting the Power BI Report Server catalog (`ReportServer`, `ReportServerTempDB`) and lab reporting datasets.
+* **Key Configuration:**
+  * SQL Server Agent (`MSSQL_AGENT_ENABLED=true`) enabled for scheduled report refreshes and subscriptions.
+  * `sa` credentials synced from HashiCorp Vault (`secret/data/homelab`) via External Secrets Operator (`sql01-auth`).
+
+---
+
+### 7. Power BI Report Server (`pbirs01`)
+* **Namespace:** `vms` (KubeVirt `VirtualMachine`)
+* **Operating System:** Windows Server 2025 Standard
+* **Sync Wave:** `Wave 8`
+* **Internal IP:** `10.10.0.20` (Static on `ovn-ad-vpc` via Kube-OVN IPAM)
+* **FQDN:** `pbirs01.ad.lambertlab.us`
+* **Hardware Profile:** 4 vCPU, 8 GiB RAM, host-passthrough CPU topology (`timezone: America/New_York`).
+* **Storage Backend:** Dedicated 80 GB iSCSI block LUN (`iqn.2026-11.us.lambertlab:pbirs01-boot`) on TerraMaster SAN; NFS installer mounts (`nas-isos-win2025-pvc`, `nas-isos-virtio-pvc`).
+* **Architectural Role:** Domain-joined on-premises reporting portal hosting interactive Power BI (`.pbix`) dashboards and paginated SSRS (`.rdl`) reports backed by `sql01`.
