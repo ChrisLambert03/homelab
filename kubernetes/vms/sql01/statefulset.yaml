@@ -20,6 +20,8 @@ spec:
         k8s.v1.cni.cncf.io/networks: vms/ovn-ad-vpc
         ovn-ad-vpc.vms.ovn.kubernetes.io/ip_address: 10.10.0.19
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: workstation
       terminationGracePeriodSeconds: 60
       securityContext:
         fsGroup: 10001

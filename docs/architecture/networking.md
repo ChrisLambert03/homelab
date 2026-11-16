@@ -166,6 +166,10 @@ ad.lambertlab.us:53 {
 ### Why Health-Checking is Essential
 Without `health_check 5s` and `max_fails 2`, if DC01 reboots or a worker node faces transient network latency, CoreDNS pods hang waiting on UDP timeouts (30+ seconds), stalling applications across the cluster. With active health-checks, degraded upstream forwarders fail fast (< 5s) and seamlessly route to healthy replicas.
 
+### Active Directory Forward & Reverse Lookup Zones (`DC01`)
+* **Forward Zone (`ad.lambertlab.us`):** AD-joined Windows VMs (`pbirs01`, `win11`) dynamically register their A records via Secure Dynamic Updates. Non-AD Linux workloads attached to `ovn-ad-vpc` (such as `sql01` at `10.10.0.19`) require static A records on `DC01`.
+* **Reverse Lookup Zone (`0.10.10.in-addr.arpa`):** Primary AD-integrated reverse zone for `10.10.0.0/24` enabling PTR resolution across `ovn-ad-vpc`. Required by .NET/Windows tooling such as Power BI Report Server Configuration Manager (`IsLocalDbServer` reverse-DNS lookup on `sql01.ad.lambertlab.us` / `10.10.0.19`).
+
 ---
 
 ## 🌐 Split-Horizon Ingress Resolution for Cluster Workloads (*.lambertlab.us)

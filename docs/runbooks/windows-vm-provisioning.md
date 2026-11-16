@@ -170,3 +170,38 @@ Windows 11 specializes on first boot using an unattended answer file mounted via
    - **Domain Join:** Verify machine object created under `OU=Desktops,OU=LambertLab,DC=ad,DC=lambertlab,DC=us`.
    - **LAPS:** Verify local administrator account `lapsadmin` is active.
    - **WinRM:** Test remote PowerShell connectivity over port 5985/5986.
+
+---
+
+## 🖥️ Windows Server 2025 Golden Image & `OU=Servers` Variant
+
+Server workloads (such as `pbirs01`) follow the same line-rate `libiscsi` + Sysprep pattern using a dedicated compressed Server 2025 template and server-scoped `unattend.xml` secret:
+
+* **Golden Image (NFS):** `10.0.0.60:/Volume4/isos-store/win2025-golden.qcow2` (Windows Server 2025 Standard with VirtIO drivers, QEMU Guest Agent, and baseline updates, generalized via `sysprep.exe /generalize /oobe /shutdown`).
+* **Sysprep Secret (`vms`):** `win2025-unattend-secret` (template at `kubernetes/vms/pbirs01/unattend.xml.example`), targeting `<MachineObjectOU>OU=Servers,OU=LambertLab,DC=ad,DC=lambertlab,DC=us</MachineObjectOU>`.
+
+### Capture or Refresh the Golden Image
+
+With the source VM `Stopped` after running `sysprep.exe /generalize /oobe /shutdown`:
+
+```bash
+mkdir -p /tmp/nas-mount
+sudo mount -t nfs 10.0.0.60:/Volume4/isos-store /tmp/nas-mount
+qemu-img convert -p -f raw -O qcow2 -c \
+  iscsi://10.0.0.60/iqn.2026-11.us.lambertlab:pbirs01-boot/0 \
+  /tmp/nas-mount/win2025-golden.qcow2
+sudo umount /tmp/nas-mount
+rmdir /tmp/nas-mount
+```
+
+### Flash a New Server LUN
+
+```bash
+mkdir -p /tmp/nas-mount
+sudo mount -t nfs 10.0.0.60:/Volume4/isos-store /tmp/nas-mount
+sudo qemu-img convert -p -f qcow2 -O raw \
+  /tmp/nas-mount/win2025-golden.qcow2 \
+  iscsi://10.0.0.60/iqn.2026-11.us.lambertlab:<vm>-boot/0
+sudo umount /tmp/nas-mount
+rmdir /tmp/nas-mount
+```

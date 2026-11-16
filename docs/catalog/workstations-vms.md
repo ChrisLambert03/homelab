@@ -85,6 +85,7 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 * **Container Image:** `mcr.microsoft.com/mssql/server:2022-latest` (Developer Edition)
 * **Sync Wave:** `Wave 8`
 * **Internal IP:** `10.10.0.19` (Static on `ovn-ad-vpc` via Multus `net1`)
+* **FQDN:** `sql01.ad.lambertlab.us` (Static A + PTR record on `DC01` in `ad.lambertlab.us` and `0.10.10.in-addr.arpa`)
 * **Resource Profile:** `500m`–`2` CPU, `2 GiB`–`4 GiB` RAM (`MSSQL_MEMORY_LIMIT_MB=3072`).
 * **Storage Backend:** Dedicated 50 GB iSCSI block LUN (`iqn.2026-11.us.lambertlab:sql01-data`) on TerraMaster SAN (`ext4`, `fsGroup: 10001`).
 * **Architectural Role:** On-premises SQL Server database engine on Linux hosting the Power BI Report Server catalog (`ReportServer`, `ReportServerTempDB`) and lab reporting datasets.
@@ -101,5 +102,5 @@ This section documents the virtual machines, edge routing firewalls, and remote 
 * **Internal IP:** `10.10.0.20` (Static on `ovn-ad-vpc` via Kube-OVN IPAM)
 * **FQDN:** `pbirs01.ad.lambertlab.us`
 * **Hardware Profile:** 4 vCPU, 8 GiB RAM, host-passthrough CPU topology (`timezone: America/New_York`).
-* **Storage Backend:** Dedicated 80 GB iSCSI block LUN (`iqn.2026-11.us.lambertlab:pbirs01-boot`) on TerraMaster SAN; NFS installer mounts (`nas-isos-win2025-pvc`, `nas-isos-virtio-pvc`).
-* **Architectural Role:** Domain-joined on-premises reporting portal hosting interactive Power BI (`.pbix`) dashboards and paginated SSRS (`.rdl`) reports backed by `sql01`.
+* **Storage Backend:** Dedicated 80 GB iSCSI block LUN (`iqn.2026-11.us.lambertlab:pbirs01-boot`) on TerraMaster SAN; zero-touch `sysprep-disk` (`win2025-unattend-secret`) and `nas-isos-virtio-pvc`.
+* **Architectural Role:** Domain-joined on-premises reporting portal (`OU=Servers`) hosting interactive Power BI (`.pbix`) dashboards and paginated SSRS (`.rdl`) reports backed by `sql01`. Baseline generalized image captured to `/Volume4/isos-store/win2025-golden.qcow2`.
