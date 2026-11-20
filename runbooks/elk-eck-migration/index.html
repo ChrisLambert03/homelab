@@ -1397,6 +1397,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#54-elastic-agent-helm-chart-vs-eck-crd-offline-agent-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Elastic Agent Helm Chart vs. ECK CRD &amp; Offline Agent Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1812,6 +1823,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#54-elastic-agent-helm-chart-vs-eck-crd-offline-agent-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Elastic Agent Helm Chart vs. ECK CRD &amp; Offline Agent Cleanup
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2155,6 +2177,12 @@ Secondary services (<code>fleet-server-agent-http-service</code> and <code>elast
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s2">"elastic:</span><span class="nv">$ES_PASS</span><span class="s2">"</span><span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="s2">"https://kibana.lambertlab.us/api/fleet/enrollment_api_keys/&lt;stale_key_id&gt;"</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"kbn-xsrf: true"</span>
 </span></code></pre></div></p>
+<h3 id="54-elastic-agent-helm-chart-vs-eck-crd-offline-agent-cleanup">5.4 Elastic Agent Helm Chart vs. ECK CRD &amp; Offline Agent Cleanup</h3>
+<p>Host telemetry agents run via the standalone <code>elastic-agent</code> Helm chart (<code>kube-system</code>, ArgoCD Wave 9, <code>preset: perNode</code>) rather than an ECK <code>Agent</code> CRD managed by <code>eck-operator</code> (<code>observability</code>, Wave 5):</p>
+<ul>
+<li><strong>Why two ArgoCD apps:</strong> <code>eck-operator</code> manages the control-plane Elastic CRDs (<code>Elasticsearch</code>, <code>Kibana</code>, <code>Logstash</code>, <code>fleet-server</code>), whereas the <code>elastic-agent</code> chart ships the <code>perNode</code> DaemonSet, RBAC, host mounts (<code>/var</code>, <code>/proc</code>, <code>/sys</code>, <code>hostNetwork: true</code>), and <code>kube-state-metrics</code> out of the box—and keeps Wave 9 host enrollment cleanly ordered after Wave 5–7 control-plane components.</li>
+<li><strong>Why <code>Offline</code> agents accumulate in Fleet:</strong> Because the <code>perNode</code> DaemonSet does not persist <code>/usr/share/elastic-agent/state</code> across pod recreations, restarted/recreated pods re-enroll with a new <code>agent.id</code> UUID, leaving previous pod IDs marked <code>Offline</code>. Enable <strong>Unenroll inactive agents</strong> in <strong>Kibana → Fleet → Agent policies → Settings</strong> with a short inactivity timeout (e.g., <code>15m</code>–<code>1h</code>) so stale pod entries clear automatically.</li>
+</ul>
 <hr />
 <h2 id="procedure-6-decommissioning-docker-resources">🧹 Procedure 6: Decommissioning Docker Resources</h2>
 <p>Once the ECK stack is validated:</p>
