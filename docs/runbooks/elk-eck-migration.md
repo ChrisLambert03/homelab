@@ -280,6 +280,12 @@ curl -sk -u "elastic:$ES_PASS" -X DELETE "https://kibana.lambertlab.us/api/fleet
   -H "kbn-xsrf: true"
 ```
 
+### 5.4 Elastic Agent Helm Chart vs. ECK CRD & Offline Agent Cleanup
+Host telemetry agents run via the standalone `elastic-agent` Helm chart (`kube-system`, ArgoCD Wave 9, `preset: perNode`) rather than an ECK `Agent` CRD managed by `eck-operator` (`observability`, Wave 5):
+
+* **Why two ArgoCD apps:** `eck-operator` manages the control-plane Elastic CRDs (`Elasticsearch`, `Kibana`, `Logstash`, `fleet-server`), whereas the `elastic-agent` chart ships the `perNode` DaemonSet, RBAC, host mounts (`/var`, `/proc`, `/sys`, `hostNetwork: true`), and `kube-state-metrics` out of the box—and keeps Wave 9 host enrollment cleanly ordered after Wave 5–7 control-plane components.
+* **Why `Offline` agents accumulate in Fleet:** Because the `perNode` DaemonSet does not persist `/usr/share/elastic-agent/state` across pod recreations, restarted/recreated pods re-enroll with a new `agent.id` UUID, leaving previous pod IDs marked `Offline`. Enable **Unenroll inactive agents** in **Kibana → Fleet → Agent policies → Settings** with a short inactivity timeout (e.g., `15m`–`1h`) so stale pod entries clear automatically.
+
 ---
 
 ## 🧹 Procedure 6: Decommissioning Docker Resources
